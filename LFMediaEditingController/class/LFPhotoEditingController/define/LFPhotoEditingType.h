@@ -22,4 +22,13 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditingType) {
     LFPhotoEditingType_crop,
 };
 
+typedef NS_ENUM(NSUInteger, LFSplashStateType) {
+    /** 马赛克 */
+    LFSplashStateType_Mosaic,
+    /** 高斯模糊 */
+    LFSplashStateType_Blurry,
+    /** 画笔涂抹 */
+    LFSplashStateType_Paintbrush,
+};
+
 #endif /* LFImagePickerEditingType_h */

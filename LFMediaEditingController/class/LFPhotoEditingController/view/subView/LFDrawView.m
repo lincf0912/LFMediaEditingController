@@ -56,7 +56,7 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
 
 - (void)customInit
 {
-    _lineWidth = 3.f;
+    _lineWidth = 5.f;
     _lineColor = [UIColor redColor];
     _slayerArray = [@[] mutableCopy];
     _lineArray = [@[] mutableCopy];

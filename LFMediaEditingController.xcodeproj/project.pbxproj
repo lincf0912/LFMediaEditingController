@@ -46,6 +46,8 @@
 		6F14E65B1EE6439E0049AE56 /* JRPickColorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E63C1EE6439E0049AE56 /* JRPickColorView.m */; };
 		6F14E65E1EE643AB0049AE56 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E65D1EE643AB0049AE56 /* PhotoViewController.m */; };
 		6F14E6601EE647820049AE56 /* 1.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 6F14E65F1EE647820049AE56 /* 1.JPG */; };
+		6F384D3F1EE7D9E70077D207 /* LFSplashView_new.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D3E1EE7D9E70077D207 /* LFSplashView_new.m */; };
+		6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -127,6 +129,10 @@
 		6F14E65C1EE643AB0049AE56 /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
 		6F14E65D1EE643AB0049AE56 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		6F14E65F1EE647820049AE56 /* 1.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.JPG; sourceTree = "<group>"; };
+		6F384D3D1EE7D9E70077D207 /* LFSplashView_new.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFSplashView_new.h; sourceTree = "<group>"; };
+		6F384D3E1EE7D9E70077D207 /* LFSplashView_new.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFSplashView_new.m; sourceTree = "<group>"; };
+		6F384D401EE7EA6D0077D207 /* LFSplashLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFSplashLayer.h; sourceTree = "<group>"; };
+		6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFSplashLayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -331,6 +337,8 @@
 			children = (
 				6F14E6201EE6439E0049AE56 /* LFMaskLayer.h */,
 				6F14E6211EE6439E0049AE56 /* LFMaskLayer.m */,
+				6F384D401EE7EA6D0077D207 /* LFSplashLayer.h */,
+				6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */,
 			);
 			path = splash;
 			sourceTree = "<group>";
@@ -353,6 +361,8 @@
 				6F14E6291EE6439E0049AE56 /* LFDrawView.m */,
 				6F14E62A1EE6439E0049AE56 /* LFSplashView.h */,
 				6F14E62B1EE6439E0049AE56 /* LFSplashView.m */,
+				6F384D3D1EE7D9E70077D207 /* LFSplashView_new.h */,
+				6F384D3E1EE7D9E70077D207 /* LFSplashView_new.m */,
 				6F14E62C1EE6439E0049AE56 /* LFStickerView.h */,
 				6F14E62D1EE6439E0049AE56 /* LFStickerView.m */,
 			);
@@ -483,8 +493,10 @@
 				6F14E63E1EE6439E0049AE56 /* UIDevice+LFMEOrientation.m in Sources */,
 				6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */,
 				6F14E6541EE6439E0049AE56 /* LFSplashView.m in Sources */,
+				6F384D3F1EE7D9E70077D207 /* LFSplashView_new.m in Sources */,
 				6F14E65E1EE643AB0049AE56 /* PhotoViewController.m in Sources */,
 				6F14E6421EE6439E0049AE56 /* LFPhotoEditingController.m in Sources */,
+				6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */,
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
 				6F14E64F1EE6439E0049AE56 /* LFZoomView.m in Sources */,
 				6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */,

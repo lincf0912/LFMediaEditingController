@@ -13,4 +13,6 @@
 - (UIImage *)captureImage;
 /** 截图图层部分为图片 */
 - (UIImage *)captureImageAtFrame:(CGRect)rect;
+/** layer坐标颜色 */
+- (UIColor *)colorOfPoint:(CGPoint)point;
 @end

@@ -8,12 +8,14 @@
 
 #import "LFZoomingView.h"
 #import "UIView+LFMEFrame.h"
+#import "UIView+LFMECommon.h"
 
 #import <AVFoundation/AVFoundation.h>
 
 /** 编辑功能 */
 #import "LFDrawView.h"
 #import "LFSplashView.h"
+#import "LFSplashView_new.h"
 #import "LFStickerView.h"
 
 NSString *const kLFZoomingViewData_draw = @"LFZoomingViewData_draw";
@@ -32,7 +34,9 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
 /** 贴图 */
 @property (nonatomic, weak) LFStickerView *stickerView;
 /** 模糊（马赛克、高斯模糊） */
-@property (nonatomic, weak) LFSplashView *splashView;
+//@property (nonatomic, weak) LFSplashView *splashView;
+/** 模糊 */
+@property (nonatomic, weak) LFSplashView_new *splashView;
 
 /** 代理 */
 @property (nonatomic ,weak) id delegate;
@@ -70,7 +74,16 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
     self.imageView = imageView;
     
     /** 涂抹 - 最底层 */
-    LFSplashView *splashView = [[LFSplashView alloc] initWithFrame:self.bounds];
+//    LFSplashView *splashView = [[LFSplashView alloc] initWithFrame:self.bounds];
+//    /** 默认不能涂抹 */
+//    splashView.userInteractionEnabled = NO;
+//    [self addSubview:splashView];
+//    self.splashView = splashView;
+    LFSplashView_new *splashView = [[LFSplashView_new alloc] initWithFrame:self.bounds];
+    __weak typeof(self) weakSelf = self;
+    splashView.splashColor = ^UIColor *(CGPoint point) {
+        return [weakSelf.imageView colorOfPoint:point];
+    };
     /** 默认不能涂抹 */
     splashView.userInteractionEnabled = NO;
     [self addSubview:splashView];
@@ -106,7 +119,7 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
     
     [self.imageView setImage:image];
     /** 创建马赛克模糊 */
-    [self.splashView setImage:image mosaicLevel:10];
+//    [self.splashView setImage:image mosaicLevel:10];
 }
 
 - (void)setMoveCenter:(BOOL (^)(CGRect))moveCenter
@@ -311,7 +324,7 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
 - (void)setSplashState:(BOOL)splashState
 {
     if (splashState) {
-        _splashView.state = LFSplashStateType_Blurry;
+        _splashView.state = LFSplashStateType_Paintbrush;
     } else {
         _splashView.state = LFSplashStateType_Mosaic;
     }
@@ -319,7 +332,7 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
 
 - (BOOL)splashState
 {
-    return _splashView.state == LFSplashStateType_Blurry;
+    return _splashView.state == LFSplashStateType_Paintbrush;
 }
 
 @end

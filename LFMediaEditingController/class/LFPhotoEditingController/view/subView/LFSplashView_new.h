@@ -1,28 +1,23 @@
 //
-//  LFSplashView.h
-//  LFImagePickerController
+//  LFSplashView_new.h
+//  LFMediaEditingController
 //
-//  Created by LamTsanFeng on 2017/2/28.
+//  Created by LamTsanFeng on 2017/6/7.
 //  Copyright © 2017年 LamTsanFeng. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "LFPhotoEditingType.h"
 
-@interface LFSplashView : UIView
-
-/** 设置图片 */
-- (void)setImage:(UIImage *)image mosaicLevel:(NSUInteger)level;
-
-/** 原图 */
-@property (nonatomic, readonly) UIImage *image;
-@property (nonatomic, readonly) NSUInteger level;
+@interface LFSplashView_new : UIView
 
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *data;
 
 @property (nonatomic, copy) void(^splashBegan)();
 @property (nonatomic, copy) void(^splashEnded)();
+/** 绘画颜色 */
+@property (nonatomic, copy) UIColor *(^splashColor)(CGPoint point);
 
 /** 改变模糊状态 */
 @property (nonatomic, assign) LFSplashStateType state;
