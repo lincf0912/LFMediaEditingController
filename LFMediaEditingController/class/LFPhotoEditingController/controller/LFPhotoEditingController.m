@@ -17,8 +17,6 @@
 #import "LFTextBar.h"
 #import "LFClipToolbar.h"
 
-#import "UIDevice+LFMEOrientation.h"
-
 #define kSplashMenu_Button_Tag1 95
 #define kSplashMenu_Button_Tag2 96
 
@@ -40,11 +38,6 @@
     
     /** 单击手势 */
     UITapGestureRecognizer *singleTapRecognizer;
-    
-    UIButton *_progressHUD;
-    UIView *_HUDContainer;
-    UIActivityIndicatorView *_HUDIndicatorView;
-    UILabel *_HUDLabel;
 }
 
 /** 隐藏控件 */
@@ -53,19 +46,6 @@
 @end
 
 @implementation LFPhotoEditingController
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [UIDevice setOrientation:UIInterfaceOrientationPortrait];
-        _oKButtonTitleColorNormal = [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0];
-        _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
-        _isHiddenStatusBar = YES;
-        _processHintStr = @"正在处理...";
-    }
-    return self;
-}
 
 - (void)setEditImage:(UIImage *)editImage
 {
@@ -140,14 +120,14 @@
     
     UIButton *_edit_cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, size, size)];
     _edit_cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [_edit_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [_edit_cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
     _edit_cancelButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [_edit_cancelButton setTitleColor:self.cancelButtonTitleColorNormal forState:UIControlStateNormal];
     [_edit_cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - (size + margin), margin, size, size)];
     _edit_finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [_edit_finishButton setTitle:@"完成" forState:UIControlStateNormal];
+    [_edit_finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     _edit_finishButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [_edit_finishButton setTitleColor:self.oKButtonTitleColorNormal forState:UIControlStateNormal];
     [_edit_finishButton addTarget:self action:@selector(finishButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -162,10 +142,9 @@
     _edit_toolBar = [[LFEditToolbar alloc] init];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
-    UIColor *defaultColor = kSliderColors[1];
-    [_edit_toolBar setDrawSliderColor:defaultColor]; /** 红色 */
+    [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */
     /** 绘画颜色一致 */
-    [_EditingView setDrawColor:defaultColor];
+    [_EditingView setDrawColor:[_edit_toolBar drawSliderCurrentColor]];
     [self.view addSubview:_edit_toolBar];
 }
 
@@ -567,77 +546,6 @@
         _isHideNaviBar = YES;
         [self changedBarState];
     }];
-}
-
-#pragma mark - 状态栏
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-    return UIStatusBarStyleDefault;
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return self.isHiddenStatusBar;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-#pragma mark - private
-- (void)showProgressHUDText:(NSString *)text isTop:(BOOL)isTop
-{
-    [self hideProgressHUD];
-    
-    if (!_progressHUD) {
-        _progressHUD = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_progressHUD setBackgroundColor:[UIColor clearColor]];
-        _progressHUD.frame = [UIScreen mainScreen].bounds;
-        
-        _HUDContainer = [[UIView alloc] init];
-        _HUDContainer.frame = CGRectMake(([[UIScreen mainScreen] bounds].size.width - 120) / 2, ([[UIScreen mainScreen] bounds].size.height - 90) / 2, 120, 90);
-        _HUDContainer.layer.cornerRadius = 8;
-        _HUDContainer.clipsToBounds = YES;
-        _HUDContainer.backgroundColor = [UIColor darkGrayColor];
-        _HUDContainer.alpha = 0.7;
-        
-        _HUDIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        _HUDIndicatorView.frame = CGRectMake(45, 15, 30, 30);
-        
-        _HUDLabel = [[UILabel alloc] init];
-        _HUDLabel.frame = CGRectMake(0,40, 120, 50);
-        _HUDLabel.textAlignment = NSTextAlignmentCenter;
-        _HUDLabel.font = [UIFont systemFontOfSize:15];
-        _HUDLabel.textColor = [UIColor whiteColor];
-        
-        [_HUDContainer addSubview:_HUDLabel];
-        [_HUDContainer addSubview:_HUDIndicatorView];
-        [_progressHUD addSubview:_HUDContainer];
-    }
-    
-    _HUDLabel.text = text ? text : self.processHintStr;
-    
-    [_HUDIndicatorView startAnimating];
-    UIView *view = isTop ? [[UIApplication sharedApplication] keyWindow] : self.view;
-    [view addSubview:_progressHUD];
-}
-
-- (void)showProgressHUDText:(NSString *)text
-{
-    [self showProgressHUDText:text isTop:NO];
-}
-
-- (void)showProgressHUD {
-    
-    [self showProgressHUDText:nil];
-    
-}
-
-- (void)hideProgressHUD {
-    if (_progressHUD) {
-        [_HUDIndicatorView stopAnimating];
-        [_progressHUD removeFromSuperview];
-    }
 }
 
 

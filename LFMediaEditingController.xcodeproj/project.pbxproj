@@ -48,6 +48,7 @@
 		6F14E6601EE647820049AE56 /* 1.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 6F14E65F1EE647820049AE56 /* 1.JPG */; };
 		6F384D3F1EE7D9E70077D207 /* LFSplashView_new.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D3E1EE7D9E70077D207 /* LFSplashView_new.m */; };
 		6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */; };
+		6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D441EEA2C290077D207 /* LFBaseEditingController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -133,6 +134,8 @@
 		6F384D3E1EE7D9E70077D207 /* LFSplashView_new.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFSplashView_new.m; sourceTree = "<group>"; };
 		6F384D401EE7EA6D0077D207 /* LFSplashLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFSplashLayer.h; sourceTree = "<group>"; };
 		6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFSplashLayer.m; sourceTree = "<group>"; };
+		6F384D431EEA2C290077D207 /* LFBaseEditingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFBaseEditingController.h; sourceTree = "<group>"; };
+		6F384D441EEA2C290077D207 /* LFBaseEditingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFBaseEditingController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +196,8 @@
 		6F14E5EA1EE6439E0049AE56 /* class */ = {
 			isa = PBXGroup;
 			children = (
+				6F384D431EEA2C290077D207 /* LFBaseEditingController.h */,
+				6F384D441EEA2C290077D207 /* LFBaseEditingController.m */,
 				6F14E5EB1EE6439E0049AE56 /* LFPhotoEditingController */,
 				6F384D3C1EE69FFC0077D207 /* LFVideoEditingController */,
 				6F14E6391EE6439E0049AE56 /* vendors */,
@@ -490,6 +495,7 @@
 				6F14E64C1EE6439E0049AE56 /* LFGridMaskLayer.m in Sources */,
 				6F14E6411EE6439E0049AE56 /* UIView+LFMEFrame.m in Sources */,
 				6F14E63F1EE6439E0049AE56 /* UIImage+LFMECommon.m in Sources */,
+				6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */,
 				6F14E63E1EE6439E0049AE56 /* UIDevice+LFMEOrientation.m in Sources */,
 				6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */,
 				6F14E6541EE6439E0049AE56 /* LFSplashView.m in Sources */,
