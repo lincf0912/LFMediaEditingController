@@ -19,24 +19,32 @@
 {
     UIImage* image = nil;
     
-    CGSize size = self.frame.size;
+    CGSize size = !CGRectEqualToRect(CGRectZero, rect) ? rect.size : self.frame.size;
     
     //1.开启上下文
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    if (!CGRectEqualToRect(CGRectZero, rect)) {
+        /** 移动上下文 */
+        CGContextTranslateCTM(context, -rect.origin.x, -rect.origin.y);
+    }
     //2.绘制图层
     [self.layer renderInContext: context];
+    
     //3.从上下文中获取新图片
     image = UIGraphicsGetImageFromCurrentImageContext();
+    
     //4.关闭图形上下文
     UIGraphicsEndImageContext();
     
-    if (!CGRectEqualToRect(CGRectZero, rect)) {
-        UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
-        [image drawAtPoint:CGPointMake(-roundf(rect.origin.x*100)/100, -roundf(rect.origin.y*100)/100)];
-        image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    }
+//    if (!CGRectEqualToRect(CGRectZero, rect)) {
+//        UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+//        [image drawAtPoint:CGPointMake(-roundf(rect.origin.x*100)/100, -roundf(rect.origin.y*100)/100)];
+//        image = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
+//    }
     
     return image;
 }

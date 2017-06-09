@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, weak) UIImageView *imageView;
-
+/** 需要保存到编辑数据 */
 @property (nonatomic, strong) LFPhotoEdit *photoEdit;
 
 @end
@@ -24,9 +24,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor blueColor];
+    self.view.backgroundColor = [UIColor redColor];
     
-    UIImage *image = [UIImage imageNamed:@"1.JPG"];
+    /** 拍照图片 */
+//    UIImage *image = [UIImage imageNamed:@"1.JPG"];
+    /** 非拍照图片 */
+    UIImage *image = [UIImage imageNamed:@"2.png"];
     /** 必须确保图片方向是正确的，当然有很多方法更正图片的方向，这里只是举例，请酌情参考。 */
     self.image = [UIImage imageWithCGImage:image.CGImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
     
