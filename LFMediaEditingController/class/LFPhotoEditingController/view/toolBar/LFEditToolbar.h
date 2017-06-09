@@ -20,8 +20,12 @@
 /** 允许撤销 */
 - (void)setRevokeAtIndex:(NSUInteger)index;
 
+/** 获取拾色器的颜色 */
+- (NSArray <UIColor *>*)drawSliderColors;
+- (UIColor *)drawSliderCurrentColor;
 /** 设置绘画拾色器默认颜色 */
 - (void)setDrawSliderColor:(UIColor *)color;
+- (void)setDrawSliderColorAtIndex:(NSUInteger)index;
 
 @end
 

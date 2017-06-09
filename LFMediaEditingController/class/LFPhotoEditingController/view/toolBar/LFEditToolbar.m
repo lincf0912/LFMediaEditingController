@@ -361,11 +361,27 @@
     }
 }
 
+/** 获取拾色器的颜色 */
+- (NSArray <UIColor *>*)drawSliderColors
+{
+    return self.draw_colorSlider.colors;
+}
+- (UIColor *)drawSliderCurrentColor
+{
+    return self.draw_colorSlider.color;
+}
+
 /** 设置绘画拾色器默认颜色 */
 - (void)setDrawSliderColor:(UIColor *)color
 {
     self.draw_colorSlider.color = color;
     self.edit_drawMenu_color.backgroundColor = color;
+}
+
+- (void)setDrawSliderColorAtIndex:(NSUInteger)index
+{
+    self.draw_colorSlider.index = index;
+    self.edit_drawMenu_color.backgroundColor = self.draw_colorSlider.color;
 }
 
 #pragma mark - JRPickColorViewDelegate
