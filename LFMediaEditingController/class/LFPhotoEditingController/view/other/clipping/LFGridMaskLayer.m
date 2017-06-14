@@ -23,7 +23,7 @@
 
 - (void)customInit
 {
-    
+    self.contentsScale = [[UIScreen mainScreen] scale];
 }
 
 - (void)setMaskColor:(CGColorRef)maskColor

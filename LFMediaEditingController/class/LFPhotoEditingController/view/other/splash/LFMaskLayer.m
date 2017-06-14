@@ -19,6 +19,7 @@
 {
     self = [super init];
     if (self) {
+        self.contentsScale = [[UIScreen mainScreen] scale];
         _lineArray = [@[] mutableCopy];
     }
     return self;

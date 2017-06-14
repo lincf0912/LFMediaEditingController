@@ -6,7 +6,7 @@
 //  Copyright © 2017年 LamTsanFeng. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
+#import <UIKit/UIKit.h>
 
 @interface LFGridMaskLayer : CAShapeLayer
 
