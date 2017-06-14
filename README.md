@@ -30,4 +30,4 @@
 
 ## 图片展示
 
-
+![image](https://github.com/lincf0912/LFMediaEditingController/blob/master/ScreenShots/screenshot.gif)
