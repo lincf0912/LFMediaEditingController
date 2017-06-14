@@ -160,8 +160,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     /** 获取当前contentOffset的最大限度，根据之前的位置比例计算实际偏移坐标 */
     contentOffset.x = isnan(scaleX) ? contentOffset.x : (scaleX > 0 ? (self.contentSize.width-self.width) * scaleX : contentOffset.x);
     contentOffset.y = isnan(scaleY) ? contentOffset.y : (scaleY > 0 ? (self.contentSize.height-self.height) * scaleY : contentOffset.y);
-    CGRect zoomViewRect = CGRectApplyAffineTransform(self.zoomingView.frame, self.transform);
-    self.contentOffset = CGPointMake(MIN(MAX(contentOffset.x, 0),zoomViewRect.size.width-self.width), MIN(MAX(contentOffset.y, 0),zoomViewRect.size.height-self.height));
+    /** 计算坐标偏移与保底值 */
+    CGRect zoomViewRect = self.zoomingView.frame;
+    CGRect selfRect = CGRectApplyAffineTransform(self.frame, self.transform);
+    self.contentOffset = CGPointMake(MIN(MAX(contentOffset.x, 0),zoomViewRect.size.width-selfRect.size.width), MIN(MAX(contentOffset.y, 0),zoomViewRect.size.height-selfRect.size.height));
 }
 
 /** 取消 */
