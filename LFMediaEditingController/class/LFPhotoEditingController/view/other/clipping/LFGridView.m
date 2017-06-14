@@ -59,6 +59,7 @@ const CGFloat kControlWidth = 30.f;
     gridLayer.lineWidth = 2.f;
     gridLayer.bgColor = [UIColor clearColor];
     gridLayer.gridColor = [UIColor whiteColor];
+    gridLayer.showDimension = YES;
     [self.layer addSublayer:gridLayer];
     self.gridLayer = gridLayer;
     
@@ -143,7 +144,6 @@ const CGFloat kControlWidth = 30.f;
     }
 }
 
-#pragma mark - private
 - (void)setGridRect:(CGRect)gridRect
 {
     [self setGridRect:gridRect maskLayer:YES];
@@ -168,6 +168,7 @@ const CGFloat kControlWidth = 30.f;
     }
 }
 
+#pragma mark - private
 - (LFResizeControl *)createResizeControl
 {
     LFResizeControl *control = [[LFResizeControl alloc] initWithFrame:(CGRect){CGPointZero, CGSizeMake(kControlWidth, kControlWidth)}];
