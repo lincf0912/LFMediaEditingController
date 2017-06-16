@@ -59,7 +59,7 @@ const CGFloat kControlWidth = 30.f;
     gridLayer.lineWidth = 2.f;
     gridLayer.bgColor = [UIColor clearColor];
     gridLayer.gridColor = [UIColor whiteColor];
-    gridLayer.showDimension = YES;
+
     [self.layer addSublayer:gridLayer];
     self.gridLayer = gridLayer;
     

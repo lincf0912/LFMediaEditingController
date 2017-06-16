@@ -29,6 +29,12 @@
 /** 剪裁尺寸, CGRectInset(self.bounds, 30, 50) */
 @property (nonatomic, assign) CGRect clippingRect;
 
+/** 显示图片剪裁像素 */
+@property (nonatomic, weak) UILabel *imagePixel;
+
+/** 图片像素参照坐标 */
+@property (nonatomic, assign) CGSize referenceSize;
+
 @property (nonatomic, copy) lf_me_dispatch_cancelable_block_t maskViewBlock;
 
 @end
@@ -77,6 +83,22 @@
     
     self.clippingMinSize = CGSizeMake(80, 80);
     self.clippingMaxRect = CGRectInset(self.frame , 20, 50);
+    
+    /** 创建显示图片像素控件 */
+    UILabel *imagePixel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.width-40, 30)];
+    imagePixel.numberOfLines = 1;
+    imagePixel.textAlignment = NSTextAlignmentCenter;
+    imagePixel.font = [UIFont boldSystemFontOfSize:13.f];
+    imagePixel.textColor = [UIColor whiteColor];
+    imagePixel.highlighted = YES;
+    imagePixel.highlightedTextColor = [UIColor whiteColor];
+    imagePixel.layer.shadowColor = [UIColor blackColor].CGColor;
+    imagePixel.layer.shadowOpacity = 1.f;
+    imagePixel.layer.shadowOffset = CGSizeMake(0, 0);
+    imagePixel.layer.shadowRadius = 8;
+    imagePixel.alpha = 0.f;
+    [self addSubview:imagePixel];
+    self.imagePixel = imagePixel;
 }
 
 - (void)setImage:(UIImage *)image
@@ -85,8 +107,12 @@
     if (image) {
         CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(image.size, self.frame);
         self.gridView.gridRect = cropRect;
+        self.imagePixel.center = CGPointMake(CGRectGetMidX(cropRect), CGRectGetMidY(cropRect));
     }
     self.clippingView.image = image;
+    
+    /** 计算图片像素参照坐标 */
+    self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clippingMaxRect).size;
 }
 
 - (void)setClippingRect:(CGRect)clippingRect
@@ -94,6 +120,7 @@
     _clippingRect = clippingRect;
     self.gridView.gridRect = clippingRect;
     self.clippingView.cropRect = clippingRect;
+    self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
     
     if (_isClipping) {
         /** 关闭缩放 */
@@ -118,6 +145,8 @@
         _clippingMaxRect = clippingMaxRect;
         self.gridView.controlMaxRect = clippingMaxRect;
         self.clippingView.editRect = clippingMaxRect;
+        /** 计算缩放剪裁尺寸 */
+        self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clippingMaxRect).size;
     }
 }
 
@@ -140,14 +169,17 @@
             }];
             [UIView animateWithDuration:0.25f delay:0.1f options:UIViewAnimationOptionCurveEaseIn animations:^{
                 self.gridView.alpha = 1.f;
+                self.imagePixel.alpha = 1.f;
             } completion:nil];
         } else {
             CGRect rect = CGRectInset(self.frame , 20, 50);
             self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect);
             self.gridView.alpha = 1.f;
+            self.imagePixel.alpha = 1.f;
             /** 显示多余部分 */
             self.clippingView.clipsToBounds = NO;
         }
+        [self updateImagePixelText];
     } else {
         /** 重置最大缩放 */
         if (animated) {
@@ -155,6 +187,7 @@
             self.clippingView.clipsToBounds = YES;
             [UIView animateWithDuration:0.1f animations:^{
                 self.gridView.alpha = 0.f;
+                self.imagePixel.alpha = 0.f;
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.25f animations:^{
                     CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.frame);
@@ -165,6 +198,7 @@
             /** 剪裁多余部分 */
             self.clippingView.clipsToBounds = YES;
             self.gridView.alpha = 0.f;
+            self.imagePixel.alpha = 0.f;
             CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.frame);
             self.clippingRect = cropRect;
         }
@@ -180,6 +214,7 @@
     if (animated) {
         [UIView animateWithDuration:0.1f animations:^{
             self.gridView.alpha = 0.f;
+            self.imagePixel.alpha = 0.f;
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:0.25f animations:^{
                 [self cancel];
@@ -194,6 +229,7 @@
 {
     [self.clippingView cancel];
     self.gridView.gridRect = self.clippingView.frame;
+    self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
     self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + kMaxZoomScale - kMaxZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), kMaxZoomScale);
 }
 
@@ -229,15 +265,6 @@
     UIImage *image = [self.clipZoomView captureImageAtFrame:self.clippingView.frame];
     [self setZoomScale:zoomScale];
     
-    CGFloat width = CGImageGetWidth(image.CGImage);
-    CGFloat height = CGImageGetHeight(image.CGImage);
-    
-    CGFloat imageWidth = CGImageGetWidth(self.image.CGImage);
-    CGFloat imageHeight = CGImageGetHeight(self.image.CGImage);
-    
-    if (imageWidth > width && imageHeight > height) {
-        return [image scaleToSize:CGSizeMake(imageWidth, imageHeight)];
-    }
     return image;
 }
 
@@ -251,6 +278,9 @@
         } else {
             [weakSelf.gridView setGridRect:rect animated:YES];
         }
+        
+        /** 图片像素 */
+        [self updateImagePixelText];
     };
     return block;
 }
@@ -294,6 +324,9 @@
 {
     /** 放大 */
     [self.clippingView zoomInToRect:gridView.gridRect];
+    
+    /** 图片像素 */
+    [self updateImagePixelText];
 }
 - (void)lf_gridViewDidEndResizing:(LFGridView *)gridView
 {
@@ -301,6 +334,8 @@
     [self.clippingView zoomOutToRect:gridView.gridRect];
     /** 让clippingView的动画回调后才显示showMaskLayer */
     //    self.gridView.showMaskLayer = YES;
+    
+    
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -364,6 +399,18 @@
     CGFloat offsetX = (self.width > self.contentSize.width) ? ((self.width - self.contentSize.width) * 0.5) : 0.0;
     CGFloat offsetY = (self.height > self.contentSize.height) ? ((self.height - self.contentSize.height) * 0.5) : 0.0;
     self.clipZoomView.center = CGPointMake(self.contentSize.width * 0.5 + offsetX, self.contentSize.height * 0.5 + offsetY);
+}
+
+#pragma mark - 更新图片像素
+- (void)updateImagePixelText;
+{
+    CGFloat scale = self.clippingView.zoomScale/self.clippingView.first_minimumZoomScale;
+    CGSize realSize = CGSizeMake(CGRectGetWidth(self.gridView.gridRect)/scale, CGRectGetHeight(self.gridView.gridRect)/scale);
+    CGFloat screenScale = [UIScreen mainScreen].scale;
+    int pixelW = (int)((self.image.size.width*screenScale)/self.referenceSize.width*realSize.width+0.5);
+    int pixelH = (int)((self.image.size.height*screenScale)/self.referenceSize.height*realSize.height+0.5);
+    self.imagePixel.text = [NSString stringWithFormat:@"%dx%d", pixelW, pixelH];
+    self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
 }
 
 #pragma mark - LFEditingProtocol

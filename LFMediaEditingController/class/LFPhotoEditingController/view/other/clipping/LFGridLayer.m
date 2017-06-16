@@ -18,14 +18,6 @@
         self.contentsScale = [[UIScreen mainScreen] scale];
         _bgColor = [UIColor clearColor];
         _gridColor = [UIColor blackColor];
-        /** 显示尺寸 */
-        _showDimension = NO;
-        UIFont *font = [UIFont boldSystemFontOfSize:14.0];//设置字体
-        NSShadow *shadow = [[NSShadow alloc] init];
-        shadow.shadowOffset = CGSizeZero;
-        shadow.shadowColor = [UIColor blackColor];
-        shadow.shadowBlurRadius = 8;
-        _dimensionAttributes = @{NSFontAttributeName:font, NSForegroundColorAttributeName:[UIColor whiteColor], NSShadowAttributeName:shadow};
     }
     return self;
 }
@@ -51,10 +43,6 @@
         }
         
         self.path = path;
-        
-        if (self.showDimension) {
-            [self setNeedsDisplay];
-        }
     }
 }
 
@@ -108,19 +96,6 @@
     [path addLineToPoint:CGPointMake(CGRectGetMinX(newRct) , CGRectGetMaxY(newRct)-cornerlength)];
     
     return path.CGPath;
-}
-
-- (void)drawInContext:(CGContextRef)context
-{
-    UIGraphicsPushContext( context );
-    
-    if (self.showDimension) {
-        NSString *text = [NSString stringWithFormat:@"%dx%d", (int)self.gridRect.size.width, (int)self.gridRect.size.height];
-        CGSize size = [text sizeWithAttributes:self.dimensionAttributes];
-        [text drawInRect:CGRectMake(CGRectGetMidX(self.gridRect)-size.width/2, CGRectGetMidY(self.gridRect)-size.height/2, size.width, size.height) withAttributes:self.dimensionAttributes];
-    }
-    
-    UIGraphicsPopContext();
 }
 
 @end
