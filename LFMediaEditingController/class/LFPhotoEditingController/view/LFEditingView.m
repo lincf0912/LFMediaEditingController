@@ -276,6 +276,8 @@
     void (^block)(CGRect) = ^(CGRect rect){
         if (clippingView.isReseting || clippingView.isRotating) { /** 重置/旋转 需要将遮罩显示也重置 */
             [weakSelf.gridView setGridRect:rect maskLayer:YES animated:YES];
+        } else if (clippingView.isZooming) { /** 缩放 */
+            
         } else {
             [weakSelf.gridView setGridRect:rect animated:YES];
         }
@@ -285,12 +287,20 @@
     };
     return block;
 }
+- (void)lf_clippingViewDidZoom:(LFClippingView *)clippingView
+{
+    if (clippingView.zooming) {
+        [self updateImagePixelText];
+    }
+}
 - (void)lf_clippingViewDidEndZooming:(LFClippingView *)clippingView
 {
     __weak typeof(self) weakSelf = self;
     self.maskViewBlock = lf_dispatch_block_t(0.25f, ^{
         weakSelf.gridView.showMaskLayer = YES;
     });
+    
+    [self updateImagePixelText];
     
     if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndZooming:)]) {
         [self.clippingDelegate lf_EditingViewDidEndZooming:self];

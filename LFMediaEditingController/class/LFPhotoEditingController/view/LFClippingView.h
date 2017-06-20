@@ -23,6 +23,8 @@
 @property (nonatomic, readonly) BOOL isReseting;
 /** 是否旋转中 */
 @property (nonatomic, readonly) BOOL isRotating;
+/** 是否缩放中 */
+//@property (nonatomic, readonly) BOOL isZooming;
 /** 是否可还原 */
 @property (nonatomic, readonly) BOOL canReset;
 
@@ -48,10 +50,12 @@
 
 /** 同步缩放视图（调用zoomOutToRect才会触发） */
 - (void (^)(CGRect))lf_clippingViewWillBeginZooming:(LFClippingView *)clippingView;
+- (void)lf_clippingViewDidZoom:(LFClippingView *)clippingView;
 - (void)lf_clippingViewDidEndZooming:(LFClippingView *)clippingView;
 
-/** 移动视图(包含缩放) */
+/** 移动视图 */
 - (void)lf_clippingViewWillBeginDragging:(LFClippingView *)clippingView;
 - (void)lf_clippingViewDidEndDecelerating:(LFClippingView *)clippingView;
+
 
 @end

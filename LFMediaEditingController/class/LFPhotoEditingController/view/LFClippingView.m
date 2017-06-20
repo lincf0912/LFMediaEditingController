@@ -426,41 +426,23 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(nullable UIView *)view
 {
-    if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginDragging:)]) {
-        [self.clippingDelegate lf_clippingViewWillBeginDragging:self];
+    if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
+        void (^block)() = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
+        block(self.frame);
+    }
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidZoom:)]) {
+        [self.clippingDelegate lf_clippingViewDidZoom:self];
     }
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(nullable UIView *)view atScale:(CGFloat)scale
 {
-    /** 手动缩放后 计算是否最小值小于当前选择框范围内 */
-    CGRect zoomingRect = CGRectApplyAffineTransform(self.zoomingView.frame, self.transform);
-    if (CGRectGetWidth(zoomingRect) < CGRectGetWidth(self.frame) || CGRectGetHeight(zoomingRect) < CGRectGetHeight(self.frame)) {
-        CGRect rect = self.frame;
-        rect.size.width = MIN(CGRectGetWidth(zoomingRect), CGRectGetWidth(self.frame));
-        rect.size.height = MIN(CGRectGetHeight(zoomingRect), CGRectGetHeight(self.frame));
-        [UIView animateWithDuration:0.25
-                              delay:0.0
-                            options:UIViewAnimationOptionBeginFromCurrentState
-                         animations:^{
-                             self.frame = rect;
-                             self.saveRect = self.frame;
-                             self.center = self.superview.center;
-                             [self resetMinimumZoomScale];
-                             [self setZoomScale:self.zoomScale];
-                             if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
-                                 void (^block)() = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
-                                 if (block) block(self.frame);
-                             }
-                         } completion:^(BOOL finished) {
-                             if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidEndDecelerating:)]) {
-                                 [self.clippingDelegate lf_clippingViewDidEndDecelerating:self];
-                             }
-                         }];
-    } else {
-        if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidEndDecelerating:)]) {
-            [self.clippingDelegate lf_clippingViewDidEndDecelerating:self];
-        }
+    if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidEndZooming:)]) {
+        [self.clippingDelegate lf_clippingViewDidEndZooming:self];
     }
 }
 
