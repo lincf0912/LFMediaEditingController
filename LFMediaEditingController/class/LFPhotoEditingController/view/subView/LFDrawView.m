@@ -120,17 +120,19 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     
     if ([event allTouches].count == 1){
         
-        if (_isBegan && self.drawBegan) self.drawBegan();
-        _isWork = YES;
-        _isBegan = NO;
     
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
         LFDrawBezierPath *path = self.lineArray.lastObject;
-        [path addLineToPoint:point];
+        if (!CGPointEqualToPoint(path.currentPoint, point)) {
+            if (_isBegan && self.drawBegan) self.drawBegan();
+            _isBegan = NO;
+            _isWork = YES;
+            [path addLineToPoint:point];
+            CAShapeLayer *slayer = self.slayerArray.lastObject;
+            slayer.path = path.CGPath;
+        }
         
-        CAShapeLayer *slayer = self.slayerArray.lastObject;
-        slayer.path = path.CGPath;
     } else {
         [super touchesMoved:touches withEvent:event];
     }

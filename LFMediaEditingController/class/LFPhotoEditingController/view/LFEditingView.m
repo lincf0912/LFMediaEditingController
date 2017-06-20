@@ -26,7 +26,7 @@
 /** 因为LFClippingView需要调整transform属性，需要额外创建一层进行缩放处理，理由：UIScrollView的缩放会自动重置transform */
 @property (nonatomic, weak) UIView *clipZoomView;
 
-/** 剪裁尺寸, CGRectInset(self.bounds, 30, 50) */
+/** 剪裁尺寸, CGRectInset(self.bounds, 20, 50) */
 @property (nonatomic, assign) CGRect clippingRect;
 
 /** 显示图片剪裁像素 */
@@ -56,23 +56,23 @@
 {
     self.backgroundColor = [UIColor blackColor];
     self.delegate = self;
-    self.scrollsToTop = NO;
-    self.showsHorizontalScrollIndicator = NO;
-    self.showsVerticalScrollIndicator = NO;
     /** 缩放 */
-    self.bouncesZoom = YES;
     self.maximumZoomScale = kMaxZoomScale;
     self.minimumZoomScale = 1.0;
     
-    LFClippingView *clippingView = [[LFClippingView alloc] initWithFrame:self.bounds];
-    clippingView.clippingDelegate = self;
     /** 创建缩放层，避免直接缩放LFClippingView，会改变其transform */
     UIView *clipZoomView = [[UIView alloc] initWithFrame:self.bounds];
     clipZoomView.backgroundColor = [UIColor clearColor];
-    [clipZoomView addSubview:clippingView];
     [self addSubview:clipZoomView];
-    self.clippingView = clippingView;
     self.clipZoomView = clipZoomView;
+    
+    /** 创建剪裁层 */
+    LFClippingView *clippingView = [[LFClippingView alloc] initWithFrame:self.bounds];
+    clippingView.clippingDelegate = self;
+    /** 非剪裁情况禁止剪裁层移动 */
+    clippingView.scrollEnabled = NO;
+    [self.clipZoomView addSubview:clippingView];
+    self.clippingView = clippingView;
     
     LFGridView *gridView = [[LFGridView alloc] initWithFrame:self.bounds];
     gridView.delegate = self;
@@ -157,6 +157,7 @@
 - (void)setIsClipping:(BOOL)isClipping animated:(BOOL)animated
 {
     _isClipping = isClipping;
+    self.clippingView.scrollEnabled = isClipping;
     if (isClipping) {
         /** 动画切换 */
         if (animated) {

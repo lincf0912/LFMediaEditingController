@@ -119,21 +119,27 @@ NSString *const kLFSplashViewData_blur = @"LFSplashViewData_blur";
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (touches.allObjects.count == 1) {
-        
-        if (_isBegan && self.splashBegan) self.splashBegan();
-        _isWork = YES;
-        _isBegan = NO;
 
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
         
         UIBezierPath *mosaicPath = self.mosaicLayer.lineArray.lastObject;
-        [mosaicPath addLineToPoint:point];
-        
         UIBezierPath *blurryPath = self.blurLayer.lineArray.lastObject;
-        [blurryPath addLineToPoint:point];
         
-        [self drawLine];
+        if (!CGPointEqualToPoint(mosaicPath.currentPoint, point)) {
+            
+            if (_isBegan && self.splashBegan) self.splashBegan();
+            _isWork = YES;
+            _isBegan = NO;
+            
+            [mosaicPath addLineToPoint:point];
+            
+            [blurryPath addLineToPoint:point];
+            
+            [self drawLine];
+        }
+        
+        
     } else {
         [super touchesMoved:touches withEvent:event];
     }

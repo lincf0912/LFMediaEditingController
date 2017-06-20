@@ -59,6 +59,7 @@ NSString *const kLFSplashViewData = @"LFSplashViewData";
         //2、创建LFSplashBlur
         LFSplashBlur *blur = (self.state == LFSplashStateType_Paintbrush ? [LFSplashImageBlur new] : [LFSplashBlur new]);
         blur.color = self.splashColor ? self.splashColor(point) : nil;
+        blur.point = point;
         if (self.state == LFSplashStateType_Mosaic) {
             blur.rect = CGRectMake(point.x-self.squareWidth/2, point.y-self.squareWidth/2, self.squareWidth, self.squareWidth);
         } else if (self.state == LFSplashStateType_Paintbrush) {
@@ -82,9 +83,7 @@ NSString *const kLFSplashViewData = @"LFSplashViewData";
 {
     if (touches.allObjects.count == 1) {
         
-        if (_isBegan && self.splashBegan) self.splashBegan();
-        _isWork = YES;
-        _isBegan = NO;
+        
         //1、触摸坐标
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
@@ -92,54 +91,61 @@ NSString *const kLFSplashViewData = @"LFSplashViewData";
         /** 获取上一个对象坐标判断是否重叠 */
         LFSplashLayer *layer = self.layerArray.lastObject;
         LFSplashBlur *prevBlur = layer.lineArray.lastObject;
-        if (self.state == LFSplashStateType_Mosaic) {
-            
-            if (CGRectContainsPoint(prevBlur.rect, point) == NO) {
-                CGFloat pointX = point.x, pointY = point.y;
-                /** 计算x */
-                if (pointX > CGRectGetMaxX(prevBlur.rect)) {
-                    pointX = CGRectGetMaxX(prevBlur.rect);
-                } else if (pointX < CGRectGetMinX(prevBlur.rect)) {
-                    pointX = CGRectGetMinX(prevBlur.rect) - CGRectGetWidth(prevBlur.rect);
-                } else {
-                    pointX = CGRectGetMinX(prevBlur.rect);
+        
+        if (!CGPointEqualToPoint(prevBlur.point, point)) {
+            if (_isBegan && self.splashBegan) self.splashBegan();
+            _isWork = YES;
+            _isBegan = NO;
+            if (self.state == LFSplashStateType_Mosaic) {
+                
+                if (CGRectContainsPoint(prevBlur.rect, point) == NO) {
+                    CGFloat pointX = point.x, pointY = point.y;
+                    /** 计算x */
+                    if (pointX > CGRectGetMaxX(prevBlur.rect)) {
+                        pointX = CGRectGetMaxX(prevBlur.rect);
+                    } else if (pointX < CGRectGetMinX(prevBlur.rect)) {
+                        pointX = CGRectGetMinX(prevBlur.rect) - CGRectGetWidth(prevBlur.rect);
+                    } else {
+                        pointX = CGRectGetMinX(prevBlur.rect);
+                    }
+                    /** 计算y */
+                    if (pointY > CGRectGetMaxY(prevBlur.rect)) {
+                        pointY = CGRectGetMaxY(prevBlur.rect);
+                    } else if (pointY < CGRectGetMinY(prevBlur.rect)) {
+                        pointY = CGRectGetMinY(prevBlur.rect) - CGRectGetHeight(prevBlur.rect);
+                    } else {
+                        pointY = CGRectGetMinY(prevBlur.rect);
+                    }
+                    //2、创建LFSplashBlur
+                    LFSplashBlur *blur = [LFSplashBlur new];
+                    blur.point = point;
+                    blur.rect = CGRectMake(pointX, pointY, CGRectGetWidth(prevBlur.rect), CGRectGetHeight(prevBlur.rect));
+                    blur.color = self.splashColor ? self.splashColor(point) : nil;
+                    
+                    [layer.lineArray addObject:blur];
+                    [layer setNeedsDisplay];
                 }
-                /** 计算y */
-                if (pointY > CGRectGetMaxY(prevBlur.rect)) {
-                    pointY = CGRectGetMaxY(prevBlur.rect);
-                } else if (pointY < CGRectGetMinY(prevBlur.rect)) {
-                    pointY = CGRectGetMinY(prevBlur.rect) - CGRectGetHeight(prevBlur.rect);
-                } else {
-                    pointY = CGRectGetMinY(prevBlur.rect);
+            } else if (self.state == LFSplashStateType_Paintbrush) {
+                /** 限制绘画的间隙 */
+                if (CGRectContainsPoint(prevBlur.rect, point) == NO) {
+                    //2、创建LFSplashBlur
+                    LFSplashImageBlur *blur = [LFSplashImageBlur new];
+                    blur.point = point;
+                    blur.imageName = @"EditImageMosaicBrush.png";
+                    blur.color = self.splashColor ? self.splashColor(point) : nil;
+                    /** 新增随机位置 */
+                    int x = self.paintSize.width + 20;
+                    float randomX = floorf(arc4random()%x) - x/2;
+                    blur.rect = CGRectMake(point.x-self.paintSize.width/2 + randomX, point.y-self.paintSize.height/2, self.paintSize.width, self.paintSize.height);
+                    
+                    [layer.lineArray addObject:blur];
+                    
+                    /** 新增额外对象 密集图片 */
+                    [layer setNeedsDisplay];
                 }
-                //2、创建LFSplashBlur
-                LFSplashBlur *blur = [LFSplashBlur new];
-                blur.rect = CGRectMake(pointX, pointY, CGRectGetWidth(prevBlur.rect), CGRectGetHeight(prevBlur.rect));
-                blur.color = self.splashColor ? self.splashColor(point) : nil;
-                
-                [layer.lineArray addObject:blur];
-                [layer setNeedsDisplay];
-            }
-        } else if (self.state == LFSplashStateType_Paintbrush) {
-            /** 限制绘画的间隙 */
-            if (CGRectContainsPoint(prevBlur.rect, point) == NO) {
-                //2、创建LFSplashBlur
-                LFSplashImageBlur *blur = [LFSplashImageBlur new];
-                blur.imageName = @"EditImageMosaicBrush.png";
-                blur.color = self.splashColor ? self.splashColor(point) : nil;
-                /** 新增随机位置 */
-                int x = self.paintSize.width + 20;
-                float randomX = floorf(arc4random()%x) - x/2;
-                blur.rect = CGRectMake(point.x-self.paintSize.width/2 + randomX, point.y-self.paintSize.height/2, self.paintSize.width, self.paintSize.height);
-                
-                [layer.lineArray addObject:blur];
-                
-                /** 新增额外对象 密集图片 */
-                
-                
-                [layer setNeedsDisplay];
             }
         }
+        
         
     } else {
         [super touchesMoved:touches withEvent:event];
