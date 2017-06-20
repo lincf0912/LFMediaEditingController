@@ -31,7 +31,6 @@
 		6F14E64C1EE6439E0049AE56 /* LFGridMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6161EE6439E0049AE56 /* LFGridMaskLayer.m */; };
 		6F14E64D1EE6439E0049AE56 /* LFGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6181EE6439E0049AE56 /* LFGridView.m */; };
 		6F14E64E1EE6439E0049AE56 /* LFResizeControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E61A1EE6439E0049AE56 /* LFResizeControl.m */; };
-		6F14E64F1EE6439E0049AE56 /* LFZoomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E61C1EE6439E0049AE56 /* LFZoomView.m */; };
 		6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6211EE6439E0049AE56 /* LFMaskLayer.m */; };
 		6F14E6511EE6439E0049AE56 /* LFMovingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6241EE6439E0049AE56 /* LFMovingView.m */; };
 		6F14E6521EE6439E0049AE56 /* LFStickerLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6261EE6439E0049AE56 /* LFStickerLabel.m */; };
@@ -100,8 +99,6 @@
 		6F14E6181EE6439E0049AE56 /* LFGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFGridView.m; sourceTree = "<group>"; };
 		6F14E6191EE6439E0049AE56 /* LFResizeControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFResizeControl.h; sourceTree = "<group>"; };
 		6F14E61A1EE6439E0049AE56 /* LFResizeControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFResizeControl.m; sourceTree = "<group>"; };
-		6F14E61B1EE6439E0049AE56 /* LFZoomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFZoomView.h; sourceTree = "<group>"; };
-		6F14E61C1EE6439E0049AE56 /* LFZoomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFZoomView.m; sourceTree = "<group>"; };
 		6F14E61D1EE6439E0049AE56 /* LFEditingProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditingProtocol.h; sourceTree = "<group>"; };
 		6F14E61E1EE6439E0049AE56 /* LFPhotoEditDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFPhotoEditDelegate.h; sourceTree = "<group>"; };
 		6F14E6201EE6439E0049AE56 /* LFMaskLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMaskLayer.h; sourceTree = "<group>"; };
@@ -334,8 +331,6 @@
 				6F14E6181EE6439E0049AE56 /* LFGridView.m */,
 				6F14E6191EE6439E0049AE56 /* LFResizeControl.h */,
 				6F14E61A1EE6439E0049AE56 /* LFResizeControl.m */,
-				6F14E61B1EE6439E0049AE56 /* LFZoomView.h */,
-				6F14E61C1EE6439E0049AE56 /* LFZoomView.m */,
 			);
 			path = clipping;
 			sourceTree = "<group>";
@@ -508,7 +503,6 @@
 				6F14E6421EE6439E0049AE56 /* LFPhotoEditingController.m in Sources */,
 				6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */,
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
-				6F14E64F1EE6439E0049AE56 /* LFZoomView.m in Sources */,
 				6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */,
 				6F14E6561EE6439E0049AE56 /* LFClipToolbar.m in Sources */,
 				6F14E6481EE6439E0049AE56 /* LFScrollView.m in Sources */,

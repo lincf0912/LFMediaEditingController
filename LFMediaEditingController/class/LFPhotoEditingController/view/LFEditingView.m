@@ -277,7 +277,8 @@
         if (clippingView.isReseting || clippingView.isRotating) { /** 重置/旋转 需要将遮罩显示也重置 */
             [weakSelf.gridView setGridRect:rect maskLayer:YES animated:YES];
         } else if (clippingView.isZooming) { /** 缩放 */
-            
+            weakSelf.gridView.showMaskLayer = NO;
+            lf_me_dispatch_cancel(weakSelf.maskViewBlock);
         } else {
             [weakSelf.gridView setGridRect:rect animated:YES];
         }
@@ -403,6 +404,16 @@
         return self.clippingView;
     }
     return view;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    /** 解决部分机型在编辑期间会触发滑动导致无法编辑的情况 */
+    if (gestureRecognizer.view == self && touch.view != self && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        /** 自身手势被触发、响应视图非自身、被触发收拾为滑动手势 */
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark - Private
