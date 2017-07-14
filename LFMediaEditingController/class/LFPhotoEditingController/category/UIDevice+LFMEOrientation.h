@@ -15,6 +15,6 @@
  
  @param orientation 旋转方向
  */
-+ (void)setOrientation:(UIInterfaceOrientation)orientation;
++ (void)LFME_setOrientation:(UIInterfaceOrientation)orientation;
 
 @end

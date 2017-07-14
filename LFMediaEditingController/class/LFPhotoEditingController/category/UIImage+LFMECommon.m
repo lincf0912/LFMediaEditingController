@@ -11,24 +11,24 @@
 
 @implementation UIImage (LFMECommon)
 
-- (UIImage *)fixOrientation {
+- (UIImage *)LFME_fixOrientation {
     
     if (self.imageOrientation == UIImageOrientationUp) return self;
     
-    CGImageRef cgimg = [self cgFixOrientation];
+    CGImageRef cgimg = [self LFME_cgFixOrientation];
     UIImage *img = [UIImage imageWithCGImage:cgimg];
     CGImageRelease(cgimg);
     return img;
 }
 
-- (CGImageRef)cgFixOrientation {
+- (CGImageRef)LFME_cgFixOrientation {
     // No-op if the orientation is already correct
     
     UIImage *editImg = self;//[UIImage imageWithData:UIImagePNGRepresentation(self)];
     
     // We need to calculate the proper transformation to make the image upright.
     // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
-    CGAffineTransform transform = [UIImage exchangeOrientation:editImg.imageOrientation size:editImg.size];
+    CGAffineTransform transform = [UIImage LFME_exchangeOrientation:editImg.imageOrientation size:editImg.size];
     
     
     // Now we draw the underlying CGImage into a new context, applying the transform
@@ -60,7 +60,7 @@
     return cgimg;
 }
 
-+ (CGAffineTransform)exchangeOrientation:(UIImageOrientation)imageOrientation size:(CGSize)size
++ (CGAffineTransform)LFME_exchangeOrientation:(UIImageOrientation)imageOrientation size:(CGSize)size
 {
     CGAffineTransform transform = CGAffineTransformIdentity;
     
@@ -107,7 +107,7 @@
     return transform;
 }
 
-+ (CGSize)scaleImageSizeBySize:(CGSize)imageSize targetSize:(CGSize)size isBoth:(BOOL)isBoth {
++ (CGSize)LFME_scaleImageSizeBySize:(CGSize)imageSize targetSize:(CGSize)size isBoth:(BOOL)isBoth {
     
     /** 原图片大小为0 不再往后处理 */
     if (CGSizeEqualToSize(imageSize, CGSizeZero)) {
@@ -151,7 +151,7 @@
     return CGSizeMake(ceilf(scaledWidth), ceilf(scaledHeight));
 }
 
-- (UIImage*)scaleToSize:(CGSize)size
+- (UIImage*)LFME_scaleToSize:(CGSize)size
 {
     CGFloat width = CGImageGetWidth(self.CGImage);
     CGFloat height = CGImageGetHeight(self.CGImage);
@@ -199,7 +199,7 @@
 /*
  *转换成马赛克,level代表一个点转为多少level*level的正方形
  */
-- (UIImage *)transToMosaicLevel:(NSUInteger)level
+- (UIImage *)LFME_transToMosaicLevel:(NSUInteger)level
 {
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -287,7 +287,7 @@
 
 // 添加通用模糊效果
 // image是图片，blur是模糊度
-- (UIImage *)transToBlurLevel:(NSUInteger)blurRadius
+- (UIImage *)LFME_transToBlurLevel:(NSUInteger)blurRadius
 {
     // Check pre-conditions.
     if (self.size.width < 1 || self.size.height < 1) {

@@ -11,22 +11,22 @@
 
 @implementation NSString (LFMECoreText)
 
-- (CGSize)sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1
+- (CGSize)LFME_sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1
 {
-    return [self sizeWithConstrainedToWidth:width fromFont:font1 lineBreakMode:kCTLineBreakByWordWrapping];
+    return [self LFME_sizeWithConstrainedToWidth:width fromFont:font1 lineBreakMode:kCTLineBreakByWordWrapping];
 }
 
-- (CGSize)sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineBreakMode:(CTLineBreakMode)lineBreakMode
+- (CGSize)LFME_sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineBreakMode:(CTLineBreakMode)lineBreakMode
 {
-    return [self sizeWithConstrainedToWidth:width fromFont:font1 lineSpace:0 lineBreakMode:lineBreakMode];
+    return [self LFME_sizeWithConstrainedToWidth:width fromFont:font1 lineSpace:0 lineBreakMode:lineBreakMode];
 }
 
-- (CGSize)sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode {
-    return [self sizeWithConstrainedToSize:CGSizeMake(width, CGFLOAT_MAX) fromFont:font1 lineSpace:lineSpace lineBreakMode:lineBreakMode];
+- (CGSize)LFME_sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode {
+    return [self LFME_sizeWithConstrainedToSize:CGSizeMake(width, CGFLOAT_MAX) fromFont:font1 lineSpace:lineSpace lineBreakMode:lineBreakMode];
 }
 
-- (CGSize)sizeWithConstrainedToSize:(CGSize)size fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode {
-    NSDictionary* attributes = [NSString attributeFont:font1 andTextColor:nil linespace:lineSpace lineBreakMode:lineBreakMode];
+- (CGSize)LFME_sizeWithConstrainedToSize:(CGSize)size fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode {
+    NSDictionary* attributes = [NSString LFME_attributeFont:font1 andTextColor:nil linespace:lineSpace lineBreakMode:lineBreakMode];
     
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self attributes:attributes];
     CFAttributedStringRef attributedString = (__bridge CFAttributedStringRef)string;
@@ -38,7 +38,7 @@
     return result;
 }
 
-+ (NSMutableDictionary *)attributeFont:(UIFont *)font andTextColor:(UIColor *)color linespace:(float)linespace lineBreakMode:(CTLineBreakMode)lineBreakMode {
++ (NSMutableDictionary *)LFME_attributeFont:(UIFont *)font andTextColor:(UIColor *)color linespace:(float)linespace lineBreakMode:(CTLineBreakMode)lineBreakMode {
     
     //Determine default text color
     UIColor* textColor = color;
@@ -72,14 +72,14 @@
 }
 
 
-- (void)drawInContext:(CGContextRef)context withPosition:(CGPoint)p andFont:(UIFont *)font andTextColor:(UIColor *)color andHeight:(float)height andWidth:(float)width linespace:(float)linespace lineBreakMode:(CTLineBreakMode)lineBreakMode {
+- (void)LFME_drawInContext:(CGContextRef)context withPosition:(CGPoint)p andFont:(UIFont *)font andTextColor:(UIColor *)color andHeight:(float)height andWidth:(float)width linespace:(float)linespace lineBreakMode:(CTLineBreakMode)lineBreakMode {
     CGSize size = CGSizeMake(width, height);
     // 翻转坐标系
     CGContextSetTextMatrix(context,CGAffineTransformIdentity);
     CGContextTranslateCTM(context,0,height);
     CGContextScaleCTM(context,1.0,-1.0);
     
-    NSMutableDictionary * attributes = [NSString attributeFont:font andTextColor:color linespace:linespace lineBreakMode:lineBreakMode];
+    NSMutableDictionary * attributes = [NSString LFME_attributeFont:font andTextColor:color linespace:linespace lineBreakMode:lineBreakMode];
     
     // 创建绘制区域（路径）
     CGMutablePathRef path = CGPathCreateMutable();

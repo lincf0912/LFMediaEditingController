@@ -19,7 +19,7 @@
  *
  *  @return 文字大小
  */
-- (CGSize)sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1;
+- (CGSize)LFME_sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1;
 
 /**
  *  @author lincf, 16-09-19 11:09:24
@@ -32,7 +32,7 @@
  *
  *  @return 文字大小
  */
-- (CGSize)sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineBreakMode:(CTLineBreakMode)lineBreakMode;
+- (CGSize)LFME_sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineBreakMode:(CTLineBreakMode)lineBreakMode;
 
 /**
  *  @author lincf, 16-09-19 11:09:24
@@ -46,7 +46,7 @@
  *
  *  @return 文字大小
  */
-- (CGSize)sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode;
+- (CGSize)LFME_sizeWithConstrainedToWidth:(float)width fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode;
 
 /**
  *  @author lincf, 16-09-19 11:09:24
@@ -60,7 +60,7 @@
  *
  *  @return 文字大小
  */
-- (CGSize)sizeWithConstrainedToSize:(CGSize)size fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode;
+- (CGSize)LFME_sizeWithConstrainedToSize:(CGSize)size fromFont:(UIFont *)font1 lineSpace:(float)lineSpace lineBreakMode:(CTLineBreakMode)lineBreakMode;
 
 
 /**
@@ -77,6 +77,6 @@
  *  @param linespace     行间距
  *  @param lineBreakMode 行模式
  */
-- (void)drawInContext:(CGContextRef)context withPosition:(CGPoint)p andFont:(UIFont *)font andTextColor:(UIColor *)color andHeight:(float)height andWidth:(float)width linespace:(float)linespace lineBreakMode:(CTLineBreakMode)lineBreakMode;
+- (void)LFME_drawInContext:(CGContextRef)context withPosition:(CGPoint)p andFont:(UIFont *)font andTextColor:(UIColor *)color andHeight:(float)height andWidth:(float)width linespace:(float)linespace lineBreakMode:(CTLineBreakMode)lineBreakMode;
 
 @end

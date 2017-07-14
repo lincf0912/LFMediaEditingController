@@ -26,7 +26,7 @@
 {
     self = [super init];
     if (self) {
-        [UIDevice setOrientation:UIInterfaceOrientationPortrait];
+        [UIDevice LFME_setOrientation:UIInterfaceOrientationPortrait];
         _oKButtonTitleColorNormal = [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0];
         _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
         _isHiddenStatusBar = YES;

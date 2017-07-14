@@ -10,12 +10,12 @@
 
 @implementation UIView (LFMECommon)
 
-- (UIImage *)captureImage
+- (UIImage *)LFME_captureImage
 {
-    return [self captureImageAtFrame:CGRectZero];
+    return [self LFME_captureImageAtFrame:CGRectZero];
 }
 
-- (UIImage *)captureImageAtFrame:(CGRect)rect
+- (UIImage *)LFME_captureImageAtFrame:(CGRect)rect
 {
     UIImage* image = nil;
     
@@ -49,7 +49,7 @@
     return image;
 }
 
-- (UIColor *)colorOfPoint:(CGPoint)point
+- (UIColor *)LFME_colorOfPoint:(CGPoint)point
 {
     unsigned char pixel[4] = {0};
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();

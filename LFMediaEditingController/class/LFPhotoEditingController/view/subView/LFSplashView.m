@@ -86,8 +86,8 @@ NSString *const kLFSplashViewData_blur = @"LFSplashViewData_blur";
     //底图
     _image = image;
     _level = level;
-    self.imageLayer_mosaic.contents = (id)[_image transToMosaicLevel:level].CGImage;
-    self.imageLayer_blurry.contents = (id)[_image transToBlurLevel:level].CGImage;
+    self.imageLayer_mosaic.contents = (id)[_image LFME_transToMosaicLevel:level].CGImage;
+    self.imageLayer_blurry.contents = (id)[_image LFME_transToBlurLevel:level].CGImage;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

@@ -263,7 +263,7 @@
 {
     CGFloat zoomScale = self.zoomScale;
     [self setZoomScale:1.f];
-    UIImage *image = [self.clipZoomView captureImageAtFrame:self.clippingView.frame];
+    UIImage *image = [self.clipZoomView LFME_captureImageAtFrame:self.clippingView.frame];
     [self setZoomScale:zoomScale];
     
     return image;
