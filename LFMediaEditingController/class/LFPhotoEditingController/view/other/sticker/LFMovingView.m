@@ -7,7 +7,7 @@
 //
 
 #import "LFMovingView.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 
 #define margin 22
 

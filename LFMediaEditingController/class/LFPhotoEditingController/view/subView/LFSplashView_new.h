@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LFPhotoEditingType.h"
+#import "LFMediaEditingType.h"
 
 @interface LFSplashView_new : UIView
 

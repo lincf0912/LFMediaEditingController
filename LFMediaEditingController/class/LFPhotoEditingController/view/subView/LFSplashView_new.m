@@ -8,7 +8,7 @@
 
 #import "LFSplashView_new.h"
 #import "LFSplashLayer.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 
 NSString *const kLFSplashViewData = @"LFSplashViewData";
 

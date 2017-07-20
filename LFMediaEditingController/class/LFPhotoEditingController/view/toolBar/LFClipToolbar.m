@@ -7,7 +7,7 @@
 //
 
 #import "LFClipToolbar.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 
 @interface LFClipToolbar ()
 

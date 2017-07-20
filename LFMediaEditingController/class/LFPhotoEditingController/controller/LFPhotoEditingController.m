@@ -7,19 +7,15 @@
 //
 
 #import "LFPhotoEditingController.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 #import "UIView+LFMEFrame.h"
-#import "LFPhotoEditingType.h"
+#import "LFMediaEditingType.h"
 
 #import "LFEditingView.h"
 #import "LFEditToolbar.h"
 #import "LFStickerBar.h"
 #import "LFTextBar.h"
 #import "LFClipToolbar.h"
-
-#define kSplashMenu_Button_Tag1 95
-#define kSplashMenu_Button_Tag2 96
-
 
 
 @interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate>
@@ -143,7 +139,7 @@
 
 - (void)configBottomToolBar
 {
-    _edit_toolBar = [[LFEditToolbar alloc] init];
+    _edit_toolBar = [[LFEditToolbar alloc] initWithType:LFEditToolbarType_All];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
     [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */

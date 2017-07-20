@@ -7,7 +7,7 @@
 //
 
 #import "LFSplashLayer.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 
 #define radiansToDegrees(x) (180.0 * x / M_PI)
 

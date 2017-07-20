@@ -177,7 +177,7 @@
     
     // 创建一个context
     // 并把它设置成为当前正在使用的context
-    UIGraphicsBeginImageContextWithOptions(size, YES, 0);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     
     // 绘制改变大小的图片
     [self drawInRect:CGRectMake(xPos, yPos, width, height)];

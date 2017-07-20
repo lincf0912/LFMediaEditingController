@@ -8,7 +8,7 @@
 
 #import "LFTextBar.h"
 #import "UIView+LFMEFrame.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 #import "LFText.h"
 #import "JRPickColorView.h"
 

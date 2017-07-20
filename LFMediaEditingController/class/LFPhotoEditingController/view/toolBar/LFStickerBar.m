@@ -7,7 +7,7 @@
 //
 
 #import "LFStickerBar.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 #import "UIView+LFMEFrame.h"
 
 #define lf_stickerRow 2

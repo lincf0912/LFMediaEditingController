@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "PhotoViewController.h"
+#import "VideoViewController.h"
 
 @interface ViewController ()
 
@@ -32,6 +33,8 @@
 }
 
 - (IBAction)videoClick:(id)sender {
+    VideoViewController *videoVC = [VideoViewController new];
+    [self.navigationController pushViewController:videoVC animated:YES];
 }
 
 @end

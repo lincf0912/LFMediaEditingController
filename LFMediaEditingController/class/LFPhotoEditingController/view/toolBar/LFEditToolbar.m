@@ -8,7 +8,7 @@
 
 #import "LFEditToolbar.h"
 #import "UIView+LFMEFrame.h"
-#import "LFPhotoEditingHeader.h"
+#import "LFMediaEditingHeader.h"
 #import "JRPickColorView.h"
 
 #define mainButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png"]
@@ -38,15 +38,26 @@
 /** 绘画拾色器 */
 @property (nonatomic, weak) JRPickColorView *draw_colorSlider;
 
+@property (nonatomic, assign) LFEditToolbarType type;
+
 @end
 
 @implementation LFEditToolbar
+
+- (instancetype)initWithType:(LFEditToolbarType)type
+{
+    self = [self init];
+    if (self) {
+        _type = type;
+        [self customInit];
+    }
+    return self;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:(CGRect){{0, [UIScreen mainScreen].bounds.size.height-99}, {[UIScreen mainScreen].bounds.size.width, 99}}];
     if (self) {
-        [self customInit];
         
     }
     return self;
@@ -58,6 +69,15 @@
     [self subBar];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *view = [super hitTest:point withEvent:event];
+    if (view == self) {
+        return nil;
+    }
+    return view;
+}
+
 #pragma mark - 菜单创建
 - (void)mainBar
 {
@@ -65,20 +85,48 @@
     edit_menu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     CGFloat rgb = 34 / 255.0;
     edit_menu.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.85];
-    NSInteger buttonCount = 5;
     
-    CGFloat width = CGRectGetWidth(self.frame)/buttonCount;
-    for (NSInteger i=0; i<buttonCount; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.tag = i;
-        button.frame = CGRectMake(width*i, 0, width, 44);
-        button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-        button.titleLabel.font = [UIFont systemFontOfSize:14];
-        [button setImage:bundleEditImageNamed(mainButtonImageNormals[i]) forState:UIControlStateNormal];
-        [button setImage:bundleEditImageNamed(mainButtonImageHighlighted[i]) forState:UIControlStateHighlighted];
-        [button setImage:bundleEditImageNamed(mainButtonImageHighlighted[i]) forState:UIControlStateSelected];
-        [button addTarget:self action:@selector(edit_toolBar_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [edit_menu addSubview:button];
+    NSInteger buttonCount = 0;
+    NSMutableArray <NSNumber *>*_imageIndexs = [@[] mutableCopy];
+    
+    if (self.type&LFEditToolbarType_draw) {
+        buttonCount ++;
+        [_imageIndexs addObject:@0];
+    }
+    if (self.type&LFEditToolbarType_sticker) {
+        buttonCount ++;
+        [_imageIndexs addObject:@1];
+    }
+    if (self.type&LFEditToolbarType_text) {
+        buttonCount ++;
+        [_imageIndexs addObject:@2];
+    }
+    if (self.type&LFEditToolbarType_splash) {
+        buttonCount ++;
+        [_imageIndexs addObject:@3];
+    }
+    if (self.type&LFEditToolbarType_crop) {
+        buttonCount ++;
+        [_imageIndexs addObject:@4];
+    }
+    
+    
+    if (buttonCount > 0) {
+        CGFloat width = CGRectGetWidth(self.frame)/buttonCount;
+        UIFont *font = [UIFont systemFontOfSize:14];
+        for (NSInteger i=0; i<buttonCount; i++) {
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(width*i, 0, width, 44);
+            button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+            button.titleLabel.font = font;
+            int index = [_imageIndexs[i] intValue];
+            button.tag = index;
+            [button setImage:bundleEditImageNamed(mainButtonImageNormals[index]) forState:UIControlStateNormal];
+            [button setImage:bundleEditImageNamed(mainButtonImageHighlighted[index]) forState:UIControlStateHighlighted];
+            [button setImage:bundleEditImageNamed(mainButtonImageHighlighted[index]) forState:UIControlStateSelected];
+            [button addTarget:self action:@selector(edit_toolBar_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+            [edit_menu addSubview:button];
+        }
     }
     
     UIView *divide = [[UIView alloc] init];

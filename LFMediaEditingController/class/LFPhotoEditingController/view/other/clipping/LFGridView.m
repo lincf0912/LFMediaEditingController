@@ -106,10 +106,10 @@ const CGFloat kControlWidth = 30.f;
         _showMaskLayer = showMaskLayer;
         if (showMaskLayer) {
             /** 还原遮罩 */
-            self.gridMaskLayer.maskRect = self.gridRect;
+            [self.gridMaskLayer setMaskRect:self.gridRect animated:YES];
         } else {
             /** 扩大遮罩范围 */
-            self.gridMaskLayer.maskRect = self.gridMaskLayer.bounds;
+            [self.gridMaskLayer setMaskRect:self.gridMaskLayer.bounds animated:YES];
         }
     }
     /** 简单粗暴的禁用拖动事件 */
@@ -162,7 +162,7 @@ const CGFloat kControlWidth = 30.f;
         _gridRect = gridRect;
         [self.gridLayer setGridRect:gridRect animated:animated];
         if (isMaskLayer) {
-            self.gridMaskLayer.maskRect = gridRect;
+            [self.gridMaskLayer setMaskRect:gridRect animated:YES];
         }
         [self setNeedsLayout];
     }
