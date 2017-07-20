@@ -18,7 +18,7 @@ const CGFloat kVideoTrimmerGridControlWidth = 25.f;
 
 @property (nonatomic, weak) LFResizeControl *leftCornerView;
 @property (nonatomic, weak) LFResizeControl *rightCornerView;
-
+/** 边框 */
 @property (nonatomic, weak) LFVideoTrimmerGridLayer *gridLayer;
 /** 背景 */
 @property (nonatomic, weak) LFVideoTrimmerGridLayer *bg_gridLayer;
@@ -207,6 +207,17 @@ const CGFloat kVideoTrimmerGridControlWidth = 25.f;
         return nil;
     }
     return view;
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event
+{
+    BOOL isHit = [super pointInside:point withEvent:event];
+    
+    if (!isHit) {
+        return (CGRectContainsPoint(self.leftCornerView.frame, point) || CGRectContainsPoint(self.rightCornerView.frame, point));
+    }
+    
+    return isHit;
 }
 
 @end

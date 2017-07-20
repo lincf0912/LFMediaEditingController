@@ -191,4 +191,15 @@
     }
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event
+{
+    BOOL isHit = [super pointInside:point withEvent:event];
+    
+    if (!isHit) {
+        return [self.gridView pointInside:point withEvent:event];
+    }
+    
+    return isHit;
+}
+
 @end

@@ -131,7 +131,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     [self.videoPlayer setURL:url];
     
     /** 重置编辑UI位置 */
-    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.frame);
+    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.bounds);
     _drawView.frame = editRect;
     _splashView.frame = editRect;
     _stickerView.frame = editRect;

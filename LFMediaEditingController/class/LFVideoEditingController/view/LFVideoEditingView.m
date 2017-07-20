@@ -169,6 +169,17 @@
     [self.clippingView setVideoURL:url placeholderImage:image];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *view = [super hitTest:point withEvent:event];
+    
+    if (self.isClipping && view == self) {
+        return self.trimmerView;
+    }
+    
+    return view;
+}
+
 - (CALayer *)buildAnimatedTitleLayerForSize:(CGSize)size
 {
     UIView *overlayView = self.clippingView.overlayView;
