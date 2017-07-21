@@ -23,11 +23,17 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
     LFEditToolbarType_All = ~0UL,
 };
 
+typedef NS_ENUM(NSUInteger, LFEditToolbarMediaType) {
+    LFEditToolbarMediaType_photo,
+    LFEditToolbarMediaType_video,
+};
+
 @protocol LFEditToolbarDelegate;
 
 @interface LFEditToolbar : UIView
 
 - (instancetype)initWithType:(LFEditToolbarType)type;
+- (instancetype)initWithType:(LFEditToolbarType)type mediaType:(LFEditToolbarMediaType)mediaType;
 
 @property (nonatomic, weak) id<LFEditToolbarDelegate> delegate;
 

@@ -10,20 +10,93 @@
 #import "LFResizeControl.h"
 #import "LFVideoTrimmerGridLayer.h"
 #import "LFGridMaskLayer.h"
+#import "UIView+LFMEFrame.h"
+
+
+@interface LFResizeImageControl : LFResizeControl
+
+@property (nonatomic, strong) UIImage *image;
+@property (strong, nonatomic, nullable) UIColor *color;
+@property (nonatomic, assign) CGRect imageRect;
+
+@end
+
+@implementation LFResizeImageControl
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _imageRect = self.bounds;
+    }
+    return self;
+}
+
+- (void)setImage:(UIImage *)image
+{
+    _image = image;
+    [self setNeedsDisplay];
+}
+
+- (void)setColor:(UIColor *)color {
+    _color = color;
+    [self setNeedsDisplay];
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
+    
+    if (self.image) {
+        [self.image drawInRect:self.imageRect];
+    } else {
+        //// Frames
+        CGRect bubbleFrame = self.imageRect;
+        
+        //// Rounded Rectangle Drawing
+        CGRect roundedRectangleRect = CGRectMake(CGRectGetMinX(bubbleFrame), CGRectGetMinY(bubbleFrame), CGRectGetWidth(bubbleFrame), CGRectGetHeight(bubbleFrame));
+        UIBezierPath *roundedRectanglePath = [UIBezierPath bezierPathWithRoundedRect: roundedRectangleRect byRoundingCorners: UIRectCornerTopLeft | UIRectCornerBottomLeft | UIRectCornerTopRight | UIRectCornerBottomRight cornerRadii: CGSizeMake(3, 3)];
+        
+        [roundedRectanglePath closePath];
+        [self.color setFill];
+        [roundedRectanglePath fill];
+        
+        
+        CGFloat lineWidth = 1.5f;
+        CGRect decoratingRect = CGRectMake(CGRectGetMinX(bubbleFrame)+CGRectGetWidth(bubbleFrame)/3-lineWidth/2, (CGRectGetHeight(bubbleFrame)-15.f)/2, lineWidth, 15.f);
+        UIBezierPath *decoratingPath = [UIBezierPath bezierPathWithRoundedRect:decoratingRect byRoundingCorners: UIRectCornerTopLeft | UIRectCornerBottomLeft | UIRectCornerBottomRight | UIRectCornerTopRight cornerRadii: CGSizeMake(1, 1)];
+        [decoratingPath closePath];
+        [[UIColor colorWithWhite:0.5 alpha:1.f] setFill];
+        [decoratingPath fill];
+        
+        CGRect decoratingRect1 = decoratingRect;
+        decoratingRect1.origin.x += CGRectGetWidth(bubbleFrame)/3;
+        UIBezierPath *decoratingPath1 = [UIBezierPath bezierPathWithRoundedRect:decoratingRect1 byRoundingCorners: UIRectCornerTopLeft | UIRectCornerBottomLeft | UIRectCornerBottomRight | UIRectCornerTopRight cornerRadii: CGSizeMake(1, 1)];
+        [decoratingPath1 closePath];
+        [[UIColor colorWithWhite:0.5 alpha:1.f] setFill];
+        [decoratingPath1 fill];
+    }
+}
+
+@end
+
 
 /** 可控范围 */
 const CGFloat kVideoTrimmerGridControlWidth = 25.f;
+const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
 
 @interface LFVideoTrimmerGridView () <lf_resizeConrolDelegate>
 
-@property (nonatomic, weak) LFResizeControl *leftCornerView;
-@property (nonatomic, weak) LFResizeControl *rightCornerView;
+@property (nonatomic, weak) LFResizeImageControl *leftCornerView;
+@property (nonatomic, weak) LFResizeImageControl *rightCornerView;
 /** 边框 */
 @property (nonatomic, weak) LFVideoTrimmerGridLayer *gridLayer;
 /** 背景 */
 @property (nonatomic, weak) LFVideoTrimmerGridLayer *bg_gridLayer;
 /** 遮罩 */
 @property (nonatomic, weak) LFGridMaskLayer *gridMaskLayer;
+/** 进度 */
+@property (nonatomic, weak) UIView *slider;
 
 @property (nonatomic, assign) CGRect initialRect;
 
@@ -42,10 +115,17 @@ const CGFloat kVideoTrimmerGridControlWidth = 25.f;
 
 - (void)customInit
 {
+    /** 进度 */
+    UIView *slider = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 2, self.bounds.size.height)];
+    slider.backgroundColor = [UIColor colorWithWhite:1.f alpha:0.5f];
+    slider.userInteractionEnabled = NO;
+    [self addSubview:slider];
+    _slider = slider;
+    
     /** 背景 */
     LFVideoTrimmerGridLayer *bg_gridLayer = [[LFVideoTrimmerGridLayer alloc] init];
     bg_gridLayer.frame = self.bounds;
-    bg_gridLayer.lineWidth = 2.f;
+    bg_gridLayer.lineWidth = kVideoTrimmerGridLayerLineWidth;
     bg_gridLayer.bgColor = [UIColor clearColor];
     bg_gridLayer.gridColor = [UIColor colorWithWhite:1.f alpha:0.5f];
     bg_gridLayer.gridRect = self.bounds;
@@ -63,12 +143,13 @@ const CGFloat kVideoTrimmerGridControlWidth = 25.f;
     /** 边框 */
     LFVideoTrimmerGridLayer *gridLayer = [[LFVideoTrimmerGridLayer alloc] init];
     gridLayer.frame = self.bounds;
-    gridLayer.lineWidth = 2.f;
+    gridLayer.lineWidth = kVideoTrimmerGridLayerLineWidth;
     gridLayer.bgColor = [UIColor clearColor];
     gridLayer.gridColor = [UIColor whiteColor];
     [self.layer addSublayer:gridLayer];
     self.gridLayer = gridLayer;
     
+    /** 左右控制器 */
     self.leftCornerView = [self createResizeControl];
     self.rightCornerView = [self createResizeControl];
     
@@ -89,6 +170,20 @@ const CGFloat kVideoTrimmerGridControlWidth = 25.f;
     
     self.leftCornerView.frame = (CGRect){CGRectGetMinX(rect) - CGRectGetWidth(self.leftCornerView.bounds) / 2, (CGRectGetHeight(rect) - CGRectGetHeight(self.leftCornerView.bounds)) / 2, self.leftCornerView.bounds.size};
     self.rightCornerView.frame = (CGRect){CGRectGetMaxX(rect) - CGRectGetWidth(self.rightCornerView.bounds) / 2, (CGRectGetHeight(rect) - CGRectGetHeight(self.rightCornerView.bounds)) / 2, self.rightCornerView.bounds.size};
+}
+
+- (void)setProgress:(double)progress
+{
+    if (isnan(progress) || progress < 0) {
+        return;
+    }
+    _progress = progress;
+    _slider.x = progress*self.width;
+}
+
+- (void)setHiddenProgress:(BOOL)hidden
+{
+    _slider.hidden = hidden;
 }
 
 #pragma mark - lf_resizeConrolDelegate
@@ -140,9 +235,12 @@ const CGFloat kVideoTrimmerGridControlWidth = 25.f;
 }
 
 #pragma mark - private
-- (LFResizeControl *)createResizeControl
+- (LFResizeImageControl *)createResizeControl
 {
-    LFResizeControl *control = [[LFResizeControl alloc] initWithFrame:(CGRect){CGPointZero, CGSizeMake(kVideoTrimmerGridControlWidth, self.bounds.size.height)}];
+    LFResizeImageControl *control = [[LFResizeImageControl alloc] initWithFrame:(CGRect){CGPointMake(0, -kVideoTrimmerGridLayerLineWidth/2), CGSizeMake(kVideoTrimmerGridControlWidth, self.bounds.size.height+kVideoTrimmerGridLayerLineWidth)}];
+    control.color = [UIColor whiteColor];
+    CGFloat imageWidth = 10.f;
+    control.imageRect = CGRectMake((control.frame.size.width-imageWidth)/2, 0, imageWidth, control.frame.size.height);
     control.delegate = self;
     [self addSubview:control];
     return control;

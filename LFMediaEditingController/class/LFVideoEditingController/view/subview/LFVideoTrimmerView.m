@@ -21,9 +21,6 @@
 /** 控制操作视图 */
 @property (nonatomic, weak) LFVideoTrimmerGridView *gridView;
 
-/** 进度 */
-@property (nonatomic, weak) UIView *slider;
-
 @end
 
 @implementation LFVideoTrimmerView
@@ -53,12 +50,6 @@
     [self addSubview:gridView];
     _gridView = gridView;
     
-    /** 进度 */
-    UIView *slider = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 2, self.bounds.size.height)];
-    slider.backgroundColor = [UIColor colorWithWhite:1.f alpha:0.5f];
-    slider.userInteractionEnabled = NO;
-    [self addSubview:slider];
-    _slider = slider;
 }
 
 - (void)setMaxImageCount:(NSInteger)maxImageCount
@@ -102,16 +93,17 @@
 
 - (void)setProgress:(double)progress
 {
-    if (isnan(progress) || progress < 0) {
-        return;
-    }
-    _progress = progress;
-    _slider.x = progress*self.width;
+    self.gridView.progress = progress;
+}
+
+- (double)progress
+{
+    return self.gridView.progress;
 }
 
 - (void)setHiddenProgress:(BOOL)hidden
 {
-    _slider.hidden = hidden;
+    [self.gridView setHiddenProgress:hidden];
 }
 
 /** 重设控制区域 */

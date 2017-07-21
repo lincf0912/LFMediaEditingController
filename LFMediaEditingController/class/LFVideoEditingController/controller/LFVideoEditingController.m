@@ -119,7 +119,7 @@
 
 - (void)configBottomToolBar
 {
-    _edit_toolBar = [[LFEditToolbar alloc] initWithType:LFEditToolbarType_draw|LFEditToolbarType_sticker|LFEditToolbarType_text|LFEditToolbarType_crop];
+    _edit_toolBar = [[LFEditToolbar alloc] initWithType:LFEditToolbarType_draw|LFEditToolbarType_sticker|LFEditToolbarType_text|LFEditToolbarType_crop mediaType:LFEditToolbarMediaType_video];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
     [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */

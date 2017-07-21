@@ -146,10 +146,8 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     
     /** 重置编辑UI位置 */
     CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.zoomView.bounds);
-    _playerLayerView.frame = editRect;
-    _drawView.frame = editRect;
-    _splashView.frame = editRect;
-    _stickerView.frame = editRect;
+    _zoomView.frame = editRect;
+    _playerLayerView.frame = _drawView.frame = _splashView.frame = _stickerView.frame = _zoomView.bounds;
 }
 
 - (void)setMoveCenter:(BOOL (^)(CGRect))moveCenter
@@ -246,28 +244,11 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 
 - (UIView *)overlayView
 {
-    UIView *view = nil;
     if (self.hasWatermark) {
         
-        NSDictionary *photoEditData = self.photoEditData;
-        
-        CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.frame);
-        view = [[UIView alloc] initWithFrame:editRect];
-        
-        /** 绘画 */
-        LFDrawView *drawView = [[LFDrawView alloc] initWithFrame:view.bounds];
-        /** 默认不能触发绘画 */
-        drawView.userInteractionEnabled = NO;
-        [view addSubview:drawView];
-        drawView.data = photoEditData[kLFVideoCLippingViewData_draw];
-        
-        
-        /** 贴图 */
-        LFStickerView *stickerView = [[LFStickerView alloc] initWithFrame:view.bounds];
-        [view addSubview:stickerView];
-        stickerView.data = photoEditData[kLFVideoCLippingViewData_sticker];
+        return self.zoomView;
     }
-    return view;
+    return nil;
 }
 
 #pragma mark - UIScrollViewDelegate

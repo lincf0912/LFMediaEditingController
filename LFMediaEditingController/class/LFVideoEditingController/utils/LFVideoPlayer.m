@@ -126,7 +126,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
 /** 跳转到某帧 */
 - (void)seekToTime:(CGFloat)time
 {
-    [self.player seekToTime:CMTimeMakeWithSeconds(time, self.player.currentTime.timescale) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    [self.player seekToTime:CMTimeMakeWithSeconds(time, self.mPlayerItem.asset.duration.timescale) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 #pragma mark -

@@ -11,8 +11,11 @@
 #import "LFMediaEditingHeader.h"
 #import "JRPickColorView.h"
 
-#define mainButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png"]
-#define mainButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png"]
+#define photoButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png"]
+#define photoButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png"]
+
+#define videoButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditVideoCropToolBtn.png"]
+#define videoButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditVideoCropToolBtn_HL.png"]
 
 @interface LFEditToolbar () <JRPickColorViewDelegate>
 
@@ -39,6 +42,9 @@
 @property (nonatomic, weak) JRPickColorView *draw_colorSlider;
 
 @property (nonatomic, assign) LFEditToolbarType type;
+@property (nonatomic, assign) LFEditToolbarMediaType mediaType;
+@property (nonatomic, strong) NSArray *mainImageNormals;
+@property (nonatomic, strong) NSArray *mainImageHighlighted;
 
 @end
 
@@ -46,9 +52,15 @@
 
 - (instancetype)initWithType:(LFEditToolbarType)type
 {
+    return [self initWithType:type mediaType:LFEditToolbarMediaType_photo];
+}
+
+- (instancetype)initWithType:(LFEditToolbarType)type mediaType:(LFEditToolbarMediaType)mediaType
+{
     self = [self init];
     if (self) {
         _type = type;
+        _mediaType = mediaType;
         [self customInit];
     }
     return self;
@@ -65,6 +77,8 @@
 
 - (void)customInit
 {
+    _mainImageNormals = self.mediaType == LFEditToolbarMediaType_photo ? photoButtonImageNormals : videoButtonImageNormals;
+    _mainImageHighlighted = self.mediaType == LFEditToolbarMediaType_photo ? photoButtonImageHighlighted : videoButtonImageHighlighted;
     [self mainBar];
     [self subBar];
 }
@@ -121,9 +135,9 @@
             button.titleLabel.font = font;
             int index = [_imageIndexs[i] intValue];
             button.tag = index;
-            [button setImage:bundleEditImageNamed(mainButtonImageNormals[index]) forState:UIControlStateNormal];
-            [button setImage:bundleEditImageNamed(mainButtonImageHighlighted[index]) forState:UIControlStateHighlighted];
-            [button setImage:bundleEditImageNamed(mainButtonImageHighlighted[index]) forState:UIControlStateSelected];
+            [button setImage:bundleEditImageNamed(_mainImageNormals[index]) forState:UIControlStateNormal];
+            [button setImage:bundleEditImageNamed(_mainImageHighlighted[index]) forState:UIControlStateHighlighted];
+            [button setImage:bundleEditImageNamed(_mainImageHighlighted[index]) forState:UIControlStateSelected];
             [button addTarget:self action:@selector(edit_toolBar_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
             [edit_menu addSubview:button];
         }

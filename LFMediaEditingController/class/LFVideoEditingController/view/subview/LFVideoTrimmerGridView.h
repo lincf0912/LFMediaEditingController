@@ -20,6 +20,10 @@
 /** 最大尺寸 */
 @property (nonatomic, assign) CGFloat controlMaxWidth;
 
+/** 进度 */
+@property (nonatomic, assign) double progress;
+- (void)setHiddenProgress:(BOOL)hidden;
+
 @property (nonatomic, weak) id<LFVideoTrimmerGridViewDelegate> delegate;
 
 @end

@@ -9,6 +9,6 @@
 #import "LFMediaEditingHeader.h"
 
 /** 编辑资源路径 */
-NSString *const kEditPath = @"LFPhotoEditingController.bundle";
+NSString *const kEditPath = @"LFMediaEditingController.bundle";
 /** 贴图资源路径 */
-NSString *const kStickersPath = @"LFPhotoEditingController.bundle/stickers";
+NSString *const kStickersPath = @"LFMediaEditingController.bundle/stickers";

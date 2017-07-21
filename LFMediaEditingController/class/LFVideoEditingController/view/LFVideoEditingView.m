@@ -188,11 +188,13 @@
     
     // 1 - Set up the layer
     CALayer *layer = [CALayer layer];
+    layer.contentsScale = [UIScreen mainScreen].scale;
     layer.contents = (__bridge id _Nullable)(image.CGImage);
     layer.frame = CGRectMake(0, 0, image.size.width, image.size.height);
     
     // 2 - The usual overlay
     CALayer *overlayLayer = [CALayer layer];
+    overlayLayer.contentsScale = [UIScreen mainScreen].scale;
     [overlayLayer addSublayer:layer];
     overlayLayer.frame = CGRectMake(0, 0, size.width, size.height);
     [overlayLayer setMasksToBounds:YES];
