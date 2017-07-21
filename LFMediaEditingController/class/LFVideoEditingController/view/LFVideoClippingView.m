@@ -10,6 +10,7 @@
 #import "LFVideoPlayer.h"
 #import "LFVideoPlayerLayerView.h"
 #import "UIView+LFMECommon.h"
+#import "UIView+LFMEFrame.h"
 
 /** 编辑功能 */
 #import "LFDrawView.h"
@@ -26,13 +27,16 @@ NSString *const kLFVideoCLippingViewData_draw = @"LFVideoCLippingViewData_draw";
 NSString *const kLFVideoCLippingViewData_sticker = @"LFVideoCLippingViewData_sticker";
 NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_splash";
 
-@interface LFVideoClippingView () <LFVideoPlayerDelegate>
+@interface LFVideoClippingView () <LFVideoPlayerDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, weak) LFVideoPlayerLayerView *playerLayerView;
 @property (nonatomic, strong) LFVideoPlayer *videoPlayer;
 
 /** 原始坐标 */
 @property (nonatomic, assign) CGRect originalRect;
+
+/** 缩放视图 */
+@property (nonatomic, weak) UIView *zoomView;
 
 /** 绘画 */
 @property (nonatomic, weak) LFDrawView *drawView;
@@ -80,12 +84,22 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 - (void)customInit
 {
     self.backgroundColor = [UIColor clearColor];
+    self.scrollEnabled = NO;
+    self.delegate = self;
+    self.showsVerticalScrollIndicator = NO;
+    self.showsHorizontalScrollIndicator = NO;
     self.editEnable = YES;
     
+    /** 缩放视图 */
+    UIView *zoomView = [[UIView alloc] initWithFrame:self.bounds];
+    [self addSubview:zoomView];
+    _zoomView = zoomView;
+    
+    
+    /** 播放视图 */
     LFVideoPlayerLayerView *playerLayerView = [[LFVideoPlayerLayerView alloc] initWithFrame:self.bounds];
     playerLayerView.contentMode = UIViewContentModeScaleAspectFit;
-    playerLayerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [self addSubview:playerLayerView];
+    [self.zoomView addSubview:playerLayerView];
     _playerLayerView = playerLayerView;
     
     /** 涂抹 - 最底层 */
@@ -103,14 +117,14 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     LFDrawView *drawView = [[LFDrawView alloc] initWithFrame:self.bounds];
     /** 默认不能触发绘画 */
     drawView.userInteractionEnabled = NO;
-    [self addSubview:drawView];
+    [self.zoomView addSubview:drawView];
     self.drawView = drawView;
     
     /** 贴图 */
     LFStickerView *stickerView = [[LFStickerView alloc] initWithFrame:self.bounds];
     /** 禁止后，贴图将不能拖到，设计上，贴图是永远可以拖动的 */
     //    stickerView.userInteractionEnabled = NO;
-    [self addSubview:stickerView];
+    [self.zoomView addSubview:stickerView];
     self.stickerView = stickerView;
 }
 
@@ -131,7 +145,8 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     [self.videoPlayer setURL:url];
     
     /** 重置编辑UI位置 */
-    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.bounds);
+    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.zoomView.bounds);
+    _playerLayerView.frame = editRect;
     _drawView.frame = editRect;
     _splashView.frame = editRect;
     _stickerView.frame = editRect;
@@ -145,6 +160,22 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     } else {
         _stickerView.moveCenter = nil;
     }
+}
+
+- (void)setCropRect:(CGRect)cropRect
+{
+    _cropRect = cropRect;
+    
+    self.frame = cropRect;
+//    _playerLayerView.center = _drawView.center = _splashView.center = _stickerView.center = self.center;
+    
+    /** 重置最小缩放比例 */
+    CGRect rotateNormalRect = CGRectApplyAffineTransform(self.originalRect, self.transform);
+    CGFloat minimumZoomScale = MAX(CGRectGetWidth(self.frame) / CGRectGetWidth(rotateNormalRect), CGRectGetHeight(self.frame) / CGRectGetHeight(rotateNormalRect));
+    self.minimumZoomScale = minimumZoomScale;
+    self.maximumZoomScale = minimumZoomScale;
+    
+    [self setZoomScale:minimumZoomScale];
 }
 
 /** 保存 */
@@ -239,6 +270,12 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     return view;
 }
 
+#pragma mark - UIScrollViewDelegate
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.zoomView;
+}
+
 #pragma mark - LFVideoPlayerDelegate
 /** 画面回调 */
 - (void)LFVideoPlayerLayerDisplay:(LFVideoPlayer *)player avplayer:(AVPlayer *)avplayer
@@ -256,8 +293,8 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     }
     _totalDuration = duration;
     [self playVideo];
-    if ([self.delegate respondsToSelector:@selector(lf_videLClippingViewReadyToPlay:)]) {
-        [self.delegate lf_videLClippingViewReadyToPlay:self];
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videLClippingViewReadyToPlay:)]) {
+        [self.clipDelegate lf_videLClippingViewReadyToPlay:self];
     }
 }
 
@@ -269,7 +306,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 /** 错误回调 */
 - (void)LFVideoPlayerFailedToPrepare:(LFVideoPlayer *)player error:(NSError *)error
 {
-    [[[UIAlertView alloc] initWithTitle:@"Error"
+    [[[UIAlertView alloc] initWithTitle:@"LFVideoPlayer_Error"
                                 message:error.localizedDescription
                                delegate:nil
                       cancelButtonTitle:@"确定"
@@ -284,8 +321,8 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     if (duration > self.endTime) {
         [self replayVideo];
     } else {
-        if ([self.delegate respondsToSelector:@selector(lf_videoClippingView:duration:)]) {
-            [self.delegate lf_videoClippingView:self duration:duration];
+        if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingView:duration:)]) {
+            [self.clipDelegate lf_videoClippingView:self duration:duration];
         }
     }
 }
@@ -293,8 +330,8 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 /** 进度长度 */
 - (CGFloat)LFVideoPlayerSyncScrubProgressWidth:(LFVideoPlayer *)player
 {
-    if ([self.delegate respondsToSelector:@selector(lf_videoClippingViewProgressWidth:)]) {
-        return [self.delegate lf_videoClippingViewProgressWidth:self];
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingViewProgressWidth:)]) {
+        return [self.clipDelegate lf_videoClippingViewProgressWidth:self];
     }
     return [UIScreen mainScreen].bounds.size.width;
 }

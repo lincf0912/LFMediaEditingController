@@ -77,7 +77,7 @@
     
     LFVideoClippingView *clippingView = [[LFVideoClippingView alloc] initWithFrame:self.bounds];
     clippingView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
-    clippingView.delegate = self;
+    clippingView.clipDelegate = self;
     __weak typeof(self) weakSelf = self;
     clippingView.moveCenter = ^BOOL(CGRect rect) {
         /** 判断缩放后贴图是否超出边界线 */
@@ -101,7 +101,7 @@
 - (void)setClippingRect:(CGRect)clippingRect
 {
     _clippingRect = clippingRect;
-    self.clippingView.frame = clippingRect;
+    self.clippingView.cropRect = clippingRect;
 }
 
 - (void)setIsClipping:(BOOL)isClipping
@@ -299,7 +299,7 @@
         }
     }
     
-    self.exportSession = [[AVAssetExportSession alloc] initWithAsset:self.composition presetName:AVAssetExportPresetMediumQuality];
+    self.exportSession = [[AVAssetExportSession alloc] initWithAsset:self.composition presetName:AVAssetExportPresetHighestQuality];
     // Implementation continues.
     self.exportSession.videoComposition = self.videoComposition;
     self.exportSession.timeRange = range;

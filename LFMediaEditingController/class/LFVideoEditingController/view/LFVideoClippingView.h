@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LFScrollView.h"
 #import "LFEditingProtocol.h"
 
 @protocol LFVideoClippingViewDelegate;
 
-@interface LFVideoClippingView : UIView <LFEditingProtocol>
+@interface LFVideoClippingView : LFScrollView <LFEditingProtocol>
 
-@property (nonatomic, weak) id<LFVideoClippingViewDelegate> delegate;
+@property (nonatomic, weak) id<LFVideoClippingViewDelegate> clipDelegate;
 
 
 /** 开始播放时间 */
@@ -34,6 +35,9 @@
 
 /** 贴图是否需要移到屏幕中心 */
 @property (nonatomic, copy) BOOL(^moveCenter)(CGRect rect);
+
+/** 剪切范围 */
+@property (nonatomic, assign) CGRect cropRect;
 
 /** 保存 */
 - (void)save;
