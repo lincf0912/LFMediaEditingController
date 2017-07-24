@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 #import "LFScrollView.h"
 #import "LFEditingProtocol.h"
 
@@ -31,7 +32,7 @@
 @property (nonatomic, weak, readonly) UIView *overlayView;
 
 /** 数据 */
-- (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
+- (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;
 
 /** 贴图是否需要移到屏幕中心 */
 @property (nonatomic, copy) BOOL(^moveCenter)(CGRect rect);

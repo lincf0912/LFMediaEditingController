@@ -29,8 +29,6 @@
 /** 剪裁尺寸 */
 @property (nonatomic, assign) CGRect clippingRect;
 
-@property (nonatomic, strong) NSURL *url;
-
 @property (nonatomic, strong) AVAssetExportSession *exportSession;
 @property (nonatomic, strong) AVAsset *asset;
 
@@ -73,7 +71,7 @@
 
 - (void)customInit
 {
-    _minClippingDuration = 5.f;
+    _minClippingDuration = 1.f;
     
     LFVideoClippingView *clippingView = [[LFVideoClippingView alloc] initWithFrame:self.bounds];
     clippingView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
@@ -162,11 +160,10 @@
     [self setIsClipping:NO animated:animated];
 }
 
-- (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image
+- (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
-    self.url = url;
-    self.asset = [AVAsset assetWithURL:self.url];
-    [self.clippingView setVideoURL:url placeholderImage:image];
+    self.asset = asset;
+    [self.clippingView setVideoAsset:asset placeholderImage:image];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
@@ -219,7 +216,20 @@
             NSLog(@"createMediaFolder error: %@ \n",[error localizedDescription]);
         }
     }
-    NSString *trimPath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_tmp.%@", [self.url.lastPathComponent stringByDeletingPathExtension], self.url.pathExtension]];
+    
+    NSString *name = nil;
+    if ([self.asset isKindOfClass:[AVURLAsset class]]) {
+        name = ((AVURLAsset *)self.asset).URL.lastPathComponent;
+    } else {
+        CFUUIDRef puuid = CFUUIDCreate( nil );
+        CFStringRef uuidString = CFUUIDCreateString( nil, puuid );
+        NSString * result = (NSString *)CFBridgingRelease(CFStringCreateCopy( NULL, uuidString));
+        CFRelease(puuid);
+        CFRelease(uuidString);
+        name = [result stringByAppendingPathExtension:@"mp4"];
+    }
+    
+    NSString *trimPath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_tmp.%@", [name stringByDeletingPathExtension], name.pathExtension]];
     NSURL *trimURL = [NSURL fileURLWithPath:trimPath];
     /** 删除原来剪辑的视频 */
     exist = [fm fileExistsAtPath:trimPath];

@@ -44,14 +44,31 @@
 - (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
 {
     _editURL = url;
+    _asset = [AVURLAsset assetWithURL:url];
     _placeholderImage = image;
-    [_EditingView setVideoURL:url placeholderImage:image];
+    [self setVideoAsset:_asset placeholderImage:image];
+}
+
+- (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
+{
+    _editURL = [asset isKindOfClass:[AVURLAsset class]] ? ((AVURLAsset *)asset).URL : nil;
+    _asset = asset;
+    _placeholderImage = image;
+    [_EditingView setVideoAsset:asset placeholderImage:image];
+}
+
+- (void)setMinClippingDuration:(double)minClippingDuration
+{
+    if (minClippingDuration > 0.999) {
+        _minClippingDuration = minClippingDuration;
+        _EditingView.minClippingDuration = minClippingDuration;
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self configScrollView];
+    [self configEditingView];
     [self configCustomNaviBar];
     [self configBottomToolBar];
 }
@@ -62,11 +79,12 @@
 }
 
 #pragma mark - 创建视图
-- (void)configScrollView
+- (void)configEditingView
 {
     _EditingView = [[LFVideoEditingView alloc] initWithFrame:self.view.bounds];
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
+    _EditingView.minClippingDuration = self.minClippingDuration;
 //    _EditingView.clippingDelegate = self;
     if (_videoEdit) {
         _EditingView.photoEditData = _videoEdit.editData;

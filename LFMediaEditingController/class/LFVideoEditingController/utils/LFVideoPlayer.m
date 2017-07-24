@@ -60,40 +60,46 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
          Create an asset for inspection of a resource referenced by a given URL.
          Load the values for the asset key "playable".
          */
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
+        self.asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
         
-        /** size */
-        CGSize videoSize = CGSizeZero;
-        NSArray *assetVideoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
-        if (assetVideoTracks.count > 0)
-        {
-            // Insert the tracks in the composition's tracks
-            AVAssetTrack *track = [assetVideoTracks firstObject];
-            
-            CGSize dimensions = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
-            videoSize = CGSizeMake(fabs(dimensions.width), fabs(dimensions.height));
-        } else {
-            NSLog(@"Error reading the transformed video track");
-        }
-        _size = videoSize;
         
-        NSArray *requestedKeys = @[@"playable"];
-        
-        /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
-        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
-         ^{
-             dispatch_async( dispatch_get_main_queue(),
-                            ^{
-                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                                [self prepareToPlayAsset:asset withKeys:requestedKeys];
-                            });
-         }];
     }
 }
 
 - (NSURL*)URL
 {
     return mURL;
+}
+
+- (void)setAsset:(AVAsset *)asset
+{
+    _asset = asset;
+    /** size */
+    CGSize videoSize = CGSizeZero;
+    NSArray *assetVideoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+    if (assetVideoTracks.count > 0)
+    {
+        // Insert the tracks in the composition's tracks
+        AVAssetTrack *track = [assetVideoTracks firstObject];
+        
+        CGSize dimensions = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
+        videoSize = CGSizeMake(fabs(dimensions.width), fabs(dimensions.height));
+    } else {
+        NSLog(@"Error reading the transformed video track");
+    }
+    _size = videoSize;
+    
+    NSArray *requestedKeys = @[@"playable"];
+    
+    /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
+    [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
+     ^{
+         dispatch_async( dispatch_get_main_queue(),
+                        ^{
+                            /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
+                            [self prepareToPlayAsset:asset withKeys:requestedKeys];
+                        });
+     }];
 }
 
 #pragma mark
@@ -383,7 +389,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
  Checks whether loading was successfull and whether the asset is playable.
  If so, sets up an AVPlayerItem and an AVPlayer to play the asset.
  */
-- (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
+- (void)prepareToPlayAsset:(AVAsset *)asset withKeys:(NSArray *)requestedKeys
 {
     /* Make sure that the value of each key has loaded successfully. */
     for (NSString *thisKey in requestedKeys)

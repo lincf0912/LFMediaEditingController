@@ -42,6 +42,7 @@
 }
 /** 视频URL */
 @property (nonatomic, copy) NSURL* URL;
+@property (nonatomic, copy) AVAsset* asset;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFVideoPlayerDelegate> delegate;

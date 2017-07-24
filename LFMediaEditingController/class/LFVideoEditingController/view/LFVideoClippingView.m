@@ -135,14 +135,14 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     self.videoPlayer = nil;
 }
 
-- (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image
+- (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
     [self.playerLayerView setImage:image];
     if (self.videoPlayer == nil) {
         self.videoPlayer = [LFVideoPlayer new];
         self.videoPlayer.delegate = self;
     }
-    [self.videoPlayer setURL:url];
+    [self.videoPlayer setAsset:asset];
     
     /** 重置编辑UI位置 */
     CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.zoomView.bounds);

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 #import "LFEditingProtocol.h"
 
 @interface LFVideoEditingView : UIView <LFEditingProtocol>
@@ -22,7 +23,7 @@
 - (void)cancelClipping:(BOOL)animated;
 
 /** 数据 */
-- (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
+- (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;
 
 /** 剪辑视频 */
 - (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL))complete;
