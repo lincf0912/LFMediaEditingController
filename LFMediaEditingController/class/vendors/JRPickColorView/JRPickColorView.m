@@ -25,6 +25,9 @@ CGFloat const JRPickColorView_Default_ColorMaxWidth = 15.0f; // 默认最大宽�
 
 CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽度
 
+CGFloat const JRPickColorView_magnifierView_WitdhOrHeight = 25.0f; //!放大镜大小
+
+CGFloat const JRPickColorView_magnifierView_Margin = 15.0f; //!放大镜距离滑块间距
 
 @interface JRPickColorView () <UIGestureRecognizerDelegate>
 
@@ -36,6 +39,9 @@ CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽�
 
 @property (assign, nonatomic) CGPoint initialPoint;
 
+@property (nonatomic, strong) UIWindow *showColorWindow;
+
+@property (nonatomic, weak) UIView *magnifierView; //!放大镜
 @end
 
 @implementation JRPickColorView
@@ -90,6 +96,29 @@ CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽�
     }
 }
 
+- (void)setMagnifierMaskImage:(UIImage *)magnifierMaskImage
+{
+    if (magnifierMaskImage) {
+        CGSize imageSize = magnifierMaskImage.size;
+        UIImageView *imageMaskView = [[UIImageView alloc] initWithImage:magnifierMaskImage];
+        imageMaskView.frame = (CGRect){CGPointZero, imageSize};
+        CGRect frame = self.magnifierView.frame;
+        frame.size.width = imageSize.width;
+        frame.size.height = imageSize.height;
+        self.magnifierView.frame = frame;
+        
+        self.magnifierView.layer.borderWidth = 0.f;
+        self.magnifierView.layer.masksToBounds = YES;
+        self.magnifierView.layer.mask = imageMaskView.layer;
+        self.magnifierView.layer.shouldRasterize = YES;
+        self.magnifierView.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    } else {
+        self.magnifierView.layer.masksToBounds = NO;
+        self.magnifierView.layer.mask = nil;
+        self.magnifierView.layer.shouldRasterize = NO;
+    }
+}
+
 #pragma mark 当前颜色数组下标
 - (void)setIndex:(NSUInteger)index{
     if (index > self.colors.count) index = 0;
@@ -131,6 +160,20 @@ CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽�
 - (void)commUI{
     [self setShowHorizontal:YES];
     self.backgroundColor = [UIColor clearColor];
+    if (!_showColorWindow) {
+        _showColorWindow = [[[UIApplication sharedApplication] delegate] window];
+    }
+    if (!_magnifierView) {
+        UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, JRPickColorView_magnifierView_WitdhOrHeight, JRPickColorView_magnifierView_WitdhOrHeight)];
+        customView.hidden = YES;
+        customView.center = CGPointMake(_showColorsContainer.center.x, _showColorsContainer.center.y - 40);
+        customView.backgroundColor = [UIColor clearColor];
+        customView.layer.cornerRadius = JRPickColorView_magnifierView_WitdhOrHeight/2;
+        customView.layer.borderWidth = 1.0f;
+        customView.layer.borderColor = [UIColor whiteColor].CGColor;
+        [self addSubview:customView];
+        _magnifierView = customView;
+    }
 }
 
 #pragma mark 返回根据位置计算所在区域以及颜色
@@ -139,7 +182,7 @@ CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽�
     /** 最小中心点 */
     CGFloat Mid = CGRectGetWidth(_showColorsContainer.frame) / 2;
     /** 限制滑动范围 */
-    if (x <= CGRectGetWidth(self.frame) && x >= (CGRectGetWidth(self.frame) - CGRectGetWidth(_showColorsContainer.frame))) 
+    if (x <= CGRectGetWidth(self.frame) && x >= (CGRectGetWidth(self.frame) - Mid))
     {
         x = CGRectGetWidth(self.frame) - Mid;
     }
@@ -178,12 +221,23 @@ CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽�
 #pragma mark 点击手势
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
+    _magnifierView.hidden = NO;
     UITouch *touch = [touches anyObject];
     _initialPoint = [touch locationInView:self];//开始触摸
     __weak typeof(self)weakSelf = self;
+//    if ([[_showColorWindow subviews] containsObject:self] == NO) {
+//        [_showColorWindow addSubview:self];
+//    }
+    if ([[_showColorWindow subviews] containsObject:_magnifierView] == NO) {
+        [_showColorWindow insertSubview:_magnifierView belowSubview:self];
+    }
     [self calu:0 point:_initialPoint comple:^(UIColor *color, CGPoint center) {
         weakSelf.showColorsContainer.backgroundColor = color;
         weakSelf.showColorsContainer.center = center;
+        CGPoint point = [weakSelf convertPoint:weakSelf.showColorsContainer.center toView:weakSelf.showColorWindow];
+        point.y -= JRPickColorView_magnifierView_Margin + weakSelf.magnifierView.frame.size.height/2 + weakSelf.showColorsContainer.frame.size.height/2;
+        weakSelf.magnifierView.center = point;
+        weakSelf.magnifierView.backgroundColor = color;
     }];
 }
 
@@ -202,16 +256,25 @@ CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽�
     UITouch *touch = [touches anyObject];
     CGPoint p = [touch locationInView:self];//开始触摸
     __weak typeof(self)weakSelf = self;
+    _magnifierView.hidden = NO;
+    if ([[_showColorWindow subviews] containsObject:_magnifierView] == NO) {
+        [_showColorWindow insertSubview:_magnifierView belowSubview:self];
+    }
     [self calu:0 point:p comple:^(UIColor *color, CGPoint center) {
         weakSelf.showColorsContainer.backgroundColor = color;
         weakSelf.showColorsContainer.center = center;
+        CGPoint point = [weakSelf convertPoint:weakSelf.showColorsContainer.center toView:weakSelf.showColorWindow];
+        point.y -= JRPickColorView_magnifierView_Margin + weakSelf.magnifierView.frame.size.height/2 + weakSelf.showColorsContainer.frame.size.height/2;;
+        weakSelf.magnifierView.center = point;
+        weakSelf.magnifierView.backgroundColor = color;
     }];
 }
-
 
 #pragma mark 动画
 //让滑块位于图片区域中心位置，回调也在这里
 - (void)startAnimation{
+    _magnifierView.hidden = YES;
+    _magnifierView.backgroundColor = [UIColor clearColor];
     CGFloat x = _index * _colorWidth + (_colorWidth / 2);
     if (self.animation) {
         [UIView animateWithDuration:0.25f delay:0.f usingSpringWithDamping:1.0f initialSpringVelocity:0.1f options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -262,7 +325,6 @@ CGFloat const JRPickColorView_Default_ColorMinWidth = 10.0f; // 默认最小宽�
             } else if (i == self.colors.count - 1) {
                 line = 2;
             }
-//            rect = CGRectMake(JRPickColorView_Default_ColorY, x, JRPickColorView_Default_ColorHeight, _colorWidth);
         }
         CGFloat cornerRadius = JRPickColorView_Default_ColorHeight / 2;
         [self drawWithRect:rect color:[self.colors objectAtIndex:i] line:line cornerRadius:cornerRadius];

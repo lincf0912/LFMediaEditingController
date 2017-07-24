@@ -156,6 +156,7 @@
 //    _colorSlider.showColor = kSliderColors[0]; /** 白色 */
     _colorSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     _colorSlider.delegate = self;
+    [_colorSlider setMagnifierMaskImage:bundleEditImageNamed(@"EditImageWaterDrop.png")];
     [keyboardBar addSubview:_colorSlider];
     self.lf_colorSlider = _colorSlider;
     

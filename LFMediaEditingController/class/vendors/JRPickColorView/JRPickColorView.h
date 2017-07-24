@@ -24,6 +24,7 @@
 @property (assign, nonatomic) NSUInteger index;
 /** 是否需要动画（默认开启） */
 @property (assign, nonatomic) BOOL animation;
+@property (nonatomic, setter=setMagnifierMaskImage:) UIImage *magnifierMaskImage;
 /** 代理 */
 @property (weak, nonatomic) id<JRPickColorViewDelegate>delegate;
 /** 当前颜色 */

@@ -186,23 +186,25 @@
         [edit_drawMenu addSubview:separateView];
         
         /** 颜色显示 */
-        CGFloat margin = isiPad ? 85.f : 25.f, colorViewHeight = 20.f;
-        UIView *colorView = [[UIView alloc] initWithFrame:CGRectMake(margin, (CGRectGetHeight(edit_drawMenu.frame)-colorViewHeight)/2, colorViewHeight, colorViewHeight)];
-        colorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        colorView.layer.cornerRadius = colorViewHeight/2;
-        colorView.layer.borderWidth = 1.0f;
-        colorView.layer.borderColor = [UIColor whiteColor].CGColor;
-        colorView.layer.masksToBounds = YES;
-        colorView.userInteractionEnabled = NO;
-        [edit_drawMenu addSubview:colorView];
-        self.edit_drawMenu_color = colorView;
+        CGFloat margin = isiPad ? 85.f : 25.f;
+//        CGFloat colorViewHeight = 20.f;
+//        UIView *colorView = [[UIView alloc] initWithFrame:CGRectMake(margin, (CGRectGetHeight(edit_drawMenu.frame)-colorViewHeight)/2, colorViewHeight, colorViewHeight)];
+//        colorView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+//        colorView.layer.cornerRadius = colorViewHeight/2;
+//        colorView.layer.borderWidth = 1.0f;
+//        colorView.layer.borderColor = [UIColor whiteColor].CGColor;
+//        colorView.layer.masksToBounds = YES;
+//        colorView.userInteractionEnabled = NO;
+//        [edit_drawMenu addSubview:colorView];
+//        self.edit_drawMenu_color = colorView;
         
         /** 拾色器 */
-        CGFloat surplusWidth = CGRectGetMinX(separateView.frame)-CGRectGetMaxX(colorView.frame)-2*margin;
+        CGFloat surplusWidth = CGRectGetMinX(separateView.frame)-CGRectGetMaxX(self.edit_drawMenu_color.frame)-2*margin;
         CGFloat sliderHeight = 34.f, sliderWidth = MIN(surplusWidth, 350);
-        JRPickColorView *_colorSlider = [[JRPickColorView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(colorView.frame) + margin + (surplusWidth - sliderWidth) / 2, (CGRectGetHeight(edit_drawMenu.frame)-sliderHeight)/2, sliderWidth, sliderHeight) colors:kSliderColors];
+        JRPickColorView *_colorSlider = [[JRPickColorView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.edit_drawMenu_color.frame) + margin + (surplusWidth - sliderWidth) / 2, (CGRectGetHeight(edit_drawMenu.frame)-sliderHeight)/2, sliderWidth, sliderHeight) colors:kSliderColors];
         _colorSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         _colorSlider.delegate = self;
+        [_colorSlider setMagnifierMaskImage:bundleEditImageNamed(@"EditImageWaterDrop.png")];
         [edit_drawMenu addSubview:_colorSlider];
         self.draw_colorSlider = _colorSlider;
         
