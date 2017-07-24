@@ -23,11 +23,26 @@
 *   lfPhotoEditVC.editImage = self.imageView.image;
 * }
 * [self.navigationController setNavigationBarHidden:YES]; //隐藏导航栏（方式因项目自身适配）
-* [self.navigationController pushViewController:lfPhotoEditVC animated:NO];
-
-* 视频编辑
-* 
+* [self.navigationController pushViewController:lfPhotoEditVC animated:NO]; 
 
 ## 图片展示
 
 ![image](https://github.com/lincf0912/LFMediaEditingController/blob/master/ScreenShots/screenshot.gif)
+
+
+* 视频编辑
+* LFVideoEditingController *lfVideoEditVC = [[LFVideoEditingController alloc] init];
+* lfVideoEditVC.delegate = self;
+* if (self.videoEdit) {
+* lfVideoEditVC.videoEdit = self.videoEdit;
+* } else {
+* [lfVideoEditVC setVideoURL:self.url placeholderImage:nil];
+* }
+* [self.navigationController setNavigationBarHidden:YES]; //隐藏导航栏（方式因项目自身适配）
+* [self.navigationController pushViewController:lfPhotoEditVC animated:NO]; 
+
+## 图片展示
+
+![image](https://github.com/lincf0912/LFMediaEditingController/blob/master/ScreenShots/screenshot_video.gif)
+
+
