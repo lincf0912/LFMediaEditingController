@@ -10,6 +10,17 @@
 
 @implementation LFVideoPlayerLayerView
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.layer.masksToBounds = YES;
+        self.layer.shouldRasterize = YES;
+        self.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    }
+    return self;
+}
+
 + (Class)layerClass
 {
     return [AVPlayerLayer class];

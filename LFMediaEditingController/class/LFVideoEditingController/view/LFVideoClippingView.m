@@ -265,6 +265,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
         [player seekToTime:self.startTime];
     }
     [self.playerLayerView setPlayer:avplayer];
+//    [self.playerLayerView setImage:nil];
 }
 /** 可以播放 */
 - (void)LFVideoPlayerReadyToPlay:(LFVideoPlayer *)player duration:(double)duration

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, weak) AVPlayerLayer *playerLayer;
 @property (nonatomic, strong) NSURL *url;
+@property (nonatomic, strong) UIImage *firstImage;
 /** 需要保存到编辑数据 */
 @property (nonatomic, strong) LFVideoEdit *videoEdit;
 
@@ -30,6 +31,7 @@
     
     self.url = [[NSBundle mainBundle] URLForResource:@"1" withExtension:@"mp4"];
     
+    self.firstImage = [self getVideoFirstImage:self.url];
     _player = [AVPlayer playerWithURL:self.url];
     [self.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
@@ -38,6 +40,26 @@
     _playerLayer = playerLayer;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(videoEditing)];
+}
+
+- (UIImage *)getVideoFirstImage:(NSURL *)videoURL
+{
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
+    NSParameterAssert(asset);
+    AVAssetImageGenerator *assetImageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    assetImageGenerator.appliesPreferredTrackTransform = YES;
+    assetImageGenerator.apertureMode =AVAssetImageGeneratorApertureModeEncodedPixels;
+    assetImageGenerator.maximumSize = CGSizeMake([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale);
+    
+    CGImageRef thumbnailImageRef = NULL;
+    CFTimeInterval thumbnailImageTime = 1;
+    NSError *thumbnailImageGenerationError = nil;
+    thumbnailImageRef = [assetImageGenerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, asset.duration.timescale) actualTime:NULL error:&thumbnailImageGenerationError];
+    
+    if(!thumbnailImageRef)
+        NSLog(@"thumbnailImageGenerationError %@",thumbnailImageGenerationError);
+    
+    return thumbnailImageRef ? [[UIImage alloc]initWithCGImage:thumbnailImageRef] : nil;
 }
 
 - (void)dealloc
@@ -71,7 +93,7 @@
     if (self.videoEdit) {
         lfVideoEditVC.videoEdit = self.videoEdit;
     } else {
-        [lfVideoEditVC setVideoURL:self.url placeholderImage:nil];
+        [lfVideoEditVC setVideoURL:self.url placeholderImage:self.firstImage];
     }
     [self.navigationController setNavigationBarHidden:YES];
     [self.navigationController pushViewController:lfVideoEditVC animated:NO];
