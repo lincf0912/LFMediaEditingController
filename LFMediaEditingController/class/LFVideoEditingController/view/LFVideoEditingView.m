@@ -382,9 +382,10 @@
 }
 
 #pragma mark - LFVideoTrimmerViewDelegate
-- (void)lf_videoTrimmerViewDidBeginResizing:(LFVideoTrimmerView *)trimmerView
+- (void)lf_videoTrimmerViewDidBeginResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect
 {
     [self.clippingView pauseVideo];
+    [self lf_videoTrimmerViewDidResizing:trimmerView gridRect:gridRect];
     [self.clippingView beginScrubbing];
     [trimmerView setHiddenProgress:YES];
     trimmerView.progress = 0;
@@ -400,7 +401,7 @@
     self.clippingView.endTime = endTime;
     
 }
-- (void)lf_videoTrimmerViewDidEndResizing:(LFVideoTrimmerView *)trimmerView
+- (void)lf_videoTrimmerViewDidEndResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect
 {
     [self.clippingView endScrubbing];
     [self.clippingView playVideo];

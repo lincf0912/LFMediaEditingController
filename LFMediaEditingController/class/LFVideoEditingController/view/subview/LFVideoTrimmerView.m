@@ -36,7 +36,7 @@
 
 - (void)customInit
 {
-    _maxImageCount = 15;
+    _maxImageCount = 10;
     
     /** 每帧图片的容器 */
     UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
@@ -130,7 +130,7 @@
         time = CMTimeAdd(time, CMTimeMake(intervalSeconds, duration.timescale));
     }
     
-    CGFloat imageWidth = self.frame.size.width / (index * 1.0f);
+    CGFloat imageMargin = self.frame.size.width / (index * 1.0f);
     __block CGFloat maxContentWidth = 0;
     
     [_imageGenerator generateCGImagesAsynchronouslyForTimes:times completionHandler:^(CMTime requestedTime,
@@ -147,8 +147,9 @@
             UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
             imageView.layer.borderColor = [UIColor blackColor].CGColor;
             imageView.layer.borderWidth = .5f;
-            CGFloat width = MIN(imageWidth, image.size.width);
-            imageView.frame = CGRectMake(imageIndex*width, 0, image.size.width, self.contentView.frame.size.height);
+            CGFloat imageWidth = self.contentView.frame.size.height / image.size.height * image.size.width;
+            CGFloat width = MIN(imageMargin, imageWidth);
+            imageView.frame = CGRectMake(imageIndex*width, 0, imageWidth, self.contentView.frame.size.height);
             imageView.contentMode = UIViewContentModeScaleAspectFit;
             [self.contentView addSubview:imageView];
             maxContentWidth = CGRectGetMaxX(imageView.frame);
@@ -166,8 +167,8 @@
 #pragma mark - LFVideoTrimmerGridViewDelegate
 - (void)lf_videoTrimmerGridViewDidBeginResizing:(LFVideoTrimmerGridView *)gridView
 {
-    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidBeginResizing:)]) {
-        [self.delegate lf_videoTrimmerViewDidBeginResizing:self];
+    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidBeginResizing:gridRect:)]) {
+        [self.delegate lf_videoTrimmerViewDidBeginResizing:self gridRect:gridView.gridRect];
     }
 }
 - (void)lf_videoTrimmerGridViewDidResizing:(LFVideoTrimmerGridView *)gridView
@@ -178,8 +179,8 @@
 }
 - (void)lf_videoTrimmerGridViewDidEndResizing:(LFVideoTrimmerGridView *)gridView
 {
-    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidEndResizing:)]) {
-        [self.delegate lf_videoTrimmerViewDidEndResizing:self];
+    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidEndResizing:gridRect:)]) {
+        [self.delegate lf_videoTrimmerViewDidEndResizing:self gridRect:gridView.gridRect];
     }
 }
 

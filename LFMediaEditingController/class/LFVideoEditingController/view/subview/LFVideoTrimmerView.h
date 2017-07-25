@@ -34,8 +34,8 @@
 
 @protocol LFVideoTrimmerViewDelegate <NSObject>
 
-- (void)lf_videoTrimmerViewDidBeginResizing:(LFVideoTrimmerView *)trimmerView;
+- (void)lf_videoTrimmerViewDidBeginResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect;
 - (void)lf_videoTrimmerViewDidResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect;
-- (void)lf_videoTrimmerViewDidEndResizing:(LFVideoTrimmerView *)trimmerView;
+- (void)lf_videoTrimmerViewDidEndResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect;
 
 @end

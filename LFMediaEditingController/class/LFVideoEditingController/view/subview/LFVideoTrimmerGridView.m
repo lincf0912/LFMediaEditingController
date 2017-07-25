@@ -205,11 +205,10 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
     
     if (!CGRectEqualToRect(_gridRect, gridRect)) {
         [self setGridRect:gridRect animated:NO];
-        
         if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerGridViewDidResizing:)]) {
             [self.delegate lf_videoTrimmerGridViewDidResizing:self];
         }
-    }    
+    }
 }
 - (void)lf_resizeConrolDidEndResizing:(LFResizeControl *)resizeConrol
 {
@@ -271,7 +270,7 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
     if (resizeControlView == self.leftCornerView) {
         /** 限制宽度 超出 最大限度 */
         if (ceil(rect.size.width) > ceil(self.controlMaxWidth) || ceil(rect.origin.x) < 0) {
-            CGFloat diff = ceil(rect.size.width) > ceil(self.controlMaxWidth) ? (self.controlMaxWidth - rect.size.width) : (rect.origin.x-0);
+            CGFloat diff = ceil(rect.origin.x) < 0 ? (rect.origin.x-0) : (self.controlMaxWidth - rect.size.width);
             rect.origin.x -= diff;
             rect.size.width += diff;
         } else
@@ -295,7 +294,7 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
     }
     
     
-    return rect;
+    return CGRectMake(ceil(rect.origin.x), ceil(rect.origin.y), ceil(rect.size.width), ceil(rect.size.height));
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event

@@ -90,6 +90,7 @@
 {
     LFVideoEditingController *lfVideoEditVC = [[LFVideoEditingController alloc] init];
     lfVideoEditVC.delegate = self;
+    lfVideoEditVC.minClippingDuration = 10;
     if (self.videoEdit) {
         lfVideoEditVC.videoEdit = self.videoEdit;
     } else {

@@ -41,6 +41,15 @@
 
 @implementation LFVideoEditingController
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _minClippingDuration = 1.f;
+    }
+    return self;
+}
+
 - (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
 {
     _editURL = url;
