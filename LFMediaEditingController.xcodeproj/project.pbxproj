@@ -55,6 +55,9 @@
 		6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */; };
 		6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D441EEA2C290077D207 /* LFBaseEditingController.m */; };
 		6F384D471EEA54550077D207 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F384D461EEA54550077D207 /* 2.png */; };
+		6F61BC1B1F2987DA005A1E63 /* LFVideoExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F61BC1A1F2987DA005A1E63 /* LFVideoExportSession.m */; };
+		6F61BC1D1F298BF8005A1E63 /* 2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6F61BC1C1F298BEE005A1E63 /* 2.mp4 */; };
+		6F61BC1F1F29B880005A1E63 /* 3.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 6F61BC1E1F29B880005A1E63 /* 3.m4v */; };
 		6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D361F27345600C1BCFD /* LFScrollView.m */; };
 		6FAB0D471F2735D800C1BCFD /* NSString+LFMECoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D401F2735D800C1BCFD /* NSString+LFMECoreText.m */; };
 		6FAB0D481F2735D800C1BCFD /* UIImage+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D421F2735D800C1BCFD /* UIImage+LFMECommon.m */; };
@@ -156,6 +159,10 @@
 		6F384D431EEA2C290077D207 /* LFBaseEditingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFBaseEditingController.h; sourceTree = "<group>"; };
 		6F384D441EEA2C290077D207 /* LFBaseEditingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFBaseEditingController.m; sourceTree = "<group>"; };
 		6F384D461EEA54550077D207 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
+		6F61BC191F2987DA005A1E63 /* LFVideoExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoExportSession.h; sourceTree = "<group>"; };
+		6F61BC1A1F2987DA005A1E63 /* LFVideoExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoExportSession.m; sourceTree = "<group>"; };
+		6F61BC1C1F298BEE005A1E63 /* 2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2.mp4; sourceTree = "<group>"; };
+		6F61BC1E1F29B880005A1E63 /* 3.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3.m4v; sourceTree = "<group>"; };
 		6FAB0D351F27345600C1BCFD /* LFScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFScrollView.h; sourceTree = "<group>"; };
 		6FAB0D361F27345600C1BCFD /* LFScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFScrollView.m; sourceTree = "<group>"; };
 		6FAB0D3C1F27357A00C1BCFD /* LFEditingProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditingProtocol.h; sourceTree = "<group>"; };
@@ -224,6 +231,8 @@
 			isa = PBXGroup;
 			children = (
 				6F359B241F1C9B40009F2035 /* 1.mp4 */,
+				6F61BC1C1F298BEE005A1E63 /* 2.mp4 */,
+				6F61BC1E1F29B880005A1E63 /* 3.m4v */,
 				6F14E65F1EE647820049AE56 /* 1.JPG */,
 				6F384D461EEA54550077D207 /* 2.png */,
 				6F14E5D41EE6438A0049AE56 /* main.m */,
@@ -470,6 +479,8 @@
 		6F359B2F1F1D95AE009F2035 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				6F61BC191F2987DA005A1E63 /* LFVideoExportSession.h */,
+				6F61BC1A1F2987DA005A1E63 /* LFVideoExportSession.m */,
 				6F359B301F1D95E2009F2035 /* LFVideoPlayer.h */,
 				6F359B311F1D95E2009F2035 /* LFVideoPlayer.m */,
 			);
@@ -594,12 +605,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F61BC1F1F29B880005A1E63 /* 3.m4v in Resources */,
 				6F359B251F1C9B40009F2035 /* 1.mp4 in Resources */,
 				6F384D471EEA54550077D207 /* 2.png in Resources */,
 				6F14E5E31EE6438A0049AE56 /* LaunchScreen.storyboard in Resources */,
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				6F14E6601EE647820049AE56 /* 1.JPG in Resources */,
 				6F359B4A1F21A326009F2035 /* LFMediaEditingController.bundle in Resources */,
+				6F61BC1D1F298BF8005A1E63 /* 2.mp4 in Resources */,
 				6F14E5DE1EE6438A0049AE56 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -643,6 +656,7 @@
 				6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */,
 				6F14E6571EE6439E0049AE56 /* LFColorSlider.m in Sources */,
 				6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */,
+				6F61BC1B1F2987DA005A1E63 /* LFVideoExportSession.m in Sources */,
 				6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
 				6F14E6521EE6439E0049AE56 /* LFStickerLabel.m in Sources */,

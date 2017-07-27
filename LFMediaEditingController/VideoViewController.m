@@ -29,7 +29,11 @@
     
     self.view.backgroundColor = [UIColor blackColor];
     
-    self.url = [[NSBundle mainBundle] URLForResource:@"1" withExtension:@"mp4"];
+    /** 非拍摄视频 */
+//    self.url = [[NSBundle mainBundle] URLForResource:@"1" withExtension:@"mp4"];
+    /** 拍摄视频 */
+//    self.url = [[NSBundle mainBundle] URLForResource:@"2" withExtension:@"mp4"];
+    self.url = [[NSBundle mainBundle] URLForResource:@"3" withExtension:@"m4v"];
     
     self.firstImage = [self getVideoFirstImage:self.url];
     _player = [AVPlayer playerWithURL:self.url];
@@ -90,7 +94,7 @@
 {
     LFVideoEditingController *lfVideoEditVC = [[LFVideoEditingController alloc] init];
     lfVideoEditVC.delegate = self;
-    lfVideoEditVC.minClippingDuration = 10;
+    lfVideoEditVC.minClippingDuration = 3;
     if (self.videoEdit) {
         lfVideoEditVC.videoEdit = self.videoEdit;
     } else {

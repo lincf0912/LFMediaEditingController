@@ -246,7 +246,24 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 {
     if (self.hasWatermark) {
         
-        return self.zoomView;
+        NSDictionary *data = self.photoEditData;
+        
+        UIView *copyZoomView = [[UIView alloc] initWithFrame:self.zoomView.bounds];
+        copyZoomView.hidden = NO;
+        copyZoomView.backgroundColor = [UIColor clearColor];
+        copyZoomView.userInteractionEnabled = NO;
+        
+        /** 绘画 */
+        LFDrawView *drawView = [[LFDrawView alloc] initWithFrame:copyZoomView.bounds];
+        [copyZoomView addSubview:drawView];
+        [drawView setData:data[kLFVideoCLippingViewData_draw]];
+        
+        /** 贴图 */
+        LFStickerView *stickerView = [[LFStickerView alloc] initWithFrame:copyZoomView.bounds];
+        [copyZoomView addSubview:stickerView];
+        [stickerView setData:data[kLFVideoCLippingViewData_sticker]];
+        
+        return copyZoomView;
     }
     return nil;
 }
