@@ -102,11 +102,11 @@
         // 视频通道  工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材
         AVMutableCompositionTrack *compositionVideoTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
         // 把视频轨道数据加入到可变轨道中 这部分可以做视频裁剪TimeRange
-        [compositionVideoTrack insertTimeRange:self.timeRange ofTrack:assetVideoTrack atTime:insertionPoint error:&error];
+        [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, self.asset.duration) ofTrack:assetVideoTrack atTime:insertionPoint error:&error];
     }
     if (assetAudioTrack != nil) {
         AVMutableCompositionTrack *compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
-        [compositionAudioTrack insertTimeRange:self.timeRange ofTrack:assetAudioTrack atTime:insertionPoint error:&error];
+        [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, self.asset.duration) ofTrack:assetAudioTrack atTime:insertionPoint error:&error];
     }
     
     /** 水印 */

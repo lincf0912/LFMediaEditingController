@@ -145,7 +145,11 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     [self.videoPlayer setAsset:asset];
     
     /** 重置编辑UI位置 */
-    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(self.videoPlayer.size, self.zoomView.bounds);
+    CGSize videoSize = self.videoPlayer.size;
+    if (isnan(videoSize.width) || isnan(videoSize.height)) {
+        videoSize = self.zoomView.size;
+    }
+    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(videoSize, self.zoomView.bounds);
     _zoomView.frame = editRect;
     _playerLayerView.frame = _drawView.frame = _splashView.frame = _stickerView.frame = _zoomView.bounds;
 }
