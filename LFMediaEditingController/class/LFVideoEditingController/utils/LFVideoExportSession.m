@@ -118,7 +118,7 @@
         if (videoTrack) {
             // AVMutableVideoCompositionInstruction 视频轨道中的一个视频，可以缩放、旋转等
             AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-            passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.composition duration]);
+            passThroughInstruction.timeRange = self.timeRange;
             
             // AVMutableVideoCompositionLayerInstruction 一个视频轨道，包含了这个轨道上的所有视频素材
             AVMutableVideoCompositionLayerInstruction *passThroughLayer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
