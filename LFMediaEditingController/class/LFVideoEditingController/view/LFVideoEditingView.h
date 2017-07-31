@@ -26,5 +26,5 @@
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;
 
 /** 剪辑视频 */
-- (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL))complete;
+- (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete;
 @end

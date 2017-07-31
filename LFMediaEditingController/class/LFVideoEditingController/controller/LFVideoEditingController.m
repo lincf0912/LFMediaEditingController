@@ -180,16 +180,18 @@
         __block LFVideoEdit *videoEdit = nil;
         NSDictionary *data = [_EditingView photoEditData];
         if (data) {
-            [_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL) {
-                
-                videoEdit = [[LFVideoEdit alloc] initWithEditURL:weakSelf.editURL editFinalURL:trimURL data:data];
-                dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL, NSError *error) {
+                    videoEdit = [[LFVideoEdit alloc] initWithEditURL:weakSelf.editURL editFinalURL:trimURL data:data];
+                    if (error) {
+                        [[[UIAlertView alloc] initWithTitle:nil message:error.localizedDescription delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil] show];
+                    }
                     if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
                         [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
                     }
                     [weakSelf hideProgressHUD];
-                });
-            }];
+                }];
+            });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
@@ -507,10 +509,14 @@
 
 - (void)showTextBarController:(LFText *)text
 {
-    LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height)];
+    LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFTextBar *textBar) {
+        textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
+        textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
+        textBar.oKButtonTitle = self.oKButtonTitle;
+        textBar.cancelButtonTitle = self.cancelButtonTitle;        
+    }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;
-    textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
     textBar.delegate = self;
     
     [self.view addSubview:textBar];

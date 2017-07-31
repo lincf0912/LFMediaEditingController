@@ -172,7 +172,7 @@
 }
 
 /** 剪辑视频 */
-- (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL))complete
+- (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete
 {
     NSError *error = nil;
     NSFileManager *fm = [NSFileManager new];
@@ -218,7 +218,7 @@
     self.exportSession.overlayView = self.clippingView.overlayView;
     
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(NSError *error) {
-        if (complete) complete((error ? nil : trimURL));
+        if (complete) complete(trimURL, error);
     }];
 }
 
