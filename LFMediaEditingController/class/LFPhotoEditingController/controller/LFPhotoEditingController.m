@@ -530,10 +530,14 @@
 
 - (void)showTextBarController:(LFText *)text
 {
-    LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height)];
+    LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFTextBar *textBar) {
+        textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
+        textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
+        textBar.oKButtonTitle = self.oKButtonTitle;
+        textBar.cancelButtonTitle = self.cancelButtonTitle;
+    }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;
-    textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
     textBar.delegate = self;
 
     [self.view addSubview:textBar];

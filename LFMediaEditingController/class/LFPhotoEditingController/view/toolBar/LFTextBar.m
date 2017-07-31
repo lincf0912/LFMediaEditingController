@@ -39,8 +39,16 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
+    return [self initWithFrame:frame layout:nil];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame layout:(void (^)(LFTextBar *textBar))layoutBlock
+{
     self = [super initWithFrame:frame];
     if (self) {
+        if (layoutBlock) {
+            layoutBlock(self);
+        }
         [self customInit];
     }
     return self;
@@ -48,7 +56,6 @@
 
 - (void)customInit
 {
-    _oKButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
     if (iOS8Later) {
         // 定义毛玻璃效果
         self.backgroundColor = [UIColor clearColor];
@@ -112,14 +119,14 @@
     
     UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, size, size)];
     cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
     cancelButton.titleLabel.font = [UIFont systemFontOfSize:15];
-    [cancelButton setTitleColor:[UIColor colorWithWhite:0.8f alpha:1.f] forState:UIControlStateNormal];
+    [cancelButton setTitleColor:self.cancelButtonTitleColorNormal forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - (size+margin), margin, size, size)];
     finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [finishButton setTitle:@"完成" forState:UIControlStateNormal];
+    [finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     finishButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [finishButton setTitleColor:self.oKButtonTitleColorNormal forState:UIControlStateNormal];
     [finishButton addTarget:self action:@selector(finishButtonClick) forControlEvents:UIControlEventTouchUpInside];

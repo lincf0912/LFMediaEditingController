@@ -21,6 +21,7 @@
 @property (nonatomic, copy) NSString *cancelButtonTitle;
 @property (nonatomic, copy) NSString *processHintStr;
 
+//- (void)showProgressHUDText:(NSString *)text;
 - (void)showProgressHUD;
 - (void)hideProgressHUD;
 @end

@@ -18,9 +18,14 @@
 
 /** 样式 */
 @property (nonatomic, strong) UIColor *oKButtonTitleColorNormal;
+@property (nonatomic, strong) UIColor *cancelButtonTitleColorNormal;
+@property (nonatomic, copy) NSString *oKButtonTitle;
+@property (nonatomic, copy) NSString *cancelButtonTitle;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFTextBarDelegate> delegate;
+
+- (instancetype)initWithFrame:(CGRect)frame layout:(void (^)(LFTextBar *textBar))layoutBlock;
 
 @end
 
