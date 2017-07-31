@@ -117,17 +117,20 @@
     topbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     topbar.backgroundColor = [UIColor clearColor];
     
-    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, size, size)];
+    UIFont *font = [UIFont systemFontOfSize:15];
+    CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, kTopbarHeight) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 2;
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, editCancelWidth, size)];
     cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
-    cancelButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    cancelButton.titleLabel.font = font;
     [cancelButton setTitleColor:self.cancelButtonTitleColorNormal forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - (size+margin), margin, size, size)];
+    CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, kTopbarHeight) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 5;
+    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - (editOkWidth+margin), margin, editOkWidth, size)];
     finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
-    finishButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    finishButton.titleLabel.font = font;
     [finishButton setTitleColor:self.oKButtonTitleColorNormal forState:UIControlStateNormal];
     [finishButton addTarget:self action:@selector(finishButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
