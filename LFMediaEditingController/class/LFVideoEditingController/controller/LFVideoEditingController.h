@@ -14,8 +14,7 @@
 
 @interface LFVideoEditingController : LFBaseEditingController
 
-/** 编辑视频路径 */
-@property (nonatomic, readonly) NSURL *editURL;
+/** 编辑视频 */
 @property (nonatomic, readonly) UIImage *placeholderImage;
 @property (nonatomic, readonly) AVAsset *asset;
 /** 设置编辑对象->重新编辑 */

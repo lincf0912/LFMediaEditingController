@@ -52,7 +52,6 @@
 
 - (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
 {
-    _editURL = url;
     _asset = [AVURLAsset assetWithURL:url];
     _placeholderImage = image;
     [self setVideoAsset:_asset placeholderImage:image];
@@ -60,7 +59,6 @@
 
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
-    _editURL = [asset isKindOfClass:[AVURLAsset class]] ? ((AVURLAsset *)asset).URL : nil;
     _asset = asset;
     _placeholderImage = image;
     [_EditingView setVideoAsset:asset placeholderImage:image];
@@ -97,9 +95,9 @@
 //    _EditingView.clippingDelegate = self;
     if (_videoEdit) {
         _EditingView.photoEditData = _videoEdit.editData;
-        [self setVideoURL:_videoEdit.editURL placeholderImage:_videoEdit.editPreviewImage];
+        [self setVideoAsset:_videoEdit.editAsset placeholderImage:_videoEdit.editPreviewImage];
     } else {
-        [self setVideoURL:_editURL placeholderImage:_placeholderImage];
+        [self setVideoAsset:_asset placeholderImage:_placeholderImage];
     }
     
     /** 单击的 Recognizer */
@@ -182,7 +180,7 @@
         if (data) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL, NSError *error) {
-                    videoEdit = [[LFVideoEdit alloc] initWithEditURL:weakSelf.editURL editFinalURL:trimURL data:data];
+                    videoEdit = [[LFVideoEdit alloc] initWithEditAsset:weakSelf.asset editFinalURL:trimURL data:data];
                     if (error) {
                         [[[UIAlertView alloc] initWithTitle:nil message:error.localizedDescription delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil] show];
                     }

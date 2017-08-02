@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface LFVideoEdit : NSObject
 
@@ -16,11 +17,11 @@
 @property (nonatomic, readonly) UIImage *editPreviewImage;
 /** 编辑视频路径(最终) */
 @property (nonatomic, readonly) NSURL *editFinalURL;
-/** 编辑视频路径(原始) */
-@property (nonatomic, readonly) NSURL *editURL;
+/** 编辑视频 */
+@property (nonatomic, readonly) AVAsset *editAsset;
 /** 编辑数据 */
 @property (nonatomic, readonly) NSDictionary *editData;
 
 /** 初始化 */
-- (instancetype)initWithEditURL:(NSURL *)editURL editFinalURL:(NSURL *)editFinalURL data:(NSDictionary *)data;
+- (instancetype)initWithEditAsset:(AVAsset *)editAsset editFinalURL:(NSURL *)editFinalURL data:(NSDictionary *)data;
 @end

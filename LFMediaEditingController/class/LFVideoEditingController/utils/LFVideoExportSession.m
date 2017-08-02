@@ -109,41 +109,70 @@
         [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, self.asset.duration) ofTrack:assetAudioTrack atTime:insertionPoint error:&error];
     }
     
-    /** 水印 */
-    if(self.overlayView) {
+    UIImageOrientation orientation = [self orientationFromAVAssetTrack:assetVideoTrack];
+    
+    if (orientation != UIImageOrientationUp || self.overlayView) {
+        self.videoComposition = [AVMutableVideoComposition videoComposition];
+        self.videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
+    }
+    
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    CGSize renderSize = assetVideoTrack.naturalSize;
+    
+    switch (orientation) {
+        case UIImageOrientationLeft:
+            //顺时针旋转270°
+            //            NSLog(@"视频旋转270度，home按键在右");
+            transform = CGAffineTransformTranslate(transform, 0.0, assetVideoTrack.naturalSize.width);
+            transform = CGAffineTransformRotate(transform,M_PI_2*3.0);
+            renderSize = CGSizeMake(assetVideoTrack.naturalSize.height,assetVideoTrack.naturalSize.width);
+            break;
+        case UIImageOrientationRight:
+            //顺时针旋转90°
+            //            NSLog(@"视频旋转90度,home按键在左");
+            transform = CGAffineTransformTranslate(transform, assetVideoTrack.naturalSize.height, 0.0);
+            transform = CGAffineTransformRotate(transform,M_PI_2);
+            renderSize = CGSizeMake(assetVideoTrack.naturalSize.height,assetVideoTrack.naturalSize.width);
+            break;
+        case UIImageOrientationDown:
+            //顺时针旋转180°
+            //            NSLog(@"视频旋转180度，home按键在上");
+            transform = CGAffineTransformTranslate(transform, assetVideoTrack.naturalSize.width, assetVideoTrack.naturalSize.height);
+            transform = CGAffineTransformRotate(transform,M_PI);
+            renderSize = CGSizeMake(assetVideoTrack.naturalSize.width,assetVideoTrack.naturalSize.height);
+            break;
+        default:
+            break;
+    }
+    
+    if (self.videoComposition) {
+        
+        self.videoComposition.renderSize = renderSize;
         
         AVAssetTrack *videoTrack = [self.composition tracksWithMediaType:AVMediaTypeVideo][0];
-        // Step 2
-        // Create a water mark layer of the same size as that of a video frame from the asset
-        if (videoTrack) {
-            // AVMutableVideoCompositionInstruction 视频轨道中的一个视频，可以缩放、旋转等
-            AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-            passThroughInstruction.timeRange = self.timeRange;
-            
-            // AVMutableVideoCompositionLayerInstruction 一个视频轨道，包含了这个轨道上的所有视频素材
-            AVMutableVideoCompositionLayerInstruction *passThroughLayer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
-            [passThroughLayer setTransform:assetVideoTrack.preferredTransform atTime:kCMTimeZero];
-//            [passThroughLayer setOpacity:0.0 atTime:self.timeRange.duration];
-            
-            passThroughInstruction.layerInstructions = [NSArray arrayWithObjects:passThroughLayer, nil];
-            
-            // build a pass through video composition
-            // 管理所有视频轨道，可以决定最终视频的尺寸
-            self.videoComposition = [AVMutableVideoComposition videoComposition];
-            self.videoComposition.renderSize = assetVideoTrack.naturalSize;
-            self.videoComposition.instructions = [NSArray arrayWithObject:passThroughInstruction];
-            self.videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
-            
-            CALayer *animatedLayer = [self buildAnimatedTitleLayerForSize:self.videoComposition.renderSize];
-            CALayer *parentLayer = [CALayer layer];
-            CALayer *videoLayer = [CALayer layer];
-            parentLayer.frame = CGRectMake(0, 0, self.videoComposition.renderSize.width, self.videoComposition.renderSize.height);
-            videoLayer.frame = CGRectMake(0, 0, self.videoComposition.renderSize.width, self.videoComposition.renderSize.height);
-            [parentLayer addSublayer:videoLayer];
-            [parentLayer addSublayer:animatedLayer];
-            
-            self.videoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
-        }
+        
+        AVMutableVideoCompositionInstruction *roateInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+        roateInstruction.timeRange = self.timeRange;
+        AVMutableVideoCompositionLayerInstruction *roateLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
+        
+        [roateLayerInstruction setTransform:transform atTime:kCMTimeZero];
+        
+        roateInstruction.layerInstructions = @[roateLayerInstruction];
+        //将视频方向旋转加入到视频处理中
+        self.videoComposition.instructions = @[roateInstruction];
+    }
+    
+    /** 水印 */
+    if(self.overlayView) {
+        CALayer *animatedLayer = [self buildAnimatedTitleLayerForSize:renderSize];
+        CALayer *parentLayer = [CALayer layer];
+        CALayer *videoLayer = [CALayer layer];
+        parentLayer.frame = CGRectMake(0, 0, self.videoComposition.renderSize.width, self.videoComposition.renderSize.height);
+        videoLayer.frame = CGRectMake(0, 0, self.videoComposition.renderSize.width, self.videoComposition.renderSize.height);
+        [parentLayer addSublayer:videoLayer];
+        [parentLayer addSublayer:animatedLayer];
+        
+        self.videoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
     }
     
     self.exportSession = [[AVAssetExportSession alloc] initWithAsset:self.composition presetName:AVAssetExportPresetHighestQuality];
@@ -211,6 +240,32 @@
     [overlayLayer setMasksToBounds:YES];
     
     return overlayLayer;
+}
+
+- (UIImageOrientation)orientationFromAVAssetTrack:(AVAssetTrack *)videoTrack
+{
+    UIImageOrientation orientation = UIImageOrientationUp;
+    
+    CGAffineTransform t = videoTrack.preferredTransform;
+    if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0){
+        // Portrait
+        //        degress = 90;
+        orientation = UIImageOrientationRight;
+    }else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0){
+        // PortraitUpsideDown
+        //        degress = 270;
+        orientation = UIImageOrientationLeft;
+    }else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0){
+        // LandscapeRight
+        //        degress = 0;
+        orientation = UIImageOrientationUp;
+    }else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0){
+        // LandscapeLeft
+        //        degress = 180;
+        orientation = UIImageOrientationDown;
+    }
+    
+    return orientation;
 }
 
 @end

@@ -12,11 +12,11 @@
 
 @implementation LFVideoEdit
 
-- (instancetype)initWithEditURL:(NSURL *)editURL editFinalURL:(NSURL *)editFinalURL data:(NSDictionary *)data
+- (instancetype)initWithEditAsset:(AVAsset *)editAsset editFinalURL:(NSURL *)editFinalURL data:(NSDictionary *)data
 {
     self = [super init];
     if (self) {
-        _editURL = editURL;
+        _editAsset = editAsset;
         _editFinalURL = editFinalURL;
         _editData = data;
         [self createfirstImage];
@@ -26,8 +26,12 @@
 
 - (void)createfirstImage
 {
-    NSURL *videoURL = self.editFinalURL ?: self.editURL;
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
+    AVAsset *asset = nil;
+    if (self.editFinalURL) {
+        asset = [[AVURLAsset alloc] initWithURL:self.editFinalURL options:nil];
+    } else {
+        asset = self.editAsset;
+    }
     NSParameterAssert(asset);
     AVAssetImageGenerator *assetImageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     assetImageGenerator.appliesPreferredTrackTransform = YES;

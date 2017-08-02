@@ -65,6 +65,7 @@
 
 - (void)customInit
 {
+    self.backgroundColor = [UIColor blackColor];
     _minClippingDuration = 1.f;
     
     LFVideoClippingView *clippingView = [[LFVideoClippingView alloc] initWithFrame:self.bounds];
@@ -185,9 +186,15 @@
     }
     
     NSString *name = nil;
+    
     if ([self.asset isKindOfClass:[AVURLAsset class]]) {
         name = ((AVURLAsset *)self.asset).URL.lastPathComponent;
-    } else {
+    } if ([self.asset isKindOfClass:[AVComposition class]]) {
+        AVCompositionTrack *avcompositionTrack = (AVCompositionTrack *)[self.asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+        AVCompositionTrackSegment *segment = avcompositionTrack.segments.firstObject;
+        name = segment.sourceURL.lastPathComponent;
+    }
+    if (name.length == 0) {
         CFUUIDRef puuid = CFUUIDCreate( nil );
         CFStringRef uuidString = CFUUIDCreateString( nil, puuid );
         NSString * result = (NSString *)CFBridgingRelease(CFStringCreateCopy( NULL, uuidString));

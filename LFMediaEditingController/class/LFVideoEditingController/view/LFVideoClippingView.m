@@ -146,7 +146,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     
     /** 重置编辑UI位置 */
     CGSize videoSize = self.videoPlayer.size;
-    if (isnan(videoSize.width) || isnan(videoSize.height)) {
+    if (CGSizeEqualToSize(CGSizeZero, videoSize) || isnan(videoSize.width) || isnan(videoSize.height)) {
         videoSize = self.zoomView.size;
     }
     CGRect editRect = AVMakeRectWithAspectRatioInsideRect(videoSize, self.zoomView.bounds);
