@@ -18,7 +18,7 @@
 #import "LFClipToolbar.h"
 
 
-@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate>
+@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate>
 {
     /** 编辑模式 */
     LFEditingView *_EditingView;
@@ -42,6 +42,15 @@
 @end
 
 @implementation LFPhotoEditingController
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _operationType = LFPhotoEditOperationType_All;
+    }
+    return self;
+}
 
 - (void)setEditImage:(UIImage *)editImage
 {
@@ -139,7 +148,24 @@
 
 - (void)configBottomToolBar
 {
-    _edit_toolBar = [[LFEditToolbar alloc] initWithType:LFEditToolbarType_All];
+    LFEditToolbarType toolbarType = 0;
+    if (self.operationType&LFPhotoEditOperationType_draw) {
+        toolbarType |= LFEditToolbarType_draw;
+    }
+    if (self.operationType&LFPhotoEditOperationType_sticker) {
+        toolbarType |= LFEditToolbarType_sticker;
+    }
+    if (self.operationType&LFPhotoEditOperationType_text) {
+        toolbarType |= LFEditToolbarType_text;
+    }
+    if (self.operationType&LFPhotoEditOperationType_splash) {
+        toolbarType |= LFEditToolbarType_splash;
+    }
+    if (self.operationType&LFPhotoEditOperationType_crop) {
+        toolbarType |= LFEditToolbarType_crop;
+    }
+    
+    _edit_toolBar = [[LFEditToolbar alloc] initWithType:(toolbarType == 0 ? LFEditToolbarType_All : toolbarType)];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
     [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */
@@ -325,18 +351,24 @@
 {
     [_EditingView cancelClipping:YES];
     [self changeClipMenu:NO];
+    _edit_clipping_toolBar.selectAspectRatio = NO;
+    [_EditingView setAspectRatio:nil];
 }
 /** 完成 */
 - (void)lf_clipToolbarDidFinish:(LFClipToolbar *)clipToolbar
 {
     [_EditingView setIsClipping:NO animated:YES];
     [self changeClipMenu:NO];
+    _edit_clipping_toolBar.selectAspectRatio = NO;
+    [_EditingView setAspectRatio:nil];
 }
 /** 重置 */
 - (void)lf_clipToolbarDidReset:(LFClipToolbar *)clipToolbar
 {
     [_EditingView reset];
     _edit_clipping_toolBar.enableReset = _EditingView.canReset;
+    _edit_clipping_toolBar.selectAspectRatio = NO;
+    [_EditingView setAspectRatio:nil];
 }
 /** 旋转 */
 - (void)lf_clipToolbarDidRotate:(LFClipToolbar *)clipToolbar
@@ -344,6 +376,70 @@
     [_EditingView rotate];
     _edit_clipping_toolBar.enableReset = _EditingView.canReset;
 }
+/** 长宽比例 */
+- (void)lf_clipToolbarDidAspectRatio:(LFClipToolbar *)clipToolbar
+{
+    NSArray *items = [LFEditingView aspectRatioDescs];
+    if (NSClassFromString(@"UIAlertController")) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        [alertController addAction:[UIAlertAction actionWithTitle:self.cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            _edit_clipping_toolBar.selectAspectRatio = NO;
+            [_EditingView setAspectRatio:nil];
+        }]];
+        
+        //Add each item to the alert controller
+        for (NSInteger i=0; i<items.count; i++) {
+            NSString *item = items[i];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                _edit_clipping_toolBar.selectAspectRatio = YES;
+                [_EditingView setAspectRatio:item];
+            }];
+            [alertController addAction:action];
+        }
+        
+        alertController.modalPresentationStyle = UIModalPresentationPopover;
+        UIPopoverPresentationController *presentationController = [alertController popoverPresentationController];
+        presentationController.sourceView = clipToolbar;
+        presentationController.sourceRect = clipToolbar.frame;
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else {
+        //TODO: Completely overhaul this once iOS 7 support is dropped
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                                 delegate:self
+                                                        cancelButtonTitle:self.cancelButtonTitle
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:nil];
+        
+        for (NSString *item in items) {
+            [actionSheet addButtonWithTitle:item];
+        }
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+            [actionSheet showFromRect:clipToolbar.frame inView:clipToolbar animated:YES];
+        else
+            [actionSheet showInView:self.view];
+#pragma clang diagnostic pop
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == [actionSheet cancelButtonIndex]) {
+        _edit_clipping_toolBar.selectAspectRatio = NO;
+        [_EditingView setAspectRatio:nil];
+    } else {
+        _edit_clipping_toolBar.selectAspectRatio = YES;
+        [_EditingView setAspectRatio:[actionSheet buttonTitleAtIndex:buttonIndex]];
+    }
+}
+#pragma clang diagnostic pop
 
 #pragma mark - 贴图菜单（懒加载）
 - (LFStickerBar *)edit_sticker_toolBar

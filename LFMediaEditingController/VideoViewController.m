@@ -94,6 +94,7 @@
 {
     LFVideoEditingController *lfVideoEditVC = [[LFVideoEditingController alloc] init];
     lfVideoEditVC.delegate = self;
+//    lfVideoEditVC.operationType = LFVideoEditOperationType_draw | LFVideoEditOperationType_clip;
 //    lfVideoEditVC.minClippingDuration = 3;
     if (self.videoEdit) {
         lfVideoEditVC.videoEdit = self.videoEdit;

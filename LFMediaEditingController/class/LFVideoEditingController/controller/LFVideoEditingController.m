@@ -45,6 +45,7 @@
 {
     self = [super init];
     if (self) {
+        _operationType = LFVideoEditOperationType_All;
         _minClippingDuration = 1.f;
     }
     return self;
@@ -144,7 +145,21 @@
 
 - (void)configBottomToolBar
 {
-    _edit_toolBar = [[LFEditToolbar alloc] initWithType:LFEditToolbarType_draw|LFEditToolbarType_sticker|LFEditToolbarType_text|LFEditToolbarType_crop mediaType:LFEditToolbarMediaType_video];
+    LFEditToolbarType toolbarType = 0;
+    if (self.operationType&LFVideoEditOperationType_draw) {
+        toolbarType |= LFEditToolbarType_draw;
+    }
+    if (self.operationType&LFVideoEditOperationType_sticker) {
+        toolbarType |= LFEditToolbarType_sticker;
+    }
+    if (self.operationType&LFVideoEditOperationType_text) {
+        toolbarType |= LFEditToolbarType_text;
+    }
+    if (self.operationType&LFVideoEditOperationType_clip) {
+        toolbarType |= LFEditToolbarType_crop;
+    }
+    
+    _edit_toolBar = [[LFEditToolbar alloc] initWithType:(toolbarType == 0 ? (LFEditToolbarType_draw|LFEditToolbarType_sticker|LFEditToolbarType_text|LFEditToolbarType_crop) : toolbarType) mediaType:LFEditToolbarMediaType_video];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
     [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */

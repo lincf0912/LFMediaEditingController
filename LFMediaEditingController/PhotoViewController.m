@@ -46,6 +46,7 @@
 - (void)photoEditing
 {
     LFPhotoEditingController *lfPhotoEditVC = [[LFPhotoEditingController alloc] init];
+//    lfPhotoEditVC.operationType = LFPhotoEditOperationType_draw | LFPhotoEditOperationType_splash;
     lfPhotoEditVC.delegate = self;
     if (self.photoEdit) {
         lfPhotoEditVC.photoEdit = self.photoEdit;

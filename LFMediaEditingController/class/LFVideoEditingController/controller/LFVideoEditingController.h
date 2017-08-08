@@ -10,6 +10,19 @@
 #import "LFBaseEditingController.h"
 #import "LFVideoEdit.h"
 
+typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
+    /** 绘画 */
+    LFVideoEditOperationType_draw = 1 << 0,
+    /** 贴图 */
+    LFVideoEditOperationType_sticker = 1 << 1,
+    /** 文本 */
+    LFVideoEditOperationType_text = 1 << 2,
+    /** 剪辑 */
+    LFVideoEditOperationType_clip = 1 << 4,
+    /** 所有 */
+    LFVideoEditOperationType_All = ~0UL,
+};
+
 @protocol LFVideoEditingControllerDelegate;
 
 @interface LFVideoEditingController : LFBaseEditingController
@@ -23,6 +36,8 @@
 - (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;
 
+/** 设置操作类型 default is LFVideoEditOperationType_All */
+@property (nonatomic, assign) LFVideoEditOperationType operationType;
 /** 允许剪辑的最小时长 1秒 */
 @property (nonatomic, assign) double minClippingDuration;
 
