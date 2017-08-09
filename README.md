@@ -3,10 +3,6 @@
 * 图片编辑 (详细使用见LFPhotoEditingController.h 的初始化方法)
 * 视频编辑 (详细使用见LFVideoEditingController.h 的初始化方法)
 
-## Warning 注意
-
-* 暂时不能与LFImagePickerController框架并用，2者选其1.
-
 ## Installation 安装
 
 * CocoaPods：pod 'LFMediaEditingController'
