@@ -43,6 +43,11 @@
 
 @synthesize image = _image;
 
+- (NSArray <NSString *>*)aspectRatioDescs
+{
+    return [self.gridView aspectRatioDescs:(self.image.size.width > self.image.size.height)];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -106,6 +111,7 @@
     _image = image;
     if (image) {
         CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(image.size, self.frame);
+        self.gridView.controlSize = cropRect.size;
         self.gridView.gridRect = cropRect;
         self.imagePixel.center = CGPointMake(CGRectGetMidX(cropRect), CGRectGetMidY(cropRect));
     }
@@ -258,6 +264,17 @@
     }
 }
 
+/** 长宽比例 */
+- (void)setAspectRatio:(NSString *)aspectRatio
+{
+    NSInteger index = 0;
+    NSArray *aspectRatioDescs = [self aspectRatioDescs];
+    if (aspectRatio.length && [aspectRatioDescs containsObject:aspectRatio]) {
+        index = [aspectRatioDescs indexOfObject:aspectRatio] + 1;
+    }
+    [self.gridView setAspectRatio:(LFGridViewAspectRatioType)index];
+}
+
 /** 创建编辑图片 */
 - (UIImage *)createEditImage
 {
@@ -346,8 +363,13 @@
     [self.clippingView zoomOutToRect:gridView.gridRect];
     /** 让clippingView的动画回调后才显示showMaskLayer */
     //    self.gridView.showMaskLayer = YES;
-    
-    
+}
+/** 调整长宽比例 */
+- (void)lf_gridViewDidAspectRatio:(LFGridView *)gridView
+{
+    [self lf_gridViewDidBeginResizing:gridView];
+    [self lf_gridViewDidResizing:gridView];
+    [self lf_gridViewDidEndResizing:gridView];
 }
 
 #pragma mark - UIScrollViewDelegate

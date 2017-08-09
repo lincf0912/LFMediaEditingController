@@ -17,6 +17,9 @@
 /** 开启重置按钮 default NO  */
 @property (nonatomic, assign) BOOL enableReset;
 
+/** 选中长宽比例按钮 default NO */
+@property (nonatomic, assign) BOOL selectAspectRatio;
+
 @end
 
 @protocol LFClipToolbarDelegate <NSObject>
@@ -29,6 +32,9 @@
 - (void)lf_clipToolbarDidReset:(LFClipToolbar *)clipToolbar;
 /** 旋转 */
 - (void)lf_clipToolbarDidRotate:(LFClipToolbar *)clipToolbar;
+/** 长宽比例 */
+- (void)lf_clipToolbarDidAspectRatio:(LFClipToolbar *)clipToolbar;
+
 @end
 
 

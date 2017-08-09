@@ -10,6 +10,7 @@
 #import "LFGridLayer.h"
 #import "LFGridMaskLayer.h"
 #import "LFResizeControl.h"
+#import <AVFoundation/AVFoundation.h>
 
 /** 可控范围 */
 const CGFloat kControlWidth = 30.f;
@@ -30,6 +31,9 @@ const CGFloat kControlWidth = 30.f;
 @property (nonatomic, assign) CGRect initialRect;
 
 @property (nonatomic, weak) LFGridLayer *gridLayer;
+
+@property (nonatomic, assign) BOOL aspectRatioHorizontally;
+@property (nonatomic, assign) CGSize aspectRatioSize;
 
 @end
 
@@ -66,6 +70,7 @@ const CGFloat kControlWidth = 30.f;
     self.gridRect = CGRectInset(self.bounds, 50, 50);
     self.controlMinSize = CGSizeMake(80, 80);
     self.controlMaxRect = CGRectInset(self.bounds, 50, 50);
+    self.controlSize = CGSizeZero;
     /** 遮罩范围 */
     self.showMaskLayer = YES;
     
@@ -168,7 +173,103 @@ const CGFloat kControlWidth = 30.f;
     }
 }
 
+- (void)setAspectRatio:(LFGridViewAspectRatioType)aspectRatio
+{
+    if (_aspectRatio != aspectRatio) {        
+        _aspectRatio = aspectRatio;
+        CGSize size = self.aspectRatioSize;
+        if (!CGSizeEqualToSize(size, CGSizeZero)) {
+            CGRect gridRect = self.gridRect;
+            /** 计算比例后高度 */
+            CGFloat newHeight = gridRect.size.width * (size.height/size.width);
+            /** 超出最大高度计算 */
+            if (newHeight > _controlMaxRect.size.height) {
+                CGFloat newWidth = gridRect.size.width * (_controlMaxRect.size.height/newHeight);
+                CGFloat diffWidth = gridRect.size.width - newWidth;
+                gridRect.size.width = newWidth;
+                gridRect.origin.x = gridRect.origin.x + diffWidth/2;
+                newHeight = _controlMaxRect.size.height;
+            }
+            CGFloat diffHeight = gridRect.size.height - newHeight;
+            gridRect.size.height = newHeight;
+            gridRect.origin.y = gridRect.origin.y + diffHeight/2;
+            
+            [self setGridRect:gridRect maskLayer:NO];
+            
+            if ([self.delegate respondsToSelector:@selector(lf_gridViewDidAspectRatio:)]) {
+                [self.delegate lf_gridViewDidAspectRatio:self];
+            }
+        }
+    }
+}
+
+- (NSArray <NSString *>*)aspectRatioDescs:(BOOL)horizontally
+{
+    _aspectRatioHorizontally = horizontally;
+    if (horizontally) {
+        return @[@"Original", @"1x1", @"3x2", @"4x3", @"5x3", @"15x9", @"16x9", @"16x10"];
+    } else {
+        return @[@"Original", @"1x1", @"2x3", @"3x4", @"3x5", @"9x15", @"9x16", @"10x16"];
+    }
+}
+
 #pragma mark - private
+
+- (CGSize)aspectRatioSize
+{
+    if (self.aspectRatioHorizontally) {
+        switch (self.aspectRatio) {
+            case LFGridViewAspectRatioType_None:
+                return CGSizeZero;
+            case LFGridViewAspectRatioType_Original:
+                if (self.controlSize.width == 0 || self.controlSize.height == 0) {
+                    return CGSizeZero;
+                }
+                return CGSizeMake(1, self.controlSize.height/self.controlSize.width);
+            case LFGridViewAspectRatioType_1x1:
+                return CGSizeMake(1, 1);
+            case LFGridViewAspectRatioType_3x2:
+                return CGSizeMake(3, 2);
+            case LFGridViewAspectRatioType_4x3:
+                return CGSizeMake(4, 3);
+            case LFGridViewAspectRatioType_5x3:
+                return CGSizeMake(5, 3);
+            case LFGridViewAspectRatioType_15x9:
+                return CGSizeMake(15, 9);
+            case LFGridViewAspectRatioType_16x9:
+                return CGSizeMake(16, 9);
+            case LFGridViewAspectRatioType_16x10:
+                return CGSizeMake(16, 10);
+        }
+    } else {
+        switch (self.aspectRatio) {
+            case LFGridViewAspectRatioType_None:
+                return CGSizeZero;
+            case LFGridViewAspectRatioType_Original:
+                if (self.controlSize.width == 0 || self.controlSize.height == 0) {
+                    return CGSizeZero;
+                }
+                return CGSizeMake(self.controlSize.width/self.controlSize.height, 1);
+            case LFGridViewAspectRatioType_1x1:
+                return CGSizeMake(1, 1);
+            case LFGridViewAspectRatioType_3x2:
+                return CGSizeMake(2, 3);
+            case LFGridViewAspectRatioType_4x3:
+                return CGSizeMake(3, 4);
+            case LFGridViewAspectRatioType_5x3:
+                return CGSizeMake(3, 5);
+            case LFGridViewAspectRatioType_15x9:
+                return CGSizeMake(9, 15);
+            case LFGridViewAspectRatioType_16x9:
+                return CGSizeMake(9, 16);
+            case LFGridViewAspectRatioType_16x10:
+                return CGSizeMake(10, 16);
+        }
+    }
+    
+    return CGSizeZero;
+}
+
 - (LFResizeControl *)createResizeControl
 {
     LFResizeControl *control = [[LFResizeControl alloc] initWithFrame:(CGRect){CGPointZero, CGSizeMake(kControlWidth, kControlWidth)}];
@@ -181,46 +282,91 @@ const CGFloat kControlWidth = 30.f;
 {
     CGRect rect = self.gridRect;
     
+    CGSize aspectRatioSize = self.aspectRatioSize;
+    CGFloat widthRatio = aspectRatioSize.height == 0 ? 0 : aspectRatioSize.width/aspectRatioSize.height;
+    CGFloat heightRatio = aspectRatioSize.width == 0 ? 0 : aspectRatioSize.height/aspectRatioSize.width;
+    
     if (resizeControlView == self.topEdgeView) {
-        rect = CGRectMake(CGRectGetMinX(self.initialRect),
+        rect = CGRectMake(CGRectGetMinX(self.initialRect) + resizeControlView.translation.y * widthRatio / 2,
                           CGRectGetMinY(self.initialRect) + resizeControlView.translation.y,
-                          CGRectGetWidth(self.initialRect),
+                          CGRectGetWidth(self.initialRect) - resizeControlView.translation.y * widthRatio,
                           CGRectGetHeight(self.initialRect) - resizeControlView.translation.y);
     } else if (resizeControlView == self.leftEdgeView) {
         rect = CGRectMake(CGRectGetMinX(self.initialRect) + resizeControlView.translation.x,
-                          CGRectGetMinY(self.initialRect),
+                          CGRectGetMinY(self.initialRect) + resizeControlView.translation.x * heightRatio / 2,
                           CGRectGetWidth(self.initialRect) - resizeControlView.translation.x,
-                          CGRectGetHeight(self.initialRect));
+                          CGRectGetHeight(self.initialRect) - resizeControlView.translation.x * heightRatio);
     } else if (resizeControlView == self.bottomEdgeView) {
-        rect = CGRectMake(CGRectGetMinX(self.initialRect),
+        rect = CGRectMake(CGRectGetMinX(self.initialRect) - resizeControlView.translation.y * widthRatio / 2,
                           CGRectGetMinY(self.initialRect),
-                          CGRectGetWidth(self.initialRect),
+                          CGRectGetWidth(self.initialRect) + resizeControlView.translation.y * widthRatio,
                           CGRectGetHeight(self.initialRect) + resizeControlView.translation.y);
     } else if (resizeControlView == self.rightEdgeView) {
         rect = CGRectMake(CGRectGetMinX(self.initialRect),
-                          CGRectGetMinY(self.initialRect),
+                          CGRectGetMinY(self.initialRect) - resizeControlView.translation.x * heightRatio / 2,
                           CGRectGetWidth(self.initialRect) + resizeControlView.translation.x,
-                          CGRectGetHeight(self.initialRect));
+                          CGRectGetHeight(self.initialRect) + resizeControlView.translation.x * heightRatio);
     } else if (resizeControlView == self.topLeftCornerView) {
-        rect = CGRectMake(CGRectGetMinX(self.initialRect) + resizeControlView.translation.x,
-                          CGRectGetMinY(self.initialRect) + resizeControlView.translation.y,
-                          CGRectGetWidth(self.initialRect) - resizeControlView.translation.x,
-                          CGRectGetHeight(self.initialRect) - resizeControlView.translation.y);
+        /** 固定大小比例 */
+        if (heightRatio && widthRatio) {
+            CGFloat trans = self.aspectRatioHorizontally ? MAX(resizeControlView.translation.x, resizeControlView.translation.y) : MIN(resizeControlView.translation.x, resizeControlView.translation.y);
+            rect = CGRectMake(CGRectGetMinX(self.initialRect) + trans,
+                              CGRectGetMinY(self.initialRect) + trans * heightRatio,
+                              CGRectGetWidth(self.initialRect) - trans,
+                              CGRectGetHeight(self.initialRect) - trans * heightRatio);
+        } else {
+            rect = CGRectMake(CGRectGetMinX(self.initialRect) + resizeControlView.translation.x,
+                              CGRectGetMinY(self.initialRect) + resizeControlView.translation.y,
+                              CGRectGetWidth(self.initialRect) - resizeControlView.translation.x,
+                              CGRectGetHeight(self.initialRect) - resizeControlView.translation.y);
+        }
     } else if (resizeControlView == self.topRightCornerView) {
-        rect = CGRectMake(CGRectGetMinX(self.initialRect),
-                          CGRectGetMinY(self.initialRect) + resizeControlView.translation.y,
-                          CGRectGetWidth(self.initialRect) + resizeControlView.translation.x,
-                          CGRectGetHeight(self.initialRect) - resizeControlView.translation.y);
+        /** 固定大小比例 */
+        if (heightRatio && widthRatio) {
+            CGFloat trans = self.aspectRatioHorizontally ? MAX(resizeControlView.translation.x * -1, resizeControlView.translation.y) : MIN(resizeControlView.translation.x * -1, resizeControlView.translation.y);
+            rect = CGRectMake(CGRectGetMinX(self.initialRect),
+                              CGRectGetMinY(self.initialRect) + trans * heightRatio,
+                              CGRectGetWidth(self.initialRect) - trans,
+                              CGRectGetHeight(self.initialRect) - trans * heightRatio);
+        } else {
+            rect = CGRectMake(CGRectGetMinX(self.initialRect),
+                              CGRectGetMinY(self.initialRect) + resizeControlView.translation.y,
+                              CGRectGetWidth(self.initialRect) + resizeControlView.translation.x,
+                              CGRectGetHeight(self.initialRect) - resizeControlView.translation.y);
+        }
     } else if (resizeControlView == self.bottomLeftCornerView) {
-        rect = CGRectMake(CGRectGetMinX(self.initialRect) + resizeControlView.translation.x,
-                          CGRectGetMinY(self.initialRect),
-                          CGRectGetWidth(self.initialRect) - resizeControlView.translation.x,
-                          CGRectGetHeight(self.initialRect) + resizeControlView.translation.y);
+        /** 固定大小比例 */
+        if (heightRatio && widthRatio) {
+            CGFloat trans = self.aspectRatioHorizontally ? MAX(resizeControlView.translation.x, resizeControlView.translation.y * -1) : MIN(resizeControlView.translation.x, resizeControlView.translation.y * -1);
+            rect = CGRectMake(CGRectGetMinX(self.initialRect) + trans,
+                              CGRectGetMinY(self.initialRect),
+                              CGRectGetWidth(self.initialRect) - trans,
+                              CGRectGetHeight(self.initialRect) - trans * heightRatio);
+        } else {
+            rect = CGRectMake(CGRectGetMinX(self.initialRect) + resizeControlView.translation.x,
+                              CGRectGetMinY(self.initialRect),
+                              CGRectGetWidth(self.initialRect) - resizeControlView.translation.x,
+                              CGRectGetHeight(self.initialRect) + resizeControlView.translation.y);
+        }
     } else if (resizeControlView == self.bottomRightCornerView) {
-        rect = CGRectMake(CGRectGetMinX(self.initialRect),
-                          CGRectGetMinY(self.initialRect),
-                          CGRectGetWidth(self.initialRect) + resizeControlView.translation.x,
-                          CGRectGetHeight(self.initialRect) + resizeControlView.translation.y);
+        /** 固定大小比例 */
+        if (heightRatio && widthRatio) {
+            CGFloat trans = self.aspectRatioHorizontally ? MAX(resizeControlView.translation.x * -1, resizeControlView.translation.y * -1) : MIN(resizeControlView.translation.x * -1, resizeControlView.translation.y * -1);
+            rect = CGRectMake(CGRectGetMinX(self.initialRect),
+                              CGRectGetMinY(self.initialRect),
+                              CGRectGetWidth(self.initialRect) - trans,
+                              CGRectGetHeight(self.initialRect) - trans * heightRatio);
+        } else {
+            rect = CGRectMake(CGRectGetMinX(self.initialRect),
+                              CGRectGetMinY(self.initialRect),
+                              CGRectGetWidth(self.initialRect) + resizeControlView.translation.x,
+                              CGRectGetHeight(self.initialRect) + resizeControlView.translation.y);
+        }
+    }
+    
+    if (ceil(rect.size.width) < ceil(_controlMinSize.width) && ceil(rect.size.height) < ceil(_controlMinSize.height)) {
+        /** 限制长宽同时少于最小值，不处理 */
+        return self.gridRect;
     }
     
     /** ps：
@@ -248,19 +394,61 @@ const CGFloat kControlWidth = 30.f;
     }
     
     /** 限制宽度／高度 小于 最小限度 */
-    if (ceil(rect.size.width) < ceil(_controlMinSize.width)) {
-        /** 左上、左、左下 */
+    if (ceil(rect.size.width) <= ceil(_controlMinSize.width)) {
+        /** 左上、左、左下 处理x最小值 */
         if (resizeControlView == self.topLeftCornerView || resizeControlView == self.leftEdgeView || resizeControlView == self.bottomLeftCornerView) {
             rect.origin.x = CGRectGetMaxX(self.initialRect) - _controlMinSize.width;
         }
         rect.size.width = _controlMinSize.width;
+        if (heightRatio && widthRatio) {
+            rect.size.height = rect.size.width * heightRatio;
+            /** 左、右 处理x最小值中间 */
+            if (resizeControlView == self.leftEdgeView || resizeControlView == self.rightEdgeView) {
+                rect.origin.y = CGRectGetMaxY(self.initialRect) - CGRectGetHeight(self.initialRect)/2 - rect.size.height/2;
+            }
+            /** 上、下 处理y最小值中间 */
+            if (resizeControlView == self.topEdgeView || resizeControlView == self.bottomEdgeView) {
+                rect.origin.x = CGRectGetMaxX(self.initialRect) - CGRectGetWidth(self.initialRect)/2 - _controlMinSize.width/2;
+            }
+            /** 左上、上、右上 处理y最小值底部 */
+            if (resizeControlView == self.topLeftCornerView || resizeControlView == self.topEdgeView || resizeControlView == self.topRightCornerView) {
+                rect.origin.y = CGRectGetMaxY(self.initialRect) - rect.size.height;
+            }
+        }
     }
-    if (ceil(rect.size.height) < ceil(_controlMinSize.height)) {
-        /** 左上、上、右上 */
+    if (ceil(rect.size.height) <= ceil(_controlMinSize.height)) {
+        /** 左上、上、右上 处理y最小值底部 */
         if (resizeControlView == self.topLeftCornerView || resizeControlView == self.topEdgeView || resizeControlView == self.topRightCornerView) {
             rect.origin.y = CGRectGetMaxY(self.initialRect) - _controlMinSize.height;
         }
         rect.size.height = _controlMinSize.height;
+        if (heightRatio && widthRatio) {
+            rect.size.width = rect.size.height * widthRatio;
+            /** 左、右 处理y最小值中间 */
+            if (resizeControlView == self.leftEdgeView || resizeControlView == self.rightEdgeView) {
+                rect.origin.y = CGRectGetMaxY(self.initialRect) - CGRectGetHeight(self.initialRect)/2 - _controlMinSize.height/2;
+            }
+            /** 上、下 处理x最小值中间 */
+            if (resizeControlView == self.topEdgeView || resizeControlView == self.bottomEdgeView) {
+                rect.origin.x = CGRectGetMaxX(self.initialRect) - CGRectGetWidth(self.initialRect)/2 - rect.size.width/2;
+            }
+            
+            /** 左上、左、左下 处理x最小值 */
+            if (resizeControlView == self.topLeftCornerView || resizeControlView == self.leftEdgeView || resizeControlView == self.bottomLeftCornerView) {
+                rect.origin.x = CGRectGetMaxX(self.initialRect) - rect.size.width;
+            }
+        }
+    }
+    
+    /** 固定大小比例 */
+    if (heightRatio && widthRatio) {
+        if (rect.size.width == _controlMaxRect.size.width) {
+            rect.origin.y = self.initialRect.origin.y;
+            rect.size.height = rect.size.width * heightRatio;
+        } else if (rect.size.height == _controlMaxRect.size.height) {
+            rect.origin.x = self.initialRect.origin.x;
+            rect.size.width = rect.size.height * widthRatio;
+        }
     }
     
     return rect;

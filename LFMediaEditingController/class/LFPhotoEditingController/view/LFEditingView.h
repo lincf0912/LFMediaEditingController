@@ -35,9 +35,13 @@
 - (BOOL)canReset;
 /** 旋转 isClipping=YES 的情况有效 */
 - (void)rotate;
+/** 长宽比例 */
+- (void)setAspectRatio:(NSString *)aspectRatio;
 
 /** 创建编辑图片 */
 - (UIImage *)createEditImage;
+
+- (NSArray <NSString *>*)aspectRatioDescs;
 
 @end
 

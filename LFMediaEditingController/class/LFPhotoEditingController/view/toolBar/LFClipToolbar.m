@@ -15,11 +15,15 @@
 @property (nonatomic, strong) UIImage *resetImage_HL;
 @property (nonatomic, strong) UIImage *rotateCCWImage;
 @property (nonatomic, strong) UIImage *rotateCCWImage_HL;
+@property (nonatomic, strong) UIImage *clampCCWImage;
+@property (nonatomic, strong) UIImage *clampCCWImage_HL;
 
 @property (nonatomic, strong) UIColor *oKButtonTitleColorNormal;
 
 /** 重置按钮 */
 @property (nonatomic, weak) UIButton *resetButton;
+/** 长宽比例按钮 */
+@property (nonatomic, weak) UIButton *clampButton;
 
 @end
 
@@ -31,6 +35,7 @@
     if (self) {
         [self customInit];
         self.enableReset = NO;
+        self.selectAspectRatio = NO;
     }
     return self;
 }
@@ -43,6 +48,8 @@
     self.rotateCCWImage_HL = [self createRotateCWImageWithHighlighted:YES];
     self.resetImage = [self createResetImageWithHighlighted:NO];
     self.resetImage_HL = [self createResetImageWithHighlighted:YES];
+    self.clampCCWImage = [self createClampImageWithHighlighted:NO];
+    self.clampCCWImage_HL = [self createClampImageWithHighlighted:YES];
     
     CGFloat rgb = 34 / 255.0;
     self.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.7];
@@ -62,8 +69,10 @@
     
     /** 减去右按钮的剩余宽度 */
     CGFloat surplusWidth = CGRectGetWidth(self.frame)-(size.width+margin)-margin;
-    CGFloat resetButtonX = surplusWidth/3+margin;
-    CGFloat rotateButtonX = surplusWidth/3*2+margin;
+    CGFloat resetButtonX = surplusWidth/4+margin;
+    CGFloat rotateButtonX = surplusWidth/4*2+margin;
+    CGFloat clampButtonX = surplusWidth/4*3+margin;
+    
     /** 还原 */
     UIButton *resetButton = [UIButton buttonWithType:UIButtonTypeCustom];
     resetButton.frame = (CGRect){{resetButtonX,0}, size};
@@ -83,6 +92,16 @@
     [rotateButton addTarget:self action:@selector(clippingRotate:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:rotateButton];
     
+    /** 新增长宽比例 */
+    UIButton *clampButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    clampButton.frame = (CGRect){{clampButtonX,0}, size};
+    [clampButton setImage:self.clampCCWImage forState:UIControlStateNormal];
+    [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateHighlighted];
+    [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateSelected];
+    [clampButton addTarget:self action:@selector(clippingClamp:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:clampButton];
+    self.clampButton = clampButton;
+    
     /** 右 */
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     rightButton.frame = (CGRect){{CGRectGetWidth(self.frame)-size.width-margin,0}, size};
@@ -97,6 +116,12 @@
 {
     _enableReset = enableReset;
     self.resetButton.enabled = enableReset;
+}
+
+- (void)setSelectAspectRatio:(BOOL)selectAspectRatio
+{
+    _selectAspectRatio = selectAspectRatio;
+    self.clampButton.selected = selectAspectRatio;
 }
 
 #pragma mark - action
@@ -118,6 +143,13 @@
 {
     if ([self.delegate respondsToSelector:@selector(lf_clipToolbarDidRotate:)]) {
         [self.delegate lf_clipToolbarDidRotate:self];
+    }
+}
+
+- (void)clippingClamp:(UIButton *)button
+{
+    if ([self.delegate respondsToSelector:@selector(lf_clipToolbarDidAspectRatio:)]) {
+        [self.delegate lf_clipToolbarDidAspectRatio:self];
     }
 }
 
@@ -222,5 +254,52 @@
     
     return resetImage;
 }
+
+- (UIImage *)createClampImageWithHighlighted:(BOOL)highlighted
+{
+    UIImage *clampImage = nil;
+    
+    UIGraphicsBeginImageContextWithOptions((CGSize){22,16}, NO, 0.0f);
+    {
+        //// Color Declarations
+        UIColor* outerBox = highlighted ? [self.oKButtonTitleColorNormal colorWithAlphaComponent:0.553] : [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.553];
+        UIColor* innerBox = highlighted ? [self.oKButtonTitleColorNormal colorWithAlphaComponent:0.773] : [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.773];
+        
+        
+        
+        //// Rectangle Drawing
+        UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 3, 13, 13)];
+        highlighted ? [self.oKButtonTitleColorNormal setFill] : [UIColor.whiteColor setFill];
+        [rectanglePath fill];
+        
+        
+        //// Outer
+        {
+            //// Top Drawing
+            UIBezierPath* topPath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, 22, 2)];
+            [outerBox setFill];
+            [topPath fill];
+            
+            
+            //// Side Drawing
+            UIBezierPath* sidePath = [UIBezierPath bezierPathWithRect: CGRectMake(19, 2, 3, 14)];
+            [outerBox setFill];
+            [sidePath fill];
+        }
+        
+        
+        //// Rectangle 2 Drawing
+        UIBezierPath* rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(14, 3, 4, 13)];
+        [innerBox setFill];
+        [rectangle2Path fill];
+        
+        
+        clampImage = UIGraphicsGetImageFromCurrentImageContext();
+    }
+    UIGraphicsEndImageContext();
+    
+    return clampImage;
+}
+
 
 @end

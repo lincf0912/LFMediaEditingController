@@ -379,7 +379,7 @@
 /** 长宽比例 */
 - (void)lf_clipToolbarDidAspectRatio:(LFClipToolbar *)clipToolbar
 {
-    NSArray *items = [LFEditingView aspectRatioDescs];
+    NSArray *items = [_EditingView aspectRatioDescs];
     if (NSClassFromString(@"UIAlertController")) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:self.cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
