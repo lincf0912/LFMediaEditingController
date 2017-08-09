@@ -2,6 +2,7 @@
 
 * 图片编辑 (详细使用见LFPhotoEditingController.h 的初始化方法)
 * 视频编辑 (详细使用见LFVideoEditingController.h 的初始化方法)
+* （因数据可以多次重复编辑，暂时未能处理横竖屏切换。）
 
 ## Installation 安装
 
