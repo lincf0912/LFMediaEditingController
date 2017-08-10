@@ -16,6 +16,7 @@
 @property (nonatomic, strong) AVAssetExportSession *exportSession;
 @property (nonatomic, strong) AVMutableComposition *composition;
 @property (nonatomic, strong) AVMutableVideoComposition *videoComposition;
+@property (nonatomic, strong) AVMutableAudioMix *audioMix;
 
 @end
 
@@ -25,6 +26,7 @@
 {
     self = [super init];
     if (self) {
+        _isOrignalSound = YES;
         _asset = asset;
         _timeRange = CMTimeRangeMake(kCMTimeZero, self.asset.duration);
     }
@@ -33,12 +35,8 @@
 
 - (id)initWithURL:(NSURL *)url
 {
-    self = [super init];
-    if (self) {
-        _asset = [AVAsset assetWithURL:url];
-        _timeRange = CMTimeRangeMake(kCMTimeZero, self.asset.duration);
-    }
-    return self;
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    return [self initWithAsset:asset];
 }
 
 - (void)dealloc
@@ -102,11 +100,38 @@
         // 视频通道  工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材
         AVMutableCompositionTrack *compositionVideoTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
         // 把视频轨道数据加入到可变轨道中 这部分可以做视频裁剪TimeRange
-        [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, self.asset.duration) ofTrack:assetVideoTrack atTime:insertionPoint error:&error];
+        [compositionVideoTrack insertTimeRange:self.timeRange ofTrack:assetVideoTrack atTime:insertionPoint error:&error];
     }
-    if (assetAudioTrack != nil) {
+    if (assetAudioTrack != nil && self.isOrignalSound) {
         AVMutableCompositionTrack *compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
-        [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, self.asset.duration) ofTrack:assetAudioTrack atTime:insertionPoint error:&error];
+        [compositionAudioTrack insertTimeRange:self.timeRange ofTrack:assetAudioTrack atTime:insertionPoint error:&error];
+    }
+    
+    /** 创建额外音轨特效 */
+    NSMutableArray<AVAudioMixInputParameters *> *inputParameters;
+    if (self.audioUrls.count) {
+        inputParameters = [@[] mutableCopy];
+    }
+    
+    /** 添加其他音频 */
+    for (NSURL *audioUrl in self.audioUrls) {
+        /** 声音采集 */
+        AVURLAsset *audioAsset =[[AVURLAsset alloc]initWithURL:audioUrl options:nil];
+        AVAssetTrack *additional_assetAudioTrack = nil;
+        /** 检查是否有效音轨 */
+        if ([[audioAsset tracksWithMediaType:AVMediaTypeAudio] count] != 0) {
+            additional_assetAudioTrack = [audioAsset tracksWithMediaType:AVMediaTypeAudio][0];
+        }
+        AVMutableCompositionTrack *additional_compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+        [additional_compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration) ofTrack:additional_assetAudioTrack atTime:insertionPoint error:&error];
+        
+        AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:additional_compositionAudioTrack];
+        [mixParameters setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration)];
+        [inputParameters addObject:mixParameters];
+    }
+    if (inputParameters.count) {
+        self.audioMix = [AVMutableAudioMix audioMix];
+        self.audioMix.inputParameters = inputParameters;
     }
     
     UIImageOrientation orientation = [self orientationFromAVAssetTrack:assetVideoTrack];
@@ -152,7 +177,7 @@
         AVAssetTrack *videoTrack = [self.composition tracksWithMediaType:AVMediaTypeVideo][0];
         
         AVMutableVideoCompositionInstruction *roateInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-        roateInstruction.timeRange = self.timeRange;
+        roateInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, self.composition.duration);
         AVMutableVideoCompositionLayerInstruction *roateLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
         
         [roateLayerInstruction setTransform:transform atTime:kCMTimeZero];
@@ -177,10 +202,12 @@
     
     self.exportSession = [[AVAssetExportSession alloc] initWithAsset:self.composition presetName:AVAssetExportPresetHighestQuality];
     // Implementation continues.
-    self.exportSession.timeRange = self.timeRange;
+    /** 创建混合视频时开始剪辑 */
+//    self.exportSession.timeRange = self.timeRange;
     self.exportSession.videoComposition = self.videoComposition;
     self.exportSession.outputURL = trimURL;
     self.exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+    self.exportSession.audioMix = self.audioMix;
     
     if (self.asset.duration.timescale == 0 || self.exportSession == nil) {
         /** 这个情况AVAssetExportSession会卡死 */
