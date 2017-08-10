@@ -11,11 +11,8 @@
 #import "LFMediaEditingHeader.h"
 #import "JRPickColorView.h"
 
-#define photoButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png"]
-#define photoButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png"]
-
-#define videoButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditVideoCropToolBtn.png"]
-#define videoButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditVideoCropToolBtn_HL.png"]
+#define EditToolbarButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png", @"EditImageAudioToolBtn.png", @"EditVideoCropToolBtn.png"]
+#define EditToolbarButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png", @"EditImageAudioToolBtn_HL.png", @"EditVideoCropToolBtn_HL.png"]
 
 @interface LFEditToolbar () <JRPickColorViewDelegate>
 
@@ -42,7 +39,6 @@
 @property (nonatomic, weak) JRPickColorView *draw_colorSlider;
 
 @property (nonatomic, assign) LFEditToolbarType type;
-@property (nonatomic, assign) LFEditToolbarMediaType mediaType;
 @property (nonatomic, strong) NSArray *mainImageNormals;
 @property (nonatomic, strong) NSArray *mainImageHighlighted;
 
@@ -52,15 +48,9 @@
 
 - (instancetype)initWithType:(LFEditToolbarType)type
 {
-    return [self initWithType:type mediaType:LFEditToolbarMediaType_photo];
-}
-
-- (instancetype)initWithType:(LFEditToolbarType)type mediaType:(LFEditToolbarMediaType)mediaType
-{
     self = [self init];
     if (self) {
         _type = type;
-        _mediaType = mediaType;
         [self customInit];
     }
     return self;
@@ -77,8 +67,8 @@
 
 - (void)customInit
 {
-    _mainImageNormals = self.mediaType == LFEditToolbarMediaType_photo ? photoButtonImageNormals : videoButtonImageNormals;
-    _mainImageHighlighted = self.mediaType == LFEditToolbarMediaType_photo ? photoButtonImageHighlighted : videoButtonImageHighlighted;
+    _mainImageNormals = EditToolbarButtonImageNormals;
+    _mainImageHighlighted = EditToolbarButtonImageHighlighted;
     [self mainBar];
     [self subBar];
 }
@@ -102,26 +92,42 @@
     
     NSInteger buttonCount = 0;
     NSMutableArray <NSNumber *>*_imageIndexs = [@[] mutableCopy];
+    NSMutableArray <NSNumber *>*_selectIndexs = [@[] mutableCopy];
     
     if (self.type&LFEditToolbarType_draw) {
-        buttonCount ++;
         [_imageIndexs addObject:@0];
+        [_selectIndexs addObject:@(LFEditToolbarType_draw)];
+        buttonCount ++;
     }
     if (self.type&LFEditToolbarType_sticker) {
-        buttonCount ++;
         [_imageIndexs addObject:@1];
+        [_selectIndexs addObject:@(LFEditToolbarType_sticker)];
+        buttonCount ++;
     }
     if (self.type&LFEditToolbarType_text) {
-        buttonCount ++;
         [_imageIndexs addObject:@2];
+        [_selectIndexs addObject:@(LFEditToolbarType_text)];
+        buttonCount ++;
     }
     if (self.type&LFEditToolbarType_splash) {
-        buttonCount ++;
         [_imageIndexs addObject:@3];
+        [_selectIndexs addObject:@(LFEditToolbarType_splash)];
+        buttonCount ++;
     }
     if (self.type&LFEditToolbarType_crop) {
-        buttonCount ++;
         [_imageIndexs addObject:@4];
+        [_selectIndexs addObject:@(LFEditToolbarType_crop)];
+        buttonCount ++;
+    }
+    if (self.type&LFEditToolbarType_audio) {
+        [_imageIndexs addObject:@5];
+        [_selectIndexs addObject:@(LFEditToolbarType_audio)];
+        buttonCount ++;
+    }
+    if (self.type&LFEditToolbarType_clip) {
+        [_imageIndexs addObject:@6];
+        [_selectIndexs addObject:@(LFEditToolbarType_clip)];
+        buttonCount ++;
     }
     
     
@@ -133,8 +139,8 @@
             button.frame = CGRectMake(width*i, 0, width, 44);
             button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
             button.titleLabel.font = font;
+            button.tag = [_selectIndexs[i] integerValue];
             int index = [_imageIndexs[i] intValue];
-            button.tag = index;
             [button setImage:bundleEditImageNamed(_mainImageNormals[index]) forState:UIControlStateNormal];
             [button setImage:bundleEditImageNamed(_mainImageHighlighted[index]) forState:UIControlStateHighlighted];
             [button setImage:bundleEditImageNamed(_mainImageHighlighted[index]) forState:UIControlStateSelected];
@@ -175,7 +181,7 @@
         button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [edit_drawMenu addSubview:button];
         
-        UIButton *edit_drawMenu_revoke = [self revokeButtonWithType:0];
+        UIButton *edit_drawMenu_revoke = [self revokeButtonWithType:LFEditToolbarType_draw];
         [edit_drawMenu addSubview:edit_drawMenu_revoke];
         self.edit_drawMenu_revoke = edit_drawMenu_revoke;
         
@@ -230,7 +236,7 @@
         button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [edit_splashMenu addSubview:button];
         
-        UIButton *edit_splashMenu_revoke = [self revokeButtonWithType:3];
+        UIButton *edit_splashMenu_revoke = [self revokeButtonWithType:LFEditToolbarType_splash];
         [edit_splashMenu addSubview:edit_splashMenu_revoke];
         self.edit_splashMenu_revoke = edit_splashMenu_revoke;
         
@@ -254,7 +260,7 @@
         [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn.png") forState:UIControlStateNormal];
         [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn_HL.png") forState:UIControlStateHighlighted];
         [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn_HL.png") forState:UIControlStateSelected];
-        action1.tag = 30;
+        action1.tag = 0;
         [edit_splashMenu addSubview:action1];
         _edit_splashMenu_action_button = action1;
         
@@ -265,7 +271,7 @@
         [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn.png") forState:UIControlStateNormal];
         [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn_HL.png") forState:UIControlStateHighlighted];
         [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn_HL.png") forState:UIControlStateSelected];
-        action2.tag = 31;
+        action2.tag = 1;
         [edit_splashMenu addSubview:action2];
         
         /** 优先激活首个按钮 */
@@ -300,7 +306,7 @@
 - (void)edit_toolBar_buttonClick:(UIButton *)button
 {
     switch (button.tag) {
-        case 0:
+        case LFEditToolbarType_draw:
         {
             [self showMenuView:_edit_drawMenu];
             if (button.isSelected == NO) {
@@ -312,7 +318,7 @@
             [self changedButton:button];
         }
             break;
-        case 3:
+        case LFEditToolbarType_splash:
         {
             [self showMenuView:_edit_splashMenu];
             if (button.isSelected == NO) {
@@ -351,10 +357,7 @@
         button.selected = YES;
         _edit_splashMenu_action_button = button;
         if ([self.delegate respondsToSelector:@selector(lf_editToolbar:subDidSelectAtIndex:)]) {
-            NSString *tag = [NSString stringWithFormat:@"%ld", (long)button.tag];
-            NSInteger row = [[tag substringFromIndex:1] integerValue];
-            NSInteger section = [[tag substringToIndex:1] integerValue];
-            [self.delegate lf_editToolbar:self subDidSelectAtIndex:[NSIndexPath indexPathForRow:row inSection:section]];
+            [self.delegate lf_editToolbar:self subDidSelectAtIndex:[NSIndexPath indexPathForRow:button.tag inSection:LFEditToolbarType_splash]];
         }
     }
 }
@@ -410,12 +413,12 @@
 - (void)setRevokeAtIndex:(NSUInteger)index
 {
     switch (index) {
-        case 0:
+        case LFEditToolbarType_draw:
         {
             _edit_drawMenu_revoke.enabled = YES;
         }
             break;
-        case 3:
+        case LFEditToolbarType_splash:
         {
             _edit_splashMenu_revoke.enabled = YES;
         }

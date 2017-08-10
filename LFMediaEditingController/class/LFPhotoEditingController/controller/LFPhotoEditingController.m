@@ -165,7 +165,7 @@
         toolbarType |= LFEditToolbarType_crop;
     }
     
-    _edit_toolBar = [[LFEditToolbar alloc] initWithType:(toolbarType == 0 ? LFEditToolbarType_All : toolbarType)];
+    _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
     [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */
@@ -219,7 +219,7 @@
     [_EditingView stickerDeactivated];
     
     switch (index) {
-        case 0:
+        case LFEditToolbarType_draw:
         {
             /** 关闭涂抹 */
             _EditingView.splashEnable = NO;
@@ -227,18 +227,18 @@
             _EditingView.drawEnable = !_EditingView.drawEnable;
         }
             break;
-        case 1:
+        case LFEditToolbarType_sticker:
         {
             [self singlePressed];
             [self changeStickerMenu:YES];
         }
             break;
-        case 2:
+        case LFEditToolbarType_text:
         {
             [self showTextBarController:nil];
         }
             break;
-        case 3:
+        case LFEditToolbarType_splash:
         {
             /** 关闭绘画 */
             _EditingView.drawEnable = NO;
@@ -246,7 +246,7 @@
             _EditingView.splashEnable = !_EditingView.splashEnable;
         }
             break;
-        case 4:
+        case LFEditToolbarType_crop:
         {
             [_EditingView setIsClipping:YES animated:YES];
             [self changeClipMenu:YES];
@@ -261,21 +261,21 @@
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar subDidRevokeAtIndex:(NSUInteger)index
 {
     switch (index) {
-        case 0:
+        case LFEditToolbarType_draw:
         {
             [_EditingView drawUndo];
         }
             break;
-        case 1:
+        case LFEditToolbarType_sticker:
             break;
-        case 2:
+        case LFEditToolbarType_text:
             break;
-        case 3:
+        case LFEditToolbarType_splash:
         {
             [_EditingView splashUndo];
         }
             break;
-        case 4:
+        case LFEditToolbarType_crop:
             break;
         default:
             break;
@@ -285,18 +285,18 @@
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar subDidSelectAtIndex:(NSIndexPath *)indexPath
 {
     switch (indexPath.section) {
-        case 0:
+        case LFEditToolbarType_draw:
             break;
-        case 1:
+        case LFEditToolbarType_sticker:
             break;
-        case 2:
+        case LFEditToolbarType_text:
             break;
-        case 3:
+        case LFEditToolbarType_splash:
         {
             _EditingView.splashState = indexPath.row == 1;
         }
             break;
-        case 4:
+        case LFEditToolbarType_crop:
             break;
         default:
             break;
@@ -307,21 +307,21 @@
 {
     BOOL canUndo = NO;
     switch (index) {
-        case 0:
+        case LFEditToolbarType_draw:
         {
             canUndo = [_EditingView drawCanUndo];
         }
             break;
-        case 1:
+        case LFEditToolbarType_sticker:
             break;
-        case 2:
+        case LFEditToolbarType_text:
             break;
-        case 3:
+        case LFEditToolbarType_splash:
         {
             canUndo = [_EditingView splashCanUndo];
         }
             break;
-        case 4:
+        case LFEditToolbarType_crop:
             break;
         default:
             break;
@@ -510,7 +510,7 @@
 - (void)lf_photoEditDrawEnded
 {
     /** 撤销生效 */
-    if (_EditingView.drawCanUndo) [_edit_toolBar setRevokeAtIndex:LFPhotoEditingType_draw];
+    if (_EditingView.drawCanUndo) [_edit_toolBar setRevokeAtIndex:LFEditToolbarType_draw];
     
     _isHideNaviBar = NO;
     [self changedBarState];
@@ -541,7 +541,7 @@
 - (void)lf_photoEditSplashEnded
 {
     /** 撤销生效 */
-    if (_EditingView.splashCanUndo) [_edit_toolBar setRevokeAtIndex:LFPhotoEditingType_splash];
+    if (_EditingView.splashCanUndo) [_edit_toolBar setRevokeAtIndex:LFEditToolbarType_splash];
     
     _isHideNaviBar = NO;
     [self changedBarState];

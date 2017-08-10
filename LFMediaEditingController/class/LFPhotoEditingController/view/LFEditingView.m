@@ -171,13 +171,14 @@
                 CGRect rect = CGRectInset(self.frame , 20, 50);
                 self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect);
             } completion:^(BOOL finished) {
-                /** 显示多余部分 */
-                self.clippingView.clipsToBounds = NO;
+                [UIView animateWithDuration:0.25f animations:^{
+                    self.gridView.alpha = 1.f;
+                    self.imagePixel.alpha = 1.f;
+                } completion:^(BOOL finished) {
+                    /** 显示多余部分 */
+                    self.clippingView.clipsToBounds = NO;
+                }];
             }];
-            [UIView animateWithDuration:0.25f delay:0.1f options:UIViewAnimationOptionCurveEaseIn animations:^{
-                self.gridView.alpha = 1.f;
-                self.imagePixel.alpha = 1.f;
-            } completion:nil];
         } else {
             CGRect rect = CGRectInset(self.frame , 20, 50);
             self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect);

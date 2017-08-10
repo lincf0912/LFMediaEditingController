@@ -165,11 +165,11 @@ const CGFloat kControlWidth = 30.f;
 {
     if (!CGRectEqualToRect(_gridRect, gridRect)) {
         _gridRect = gridRect;
+        [self setNeedsLayout];
         [self.gridLayer setGridRect:gridRect animated:animated];
         if (isMaskLayer) {
             [self.gridMaskLayer setMaskRect:gridRect animated:YES];
         }
-        [self setNeedsLayout];
     }
 }
 

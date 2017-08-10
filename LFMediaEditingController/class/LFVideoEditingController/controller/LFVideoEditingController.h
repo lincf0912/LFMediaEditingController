@@ -17,6 +17,8 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
     LFVideoEditOperationType_sticker = 1 << 1,
     /** 文本 */
     LFVideoEditOperationType_text = 1 << 2,
+    /** 音频 */
+    LFVideoEditOperationType_audio = 1 << 3,
     /** 剪辑 */
     LFVideoEditOperationType_clip = 1 << 4,
     /** 所有 */

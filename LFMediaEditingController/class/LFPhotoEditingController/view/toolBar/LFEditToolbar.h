@@ -19,13 +19,12 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
     LFEditToolbarType_splash = 1 << 3,
     /** 修剪 */
     LFEditToolbarType_crop = 1 << 4,
+    /** 音频 */
+    LFEditToolbarType_audio = 1 << 5,
+    /** 剪辑 */
+    LFEditToolbarType_clip = 1 << 6,
     /** 所有 */
     LFEditToolbarType_All = ~0UL,
-};
-
-typedef NS_ENUM(NSUInteger, LFEditToolbarMediaType) {
-    LFEditToolbarMediaType_photo,
-    LFEditToolbarMediaType_video,
 };
 
 @protocol LFEditToolbarDelegate;
@@ -33,7 +32,6 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarMediaType) {
 @interface LFEditToolbar : UIView
 
 - (instancetype)initWithType:(LFEditToolbarType)type;
-- (instancetype)initWithType:(LFEditToolbarType)type mediaType:(LFEditToolbarMediaType)mediaType;
 
 @property (nonatomic, weak) id<LFEditToolbarDelegate> delegate;
 
