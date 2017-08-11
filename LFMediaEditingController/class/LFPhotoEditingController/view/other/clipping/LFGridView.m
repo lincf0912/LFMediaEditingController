@@ -364,9 +364,11 @@ const CGFloat kControlWidth = 30.f;
         }
     }
     
-    if (ceil(rect.size.width) < ceil(_controlMinSize.width) && ceil(rect.size.height) < ceil(_controlMinSize.height)) {
+    if (heightRatio && widthRatio) {
         /** 限制长宽同时少于最小值，不处理 */
-        return self.gridRect;
+        if (ceil(rect.size.width) < ceil(_controlMinSize.width) && ceil(rect.size.height) < ceil(_controlMinSize.height)) {
+            return self.gridRect;
+        }
     }
     
     /** ps：

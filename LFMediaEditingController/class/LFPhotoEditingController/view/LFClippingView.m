@@ -305,8 +305,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     if (!([self verifyRect:cropRect] && zoomScale == self.zoomScale)) { /** 实际位置与当前位置一致不做位移处理 && 缩放系数一致 */
         /** 获取相对坐标 */
         CGRect zoomRect = [self.superview convertRect:rect toView:self];
-        contentOffset.x = zoomRect.origin.x * zoomScale / self.zoomScale;
-        contentOffset.y = zoomRect.origin.y * zoomScale / self.zoomScale;
+        contentOffset.x = MIN(zoomRect.origin.x * zoomScale / self.zoomScale, zoomViewRect.size.width * zoomScale / self.zoomScale - cropRect.size.width);
+        contentOffset.y = MIN(zoomRect.origin.y * zoomScale / self.zoomScale, zoomViewRect.size.height * zoomScale / self.zoomScale - cropRect.size.height);
     }
     
     
