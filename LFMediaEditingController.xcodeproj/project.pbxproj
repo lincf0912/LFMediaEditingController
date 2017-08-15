@@ -38,6 +38,7 @@
 		6F14E65E1EE643AB0049AE56 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E65D1EE643AB0049AE56 /* PhotoViewController.m */; };
 		6F14E6601EE647820049AE56 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6F14E65F1EE647820049AE56 /* 1.jpg */; };
 		6F307D281F3AF6A700A48B49 /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6F307D271F3AF6A700A48B49 /* 3.jpg */; };
+		6F307D311F3C5DF800A48B49 /* LFAudioTrackBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F307D301F3C5DF800A48B49 /* LFAudioTrackBar.m */; };
 		6F359B101F1C676A009F2035 /* LFVideoEditingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359B0F1F1C676A009F2035 /* LFVideoEditingController.m */; };
 		6F359B131F1C678D009F2035 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359B121F1C678D009F2035 /* VideoViewController.m */; };
 		6F359B1C1F1C8AA3009F2035 /* LFMediaEditingHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359B1A1F1C8AA3009F2035 /* LFMediaEditingHeader.m */; };
@@ -127,6 +128,8 @@
 		6F14E65D1EE643AB0049AE56 /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		6F14E65F1EE647820049AE56 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		6F307D271F3AF6A700A48B49 /* 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 3.jpg; sourceTree = "<group>"; };
+		6F307D2F1F3C5DF800A48B49 /* LFAudioTrackBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFAudioTrackBar.h; sourceTree = "<group>"; };
+		6F307D301F3C5DF800A48B49 /* LFAudioTrackBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFAudioTrackBar.m; sourceTree = "<group>"; };
 		6F359B0E1F1C676A009F2035 /* LFVideoEditingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoEditingController.h; sourceTree = "<group>"; };
 		6F359B0F1F1C676A009F2035 /* LFVideoEditingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoEditingController.m; sourceTree = "<group>"; };
 		6F359B111F1C678D009F2035 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
@@ -495,6 +498,8 @@
 			children = (
 				6F359B351F1DDE6D009F2035 /* LFVideoClipToolbar.h */,
 				6F359B361F1DDE6D009F2035 /* LFVideoClipToolbar.m */,
+				6F307D2F1F3C5DF800A48B49 /* LFAudioTrackBar.h */,
+				6F307D301F3C5DF800A48B49 /* LFAudioTrackBar.m */,
 			);
 			path = toolBar;
 			sourceTree = "<group>";
@@ -633,6 +638,7 @@
 				6F14E65B1EE6439E0049AE56 /* JRPickColorView.m in Sources */,
 				6F14E6591EE6439E0049AE56 /* LFStickerBar.m in Sources */,
 				6F14E64C1EE6439E0049AE56 /* LFGridMaskLayer.m in Sources */,
+				6F307D311F3C5DF800A48B49 /* LFAudioTrackBar.m in Sources */,
 				6F359B2B1F1CBB3F009F2035 /* LFVideoClippingView.m in Sources */,
 				6FAB0D491F2735D800C1BCFD /* UIView+LFMECommon.m in Sources */,
 				6F359B411F1E0A2B009F2035 /* LFVideoTrimmerGridView.m in Sources */,

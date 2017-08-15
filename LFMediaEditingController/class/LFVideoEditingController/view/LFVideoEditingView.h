@@ -24,6 +24,7 @@
 
 /** 数据 */
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;
+- (void)setAudioUrls:(NSArray <NSURL *>*)audioUrls;
 
 /** 剪辑视频 */
 - (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete;

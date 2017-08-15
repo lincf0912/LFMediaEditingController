@@ -21,6 +21,7 @@
 @property (nonatomic, strong) UIColor *cancelButtonTitleColorNormal;
 @property (nonatomic, copy) NSString *oKButtonTitle;
 @property (nonatomic, copy) NSString *cancelButtonTitle;
+@property (nonatomic, assign) CGFloat customTopbarHeight;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFTextBarDelegate> delegate;

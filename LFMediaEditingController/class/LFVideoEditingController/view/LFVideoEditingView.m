@@ -30,6 +30,7 @@
 
 @property (nonatomic, strong) AVAsset *asset;
 @property (nonatomic, strong) LFVideoExportSession *exportSession;
+@property (nonatomic, strong) NSArray <NSURL *>*audioUrls;
 
 
 @end
@@ -160,6 +161,10 @@
     self.asset = asset;
     [self.clippingView setVideoAsset:asset placeholderImage:image];
 }
+- (void)setAudioUrls:(NSArray <NSURL *>*)audioUrls
+{
+    _audioUrls = audioUrls;
+}
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
@@ -223,6 +228,7 @@
     self.exportSession.outputURL = trimURL;
     self.exportSession.timeRange = range;
     self.exportSession.overlayView = self.clippingView.overlayView;
+    self.exportSession.audioUrls = self.audioUrls;
     
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(NSError *error) {
         if (complete) complete(trimURL, error);

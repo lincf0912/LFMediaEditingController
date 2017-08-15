@@ -16,8 +16,9 @@
 #import "LFStickerBar.h"
 #import "LFTextBar.h"
 #import "LFVideoClipToolbar.h"
+#import "LFAudioTrackBar.h"
 
-@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate>
+@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate>
 {
     /** 编辑模式 */
     LFVideoEditingView *_EditingView;
@@ -113,7 +114,7 @@
 
 - (void)configCustomNaviBar
 {
-    CGFloat margin = 10, topbarHeight = 64;
+    CGFloat margin = 5, topbarHeight = kCustomTopbarHeight;
     CGFloat buttonHeight = topbarHeight - margin*2;
     
     _edit_naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, topbarHeight)];
@@ -122,7 +123,7 @@
     
     UIFont *font = [UIFont systemFontOfSize:15];
     CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 2;
-    UIButton *_edit_cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, editCancelWidth, buttonHeight)];
+    UIButton *_edit_cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin*2, margin, editCancelWidth, buttonHeight)];
     _edit_cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [_edit_cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
     _edit_cancelButton.titleLabel.font = font;
@@ -131,7 +132,7 @@
     
     CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 5;
     
-    UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - (editOkWidth + margin), margin, editOkWidth, buttonHeight)];
+    UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - (editOkWidth + margin*2), margin, editOkWidth, buttonHeight)];
     _edit_finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [_edit_finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     _edit_finishButton.titleLabel.font = font;
@@ -257,7 +258,8 @@
             break;
         case LFEditToolbarType_audio:
         {
-            
+            /** 音轨编辑UI */
+            [self showAudioTrackBar];
         }
             break;
         case LFEditToolbarType_clip:
@@ -400,6 +402,30 @@
     }];
 }
 
+#pragma mark - LFAudioTrackBarDelegate
+/** 完成回调 */
+- (void)lf_audioTrackBar:(LFAudioTrackBar *)audioTrackBar didFinishAudioUrls:(NSArray <NSURL *> *)audioUrls
+{
+    if (audioTrackBar.error) {
+        [[[UIAlertView alloc] initWithTitle:nil message:audioTrackBar.error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    } else {
+        [self lf_audioTrackBarDidCancel:audioTrackBar];
+    }
+}
+/** 取消回调 */
+- (void)lf_audioTrackBarDidCancel:(LFAudioTrackBar *)audioTrackBar
+{
+    /** 显示顶部栏 */
+    _isHideNaviBar = NO;
+    [self changedBarState];
+    
+    [UIView animateWithDuration:0.25f delay:0.f options:UIViewAnimationOptionCurveLinear animations:^{
+        audioTrackBar.y = self.view.height;
+    } completion:^(BOOL finished) {
+        [audioTrackBar removeFromSuperview];
+        singleTapRecognizer.enabled = YES;
+    }];
+}
 
 #pragma mark - LFVideoClipToolbarDelegate
 /** 取消 */
@@ -540,7 +566,8 @@
         textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
         textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
         textBar.oKButtonTitle = self.oKButtonTitle;
-        textBar.cancelButtonTitle = self.cancelButtonTitle;        
+        textBar.cancelButtonTitle = self.cancelButtonTitle;
+        textBar.customTopbarHeight = kCustomTopbarHeight;
     }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;
@@ -577,5 +604,32 @@
         _edit_clipping_toolBar.delegate = self;
     }
     return _edit_clipping_toolBar;
+}
+
+#pragma mark - 音轨菜单
+- (void)showAudioTrackBar
+{
+    LFAudioTrackBar *audioTrackBar = [[LFAudioTrackBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFAudioTrackBar *audioTrackBar) {
+        audioTrackBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
+        audioTrackBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
+        audioTrackBar.oKButtonTitle = self.oKButtonTitle;
+        audioTrackBar.cancelButtonTitle = self.cancelButtonTitle;
+        audioTrackBar.customTopbarHeight = kCustomTopbarHeight;
+    }];
+    
+    audioTrackBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    audioTrackBar.delegate = self;
+//    audioTrackBar.audioUrls =
+    
+    [self.view addSubview:audioTrackBar];
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        audioTrackBar.y = 0;
+    } completion:^(BOOL finished) {
+        /** 隐藏顶部栏 */
+        _isHideNaviBar = YES;
+        [self changedBarState];
+        singleTapRecognizer.enabled = NO;
+    }];
 }
 @end

@@ -116,7 +116,7 @@
 
 - (void)configCustomNaviBar
 {
-    CGFloat margin = 10, topbarHeight = 64;
+    CGFloat margin = 5, topbarHeight = kCustomTopbarHeight;
     CGFloat buttonHeight = topbarHeight - margin*2;
     
     _edit_naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, topbarHeight)];
@@ -125,7 +125,7 @@
     
     UIFont *font = [UIFont systemFontOfSize:15];
     CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 2;
-    UIButton *_edit_cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, editCancelWidth, buttonHeight)];
+    UIButton *_edit_cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin*2, margin, editCancelWidth, buttonHeight)];
     _edit_cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [_edit_cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
     _edit_cancelButton.titleLabel.font = font;
@@ -134,7 +134,7 @@
     
     CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 5;
 
-    UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - (editOkWidth + margin), margin, editOkWidth, buttonHeight)];
+    UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - (editOkWidth + margin*2), margin, editOkWidth, buttonHeight)];
     _edit_finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [_edit_finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     _edit_finishButton.titleLabel.font = font;
@@ -631,6 +631,7 @@
         textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
         textBar.oKButtonTitle = self.oKButtonTitle;
         textBar.cancelButtonTitle = self.cancelButtonTitle;
+        textBar.customTopbarHeight = kCustomTopbarHeight;
     }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;
