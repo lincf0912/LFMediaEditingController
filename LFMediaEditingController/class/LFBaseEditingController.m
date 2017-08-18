@@ -18,8 +18,9 @@
     UIActivityIndicatorView *_HUDIndicatorView;
     UILabel *_HUDLabel;
 }
+/** 默认编辑屏幕方向 */
+@property (nonatomic, assign) UIInterfaceOrientation orientation;
 
-@property (nonatomic, assign) UIInterfaceOrientation superInterfaceOrientation;
 
 @end
 
@@ -27,9 +28,16 @@
 
 - (instancetype)init
 {
+    return [self initWithOrientation:UIInterfaceOrientationPortrait];
+}
+
+- (instancetype)initWithOrientation:(UIInterfaceOrientation)orientation
+{
     self = [super init];
     if (self) {
-        _orientation = UIInterfaceOrientationPortrait;
+        _orientation = orientation;
+        /** 因数据可以多次重复编辑，暂时未能处理横竖屏切换的问题。 */
+        [UIDevice LFME_setOrientation:orientation];
         _oKButtonTitleColorNormal = [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0];
         _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
         _isHiddenStatusBar = YES;
@@ -43,8 +51,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    /** 因数据可以多次重复编辑，暂时未能处理横竖屏切换的问题。 */
-    [UIDevice LFME_setOrientation:self.orientation];
 }
 
 - (void)dealloc

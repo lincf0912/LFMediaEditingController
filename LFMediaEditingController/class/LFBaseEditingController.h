@@ -13,9 +13,6 @@
 /** 是否隐藏状态栏 默认YES */
 @property (nonatomic, assign) BOOL isHiddenStatusBar;
 
-/** 默认编辑屏幕方向 */
-@property (nonatomic, assign) UIInterfaceOrientation orientation;
-
 /// 自定义外观颜色
 @property (nonatomic, strong) UIColor *oKButtonTitleColorNormal;
 @property (nonatomic, strong) UIColor *cancelButtonTitleColorNormal;
@@ -27,4 +24,8 @@
 //- (void)showProgressHUDText:(NSString *)text;
 - (void)showProgressHUD;
 - (void)hideProgressHUD;
+
+/** 初始化 */
+- (instancetype)initWithOrientation:(UIInterfaceOrientation)orientation;
+
 @end
