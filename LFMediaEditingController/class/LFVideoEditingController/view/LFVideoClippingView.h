@@ -49,10 +49,16 @@
 - (void)playVideo;
 /** 暂停 */
 - (void)pauseVideo;
+/** 静音原音 */
+- (void)muteOriginalVideo:(BOOL)mute;
 /** 是否播放 */
 - (BOOL)isPlaying;
 /** 重新播放 */
 - (void)replayVideo;
+/** 重置视频 */
+- (void)resetVideoDisplay;
+/** 增加音效 */
+- (void)addAudioMix:(NSArray <NSURL *>*)audioMix;
 
 /** 移动到某帧 */
 - (void)beginScrubbing;

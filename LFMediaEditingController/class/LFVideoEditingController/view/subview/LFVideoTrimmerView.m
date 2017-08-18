@@ -115,14 +115,30 @@
 - (void)analysisVideo
 {
     [self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    /** 适配获取张图以铺满内容 */
+    NSInteger maxImageCount = self.maxImageCount;
+    NSArray *assetVideoTracks = [_asset tracksWithMediaType:AVMediaTypeVideo];
+    CGSize maximumSize = CGSizeMake(self.contentView.frame.size.height, self.contentView.frame.size.height);;
+    if (assetVideoTracks.count > 0)
+    {
+        // Insert the tracks in the composition's tracks
+        AVAssetTrack *track = [assetVideoTracks firstObject];
+        CGSize dimensions = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
+        
+        maximumSize = CGSizeMake(dimensions.width/dimensions.height*self.contentView.frame.size.height, self.contentView.frame.size.height);
+    }
+    if (maxImageCount * maximumSize.width < self.contentView.frame.size.width) {
+        maxImageCount = self.contentView.frame.size.width / maximumSize.width + 1;
+    }
+    
     
     _imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:_asset];
-    CGFloat minSize = MIN(self.frame.size.width, self.frame.size.height);
-    _imageGenerator.maximumSize = CGSizeMake(minSize, minSize);
+    _imageGenerator.maximumSize = maximumSize;
     
     CMTime duration = _asset.duration;
-    NSInteger index = self.maxImageCount;
-    CMTimeValue intervalSeconds = duration.value/self.maxImageCount;
+    
+    NSInteger index = maxImageCount;
+    CMTimeValue intervalSeconds = duration.value/index;
     CMTime time = CMTimeMake(0, duration.timescale);
     NSMutableArray *times = [NSMutableArray array];
     for (NSUInteger i = 0; i < index; i++) {

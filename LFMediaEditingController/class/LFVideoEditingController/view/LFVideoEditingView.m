@@ -11,11 +11,22 @@
 #import "LFVideoTrimmerView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "LFVideoExportSession.h"
+#import "LFAudioTrackBar.h"
 
 #import "UIView+LFMEFrame.h"
 
 /** 默认剪辑尺寸 */
 #define kDefaultClipRect CGRectInset(self.frame , 20, 70)
+
+NSString *const kLFVideoEditingViewData = @"LFVideoEditingViewData";
+NSString *const kLFVideoEditingViewData_clipping = @"LFVideoEditingViewData_clipping";
+
+NSString *const kLFVideoEditingViewData_audioUrlList = @"LFVideoEditingViewData_audioUrlList";
+
+NSString *const kLFVideoEditingViewData_audioUrl = @"LFVideoEditingViewData_audioUrl";
+NSString *const kLFVideoEditingViewData_audioTitle = @"LFVideoEditingViewData_audioTitle";
+NSString *const kLFVideoEditingViewData_audioOriginal = @"LFVideoEditingViewData_audioOriginal";
+NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_audioEnable";
 
 @interface LFVideoEditingView () <LFVideoClippingViewDelegate, LFVideoTrimmerViewDelegate>
 
@@ -30,8 +41,6 @@
 
 @property (nonatomic, strong) AVAsset *asset;
 @property (nonatomic, strong) LFVideoExportSession *exportSession;
-@property (nonatomic, strong) NSArray <NSURL *>*audioUrls;
-
 
 @end
 
@@ -114,12 +123,14 @@
     if (isClipping) {
         /** 动画切换 */
         if (animated) {
+            self.trimmerView.hidden = NO;
+            self.trimmerView.alpha = 0.f;
             [UIView animateWithDuration:0.25f animations:^{
                 CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, kDefaultClipRect);
                 rect.origin.y = 0;
                 self.clippingRect = rect;
+                self.trimmerView.alpha = 1.f;
             } completion:^(BOOL finished) {
-                self.trimmerView.hidden = NO;
                 if (self.trimmerView.asset == nil) {
                     self.trimmerView.asset = self.asset;
                 }
@@ -139,6 +150,9 @@
             [UIView animateWithDuration:0.25f animations:^{
                 CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.frame);
                 self.clippingRect = cropRect;
+                self.trimmerView.alpha = 0.f;
+            } completion:^(BOOL finished) {
+                self.trimmerView.alpha = 1.f;
                 self.trimmerView.hidden = YES;
             }];
         } else {
@@ -158,12 +172,29 @@
 
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
+    if (self.audioUrls == nil) {
+        /** 创建默认音轨 */
+        LFAudioItem *item = [LFAudioItem defaultAudioItem];
+        self.audioUrls = @[item];
+    }
     self.asset = asset;
     [self.clippingView setVideoAsset:asset placeholderImage:image];
 }
-- (void)setAudioUrls:(NSArray <NSURL *>*)audioUrls
+
+- (void)setAudioUrls:(NSArray<LFAudioItem *> *)audioUrls
 {
     _audioUrls = audioUrls;
+    NSMutableArray <NSURL *>*audioMixUrls = [@[] mutableCopy];
+    BOOL isMuteOriginal = NO;
+    for (LFAudioItem *item in audioUrls) {
+        if (item.isOriginal) {
+            isMuteOriginal = !item.isEnable;
+        } else if (item.url && item.isEnable) {
+            [audioMixUrls addObject:item.url];
+        }
+    }
+    [self.clippingView addAudioMix:audioMixUrls];
+    [self.clippingView muteOriginalVideo:isMuteOriginal];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
@@ -228,11 +259,31 @@
     self.exportSession.outputURL = trimURL;
     self.exportSession.timeRange = range;
     self.exportSession.overlayView = self.clippingView.overlayView;
-    self.exportSession.audioUrls = self.audioUrls;
+    NSMutableArray *audioUrls = [@[] mutableCopy];
+    for (LFAudioItem *item in self.audioUrls) {
+        if (item.isEnable && item.url) {
+            [audioUrls addObject:item.url];
+        }
+        if (item.isOriginal) {
+            self.exportSession.isOrignalSound = item.isEnable;
+        }
+    }
+    self.exportSession.audioUrls = audioUrls;
     
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(NSError *error) {
         if (complete) complete(trimURL, error);
     }];
+}
+
+/** 播放 */
+- (void)playVideo
+{
+    [self.clippingView playVideo];
+}
+/** 重置视频 */
+- (void)resetVideoDisplay
+{
+    [self.clippingView resetVideoDisplay];
 }
 
 #pragma mark - LFVideoClippingViewDelegate
@@ -300,12 +351,58 @@
 #pragma mark - 数据
 - (NSDictionary *)photoEditData
 {
-    return self.clippingView.photoEditData;
+    NSDictionary *subData = self.clippingView.photoEditData;
+    NSMutableDictionary *data = [@{} mutableCopy];
+    if (subData) [data setObject:subData forKey:kLFVideoEditingViewData_clipping];
+    
+    if (self.audioUrls.count) {
+        NSMutableArray *audioDatas = [@[] mutableCopy];
+        BOOL hasOriginal = NO;
+        for (LFAudioItem *item in self.audioUrls) {
+            NSMutableDictionary *myData = [@{} mutableCopy];
+            if (item.title) {
+                [myData setObject:item.title forKey:kLFVideoEditingViewData_audioTitle];
+            }
+            if (item.url) {
+                [myData setObject:item.url forKey:kLFVideoEditingViewData_audioUrl];
+            }
+            [myData setObject:@(item.isOriginal) forKey:kLFVideoEditingViewData_audioOriginal];
+            [myData setObject:@(item.isEnable) forKey:kLFVideoEditingViewData_audioEnable];
+            
+            [audioDatas addObject:myData];
+            if (item.isOriginal && item.isEnable) {
+                hasOriginal = YES;
+            }
+        }
+        if (!(hasOriginal && audioDatas.count == 1)) { /** 只有1个并且是原音，忽略数据 */
+            [data setObject:@{kLFVideoEditingViewData_audioUrlList:audioDatas} forKey:kLFVideoEditingViewData];
+        }
+    }
+    if (data.count) {
+        return data;
+    }
+    return nil;
 }
 
 - (void)setPhotoEditData:(NSDictionary *)photoEditData
 {
-    self.clippingView.photoEditData = photoEditData;
+    NSDictionary *myData = [photoEditData objectForKey:kLFVideoEditingViewData];
+    if (myData) {
+        NSArray *audioUrlList = myData[kLFVideoEditingViewData_audioUrlList];
+        NSMutableArray <LFAudioItem *>*audioUrls = [@[] mutableCopy];
+        for (NSDictionary *audioDict in audioUrlList) {
+            LFAudioItem *item = [LFAudioItem new];
+            item.title = audioDict[kLFVideoEditingViewData_audioTitle];
+            item.url = audioDict[kLFVideoEditingViewData_audioUrl];
+            item.isOriginal = [audioDict[kLFVideoEditingViewData_audioOriginal] boolValue];
+            item.isEnable = [audioDict[kLFVideoEditingViewData_audioEnable] boolValue];
+            [audioUrls addObject:item];
+        }
+        if (audioUrls.count) {
+            self.audioUrls = [audioUrls copy];
+        }
+    }
+    self.clippingView.photoEditData = photoEditData[kLFVideoEditingViewData_clipping];
 }
 
 #pragma mark - 绘画功能

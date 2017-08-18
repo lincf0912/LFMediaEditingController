@@ -14,6 +14,16 @@
 
 @implementation LFAudioItem
 
++ (instancetype)defaultAudioItem
+{
+    LFAudioItem *item = [self new];
+    if (item) {
+        item.title = @"Default AudioTrack";
+        item.isOriginal = YES;
+        item.isEnable = YES;
+    }
+    return item;
+}
 
 @end
 
@@ -45,7 +55,6 @@
 @property (nonatomic, assign) CGFloat customToolbarHeight;
 
 @property (nonatomic, strong) NSMutableArray <LFAudioItem *> *m_audioUrls;
-@property (nonatomic, strong) NSMutableArray <LFAudioItem *> *m_select_audioUrls;
 
 @property (nonatomic, weak) UITableView *tableView;
 
@@ -86,7 +95,6 @@
 {
     self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:1.f];
     _m_audioUrls = [@[] mutableCopy];
-    _m_select_audioUrls = [@[] mutableCopy];
     
     [self configCustomNaviBar];
     [self configTableView];
@@ -191,33 +199,30 @@
 
 - (void)finishButtonClick
 {
-    BOOL hasOrignal = NO;
-    for (NSInteger i=0; i<self.m_select_audioUrls.count; i++) {
-        LFAudioItem *item = self.m_select_audioUrls[i];
-        if (item.isOriginal) {
-            hasOrignal = YES;
-        }
+    NSMutableArray <LFAudioItem *> *results = [@[] mutableCopy];
+    for (NSInteger i=0; i<self.m_audioUrls.count; i++) {
+        LFAudioItem *item = self.m_audioUrls[i];
+        [results addObject:item];
     }
-    BOOL isError = self.m_select_audioUrls.count > (hasOrignal ? 2 : 1);
-    if (isError) {
-        _error = [NSError errorWithDomain:NSOSStatusErrorDomain code:-300 userInfo:@{NSLocalizedDescriptionKey:@"最多只能选择1个额外音轨"}];
-    }
+    
     if ([self.delegate respondsToSelector:@selector(lf_audioTrackBar:didFinishAudioUrls:)]) {
-        [self.delegate lf_audioTrackBar:self didFinishAudioUrls:self.m_select_audioUrls];
+        [self.delegate lf_audioTrackBar:self didFinishAudioUrls:results];
     }
-    _error = nil;
 }
 
 - (void)audioTrackTrash
 {
-    for (LFAudioItem *item in self.m_select_audioUrls) {
+    NSMutableArray <LFAudioItem *>*deleteItems = [@[] mutableCopy];
+    for (LFAudioItem *item in self.m_audioUrls) {
         if (item.isOriginal) {
             continue;
         }
-        [self.m_audioUrls removeObject:item];
+        if (item.isEnable) {
+            [deleteItems addObject:item];
+        }
     }
-    if (self.m_select_audioUrls.count) {
-        [self.m_select_audioUrls removeAllObjects];
+    if (deleteItems.count) {
+        [self.m_audioUrls removeObjectsInArray:deleteItems];;
         [self.tableView reloadData];
     }
 }
@@ -237,7 +242,7 @@
 {
     [tableView beginUpdates];
     LFAudioItem *item = self.m_audioUrls[indexPath.row];
-    [self.m_select_audioUrls addObject:item];
+    item.isEnable = YES;
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [tableView endUpdates];
 }
@@ -246,7 +251,7 @@
 {
     [tableView beginUpdates];
     LFAudioItem *item = self.m_audioUrls[indexPath.row];
-    [self.m_select_audioUrls removeObject:item];
+    item.isEnable = NO;
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [tableView endUpdates];
 }
@@ -274,7 +279,7 @@
     LFAudioItem *item = self.m_audioUrls[indexPath.row];
     cell.textLabel.text = item.title;
     
-    if ([self.m_select_audioUrls containsObject:item]) {
+    if (item.isEnable) {
         [tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
     } else {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -307,6 +312,7 @@
             LFAudioItem *item = [LFAudioItem new];
             item.title = mediaItem.title;
             item.url = url;
+            item.isEnable = YES;
             [self.m_audioUrls addObject:item];
         }
     }
@@ -328,7 +334,9 @@
 {
     self.m_audioUrls = [@[] mutableCopy];
     if (audioUrls.count) {
-        [self.m_audioUrls addObjectsFromArray:audioUrls];
+        for (LFAudioItem *item in audioUrls) {
+            [self.m_audioUrls addObject:item];
+        }
     }
 }
 

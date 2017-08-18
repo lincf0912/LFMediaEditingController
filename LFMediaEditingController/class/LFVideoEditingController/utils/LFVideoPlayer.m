@@ -7,6 +7,10 @@
 //
 
 #import "LFVideoPlayer.h"
+enum
+{
+    kCMPersistentTrackID_Orignail_Invalid = 90
+};
 
 @interface LFVideoPlayer ()
 
@@ -15,6 +19,8 @@
 
 /** 视频播放器 */
 @property (strong) AVPlayer* player;
+
+@property (nonatomic ,strong) AVMutableAudioMix *audioMix;
 
 @end
 
@@ -48,6 +54,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     [self.player pause];
 }
 
+
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -74,6 +81,8 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
 - (void)setAsset:(AVAsset *)asset
 {
     _asset = asset;
+    _muteOriginalSound = NO;
+    
     /** size */
     CGSize videoSize = CGSizeZero;
     NSArray *assetVideoTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
@@ -88,6 +97,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
         NSLog(@"Error reading the transformed video track");
     }
     _size = videoSize;
+
     
     NSArray *requestedKeys = @[@"playable"];
     
@@ -100,6 +110,114 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
                             [self prepareToPlayAsset:asset withKeys:requestedKeys];
                         });
      }];
+}
+
+#pragma mark Asset audioMix
+- (void)setAsset:(AVAsset *)asset audioUrls:(NSArray <NSURL *>*)audioUrls
+{
+    self.audioMix = nil;
+    _audioUrls = audioUrls;
+    if (audioUrls.count && asset) {
+        
+        AVAssetTrack *assetVideoTrack = nil;
+        AVAssetTrack *assetAudioTrack = nil;
+        // Check if the asset contains video and audio tracks
+        if ([[asset tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
+            assetVideoTrack = [asset tracksWithMediaType:AVMediaTypeVideo][0];
+        }
+        if ([[asset tracksWithMediaType:AVMediaTypeAudio] count] != 0) {
+            assetAudioTrack = [asset tracksWithMediaType:AVMediaTypeAudio][0];
+        }
+        
+        CMTime insertionPoint = kCMTimeZero;
+        
+        // Step 1
+        // Create a composition with the given asset and insert audio and video tracks into it from the asset
+        // Check if a composition already exists, else create a composition using the input asset
+        
+        AVMutableComposition *composition = [[AVMutableComposition alloc] init];
+        
+        // Insert the video and audio tracks from AVAsset
+        if (assetVideoTrack != nil) {
+            // 视频通道  工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材
+            AVMutableCompositionTrack *compositionVideoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+            // 把视频轨道数据加入到可变轨道中 这部分可以做视频裁剪TimeRange
+            [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:assetVideoTrack atTime:insertionPoint error:nil];
+        }
+        
+        if (assetAudioTrack != nil) {
+            AVMutableCompositionTrack *compositionAudioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Orignail_Invalid];
+            [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:assetAudioTrack atTime:insertionPoint error:nil];
+        }
+        
+        /** 创建额外音轨特效 */
+        NSMutableArray<AVAudioMixInputParameters *> *inputParameters = [@[] mutableCopy];
+        for (NSURL *audioUrl in audioUrls) {
+            /** 声音采集 */
+            AVURLAsset *audioAsset =[[AVURLAsset alloc]initWithURL:audioUrl options:nil];
+            AVAssetTrack *additional_assetAudioTrack = nil;
+            /** 检查是否有效音轨 */
+            if ([[audioAsset tracksWithMediaType:AVMediaTypeAudio] count] != 0) {
+                additional_assetAudioTrack = [audioAsset tracksWithMediaType:AVMediaTypeAudio][0];
+            }
+            if (additional_assetAudioTrack) {
+                AVMutableCompositionTrack *additional_compositionAudioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+                [additional_compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, composition.duration) ofTrack:additional_assetAudioTrack atTime:insertionPoint error:nil];
+                
+                AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:additional_compositionAudioTrack];
+                CMTimeRange timeRange = self.endTime > 0 ? CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(self.endTime, composition.duration.timescale)) : CMTimeRangeMake(kCMTimeZero, composition.duration);
+                [mixParameters setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:timeRange];
+                [inputParameters addObject:mixParameters];
+            }
+            if (inputParameters.count) {
+                AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
+                [audioMix setInputParameters:inputParameters];
+                [self.mPlayerItem setAudioMix:audioMix];
+                self.audioMix = audioMix;
+            }
+        }
+        self.asset = composition;
+    } else {
+        self.asset = asset;
+    }
+    
+}
+
+- (void)setMuteOriginalSound:(BOOL)muteOriginalSound
+{
+    if (_muteOriginalSound != muteOriginalSound) {
+        _muteOriginalSound = muteOriginalSound;
+        [self mute:NO];
+        if ([self.asset isKindOfClass:[AVMutableComposition class]]) {
+            self.endTime = self.endTime;
+        } else {
+            self.audioMix = nil;
+            [self mute:muteOriginalSound];
+        }
+    }
+}
+
+ - (void)setEndTime:(CGFloat)endTime
+{
+    _endTime = endTime;
+    if ([self.asset isKindOfClass:[AVMutableComposition class]]) {
+        NSArray *audioTracks = [self.asset tracksWithMediaType:AVMediaTypeAudio];
+        NSMutableArray *allAudioParams = [NSMutableArray array];
+        CMTimeRange timeRange = self.endTime > 0 ? CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(self.endTime, self.asset.duration.timescale)) : CMTimeRangeMake(kCMTimeZero, self.asset.duration);
+        for (AVAssetTrack *track in audioTracks) {
+            AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:track];
+            if ([track trackID] == kCMPersistentTrackID_Orignail_Invalid) {
+                [audioInputParams setVolume:(self.muteOriginalSound ? 0 : 1) atTime:kCMTimeZero];
+            } else {
+                [audioInputParams setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:timeRange];
+            }
+            [allAudioParams addObject:audioInputParams];
+        }
+        AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
+        [audioMix setInputParameters:allAudioParams];
+        [self.mPlayerItem setAudioMix:audioMix];
+        self.audioMix = audioMix;
+    }
 }
 
 #pragma mark
@@ -121,6 +239,12 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
 - (void)pause
 {
     [self.player pause];
+}
+
+/** 静音 */
+- (void)mute:(BOOL)mute
+{
+    self.player.muted = mute;
 }
 
 - (void)resetDisplay
@@ -438,6 +562,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
     self.mPlayerItem = [AVPlayerItem playerItemWithAsset:asset];
+    self.mPlayerItem.audioMix = self.audioMix;
     
     /* Observe the player item "status" key to determine when it is ready to play. */
     [self.mPlayerItem addObserver:self

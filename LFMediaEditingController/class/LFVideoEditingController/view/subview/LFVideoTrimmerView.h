@@ -13,7 +13,7 @@
 
 /** 视频对象 */
 @property (nonatomic, strong) AVAsset *asset;
-/** 最大图片数量 默认15张 */
+/** 最大图片数量 默认10张 */
 @property (nonatomic, assign) NSInteger maxImageCount;
 /** 最小尺寸 */
 @property (nonatomic, assign) CGFloat controlMinWidth;

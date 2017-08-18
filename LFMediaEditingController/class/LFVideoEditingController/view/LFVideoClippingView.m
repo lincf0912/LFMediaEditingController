@@ -47,6 +47,9 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 
 /** 代理 */
 @property (nonatomic ,weak) id<LFPhotoEditDelegate> editDelegate_self;
+@property (nonatomic, assign) BOOL muteOriginal;
+@property (nonatomic, strong) NSArray *audioMix;
+@property (nonatomic, strong) AVAsset *asset;
 
 /** 记录编辑层是否可控 */
 @property (nonatomic, assign) BOOL editEnable;
@@ -137,20 +140,25 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
+    _asset = asset;
     [self.playerLayerView setImage:image];
     if (self.videoPlayer == nil) {
         self.videoPlayer = [LFVideoPlayer new];
         self.videoPlayer.delegate = self;
+        if (self.endTime > 0) {
+            self.videoPlayer.endTime = self.endTime;
+        }
     }
-    [self.videoPlayer setAsset:asset];
+    [self.videoPlayer setAsset:asset audioUrls:self.audioMix];
     
     /** 重置编辑UI位置 */
     CGSize videoSize = self.videoPlayer.size;
     if (CGSizeEqualToSize(CGSizeZero, videoSize) || isnan(videoSize.width) || isnan(videoSize.height)) {
         videoSize = self.zoomView.size;
     }
-    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(videoSize, self.zoomView.bounds);
-    _zoomView.frame = editRect;
+    CGRect editRect = AVMakeRectWithAspectRatioInsideRect(videoSize, self.superview.bounds);
+    self.frame = editRect;
+    _zoomView.size = editRect.size;
     _playerLayerView.frame = _drawView.frame = _splashView.frame = _stickerView.frame = _zoomView.bounds;
 }
 
@@ -206,6 +214,13 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     [self.videoPlayer pause];
 }
 
+/** 静音原音 */
+- (void)muteOriginalVideo:(BOOL)mute
+{
+    _muteOriginal = mute;
+    self.videoPlayer.muteOriginalSound = mute;
+}
+
 /** 是否播放 */
 - (BOOL)isPlaying
 {
@@ -220,6 +235,21 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
         [self.videoPlayer play];
     }
     [self seekToTime:self.startTime];
+}
+
+/** 重置视频 */
+- (void)resetVideoDisplay
+{
+    [self.videoPlayer pause];
+    [self.videoPlayer resetDisplay];
+    [self seekToTime:self.startTime];
+}
+
+/** 增加音效 */
+- (void)addAudioMix:(NSArray <NSURL *>*)audioMix
+{
+    _audioMix = audioMix;
+    [self.videoPlayer setAsset:self.asset audioUrls:audioMix];
 }
 
 /** 移动到某帧 */
@@ -238,6 +268,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 {
     _isScrubbing = NO;
     [self.videoPlayer endScrubbing];
+    self.videoPlayer.endTime = self.endTime;
 }
 
 /** 是否存在水印 */
@@ -295,6 +326,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
         _endTime = duration;
     }
     _totalDuration = duration;
+    self.videoPlayer.muteOriginalSound = self.muteOriginal;
     [self playVideo];
     if ([self.clipDelegate respondsToSelector:@selector(lf_videLClippingViewReadyToPlay:)]) {
         [self.clipDelegate lf_videLClippingViewReadyToPlay:self];

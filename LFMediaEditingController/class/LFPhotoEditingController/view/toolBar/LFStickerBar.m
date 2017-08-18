@@ -11,7 +11,6 @@
 #import "UIView+LFMEFrame.h"
 
 #define lf_stickerRow 2
-#define lf_stickerColumn 4
 #define lf_stickerSize 60
 #define lf_pageControlHeight 30
 
@@ -80,7 +79,7 @@
     NSInteger index = 0;
     
     NSInteger row = lf_stickerRow;
-    NSInteger column = lf_stickerColumn;
+    NSInteger column = self.frame.size.width / (lf_stickerSize + self.frame.size.width * 0.1);
     
     CGFloat size = lf_stickerSize;
     CGFloat marginRow = (lf_scrollViewSticker.bounds.size.width-column*size)/(column+1);

@@ -14,6 +14,9 @@
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, strong) NSURL *url;
 @property (nonatomic, assign) BOOL isOriginal;
+@property (nonatomic, assign) BOOL isEnable;
+
++ (instancetype)defaultAudioItem;
 
 @end
 
@@ -22,7 +25,6 @@
 @interface LFAudioTrackBar : UIView
 
 @property (nonatomic, strong) NSArray <LFAudioItem *> *audioUrls;
-@property (nonatomic, readonly) NSError *error;
 
 /** 代理 */
 @property (nonatomic, weak) UIViewController <LFAudioTrackBarDelegate> *delegate;

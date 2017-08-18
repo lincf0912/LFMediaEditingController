@@ -43,6 +43,9 @@
 /** 视频URL */
 @property (nonatomic, copy) NSURL* URL;
 @property (nonatomic, copy) AVAsset* asset;
+/** 音效 */
+@property (nonatomic, readonly) NSArray <NSURL *> *audioUrls;
+- (void)setAsset:(AVAsset *)asset audioUrls:(NSArray <NSURL *>*)audioUrls;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFVideoPlayerDelegate> delegate;
@@ -52,10 +55,16 @@
 @property (nonatomic, readonly) double totalDuration;
 /** 当前播放时间 */
 @property (nonatomic, readonly) double duration;
+/** 针对原音轨静音 */
+@property (nonatomic, assign) BOOL muteOriginalSound;
+/** 音效结束时间 */
+@property (nonatomic, assign) CGFloat endTime;
 
 /** 视频控制 */
 - (void)play;
 - (void)pause;
+/** 静音 */
+- (void)mute:(BOOL)mute;
 - (BOOL)isPlaying;
 /** 重置画面 */
 - (void)resetDisplay;

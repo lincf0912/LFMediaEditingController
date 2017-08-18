@@ -404,17 +404,24 @@
 
 #pragma mark - LFAudioTrackBarDelegate
 /** 完成回调 */
-- (void)lf_audioTrackBar:(LFAudioTrackBar *)audioTrackBar didFinishAudioUrls:(NSArray <NSURL *> *)audioUrls
+- (void)lf_audioTrackBar:(LFAudioTrackBar *)audioTrackBar didFinishAudioUrls:(NSArray <LFAudioItem *> *)audioUrls
 {
-    if (audioTrackBar.error) {
-        [[[UIAlertView alloc] initWithTitle:nil message:audioTrackBar.error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-    } else {
-        [self lf_audioTrackBarDidCancel:audioTrackBar];
+    /** 过滤没有启用的音轨 */
+    NSMutableArray <LFAudioItem *> *results = [@[] mutableCopy];
+    for (LFAudioItem *item in audioUrls) {
+        if (item.isEnable) { /** 选中的音轨 */
+            [results addObject:item];
+        } else if (item.isOriginal) { /** 默认音轨 */
+            [results addObject:item];
+        }
     }
+    _EditingView.audioUrls = audioUrls;
+    [self lf_audioTrackBarDidCancel:audioTrackBar];
 }
 /** 取消回调 */
 - (void)lf_audioTrackBarDidCancel:(LFAudioTrackBar *)audioTrackBar
 {
+    [_EditingView playVideo];
     /** 显示顶部栏 */
     _isHideNaviBar = NO;
     [self changedBarState];
@@ -619,7 +626,7 @@
     
     audioTrackBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     audioTrackBar.delegate = self;
-//    audioTrackBar.audioUrls =
+    audioTrackBar.audioUrls = _EditingView.audioUrls;
     
     [self.view addSubview:audioTrackBar];
     
@@ -630,6 +637,7 @@
         _isHideNaviBar = YES;
         [self changedBarState];
         singleTapRecognizer.enabled = NO;
+        [_EditingView resetVideoDisplay];
     }];
 }
 @end
