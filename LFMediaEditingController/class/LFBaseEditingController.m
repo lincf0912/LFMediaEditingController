@@ -68,6 +68,22 @@
     return self.isHiddenStatusBar;
 }
 
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    
+    UIInterfaceOrientationMask mask = UIInterfaceOrientationMaskPortrait;
+    switch (self.orientation) {
+        case UIInterfaceOrientationLandscapeLeft:
+            mask = UIInterfaceOrientationMaskLandscape;
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            mask = UIInterfaceOrientationMaskLandscape;
+            break;
+        default:
+            break;
+    }
+    return mask;
+}
+
 #pragma mark - private
 - (void)showProgressHUDText:(NSString *)text isTop:(BOOL)isTop
 {
