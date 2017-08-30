@@ -20,6 +20,8 @@
 /** 选中长宽比例按钮 default NO */
 @property (nonatomic, assign) BOOL selectAspectRatio;
 
+@property (nonatomic, readonly) CGRect clickViewRect;
+
 @end
 
 @protocol LFClipToolbarDelegate <NSObject>

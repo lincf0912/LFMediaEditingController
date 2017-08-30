@@ -127,6 +127,7 @@
 #pragma mark - action
 - (void)clippingCancel:(UIButton *)button
 {
+    _clickViewRect = button.frame;
     if ([self.delegate respondsToSelector:@selector(lf_clipToolbarDidCancel:)]) {
         [self.delegate lf_clipToolbarDidCancel:self];
     }
@@ -134,6 +135,7 @@
 
 - (void)clippingReset:(UIButton *)button
 {
+    _clickViewRect = button.frame;
     if ([self.delegate respondsToSelector:@selector(lf_clipToolbarDidReset:)]) {
         [self.delegate lf_clipToolbarDidReset:self];
     }
@@ -141,6 +143,7 @@
 
 - (void)clippingRotate:(UIButton *)button
 {
+    _clickViewRect = button.frame;
     if ([self.delegate respondsToSelector:@selector(lf_clipToolbarDidRotate:)]) {
         [self.delegate lf_clipToolbarDidRotate:self];
     }
@@ -148,6 +151,7 @@
 
 - (void)clippingClamp:(UIButton *)button
 {
+    _clickViewRect = button.frame;
     if ([self.delegate respondsToSelector:@selector(lf_clipToolbarDidAspectRatio:)]) {
         [self.delegate lf_clipToolbarDidAspectRatio:self];
     }
@@ -155,6 +159,7 @@
 
 - (void)clippingOk:(UIButton *)button
 {
+    _clickViewRect = button.frame;
     if ([self.delegate respondsToSelector:@selector(lf_clipToolbarDidFinish:)]) {
         [self.delegate lf_clipToolbarDidFinish:self];
     }

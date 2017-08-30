@@ -400,7 +400,7 @@
         alertController.modalPresentationStyle = UIModalPresentationPopover;
         UIPopoverPresentationController *presentationController = [alertController popoverPresentationController];
         presentationController.sourceView = clipToolbar;
-        presentationController.sourceRect = clipToolbar.frame;
+        presentationController.sourceRect = clipToolbar.clickViewRect;
         [self presentViewController:alertController animated:YES completion:nil];
     }
     else {
