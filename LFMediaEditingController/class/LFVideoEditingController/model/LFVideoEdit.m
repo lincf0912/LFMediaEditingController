@@ -32,6 +32,9 @@
     } else {
         asset = self.editAsset;
     }
+    
+    _duration = CMTimeGetSeconds(asset.duration);
+    
     NSParameterAssert(asset);
     AVAssetImageGenerator *assetImageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     assetImageGenerator.appliesPreferredTrackTransform = YES;

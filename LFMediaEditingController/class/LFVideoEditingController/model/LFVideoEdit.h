@@ -21,6 +21,8 @@
 @property (nonatomic, readonly) AVAsset *editAsset;
 /** 编辑数据 */
 @property (nonatomic, readonly) NSDictionary *editData;
+/** 视频时间 */
+@property (nonatomic, readonly) NSTimeInterval duration;
 
 /** 初始化 */
 - (instancetype)initWithEditAsset:(AVAsset *)editAsset editFinalURL:(NSURL *)editFinalURL data:(NSDictionary *)data;
