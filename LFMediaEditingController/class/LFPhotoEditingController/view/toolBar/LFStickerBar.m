@@ -14,14 +14,19 @@
 #define lf_stickerSize 60
 #define lf_pageControlHeight 30
 
+#define kImageExtensions @[@"png", @"jpg", @"jpeg", @"gif"]
+
 @interface LFStickerBar () <UIScrollViewDelegate>
 
+@property (nonatomic, strong) NSString *resourcePath;
 @property (nonatomic, strong) NSArray<NSString *> *files;
 
 @property (nonatomic, assign) NSInteger pageCount;
 
 @property (nonatomic, weak) UIScrollView *lf_scrollViewSticker;
 @property (nonatomic, weak) UIPageControl *lf_pageControlSticker;
+
+@property (nonatomic, assign) BOOL external;
 
 @end
 
@@ -40,6 +45,16 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame resourcePath:(NSString *)resourcePath
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _resourcePath = resourcePath;
         [self customInit];
     }
     return self;
@@ -64,8 +79,21 @@
     [self addSubview:bgButton];
     
     NSFileManager *fileManager = [NSFileManager new];
-    NSString *path = [[NSBundle mainBundle] pathForResource:kStickersPath ofType:nil];
-    self.files = [fileManager contentsOfDirectoryAtPath:path error:nil];
+    if (self.resourcePath && [fileManager fileExistsAtPath:self.resourcePath]) {
+        NSArray *files = [fileManager contentsOfDirectoryAtPath:self.resourcePath error:nil];
+        NSMutableArray *newFiles = [@[] mutableCopy];
+        for (NSString *fileName in files) {
+            if ([kImageExtensions containsObject:[fileName.pathExtension lowercaseString]]) {
+                [newFiles addObject:fileName];
+            }
+        }
+        self.files = [newFiles copy];
+        self.external = YES;
+    } else {
+        NSString *path = [[NSBundle mainBundle] pathForResource:kStickersPath ofType:nil];
+        self.files = [fileManager contentsOfDirectoryAtPath:path error:nil];
+    }
+    
     NSInteger count = self.files.count;
     [self setupScrollView:count];
     [self setupPageControl];
@@ -99,7 +127,12 @@
                 UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
                 [button setFrame:CGRectMake((x + i * marginRow + (i - 1) * size), (j * marginColumn + (j - 1) * size), size, size)];
                 [button setBackgroundColor:[UIColor clearColor]];
-                UIImage * backImage = bundleStickerImageNamed(self.files[index]);
+                UIImage * backImage = nil;
+                if (self.external) {
+                    backImage = [UIImage imageWithContentsOfFile:[self.resourcePath stringByAppendingPathComponent:self.files[index]]];
+                } else {
+                    backImage = bundleStickerImageNamed(self.files[index]);
+                }
                 [button setBackgroundImage:backImage forState:UIControlStateNormal];
                 button.tag = index;
                 [button addTarget:self action:@selector(stickerClicked:) forControlEvents:UIControlEventTouchUpInside];

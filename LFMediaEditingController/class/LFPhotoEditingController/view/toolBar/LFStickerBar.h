@@ -14,6 +14,16 @@
 
 @property (nonatomic, weak) id <LFStickerBarDelegate> delegate;
 
+
+/**
+ 初始化 指定贴图资源目录
+
+ @param frame 位置
+ @param resourcePath 资源目录
+ @return self
+ */
+- (instancetype)initWithFrame:(CGRect)frame resourcePath:(NSString *)resourcePath;
+
 @end
 
 @protocol LFStickerBarDelegate <NSObject>

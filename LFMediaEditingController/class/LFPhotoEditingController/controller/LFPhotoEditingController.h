@@ -35,6 +35,9 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationType) {
 /** 设置操作类型 default is LFPhotoEditOperationType_All */
 @property (nonatomic, assign) LFPhotoEditOperationType operationType;
 
+/** 自定义贴图资源 */
+@property (nonatomic, strong) NSString *stickerPath;
+
 /** 代理 */
 @property (nonatomic, weak) id<LFPhotoEditingControllerDelegate> delegate;
 

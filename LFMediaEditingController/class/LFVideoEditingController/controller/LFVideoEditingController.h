@@ -40,6 +40,8 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
 
 /** 设置操作类型 default is LFVideoEditOperationType_All */
 @property (nonatomic, assign) LFVideoEditOperationType operationType;
+/** 自定义贴图资源 */
+@property (nonatomic, strong) NSString *stickerPath;
 /** 允许剪辑的最小时长 1秒 */
 @property (nonatomic, assign) double minClippingDuration;
 
