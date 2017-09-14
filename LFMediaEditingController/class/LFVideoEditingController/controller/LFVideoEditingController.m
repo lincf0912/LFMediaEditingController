@@ -42,9 +42,9 @@
 
 @implementation LFVideoEditingController
 
-- (instancetype)init
+- (instancetype)initWithOrientation:(UIInterfaceOrientation)orientation
 {
-    self = [super init];
+    self = [super initWithOrientation:orientation];
     if (self) {
         _operationType = LFVideoEditOperationType_All;
         _minClippingDuration = 1.f;

@@ -43,9 +43,9 @@
 
 @implementation LFPhotoEditingController
 
-- (instancetype)init
+- (instancetype)initWithOrientation:(UIInterfaceOrientation)orientation
 {
-    self = [super init];
+    self = [super initWithOrientation:orientation];
     if (self) {
         _operationType = LFPhotoEditOperationType_All;
     }
