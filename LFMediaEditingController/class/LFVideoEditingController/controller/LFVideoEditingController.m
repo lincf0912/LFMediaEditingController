@@ -191,11 +191,11 @@
     /** 取消贴图激活 */
     [_EditingView stickerDeactivated];
     
+    /** 处理编辑图片 */
+    __block LFVideoEdit *videoEdit = nil;
+    NSDictionary *data = [_EditingView photoEditData];
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        /** 处理编辑图片 */
-        __block LFVideoEdit *videoEdit = nil;
-        NSDictionary *data = [_EditingView photoEditData];
         if (data) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL, NSError *error) {

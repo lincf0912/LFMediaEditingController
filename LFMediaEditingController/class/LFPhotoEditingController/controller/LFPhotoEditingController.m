@@ -193,12 +193,15 @@
     /** 取消贴图激活 */
     [_EditingView stickerDeactivated];
     
+    /** 处理编辑图片 */
+    __block LFPhotoEdit *photoEdit = nil;
+    NSDictionary *data = [_EditingView photoEditData];
+    UIImage *image = nil;
+    if (data) {
+        image = [_EditingView createEditImage];
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        /** 处理编辑图片 */
-        LFPhotoEdit *photoEdit = nil;
-        NSDictionary *data = [_EditingView photoEditData];
         if (data) {
-            UIImage *image = [_EditingView createEditImage];
             photoEdit = [[LFPhotoEdit alloc] initWithEditImage:self.editImage previewImage:image data:data];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
