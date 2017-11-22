@@ -48,6 +48,7 @@
         if (layoutBlock) {
             layoutBlock(self);
         }
+        layoutBlock = nil;
         [self customInit];
     }
     return self;

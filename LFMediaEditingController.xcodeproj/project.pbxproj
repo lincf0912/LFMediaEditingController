@@ -67,6 +67,7 @@
 		6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D461F2735D800C1BCFD /* UIView+LFMEFrame.m */; };
 		6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
+		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -185,6 +186,8 @@
 		6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+LFMEOrientation.m"; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
+		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
+		C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFEditCollectionView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -408,6 +411,8 @@
 				6F14E6341EE6439E0049AE56 /* LFEditToolbar.m */,
 				6F14E6351EE6439E0049AE56 /* LFStickerBar.h */,
 				6F14E6361EE6439E0049AE56 /* LFStickerBar.m */,
+				C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */,
+				C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */,
 				6F14E6371EE6439E0049AE56 /* LFTextBar.h */,
 				6F14E6381EE6439E0049AE56 /* LFTextBar.m */,
 			);
@@ -645,6 +650,7 @@
 				6F14E64C1EE6439E0049AE56 /* LFGridMaskLayer.m in Sources */,
 				6F307D311F3C5DF800A48B49 /* LFAudioTrackBar.m in Sources */,
 				6F359B2B1F1CBB3F009F2035 /* LFVideoClippingView.m in Sources */,
+				C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */,
 				6FAB0D491F2735D800C1BCFD /* UIView+LFMECommon.m in Sources */,
 				6F359B411F1E0A2B009F2035 /* LFVideoTrimmerGridView.m in Sources */,
 				6F359B441F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m in Sources */,

@@ -73,7 +73,11 @@
 {
     return self.isHiddenStatusBar;
 }
-
+- (BOOL)shouldAutorotate
+{
+    /** 必须要为YES，开启接受屏幕方向转换，否则会受到其他能横屏的界面影响，无法更正回来 */
+    return YES;
+}
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     
     UIInterfaceOrientationMask mask = UIInterfaceOrientationMaskPortrait;

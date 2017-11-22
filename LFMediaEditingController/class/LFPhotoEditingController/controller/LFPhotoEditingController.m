@@ -18,7 +18,7 @@
 #import "LFClipToolbar.h"
 
 
-@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate>
+@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
     /** 编辑模式 */
     LFEditingView *_EditingView;
@@ -81,6 +81,17 @@
     [super viewWillDisappear:animated];
 }
 
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    
+    if (@available(iOS 11.0, *)) {
+        _edit_naviBar.height = kCustomTopbarHeight_iOS11;
+    } else {
+        _edit_naviBar.height = kCustomTopbarHeight;
+    }
+}
+
 - (void)dealloc{
     [self hideProgressHUD];
 }
@@ -108,6 +119,7 @@
     singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singlePressed)];
     /** 点击的次数 */
     singleTapRecognizer.numberOfTapsRequired = 1; // 单击
+    singleTapRecognizer.delegate = self;
     /** 给view添加一个手势监测 */
     [self.view addGestureRecognizer:singleTapRecognizer];
     
@@ -116,8 +128,13 @@
 
 - (void)configCustomNaviBar
 {
-    CGFloat margin = 5, topbarHeight = kCustomTopbarHeight;
-    CGFloat buttonHeight = topbarHeight;
+    CGFloat margin = 5, topbarHeight = 0;
+    if (@available(iOS 11.0, *)) {
+        topbarHeight = kCustomTopbarHeight_iOS11;
+    } else {
+        topbarHeight = kCustomTopbarHeight;
+    }
+    CGFloat buttonHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
     
     _edit_naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, topbarHeight)];
     _edit_naviBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
@@ -211,6 +228,15 @@
             [self hideProgressHUD];
         });
     });
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([touch.view isDescendantOfView:_EditingView]) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - LFEditToolbarDelegate 底部栏(action)
@@ -342,7 +368,11 @@
 - (UIView *)edit_clipping_toolBar
 {
     if (_edit_clipping_toolBar == nil) {
-        _edit_clipping_toolBar = [[LFClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - 44, self.view.width, 44)];
+        CGFloat h = 44.f;
+        if (@available(iOS 11.0, *)) {
+            h += self.view.safeAreaInsets.bottom;
+        }
+        _edit_clipping_toolBar = [[LFClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
         _edit_clipping_toolBar.delegate = self;
     }
     return _edit_clipping_toolBar;
@@ -449,6 +479,9 @@
 {
     if (_edit_sticker_toolBar == nil) {
         CGFloat w=self.view.width, h=175.f;
+        if (@available(iOS 11.0, *)) {
+            h += self.view.safeAreaInsets.bottom;
+        }
         _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:self.stickerPath];
         _edit_sticker_toolBar.delegate = self;
     }
@@ -634,7 +667,7 @@
         textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
         textBar.oKButtonTitle = self.oKButtonTitle;
         textBar.cancelButtonTitle = self.cancelButtonTitle;
-        textBar.customTopbarHeight = kCustomTopbarHeight;
+        textBar.customTopbarHeight = self->_edit_naviBar.height;
     }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;

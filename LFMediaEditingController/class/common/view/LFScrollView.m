@@ -36,6 +36,10 @@
     self.scrollsToTop = NO;
     self.showsHorizontalScrollIndicator = NO;
     self.showsVerticalScrollIndicator = NO;
+    
+    if (@available(iOS 11.0, *)){
+        [self setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
 }
 
 - (BOOL)touchesShouldBegin:(NSSet *)touches withEvent:(UIEvent *)event inContentView:(UIView *)view

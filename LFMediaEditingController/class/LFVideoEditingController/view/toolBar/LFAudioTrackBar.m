@@ -52,8 +52,6 @@
 
 @interface LFAudioTrackBar () <UITableViewDelegate, UITableViewDataSource, MPMediaPickerControllerDelegate>
 
-@property (nonatomic, assign) CGFloat customToolbarHeight;
-
 @property (nonatomic, strong) NSMutableArray <LFAudioItem *> *m_audioUrls;
 
 @property (nonatomic, weak) UITableView *tableView;
@@ -86,6 +84,7 @@
         if (layoutBlock) {
             layoutBlock(self);
         }
+        layoutBlock = nil;
         [self customInit];
     }
     return self;
@@ -105,22 +104,22 @@
 {
     /** 顶部栏 */
     CGFloat margin = 5;
-    CGFloat size = _customTopbarHeight;
+    CGFloat size = 44;
     UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, _customTopbarHeight)];
     topbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     topbar.backgroundColor = [UIColor clearColor];
     
     UIFont *font = [UIFont systemFontOfSize:15];
-    CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, _customTopbarHeight) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + margin*4;
-    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, editCancelWidth, size)];
+    CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, size) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + margin*4;
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, topbar.height-size, editCancelWidth, size)];
     cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
     cancelButton.titleLabel.font = font;
     [cancelButton setTitleColor:self.cancelButtonTitleColorNormal forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
-    CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, _customTopbarHeight) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + margin*4;
-    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - editOkWidth, 0, editOkWidth, size)];
+    CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, size) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + margin*4;
+    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - editOkWidth, topbar.height-size, editOkWidth, size)];
     finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     finishButton.titleLabel.font = font;
@@ -148,9 +147,15 @@
     if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
         [tableView setSeparatorInset:UIEdgeInsetsZero];
     }
+    if (@available(iOS 11.0, *)){
+        [tableView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
     tableView.tableFooterView = [[UIView alloc] init];
     tableView.allowsSelection = NO;
     tableView.allowsMultipleSelectionDuringEditing = YES;
+    tableView.estimatedRowHeight = 0;
+    tableView.estimatedSectionHeaderHeight = 0;
+    tableView.estimatedSectionFooterHeight = 0;
     
     tableView.editing = YES;
     [self addSubview:tableView];
@@ -164,7 +169,7 @@
     CGFloat rgb = 34 / 255.0;
     toolbar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.7];
     
-    CGSize size = CGSizeMake(44, toolbar.frame.size.height);
+    CGSize size = CGSizeMake(44, 44);
     CGFloat margin = 10.f;
     
     /** 左 */

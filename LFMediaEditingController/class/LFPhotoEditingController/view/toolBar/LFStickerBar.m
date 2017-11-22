@@ -9,28 +9,22 @@
 #import "LFStickerBar.h"
 #import "LFMediaEditingHeader.h"
 #import "UIView+LFMEFrame.h"
+#import "LFEditCollectionView.h"
 
 #define lf_stickerRow 2
-#define lf_stickerSize 60
-#define lf_pageControlHeight 30
+#define lf_stickerMargin 10
 
 #define kImageExtensions @[@"png", @"jpg", @"jpeg", @"gif"]
 
-@interface LFStickerBar () <UIScrollViewDelegate>
+#pragma mark - LFStickerCollectionViewCell
+@interface LFStickerCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, strong) NSString *resourcePath;
-@property (nonatomic, strong) NSArray<NSString *> *files;
+@property (nonatomic, weak) UIImageView *lf_imageView;
 
-@property (nonatomic, assign) NSInteger pageCount;
-
-@property (nonatomic, weak) UIScrollView *lf_scrollViewSticker;
-@property (nonatomic, weak) UIPageControl *lf_pageControlSticker;
-
-@property (nonatomic, assign) BOOL external;
-
++ (NSString *)identifier;
 @end
 
-@implementation LFStickerBar
+@implementation LFStickerCollectionViewCell
 
 - (instancetype)init
 {
@@ -50,14 +44,101 @@
     return self;
 }
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGFloat width = self.contentView.frame.size.width;
+    CGFloat height = self.contentView.frame.size.height;
+    self.lf_imageView.frame = CGRectMake(0, 0, width, height);
+}
+
+- (void)customInit
+{
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self.contentView addSubview:imageView];
+    self.lf_imageView = imageView;
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    self.lf_imageView.image = nil;
+}
+
++ (NSString *)identifier
+{
+    return NSStringFromClass([LFStickerCollectionViewCell class]);
+}
+
+@end
+
+@interface LFStickerBar () <UIScrollViewDelegate>
+
+@property (nonatomic, strong) NSString *resourcePath;
+@property (nonatomic, strong) NSArray<NSString *> *files;
+
+@property (nonatomic, weak) LFEditCollectionView *lf_collectionViewSticker;
+
+/* 外置资源 */
+@property (nonatomic, assign) BOOL external;
+
+/* 记录自身高度 */
+@property (nonatomic, assign) CGFloat myHeight;
+
+@end
+
+@implementation LFStickerBar
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _myHeight = frame.size.height;
+        [self customInit];
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame resourcePath:(NSString *)resourcePath
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _myHeight = frame.size.height;
         _resourcePath = resourcePath;
         [self customInit];
     }
     return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    if (@available(iOS 11.0, *)) {
+        self.lf_collectionViewSticker.height = self.height - self.safeAreaInsets.bottom;
+        CGFloat size = (self.lf_collectionViewSticker.height-lf_stickerMargin*2)/lf_stickerRow;
+        self.lf_collectionViewSticker.itemSize = CGSizeMake(size, size);
+        [self.lf_collectionViewSticker.collectionViewLayout invalidateLayout];
+    }
 }
 
 - (void)customInit
@@ -94,108 +175,48 @@
         self.files = [fileManager contentsOfDirectoryAtPath:path error:nil];
     }
     
-    NSInteger count = self.files.count;
-    [self setupScrollView:count];
-    [self setupPageControl];
+    [self setupCollectionView];
 }
 
-- (void)setupScrollView:(NSInteger)count
+- (void)setupCollectionView
 {
+    LFEditCollectionView *lf_collectionViewSticker = [[LFEditCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+    [lf_collectionViewSticker setBackgroundColor:[UIColor clearColor]];
     
-    UIScrollView *lf_scrollViewSticker = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
-    [lf_scrollViewSticker setBackgroundColor:[UIColor clearColor]];
-    NSInteger index = 0;
+    CGFloat size = (self.lf_collectionViewSticker.height-lf_stickerMargin*2)/lf_stickerRow;
+    lf_collectionViewSticker.itemSize = CGSizeMake(size, size);
+    lf_collectionViewSticker.sectionInset = UIEdgeInsetsMake(lf_stickerMargin, lf_stickerMargin, lf_stickerMargin, lf_stickerMargin);
     
-    NSInteger row = lf_stickerRow;
-    NSInteger column = self.frame.size.width / (lf_stickerSize + self.frame.size.width * 0.1);
+    [lf_collectionViewSticker registerClass:[LFStickerCollectionViewCell class] forCellWithReuseIdentifier:[LFStickerCollectionViewCell identifier]];
     
-    CGFloat size = lf_stickerSize;
-    CGFloat marginRow = (lf_scrollViewSticker.bounds.size.width-column*size)/(column+1);
-    CGFloat marginColumn = (lf_scrollViewSticker.bounds.size.height-row*size)/(row+1);
+    lf_collectionViewSticker.dataSources = @[self.files];
     
-    NSInteger pageCount = count/(row*column);
-    pageCount = count%(row*column) > 0 ? pageCount + 1 : pageCount;
-    self.pageCount = pageCount;
-    
-    for (NSInteger pageIndex = 0; pageIndex < pageCount; pageIndex ++) {
-        
-        CGFloat x = pageIndex * self.bounds.size.width;
-        
-        for (NSInteger j=1; j<=row; j++) {
-            for (NSInteger i=1;i<=column;i++) {
-                if (index >= count) break;
-                UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-                [button setFrame:CGRectMake((x + i * marginRow + (i - 1) * size), (j * marginColumn + (j - 1) * size), size, size)];
-                [button setBackgroundColor:[UIColor clearColor]];
-                UIImage * backImage = nil;
-                if (self.external) {
-                    backImage = [UIImage imageWithContentsOfFile:[self.resourcePath stringByAppendingPathComponent:self.files[index]]];
-                } else {
-                    backImage = bundleStickerImageNamed(self.files[index]);
-                }
-                [button setBackgroundImage:backImage forState:UIControlStateNormal];
-                button.tag = index;
-                [button addTarget:self action:@selector(stickerClicked:) forControlEvents:UIControlEventTouchUpInside];
-                index++;
-                [lf_scrollViewSticker addSubview:button];
-            }
+    __weak typeof(self) weakSelf = self;
+    [lf_collectionViewSticker callbackCellIdentifier:^NSString * _Nonnull(NSIndexPath * _Nonnull indexPath) {
+        return [LFStickerCollectionViewCell identifier];
+    } configureCell:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item, UICollectionViewCell * _Nonnull cell) {
+        UIImage * backImage = nil;
+        if (weakSelf.external) {
+            backImage = [UIImage imageWithContentsOfFile:[weakSelf.resourcePath stringByAppendingPathComponent:item]];
+        } else {
+            backImage = bundleStickerImageNamed(item);
         }
-    }
+        ((LFStickerCollectionViewCell *)cell).lf_imageView.image = backImage;
+    } didSelectItemAtIndexPath:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item) {
+        if ([weakSelf.delegate respondsToSelector:@selector(lf_stickerBar:didSelectImage:)]) {
+            UIImage * backImage = nil;
+            if (weakSelf.external) {
+                backImage = [UIImage imageWithContentsOfFile:[weakSelf.resourcePath stringByAppendingPathComponent:item]];
+            } else {
+                backImage = bundleStickerImageNamed(item);
+            }
+            [weakSelf.delegate lf_stickerBar:weakSelf didSelectImage:backImage];
+        }
+    }];
     
-    [lf_scrollViewSticker setShowsVerticalScrollIndicator:NO];
-    [lf_scrollViewSticker setShowsHorizontalScrollIndicator:NO];
-    lf_scrollViewSticker.alwaysBounceHorizontal = YES;
-    lf_scrollViewSticker.contentSize=CGSizeMake(self.bounds.size.width * pageCount, 0);
-    lf_scrollViewSticker.pagingEnabled=YES;
-    lf_scrollViewSticker.delegate=self;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(testPressed)];
-    [lf_scrollViewSticker addGestureRecognizer:tap];
-    [self addSubview:lf_scrollViewSticker];
-    self.lf_scrollViewSticker = lf_scrollViewSticker;
+    [self addSubview:lf_collectionViewSticker];
+    self.lf_collectionViewSticker = lf_collectionViewSticker;
 }
 
-- (void)testPressed
-{
-    /** 接收scrollView的点击事件，避免传递到下层控件响应 */
-}
-
-- (void)setupPageControl
-{
-    if (self.pageCount > 1) {
-        CGFloat width = 150.0;
-        CGFloat x = self.bounds.size.width/2 - width/2;
-        UIPageControl *lf_pageControlSticker=[[UIPageControl alloc]initWithFrame:CGRectMake( x,self.height-lf_pageControlHeight,width,lf_pageControlHeight)];
-        [lf_pageControlSticker setCurrentPage:0];
-        lf_pageControlSticker.numberOfPages = self.pageCount;   //指定页面个数
-        [lf_pageControlSticker setBackgroundColor:[UIColor clearColor]];
-        [lf_pageControlSticker setCurrentPageIndicatorTintColor:[UIColor grayColor]];
-        [lf_pageControlSticker setPageIndicatorTintColor:[UIColor lightGrayColor]];
-        [lf_pageControlSticker addTarget:self action:@selector(stickerPageControl:) forControlEvents:UIControlEventValueChanged];
-        [self addSubview:lf_pageControlSticker];
-        self.lf_pageControlSticker = lf_pageControlSticker;
-    }
-}
-
-- (void)stickerClicked:(UIButton *)button
-{
-    if ([self.delegate respondsToSelector:@selector(lf_stickerBar:didSelectImage:)]) {
-        [self.delegate lf_stickerBar:self didSelectImage:[button backgroundImageForState:UIControlStateNormal]];
-    }
-}
-
-#pragma mark - pageControl滚动事件
-- (void)stickerPageControl:(UIPageControl *)pageControl
-{
-    NSInteger page = pageControl.currentPage;//获取当前pagecontroll的值
-    [self.lf_scrollViewSticker setContentOffset:CGPointMake(self.bounds.size.width * page, 0)];//根据pagecontroll的值来改变scrollview的滚动位置，以此切换到指定的页面
-}
-
-#pragma mark - UIScrollViewDelegate
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    // 设置pageCotrol 当前对应位置
-    NSInteger currentPage = self.lf_scrollViewSticker.contentOffset.x / self.bounds.size.width;
-    [self.lf_pageControlSticker setCurrentPage:currentPage];
-}
 
 @end

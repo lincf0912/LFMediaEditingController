@@ -14,6 +14,9 @@
 #define EditToolbarButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png", @"EditImageAudioToolBtn.png", @"EditVideoCropToolBtn.png"]
 #define EditToolbarButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png", @"EditImageAudioToolBtn_HL.png", @"EditVideoCropToolBtn_HL.png"]
 
+#define kToolbar_MainHeight 44
+#define kToolbar_SubHeight 55
+
 @interface LFEditToolbar () <JRPickColorViewDelegate>
 
 /** 一级菜单 */
@@ -58,11 +61,25 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:(CGRect){{0, [UIScreen mainScreen].bounds.size.height-99}, {[UIScreen mainScreen].bounds.size.width, 99}}];
+    CGFloat height = kToolbar_MainHeight+kToolbar_SubHeight;
+    self = [super initWithFrame:(CGRect){{0, [UIScreen mainScreen].bounds.size.height-height}, {[UIScreen mainScreen].bounds.size.width, height}}];
     if (self) {
         
     }
     return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGFloat height = kToolbar_MainHeight+kToolbar_SubHeight;
+    
+    if (@available(iOS 11.0, *)) {
+        height += self.safeAreaInsets.bottom;
+    }
+    
+    self.frame = (CGRect){{0, [UIScreen mainScreen].bounds.size.height-height}, {[UIScreen mainScreen].bounds.size.width, height}};
+    self.edit_menu.frame = CGRectMake(0, kToolbar_SubHeight, self.width, height-kToolbar_SubHeight);
 }
 
 - (void)customInit
@@ -85,7 +102,11 @@
 #pragma mark - 菜单创建
 - (void)mainBar
 {
-    UIView *edit_menu = [[UIView alloc] initWithFrame:CGRectMake(0, self.height - 44, self.width, 44)];
+    CGFloat height = kToolbar_MainHeight;
+    if (@available(iOS 11.0, *)) {
+        height += self.safeAreaInsets.bottom;
+    }
+    UIView *edit_menu = [[UIView alloc] initWithFrame:CGRectMake(0, kToolbar_SubHeight, self.width, height)];
     edit_menu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     CGFloat rgb = 34 / 255.0;
     edit_menu.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.85];
@@ -136,7 +157,7 @@
         UIFont *font = [UIFont systemFontOfSize:14];
         for (NSInteger i=0; i<buttonCount; i++) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(width*i, 0, width, 44);
+            button.frame = CGRectMake(width*i, 0, width, kToolbar_MainHeight);
             button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
             button.titleLabel.font = font;
             button.tag = [_selectIndexs[i] integerValue];
@@ -153,7 +174,7 @@
     CGFloat rgb2 = 40 / 255.0;
     divide.backgroundColor = [UIColor colorWithRed:rgb2 green:rgb2 blue:rgb2 alpha:1.0];
     divide.frame = CGRectMake(0, 0, self.width, 1);
-    divide.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    divide.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     
     [edit_menu addSubview:divide];
     self.edit_menu = edit_menu;
@@ -171,7 +192,7 @@
 - (void)drawMenu
 {
     if (_edit_drawMenu == nil) {
-        UIView *edit_drawMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, 55)];
+        UIView *edit_drawMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
         edit_drawMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_drawMenu.backgroundColor = _edit_menu.backgroundColor;
         edit_drawMenu.alpha = 0.f;
@@ -226,7 +247,7 @@
 - (void)splashMenu
 {
     if (_edit_splashMenu == nil) {
-        UIView *edit_splashMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, 55)];
+        UIView *edit_splashMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
         edit_splashMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_splashMenu.backgroundColor = _edit_menu.backgroundColor;
         edit_splashMenu.alpha = 0.f;
@@ -285,7 +306,7 @@
 - (UIButton *)revokeButtonWithType:(NSInteger)type
 {
     UIButton *revoke = [UIButton buttonWithType:UIButtonTypeCustom];
-    revoke.frame = CGRectMake(_edit_menu.width-44-5, 0, 44, 55);
+    revoke.frame = CGRectMake(_edit_menu.width-44-5, 0, 44, kToolbar_SubHeight);
     revoke.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
     [revoke setImage:bundleEditImageNamed(@"EditImageRevokeBtn.png") forState:UIControlStateNormal];
     [revoke setImage:bundleEditImageNamed(@"EditImageRevokeBtn_HL.png") forState:UIControlStateHighlighted];

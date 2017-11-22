@@ -18,6 +18,10 @@
 /** 默认剪辑尺寸 */
 #define kDefaultClipRect CGRectInset(self.frame , 20, 70)
 
+#define kVideoTrimmer_r_margin 15.f
+#define kVideoTrimmer_l_margin 50.f
+#define kVideoTrimmer_h 60.f
+
 NSString *const kLFVideoEditingViewData = @"LFVideoEditingViewData";
 NSString *const kLFVideoEditingViewData_clipping = @"LFVideoEditingViewData_clipping";
 
@@ -41,6 +45,9 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 
 @property (nonatomic, strong) AVAsset *asset;
 @property (nonatomic, strong) LFVideoExportSession *exportSession;
+
+/* 底部栏高度 默认44 */
+@property (nonatomic, assign) CGFloat editToolbarDefaultHeight;
 
 @end
 
@@ -73,10 +80,23 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     [self.exportSession cancelExport];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGFloat toolbarHeight = self.editToolbarDefaultHeight;
+    
+    if (@available(iOS 11.0, *)) {
+        toolbarHeight += self.safeAreaInsets.bottom;
+    }
+    
+    self.trimmerView.frame = CGRectMake(kVideoTrimmer_l_margin, CGRectGetHeight(self.bounds)-kVideoTrimmer_h-toolbarHeight-kVideoTrimmer_r_margin, self.bounds.size.width-kVideoTrimmer_l_margin*2, kVideoTrimmer_h);
+}
+
 - (void)customInit
 {
     self.backgroundColor = [UIColor blackColor];
     _minClippingDuration = 1.f;
+    _editToolbarDefaultHeight = 44.f;
     
     LFVideoClippingView *clippingView = [[LFVideoClippingView alloc] initWithFrame:self.bounds];
     clippingView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
@@ -91,9 +111,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     [self addSubview:clippingView];
     _clippingView = clippingView;
     
-    CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, kDefaultClipRect);
-    CGFloat r_margin = 15.f, l_margin = 50;
-    LFVideoTrimmerView *trimmerView = [[LFVideoTrimmerView alloc] initWithFrame:CGRectMake(l_margin, CGRectGetHeight(rect)+r_margin, self.bounds.size.width-l_margin*2, CGRectGetHeight(self.bounds)-CGRectGetHeight(rect)-44-r_margin*2)];
+    LFVideoTrimmerView *trimmerView = [[LFVideoTrimmerView alloc] initWithFrame:CGRectMake(kVideoTrimmer_l_margin, CGRectGetHeight(self.bounds)-kVideoTrimmer_h-self.editToolbarDefaultHeight-kVideoTrimmer_r_margin, self.bounds.size.width-kVideoTrimmer_l_margin*2, kVideoTrimmer_h)];
     trimmerView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
     trimmerView.hidden = YES;
     trimmerView.delegate = self;
@@ -125,9 +143,9 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         if (animated) {
             self.trimmerView.hidden = NO;
             self.trimmerView.alpha = 0.f;
+            CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, kDefaultClipRect);
+            rect.origin.y = CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin-CGRectGetHeight(rect);
             [UIView animateWithDuration:0.25f animations:^{
-                CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, kDefaultClipRect);
-                rect.origin.y = 0;
                 self.clippingRect = rect;
                 self.trimmerView.alpha = 1.f;
             } completion:^(BOOL finished) {
@@ -137,7 +155,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
             }];
         } else {
             CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, kDefaultClipRect);
-            rect.origin.y = 0;
+            rect.origin.y = CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin-CGRectGetHeight(rect);
             self.clippingRect = rect;
             self.trimmerView.hidden = NO;
             if (self.trimmerView.asset == nil) {
@@ -179,6 +197,8 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     }
     self.asset = asset;
     [self.clippingView setVideoAsset:asset placeholderImage:image];
+    
+    [self setNeedsDisplay];
 }
 
 - (void)setAudioUrls:(NSArray<LFAudioItem *> *)audioUrls
