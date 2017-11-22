@@ -66,6 +66,7 @@
 		6FAB0D491F2735D800C1BCFD /* UIView+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D441F2735D800C1BCFD /* UIView+LFMECommon.m */; };
 		6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D461F2735D800C1BCFD /* UIView+LFMEFrame.m */; };
 		6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */; };
+		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -182,6 +183,8 @@
 		6FAB0D461F2735D800C1BCFD /* UIView+LFMEFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+LFMEFrame.m"; sourceTree = "<group>"; };
 		6FAB0D4B1F27360300C1BCFD /* UIDevice+LFMEOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+LFMEOrientation.h"; sourceTree = "<group>"; };
 		6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+LFMEOrientation.m"; sourceTree = "<group>"; };
+		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
+		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +220,8 @@
 				6F14E5EA1EE6439E0049AE56 /* class */,
 				6F14E5D61EE6438A0049AE56 /* AppDelegate.h */,
 				6F14E5D71EE6438A0049AE56 /* AppDelegate.m */,
+				C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */,
+				C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */,
 				6F14E5D91EE6438A0049AE56 /* ViewController.h */,
 				6F14E5DA1EE6438A0049AE56 /* ViewController.m */,
 				6F14E65C1EE643AB0049AE56 /* PhotoViewController.h */,
@@ -661,6 +666,7 @@
 				6F14E5D51EE6438A0049AE56 /* main.m in Sources */,
 				6F14E64A1EE6439E0049AE56 /* LFText.m in Sources */,
 				6F359B281F1CB662009F2035 /* LFVideoEditingView.m in Sources */,
+				C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */,
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,
 				6F359B131F1C678D009F2035 /* VideoViewController.m in Sources */,
 				6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */,
