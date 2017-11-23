@@ -19,6 +19,8 @@
 
 #define kMaxZoomScale 2.5f
 
+#define kClipZoom_margin 15.f
+
 @interface LFEditingView () <UIScrollViewDelegate, LFClippingViewDelegate, LFGridViewDelegate>
 
 @property (nonatomic, weak) LFClippingView *clippingView;
@@ -34,6 +36,9 @@
 
 /** 图片像素参照坐标 */
 @property (nonatomic, assign) CGSize referenceSize;
+
+/* 底部栏高度 默认44 */
+@property (nonatomic, assign) CGFloat editToolbarDefaultHeight;
 
 @property (nonatomic, copy) lf_me_dispatch_cancelable_block_t maskViewBlock;
 
@@ -64,6 +69,7 @@
     /** 缩放 */
     self.maximumZoomScale = kMaxZoomScale;
     self.minimumZoomScale = 1.0;
+    _editToolbarDefaultHeight = 44.f;
     
     /** 创建缩放层，避免直接缩放LFClippingView，会改变其transform */
     UIView *clipZoomView = [[UIView alloc] initWithFrame:self.bounds];
@@ -123,6 +129,14 @@
 
 - (void)setClippingRect:(CGRect)clippingRect
 {
+    CGFloat toolbarHeight = self.editToolbarDefaultHeight;
+    if (@available(iOS 11.0, *)) {
+        toolbarHeight += self.safeAreaInsets.bottom;
+    }
+    CGFloat clippingMinY = CGRectGetHeight(self.frame)-toolbarHeight-kClipZoom_margin-CGRectGetHeight(clippingRect);
+    if (clippingRect.origin.y > clippingMinY) {
+        clippingRect.origin.y = clippingMinY;
+    }
     _clippingRect = clippingRect;
     self.gridView.gridRect = clippingRect;
     self.clippingView.cropRect = clippingRect;
