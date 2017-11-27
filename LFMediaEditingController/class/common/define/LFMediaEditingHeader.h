@@ -23,7 +23,7 @@
 #define bundleStickerImageNamed(name) [UIImage imageNamed:[NSString stringWithFormat:@"%@/%@", kStickersPath, name]]
 
 #define kCustomTopbarHeight CGRectGetHeight(self.navigationController.navigationBar.frame) + (CGRectGetWidth([UIScreen mainScreen].bounds) < CGRectGetHeight([UIScreen mainScreen].bounds) ? 20 : 0)
-#define kCustomTopbarHeight_iOS11 CGRectGetHeight(self.navigationController.navigationBar.frame) + self.view.safeAreaInsets.top
+#define kCustomTopbarHeight_iOS11 CGRectGetHeight(self.navigationController.navigationBar.frame) + (self.view.safeAreaInsets.top > 0 ?: (CGRectGetWidth([UIScreen mainScreen].bounds) < CGRectGetHeight([UIScreen mainScreen].bounds) ? 20 : 0))
 
 
 #define kSliderColors @[[UIColor colorWithRed:246.f/255.f green:246.f/255.f blue:246.f/255.f alpha:1.f]/*白色*/\
