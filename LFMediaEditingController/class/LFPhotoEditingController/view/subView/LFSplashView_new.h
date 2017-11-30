@@ -14,8 +14,8 @@
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *data;
 
-@property (nonatomic, copy) void(^splashBegan)();
-@property (nonatomic, copy) void(^splashEnded)();
+@property (nonatomic, copy) void(^splashBegan)(void);
+@property (nonatomic, copy) void(^splashEnded)(void);
 /** 绘画颜色 */
 @property (nonatomic, copy) UIColor *(^splashColor)(CGPoint point);
 

@@ -13,8 +13,8 @@
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, strong) UIColor *lineColor;
 
-@property (nonatomic, copy) void(^drawBegan)();
-@property (nonatomic, copy) void(^drawEnded)();
+@property (nonatomic, copy) void(^drawBegan)(void);
+@property (nonatomic, copy) void(^drawEnded)(void);
 
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *data;

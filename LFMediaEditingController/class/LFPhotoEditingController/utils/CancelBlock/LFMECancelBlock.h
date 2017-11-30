@@ -11,7 +11,7 @@
 
 typedef void(^lf_me_dispatch_cancelable_block_t)(BOOL cancel);
 
-lf_me_dispatch_cancelable_block_t lf_dispatch_block_t(NSTimeInterval delay, void(^block)())
+lf_me_dispatch_cancelable_block_t lf_dispatch_block_t(NSTimeInterval delay, void(^block)(void))
 {
     __block lf_me_dispatch_cancelable_block_t cancelBlock = nil;
     lf_me_dispatch_cancelable_block_t delayBlcok = ^(BOOL cancel){

@@ -21,8 +21,8 @@
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *data;
 
-@property (nonatomic, copy) void(^splashBegan)();
-@property (nonatomic, copy) void(^splashEnded)();
+@property (nonatomic, copy) void(^splashBegan)(void);
+@property (nonatomic, copy) void(^splashEnded)(void);
 
 /** 改变模糊状态 */
 @property (nonatomic, assign) LFSplashStateType state;

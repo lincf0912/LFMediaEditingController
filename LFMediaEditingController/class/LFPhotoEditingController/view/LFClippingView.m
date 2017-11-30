@@ -200,7 +200,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                              /** 重置contentOffset */
                              self.contentOffset = CGPointZero;
                              if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
-                                 void (^block)() = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
+                                 void (^block)(CGRect) = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
                                  if (block) block(self.frame);
                              }
                          } completion:^(BOOL finished) {
@@ -274,7 +274,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                              self.saveRect = self.frame;
                              
                              if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
-                                 void (^block)() = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
+                                 void (^block)(CGRect) = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
                                  if (block) block(self.frame);
                              }
                          } completion:^(BOOL finished) {
@@ -327,7 +327,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                          [self setZoomScale:self.zoomScale];
                          
                          if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
-                             void (^block)() = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
+                             void (^block)(CGRect) = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
                              if (block) block(self.frame);
                              block = nil;
                          }
@@ -389,7 +389,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
             [self transformRotate:self.angle];
             
             if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
-                void (^block)() = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
+                void (^block)(CGRect) = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
                 if (block) block(self.frame);
             }
             
@@ -435,7 +435,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(nullable UIView *)view
 {
     if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
-        void (^block)() = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
+        void (^block)(CGRect) = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
         block(self.frame);
     }
 }

@@ -140,9 +140,12 @@
     tableView.dataSource = self;
     tableView.backgroundColor = [UIColor clearColor];
     /** 这个设置iOS9以后才有，主要针对iPad，不设置的话，分割线左侧空出很多 */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
     if ([tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]) {
         tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
+#pragma clang diagnostic pop
     /** 解决ios7中tableview每一行下面的线向右偏移的问题 */
     if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
         [tableView setSeparatorInset:UIEdgeInsetsZero];
