@@ -49,15 +49,15 @@
     CTTextAlignment alignment = kCTTextAlignmentLeft;
     
     //Apply paragraph settings
-    CTParagraphStyleRef style = CTParagraphStyleCreate((CTParagraphStyleSetting[3]){
+    CTParagraphStyleRef style = CTParagraphStyleCreate((CTParagraphStyleSetting[5]){
         {kCTParagraphStyleSpecifierAlignment, sizeof(alignment), &alignment},
 //        {kCTParagraphStyleSpecifierMinimumLineHeight,sizeof(minimumLineHeight),&minimumLineHeight},
 //        {kCTParagraphStyleSpecifierMaximumLineHeight,sizeof(maximumLineHeight),&maximumLineHeight},
-//        {kCTParagraphStyleSpecifierMaximumLineSpacing, sizeof(linespace), &linespace},
-//        {kCTParagraphStyleSpecifierMinimumLineSpacing, sizeof(linespace), &linespace},
+        {kCTParagraphStyleSpecifierMaximumLineSpacing, sizeof(linespace), &linespace},
+        {kCTParagraphStyleSpecifierMinimumLineSpacing, sizeof(linespace), &linespace},
         { kCTParagraphStyleSpecifierLineSpacingAdjustment, sizeof(CGFloat), &linespace },
         {kCTParagraphStyleSpecifierLineBreakMode,sizeof(CTLineBreakMode),&lineBreakMode}
-    },3);
+    },5);
     
     
     NSMutableDictionary * attributes = [NSMutableDictionary dictionary];

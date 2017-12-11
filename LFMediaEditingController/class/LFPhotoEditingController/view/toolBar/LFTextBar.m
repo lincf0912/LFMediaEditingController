@@ -197,7 +197,7 @@
             text = [LFText new];
             text.text = self.lf_textView.text;
             text.textColor = self.lf_textView.textColor;
-            CGFloat fontSize = 50.f;
+            CGFloat fontSize = 30.f;
             UIFont *font = [UIFont systemFontOfSize:fontSize];
             text.font = font;
         }

@@ -200,7 +200,7 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 {
     LFMovingView *movingView = [self doCreateText:text active:YES];
     //    CGFloat ratio = MIN( (0.5 * self.width) / movingView.width, (0.5 * self.height) / movingView.height);
-    [movingView setScale:0.6f];
+    [movingView setScale:0.8f];
     self.selectMovingView = movingView;
 }
 
