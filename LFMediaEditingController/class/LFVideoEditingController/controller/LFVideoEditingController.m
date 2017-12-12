@@ -93,6 +93,12 @@
     }
 }
 
+- (void)dealloc
+{
+    /** 恢复原来的音频 */
+    [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
