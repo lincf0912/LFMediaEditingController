@@ -207,6 +207,7 @@
 }
 - (void)cancelButtonClick
 {
+    [_EditingView pauseVideo];
     if ([self.delegate respondsToSelector:@selector(lf_VideoEditingController:didCancelPhotoEdit:)]) {
         [self.delegate lf_VideoEditingController:self didCancelPhotoEdit:self.videoEdit];
     }
@@ -217,7 +218,6 @@
     [self showProgressHUD];
     /** 取消贴图激活 */
     [_EditingView stickerDeactivated];
-    
     /** 处理编辑图片 */
     __block LFVideoEdit *videoEdit = nil;
     NSDictionary *data = [_EditingView photoEditData];

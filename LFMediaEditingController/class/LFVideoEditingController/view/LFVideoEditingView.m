@@ -300,6 +300,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 {
     [self.clippingView playVideo];
 }
+/** 暂停 */
+- (void)pauseVideo
+{
+    [self.clippingView pauseVideo];
+}
 /** 重置视频 */
 - (void)resetVideoDisplay
 {

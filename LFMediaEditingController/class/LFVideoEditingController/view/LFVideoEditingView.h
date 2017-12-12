@@ -35,6 +35,8 @@
 
 /** 播放 */
 - (void)playVideo;
+/** 暂停 */
+- (void)pauseVideo;
 /** 重置视频 */
 - (void)resetVideoDisplay;
 
