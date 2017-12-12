@@ -123,7 +123,8 @@
     {
         // Insert the tracks in the composition's tracks
         AVAssetTrack *track = [assetVideoTracks firstObject];
-        CGSize dimensions = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
+        CGSize size = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
+        CGSize dimensions = CGSizeMake(fabs(size.width), fabs(size.height));
         
         maximumSize = CGSizeMake(dimensions.width/dimensions.height*self.contentView.frame.size.height, self.contentView.frame.size.height);
     }
