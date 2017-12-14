@@ -11,7 +11,7 @@
 
 @interface LFSplashBlur : NSObject
 
-@property (nonatomic, assign) CGPoint point;
+//@property (nonatomic, assign) CGPoint point;
 @property (nonatomic, assign) CGRect rect;
 @property (nonatomic, strong) UIColor *color;
 
