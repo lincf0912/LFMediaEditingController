@@ -144,7 +144,9 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
             self.trimmerView.hidden = NO;
             self.trimmerView.alpha = 0.f;
             CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, kDefaultClipRect);
-            rect.origin.y = CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin-CGRectGetHeight(rect);
+            if (CGRectGetMaxY(rect) > CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin) {
+                rect.origin.y = CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin-CGRectGetHeight(rect);
+            }
             [UIView animateWithDuration:0.25f animations:^{
                 self.clippingRect = rect;
                 self.trimmerView.alpha = 1.f;
@@ -155,7 +157,9 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
             }];
         } else {
             CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, kDefaultClipRect);
-            rect.origin.y = CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin-CGRectGetHeight(rect);
+            if (CGRectGetMaxY(rect) > CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin) {
+                rect.origin.y = CGRectGetMinY(self.trimmerView.frame)-kVideoTrimmer_r_margin-CGRectGetHeight(rect);
+            }
             self.clippingRect = rect;
             self.trimmerView.hidden = NO;
             if (self.trimmerView.asset == nil) {
@@ -384,6 +388,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         NSMutableArray *audioDatas = [@[] mutableCopy];
         BOOL hasOriginal = NO;
         for (LFAudioItem *item in self.audioUrls) {
+            
             NSMutableDictionary *myData = [@{} mutableCopy];
             if (item.title) {
                 [myData setObject:item.title forKey:kLFVideoEditingViewData_audioTitle];
@@ -394,7 +399,10 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
             [myData setObject:@(item.isOriginal) forKey:kLFVideoEditingViewData_audioOriginal];
             [myData setObject:@(item.isEnable) forKey:kLFVideoEditingViewData_audioEnable];
             
-            [audioDatas addObject:myData];
+            /** 忽略没有启用的音频 */
+            if (item.isEnable || item.isOriginal) {
+                [audioDatas addObject:myData];
+            }
             if (item.isOriginal && item.isEnable) {
                 hasOriginal = YES;
             }
