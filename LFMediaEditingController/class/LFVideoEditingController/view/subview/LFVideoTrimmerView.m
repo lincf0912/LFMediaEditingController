@@ -126,7 +126,8 @@
         CGSize size = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
         CGSize dimensions = CGSizeMake(fabs(size.width), fabs(size.height));
         
-        maximumSize = CGSizeMake(dimensions.width/dimensions.height*self.contentView.frame.size.height, self.contentView.frame.size.height);
+        CGFloat height = self.contentView.frame.size.height * [UIScreen mainScreen].scale;
+        maximumSize = CGSizeMake(dimensions.width/dimensions.height*height, height);
     }
     if (maxImageCount * maximumSize.width < self.contentView.frame.size.width) {
         maxImageCount = self.contentView.frame.size.width / maximumSize.width + 1;
@@ -135,6 +136,7 @@
     
     _imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:_asset];
     _imageGenerator.maximumSize = maximumSize;
+    _imageGenerator.appliesPreferredTrackTransform = YES;
     
     CMTime duration = _asset.duration;
     
