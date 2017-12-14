@@ -99,11 +99,14 @@
     if (assetVideoTrack != nil) {
         // 视频通道  工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材
         AVMutableCompositionTrack *compositionVideoTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+        // 视频方向
+        [compositionVideoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
         // 把视频轨道数据加入到可变轨道中 这部分可以做视频裁剪TimeRange
         [compositionVideoTrack insertTimeRange:self.timeRange ofTrack:assetVideoTrack atTime:insertionPoint error:&error];
     }
     if (assetAudioTrack != nil && self.isOrignalSound) {
         AVMutableCompositionTrack *compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+        compositionAudioTrack.preferredTransform = assetAudioTrack.preferredTransform;
         [compositionAudioTrack insertTimeRange:self.timeRange ofTrack:assetAudioTrack atTime:insertionPoint error:&error];
     }
     
@@ -124,6 +127,7 @@
         }
         if (additional_assetAudioTrack) {
             AVMutableCompositionTrack *additional_compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+            additional_compositionAudioTrack.preferredTransform = additional_assetAudioTrack.preferredTransform;
             [additional_compositionAudioTrack insertTimeRange:self.timeRange ofTrack:additional_assetAudioTrack atTime:insertionPoint error:&error];
             
             AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:additional_compositionAudioTrack];
@@ -205,7 +209,7 @@
     self.exportSession = [[AVAssetExportSession alloc] initWithAsset:self.composition presetName:AVAssetExportPresetHighestQuality];
     // Implementation continues.
     /** 创建混合视频时开始剪辑 */
-//    self.exportSession.timeRange = self.timeRange;
+    //    self.exportSession.timeRange = self.timeRange;
     self.exportSession.videoComposition = self.videoComposition;
     self.exportSession.outputURL = trimURL;
     self.exportSession.outputFileType = AVFileTypeQuickTimeMovie;
@@ -298,3 +302,4 @@
 }
 
 @end
+

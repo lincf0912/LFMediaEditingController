@@ -81,7 +81,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
 - (void)setAsset:(AVAsset *)asset
 {
     _asset = asset;
-    _muteOriginalSound = NO;
+    self.muteOriginalSound = NO;
     
     /** size */
     CGSize videoSize = CGSizeZero;
@@ -97,7 +97,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
         NSLog(@"Error reading the transformed video track");
     }
     _size = videoSize;
-
+    
     
     NSArray *requestedKeys = @[@"playable"];
     
@@ -141,12 +141,15 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
         if (assetVideoTrack != nil) {
             // 视频通道  工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材
             AVMutableCompositionTrack *compositionVideoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+            // 视频方向
+            [compositionVideoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
             // 把视频轨道数据加入到可变轨道中 这部分可以做视频裁剪TimeRange
             [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:assetVideoTrack atTime:insertionPoint error:nil];
         }
         
         if (assetAudioTrack != nil) {
             AVMutableCompositionTrack *compositionAudioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Orignail_Invalid];
+            [compositionAudioTrack setPreferredTransform:assetAudioTrack.preferredTransform];
             [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:assetAudioTrack atTime:insertionPoint error:nil];
         }
         
@@ -162,6 +165,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
             }
             if (additional_assetAudioTrack) {
                 AVMutableCompositionTrack *additional_compositionAudioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+                [additional_compositionAudioTrack setPreferredTransform:additional_assetAudioTrack.preferredTransform];
                 [additional_compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, composition.duration) ofTrack:additional_assetAudioTrack atTime:insertionPoint error:nil];
                 
                 AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:additional_compositionAudioTrack];
@@ -197,7 +201,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     }
 }
 
- - (void)setEndTime:(CGFloat)endTime
+- (void)setEndTime:(CGFloat)endTime
 {
     _endTime = endTime;
     if ([self.asset isKindOfClass:[AVMutableComposition class]]) {
@@ -295,8 +299,8 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     /* Update the scrubber during normal playback. */
     __weak typeof(self) weakSelf = self;
     mTimeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
-                                                               queue:NULL /* If you pass NULL, the main queue is used. */
-                                                          usingBlock:^(CMTime time)
+                                                              queue:NULL /* If you pass NULL, the main queue is used. */
+                                                         usingBlock:^(CMTime time)
                      {
                          [weakSelf syncScrubber];
                      }];
@@ -497,12 +501,12 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     }
     
     /* Display the error. */
-//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
-//                                                        message:[error localizedFailureReason]
-//                                                       delegate:nil
-//                                              cancelButtonTitle:@"OK"
-//                                              otherButtonTitles:nil];
-//    [alertView show];
+    //    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
+    //                                                        message:[error localizedFailureReason]
+    //                                                       delegate:nil
+    //                                              cancelButtonTitle:@"OK"
+    //                                              otherButtonTitles:nil];
+    //    [alertView show];
 }
 
 
@@ -697,13 +701,13 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
         /* Is the new player item null? */
         if (newPlayerItem == (id)[NSNull null])
         {
-
+            
         }
         else /* Replacement of player currentItem has occurred */
         {
             /* Set the AVPlayer for which the player layer displays visual output. */
             
-            /* Specifies that the player should preserve the video’s aspect ratio and 
+            /* Specifies that the player should preserve the video’s aspect ratio and
              fit the video within the layer’s bounds. */
             
             /** AVLayerVideoGravityResizeAspect */
@@ -718,5 +722,95 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     }
 }
 
+#pragma mark - fix video orientation
++ (AVMutableVideoComposition *)fixVideoOrientationWithAsset:(AVAsset *)asset
+{
+    AVMutableVideoComposition *videoComposition = nil;
+    AVAssetTrack *assetVideoTrack = nil;
+    // Check if the asset contains video and audio tracks
+    if ([[asset tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
+        assetVideoTrack = [asset tracksWithMediaType:AVMediaTypeVideo][0];
+    }
+    
+    if (assetVideoTrack != nil) {
+        UIImageOrientation orientation = [self orientationFromAVAssetTrack:assetVideoTrack];
+        
+        if (orientation != UIImageOrientationUp) {
+            videoComposition = [AVMutableVideoComposition videoComposition];
+            videoComposition.frameDuration = asset.duration;
+            
+            CGAffineTransform transform = CGAffineTransformIdentity;
+            CGSize renderSize = assetVideoTrack.naturalSize;
+            
+            switch (orientation) {
+                case UIImageOrientationLeft:
+                    //顺时针旋转270°
+                    //            NSLog(@"视频旋转270度，home按键在右");
+                    transform = CGAffineTransformTranslate(transform, 0.0, assetVideoTrack.naturalSize.width);
+                    transform = CGAffineTransformRotate(transform,M_PI_2*3.0);
+                    renderSize = CGSizeMake(assetVideoTrack.naturalSize.height,assetVideoTrack.naturalSize.width);
+                    break;
+                case UIImageOrientationRight:
+                    //顺时针旋转90°
+                    //            NSLog(@"视频旋转90度,home按键在左");
+                    transform = CGAffineTransformTranslate(transform, assetVideoTrack.naturalSize.height, 0.0);
+                    transform = CGAffineTransformRotate(transform,M_PI_2);
+                    renderSize = CGSizeMake(assetVideoTrack.naturalSize.height,assetVideoTrack.naturalSize.width);
+                    break;
+                case UIImageOrientationDown:
+                    //顺时针旋转180°
+                    //            NSLog(@"视频旋转180度，home按键在上");
+                    transform = CGAffineTransformTranslate(transform, assetVideoTrack.naturalSize.width, assetVideoTrack.naturalSize.height);
+                    transform = CGAffineTransformRotate(transform,M_PI);
+                    renderSize = CGSizeMake(assetVideoTrack.naturalSize.width,assetVideoTrack.naturalSize.height);
+                    break;
+                default:
+                    break;
+            }
+            
+            videoComposition.renderSize = renderSize;
+            
+            AVMutableVideoCompositionInstruction *roateInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+            roateInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
+            AVMutableVideoCompositionLayerInstruction *roateLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:assetVideoTrack];
+            
+            [roateLayerInstruction setTransform:transform atTime:kCMTimeZero];
+            
+            roateInstruction.layerInstructions = @[roateLayerInstruction];
+            //将视频方向旋转加入到视频处理中
+            videoComposition.instructions = @[roateInstruction];
+        }
+        
+    }
+    
+    return videoComposition;
+}
+
++ (UIImageOrientation)orientationFromAVAssetTrack:(AVAssetTrack *)videoTrack
+{
+    UIImageOrientation orientation = UIImageOrientationUp;
+    CGAffineTransform t = videoTrack.preferredTransform;
+    if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0){
+        // Portrait
+        //        degress = 90;
+        orientation = UIImageOrientationRight;
+    }else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0){
+        // PortraitUpsideDown
+        //        degress = 270;
+        orientation = UIImageOrientationLeft;
+    }else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0){
+        // LandscapeRight
+        //        degress = 0;
+        orientation = UIImageOrientationUp;
+    }else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0){
+        // LandscapeLeft
+        //        degress = 180;
+        orientation = UIImageOrientationDown;
+    }
+    
+    return orientation;
+}
+
 
 @end
+
