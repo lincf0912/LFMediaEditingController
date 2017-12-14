@@ -183,7 +183,7 @@
     LFEditCollectionView *lf_collectionViewSticker = [[LFEditCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
     [lf_collectionViewSticker setBackgroundColor:[UIColor clearColor]];
     
-    CGFloat size = (self.lf_collectionViewSticker.height-lf_stickerMargin*2)/lf_stickerRow;
+    CGFloat size = (lf_collectionViewSticker.height-lf_stickerMargin*2)/lf_stickerRow;
     lf_collectionViewSticker.itemSize = CGSizeMake(size, size);
     lf_collectionViewSticker.sectionInset = UIEdgeInsetsMake(lf_stickerMargin, lf_stickerMargin, lf_stickerMargin, lf_stickerMargin);
     
