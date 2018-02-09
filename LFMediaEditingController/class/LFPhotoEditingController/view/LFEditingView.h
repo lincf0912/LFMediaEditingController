@@ -47,8 +47,8 @@
 
 
 @protocol LFEditingViewDelegate <NSObject>
-/** 剪裁发生变化后 */
-- (void)lf_EditingViewDidEndZooming:(LFEditingView *)EditingView;
-/** 剪裁目标移动后 */
-- (void)lf_EditingViewEndDecelerating:(LFEditingView *)EditingView;
+/** 开始编辑目标 */
+- (void)lf_EditingViewWillBeginEditing:(LFEditingView *)EditingView;
+/** 停止编辑目标 */
+- (void)lf_EditingViewDidEndEditing:(LFEditingView *)EditingView;
 @end

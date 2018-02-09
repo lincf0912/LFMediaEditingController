@@ -36,6 +36,9 @@ typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
 /** 显示遮罩层（触发拖动条件必须设置为YES）default is YES */
 @property (nonatomic, assign) BOOL showMaskLayer;
 
+/** 是否正在拖动 */
+@property(nonatomic,readonly,getter=isDragging) BOOL dragging;
+
 /** 设置固定比例 */
 @property (nonatomic, assign) LFGridViewAspectRatioType aspectRatio;
 

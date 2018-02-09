@@ -39,6 +39,8 @@ const CGFloat kControlWidth = 30.f;
 
 @implementation LFGridView
 
+@synthesize dragging = _dragging;
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -121,12 +123,17 @@ const CGFloat kControlWidth = 30.f;
     self.userInteractionEnabled = showMaskLayer;
 }
 
+- (BOOL)isDragging
+{
+    return _dragging;
+}
+
 #pragma mark - lf_resizeConrolDelegate
 
 - (void)lf_resizeConrolDidBeginResizing:(LFResizeControl *)resizeConrol
 {
     self.initialRect = self.gridRect;
-    
+    _dragging = YES;
 //    self.showMaskLayer = NO;
     if ([self.delegate respondsToSelector:@selector(lf_gridViewDidBeginResizing:)]) {
         [self.delegate lf_gridViewDidBeginResizing:self];
@@ -147,6 +154,7 @@ const CGFloat kControlWidth = 30.f;
     if ([self.delegate respondsToSelector:@selector(lf_gridViewDidEndResizing:)]) {
         [self.delegate lf_gridViewDidEndResizing:self];
     }
+    _dragging = NO;
 }
 
 - (void)setGridRect:(CGRect)gridRect
