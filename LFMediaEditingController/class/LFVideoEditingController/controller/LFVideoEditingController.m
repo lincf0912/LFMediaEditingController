@@ -632,7 +632,8 @@
 - (LFStickerBar *)edit_sticker_toolBar
 {
     if (_edit_sticker_toolBar == nil) {
-        CGFloat w=self.view.width, h=175.f;
+        CGFloat row = 2;
+        CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
         if (@available(iOS 11.0, *)) {
             h += self.view.safeAreaInsets.bottom;
         }

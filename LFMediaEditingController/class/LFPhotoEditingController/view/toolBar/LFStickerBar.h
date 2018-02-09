@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+extern CGFloat const lf_stickerSize;
+extern CGFloat const lf_stickerMargin;
+
 @protocol LFStickerBarDelegate;
 
 @interface LFStickerBar : UIView;

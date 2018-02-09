@@ -482,7 +482,8 @@
 - (LFStickerBar *)edit_sticker_toolBar
 {
     if (_edit_sticker_toolBar == nil) {
-        CGFloat w=self.view.width, h=175.f;
+        CGFloat row = 2;
+        CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
         if (@available(iOS 11.0, *)) {
             h += self.view.safeAreaInsets.bottom;
         }
@@ -588,14 +589,19 @@
 }
 
 #pragma mark - LFEditingViewDelegate
-/** 剪裁发生变化后 */
-- (void)lf_EditingViewDidEndZooming:(LFEditingView *)EditingView
+/** 开始编辑目标 */
+- (void)lf_EditingViewWillBeginEditing:(LFEditingView *)EditingView
 {
-    _edit_clipping_toolBar.enableReset = EditingView.canReset;
+    [UIView animateWithDuration:0.25f animations:^{
+        _edit_clipping_toolBar.alpha = 0.f;
+    }];
 }
-/** 剪裁目标移动后 */
-- (void)lf_EditingViewEndDecelerating:(LFEditingView *)EditingView
+/** 停止编辑目标 */
+- (void)lf_EditingViewDidEndEditing:(LFEditingView *)EditingView
 {
+    [UIView animateWithDuration:0.25f animations:^{
+        _edit_clipping_toolBar.alpha = 1.f;
+    }];
     _edit_clipping_toolBar.enableReset = EditingView.canReset;
 }
 

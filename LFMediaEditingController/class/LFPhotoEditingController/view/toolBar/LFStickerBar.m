@@ -11,8 +11,8 @@
 #import "UIView+LFMEFrame.h"
 #import "LFEditCollectionView.h"
 
-#define lf_stickerRow 2
-#define lf_stickerMargin 10
+CGFloat const lf_stickerSize = 80;
+CGFloat const lf_stickerMargin = 10;
 
 #define kImageExtensions @[@"png", @"jpg", @"jpeg", @"gif"]
 
@@ -135,9 +135,6 @@
     [super layoutSubviews];
     if (@available(iOS 11.0, *)) {
         self.lf_collectionViewSticker.height = self.height - self.safeAreaInsets.bottom;
-        CGFloat size = (self.lf_collectionViewSticker.height-lf_stickerMargin*2)/lf_stickerRow;
-        self.lf_collectionViewSticker.itemSize = CGSizeMake(size, size);
-        [self.lf_collectionViewSticker.collectionViewLayout invalidateLayout];
     }
 }
 
@@ -183,9 +180,10 @@
     LFEditCollectionView *lf_collectionViewSticker = [[LFEditCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
     [lf_collectionViewSticker setBackgroundColor:[UIColor clearColor]];
     
-    CGFloat size = (lf_collectionViewSticker.height-lf_stickerMargin*2)/lf_stickerRow;
-    lf_collectionViewSticker.itemSize = CGSizeMake(size, size);
+    lf_collectionViewSticker.itemSize = CGSizeMake(lf_stickerSize, lf_stickerSize);
     lf_collectionViewSticker.sectionInset = UIEdgeInsetsMake(lf_stickerMargin, lf_stickerMargin, lf_stickerMargin, lf_stickerMargin);
+    lf_collectionViewSticker.minimumInteritemSpacing = lf_stickerMargin;
+    lf_collectionViewSticker.minimumLineSpacing = lf_stickerMargin;
     
     [lf_collectionViewSticker registerClass:[LFStickerCollectionViewCell class] forCellWithReuseIdentifier:[LFStickerCollectionViewCell identifier]];
     
