@@ -678,6 +678,7 @@
         textBar.oKButtonTitle = self.oKButtonTitle;
         textBar.cancelButtonTitle = self.cancelButtonTitle;
         textBar.customTopbarHeight = self->_edit_naviBar.height;
+        textBar.naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
     }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;

@@ -611,6 +611,7 @@
         textBar.oKButtonTitle = self.oKButtonTitle;
         textBar.cancelButtonTitle = self.cancelButtonTitle;
         textBar.customTopbarHeight = self->_edit_naviBar.height;
+        textBar.naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
     }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;
@@ -666,6 +667,7 @@
         audioTrackBar.oKButtonTitle = self.oKButtonTitle;
         audioTrackBar.cancelButtonTitle = self.cancelButtonTitle;
         audioTrackBar.customTopbarHeight = self->_edit_naviBar.height;
+        audioTrackBar.naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
         if (@available(iOS 11.0, *)) {
             audioTrackBar.customToolbarHeight = 44.f+self.view.safeAreaInsets.bottom;
         } else {

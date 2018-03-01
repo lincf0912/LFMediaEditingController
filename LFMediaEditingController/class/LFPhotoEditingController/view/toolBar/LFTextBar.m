@@ -17,6 +17,7 @@
 
 @interface LFTextBar () <UITextViewDelegate, JRPickColorViewDelegate>
 
+@property (nonatomic, weak) UIView *topbar;
 @property (nonatomic, weak) UITextView *lf_textView;
 
 @property (nonatomic, weak) JRPickColorView *lf_colorSlider;
@@ -44,7 +45,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _customTopbarHeight = 64;
+        _customTopbarHeight = 64.f;
+        _naviHeight = 44.f;
         if (layoutBlock) {
             layoutBlock(self);
         }
@@ -112,23 +114,27 @@
 {
     /** 顶部栏 */
     CGFloat margin = 8;
-    CGFloat size = _customTopbarHeight;
-    UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, _customTopbarHeight)];
+    CGFloat size = _naviHeight;
+    
+    CGFloat topbarHeight = _customTopbarHeight;
+    CGFloat topSubViewY = topbarHeight - size;
+    
+    UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, topbarHeight)];
     topbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     topbar.backgroundColor = [UIColor clearColor];
     
     UIFont *font = [UIFont systemFontOfSize:15];
     CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, _customTopbarHeight) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
-    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, 0, editCancelWidth, size)];
-    cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, topSubViewY, editCancelWidth, size)];
+    cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
     [cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
     cancelButton.titleLabel.font = font;
     [cancelButton setTitleColor:self.cancelButtonTitleColorNormal forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, _customTopbarHeight) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
-    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - editOkWidth - margin, 0, editOkWidth, size)];
-    finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - editOkWidth - margin, topSubViewY, editOkWidth, size)];
+    finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     [finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     finishButton.titleLabel.font = font;
     [finishButton setTitleColor:self.oKButtonTitleColorNormal forState:UIControlStateNormal];
@@ -138,11 +144,12 @@
     [topbar addSubview:finishButton];
     
     [self addSubview:topbar];
+    _topbar = topbar;
 }
 
 - (void)configTextView
 {
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, _customTopbarHeight, self.width, self.height-_customTopbarHeight)];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_topbar.frame), self.width, self.height-CGRectGetHeight(_topbar.frame))];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor];

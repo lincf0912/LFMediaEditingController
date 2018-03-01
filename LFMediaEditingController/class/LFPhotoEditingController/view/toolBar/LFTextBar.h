@@ -22,6 +22,7 @@
 @property (nonatomic, copy) NSString *oKButtonTitle;
 @property (nonatomic, copy) NSString *cancelButtonTitle;
 @property (nonatomic, assign) CGFloat customTopbarHeight;
+@property (nonatomic, assign) CGFloat naviHeight;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFTextBarDelegate> delegate;

@@ -81,6 +81,7 @@
     if (self) {
         _customToolbarHeight = 44.f;
         _customTopbarHeight = 64.f;
+        _naviHeight = 44.f;
         if (layoutBlock) {
             layoutBlock(self);
         }
@@ -104,7 +105,7 @@
 {
     /** 顶部栏 */
     CGFloat margin = 8;
-    CGFloat size = 44;
+    CGFloat size = _naviHeight;
     UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, _customTopbarHeight)];
     topbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     topbar.backgroundColor = [UIColor clearColor];
