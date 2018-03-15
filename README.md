@@ -3,6 +3,7 @@
 * 图片编辑 (详细使用见LFPhotoEditingController.h 的初始化方法)
 * 视频编辑 (详细使用见LFVideoEditingController.h 的初始化方法)
 * 视频编辑 需要访问音乐库 需要在info.plist 添加 NSAppleMusicUsageDescription
+* 支持国际化配置（复制LFMediaEditingController.bundle\LFMediaEditingController.strings到项目中，修改对应的值即可；详情见DEMO；注意：不跟随系统语言切换显示）
 * （因数据可以多次重复编辑，暂时未能处理横竖屏切换。）
 
 ## Installation 安装
