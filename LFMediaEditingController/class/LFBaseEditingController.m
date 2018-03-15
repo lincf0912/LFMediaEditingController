@@ -7,7 +7,7 @@
 //
 
 #import "LFBaseEditingController.h"
-
+#import "LFMediaEditingHeader.h"
 #import "UIDevice+LFMEOrientation.h"
 
 @interface LFBaseEditingController ()
@@ -41,9 +41,6 @@
         _oKButtonTitleColorNormal = [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0];
         _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
         _isHiddenStatusBar = YES;
-        _oKButtonTitle = @"完成";
-        _cancelButtonTitle = @"取消";
-        _processHintStr = @"正在处理...";
     }
     return self;
 }
@@ -125,7 +122,7 @@
         [_progressHUD addSubview:_HUDContainer];
     }
     
-    _HUDLabel.text = text ? text : self.processHintStr;
+    _HUDLabel.text = text ? text : [NSBundle LFME_localizedStringForKey:@"_LFME_processHintStr"];
     
     [_HUDIndicatorView startAnimating];
     UIView *view = isTop ? [[UIApplication sharedApplication] keyWindow] : self.view;

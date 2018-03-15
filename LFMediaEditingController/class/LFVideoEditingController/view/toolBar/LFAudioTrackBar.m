@@ -18,7 +18,7 @@
 {
     LFAudioItem *item = [self new];
     if (item) {
-        item.title = @"Default AudioTrack";
+        item.title = [NSBundle LFME_localizedStringForKey:@"_LFME_defaultAudioItem_name"];
         item.isOriginal = YES;
         item.isEnable = YES;
     }
@@ -239,7 +239,7 @@
 - (void)audioTrackAdd
 {
     MPMediaPickerController *picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
-    picker.prompt = @"请选择需要的歌曲";   //弹出选择播放歌曲的提示
+    picker.prompt = [NSBundle LFME_localizedStringForKey:@"_LFME_MediaPicker_prompt"];   //弹出选择播放歌曲的提示
     picker.showsCloudItems = YES;     //显示为下载的歌曲
     picker.allowsPickingMultipleItems = YES;  //是否允许多选
     picker.delegate = self;

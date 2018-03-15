@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSBundle+LFMediaEditing.h"
 
 #ifndef LFMediaEditingHeader_h
 #define LFMediaEditingHeader_h
@@ -19,8 +20,8 @@
 #define isiPhone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define isiPad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
-#define bundleEditImageNamed(name) [UIImage imageNamed:[NSString stringWithFormat:@"%@/%@", kEditPath, name]]
-#define bundleStickerImageNamed(name) [UIImage imageNamed:[NSString stringWithFormat:@"%@/%@", kStickersPath, name]]
+#define bundleEditImageNamed(name) [NSBundle LFME_imageNamed:name]
+#define bundleStickerImageNamed(name) [NSBundle LFME_stickersImageNamed:name]
 
 #define kCustomTopbarHeight CGRectGetHeight(self.navigationController.navigationBar.frame) + (CGRectGetWidth([UIScreen mainScreen].bounds) < CGRectGetHeight([UIScreen mainScreen].bounds) ? 20 : 0)
 #define kCustomTopbarHeight_iOS11 CGRectGetHeight(self.navigationController.navigationBar.frame) + (self.view.safeAreaInsets.top > 0 ? self.view.safeAreaInsets.top : (CGRectGetWidth([UIScreen mainScreen].bounds) < CGRectGetHeight([UIScreen mainScreen].bounds) ? 20 : 0))
@@ -40,10 +41,5 @@
 , [UIColor colorWithRed:242.f/255.f green:102.f/255.f blue:139.f/255.f alpha:1.f]/*橙色*/\
 , [UIColor colorWithRed:236.f/255.f green:36.f/255.f blue:179.f/255.f alpha:1.f]/*粉红色*/\
 ]
-
-/** 编辑资源路径 */
-extern NSString *const kEditPath;
-/** 贴图资源路径 */
-extern NSString *const kStickersPath;
 
 #endif /* LFMediaEditingHeader_h */

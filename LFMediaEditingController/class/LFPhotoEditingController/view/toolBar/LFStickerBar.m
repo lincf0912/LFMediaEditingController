@@ -168,7 +168,7 @@ CGFloat const lf_stickerMargin = 10;
         self.files = [newFiles copy];
         self.external = YES;
     } else {
-        NSString *path = [[NSBundle mainBundle] pathForResource:kStickersPath ofType:nil];
+        NSString *path = [NSBundle LFME_stickersPath];
         self.files = [fileManager contentsOfDirectoryAtPath:path error:nil];
     }
     
@@ -187,7 +187,9 @@ CGFloat const lf_stickerMargin = 10;
     
     [lf_collectionViewSticker registerClass:[LFStickerCollectionViewCell class] forCellWithReuseIdentifier:[LFStickerCollectionViewCell identifier]];
     
-    lf_collectionViewSticker.dataSources = @[self.files];
+    if (self.files.count) {
+        lf_collectionViewSticker.dataSources = @[self.files];
+    }
     
     __weak typeof(self) weakSelf = self;
     [lf_collectionViewSticker callbackCellIdentifier:^NSString * _Nonnull(NSIndexPath * _Nonnull indexPath) {

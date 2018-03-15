@@ -17,9 +17,9 @@
 @property (nonatomic, strong) UIColor *oKButtonTitleColorNormal;
 @property (nonatomic, strong) UIColor *cancelButtonTitleColorNormal;
 /// 自定义文字
-@property (nonatomic, copy) NSString *oKButtonTitle;
-@property (nonatomic, copy) NSString *cancelButtonTitle;
-@property (nonatomic, copy) NSString *processHintStr;
+@property (nonatomic, copy) NSString *oKButtonTitle __deprecated_msg("Property deprecated. Use `LFMediaEditingController.strings`");
+@property (nonatomic, copy) NSString *cancelButtonTitle __deprecated_msg("Property deprecated. Use `LFMediaEditingController.strings`");
+@property (nonatomic, copy) NSString *processHintStr __deprecated_msg("Property deprecated. Use `LFMediaEditingController.strings`");
 
 //- (void)showProgressHUDText:(NSString *)text;
 - (void)showProgressHUD;

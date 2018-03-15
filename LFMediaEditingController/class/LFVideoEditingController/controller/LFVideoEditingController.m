@@ -149,20 +149,20 @@
     [_edit_naviBar addSubview:naviBar];
     
     UIFont *font = [UIFont systemFontOfSize:15];
-    CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
+    CGFloat editCancelWidth = [[NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"] boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
     UIButton *_edit_cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, 0, editCancelWidth, naviHeight)];
     _edit_cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [_edit_cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
+    [_edit_cancelButton setTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"] forState:UIControlStateNormal];
     _edit_cancelButton.titleLabel.font = font;
     [_edit_cancelButton setTitleColor:self.cancelButtonTitleColorNormal forState:UIControlStateNormal];
     [_edit_cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [naviBar addSubview:_edit_cancelButton];
     
-    CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
+    CGFloat editOkWidth = [[NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"] boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
     
     UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - editOkWidth-margin, 0, editOkWidth, naviHeight)];
     _edit_finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [_edit_finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
+    [_edit_finishButton setTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"] forState:UIControlStateNormal];
     _edit_finishButton.titleLabel.font = font;
     [_edit_finishButton setTitleColor:self.oKButtonTitleColorNormal forState:UIControlStateNormal];
     [_edit_finishButton addTarget:self action:@selector(finishButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -228,7 +228,7 @@
                 [_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL, NSError *error) {
                     videoEdit = [[LFVideoEdit alloc] initWithEditAsset:weakSelf.asset editFinalURL:trimURL data:data];
                     if (error) {
-                        [[[UIAlertView alloc] initWithTitle:nil message:error.localizedDescription delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil] show];
+                        [[[UIAlertView alloc] initWithTitle:nil message:error.localizedDescription delegate:nil cancelButtonTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_alertViewCancelTitle"] otherButtonTitles:nil] show];
                     }
                     if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
                         [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
@@ -608,8 +608,8 @@
     LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFTextBar *textBar) {
         textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
         textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
-        textBar.oKButtonTitle = self.oKButtonTitle;
-        textBar.cancelButtonTitle = self.cancelButtonTitle;
+        textBar.oKButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"];
+        textBar.cancelButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"];
         textBar.customTopbarHeight = self->_edit_naviBar.height;
         textBar.naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
     }];
@@ -664,8 +664,8 @@
     LFAudioTrackBar *audioTrackBar = [[LFAudioTrackBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFAudioTrackBar *audioTrackBar) {
         audioTrackBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
         audioTrackBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
-        audioTrackBar.oKButtonTitle = self.oKButtonTitle;
-        audioTrackBar.cancelButtonTitle = self.cancelButtonTitle;
+        audioTrackBar.oKButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"];
+        audioTrackBar.cancelButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"];
         audioTrackBar.customTopbarHeight = self->_edit_naviBar.height;
         audioTrackBar.naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
         if (@available(iOS 11.0, *)) {

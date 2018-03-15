@@ -11,6 +11,7 @@
 #import "LFVideoPlayerLayerView.h"
 #import "UIView+LFMECommon.h"
 #import "UIView+LFMEFrame.h"
+#import "LFMediaEditingHeader.h"
 
 /** 编辑功能 */
 #import "LFDrawView.h"
@@ -344,7 +345,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     [[[UIAlertView alloc] initWithTitle:@"LFVideoPlayer_Error"
                                 message:error.localizedDescription
                                delegate:nil
-                      cancelButtonTitle:@"确定"
+                      cancelButtonTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_alertViewCancelTitle"]
                       otherButtonTitles:nil]
      show];
 }

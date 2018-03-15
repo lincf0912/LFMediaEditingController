@@ -1,0 +1,18 @@
+/* 
+  LFImagePickerController.strings
+  LFImagePickerController
+
+  Created by Mr.D on 2018/3/9.
+  Copyright © 2018年 LamTsanFeng. All rights reserved.
+*/
+
+/* -------- LFBaseEditingController -------*/
+"_LFME_oKButtonTitle" = "Done";
+"_LFME_cancelButtonTitle" = "Cancel";
+"_LFME_processHintStr" = "Process...";
+
+"_LFME_alertViewCancelTitle" = "OK";
+
+/* -------- LFAudioItem  -------*/
+"_LFME_defaultAudioItem_name" = "Default AudioTrack";
+"_LFME_MediaPicker_prompt" = "Please select the audio";
