@@ -27,8 +27,7 @@
     self.view.backgroundColor = [UIColor redColor];
     
     /** 拍照图片 */
-//    UIImage *image = [UIImage imageNamed:@"1.jpg"];
-    UIImage *image = [UIImage imageNamed:@"4.gif"];
+    UIImage *image = [UIImage imageNamed:@"1.jpg"];
     /** 非拍照图片 */
 //    UIImage *image = [UIImage imageNamed:@"2.png"];
     /** 必须确保图片方向是正确的，当然有很多方法更正图片的方向，这里只是举例，请酌情参考。 */

@@ -55,6 +55,10 @@
 - (void)setEditImage:(UIImage *)editImage
 {
     _editImage = editImage;
+    /** GIF图片仅支持编辑第一帧 */
+    if (editImage.images.count) {
+        editImage = editImage.images.firstObject;
+    }
     _EditingView.image = editImage;
 }
 

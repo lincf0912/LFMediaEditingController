@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		06B5C6B8E0E458AF4F214A1E /* libPods-LFMediaEditingController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 148F5F9EE8645DAFC53E4A98 /* libPods-LFMediaEditingController.a */; };
 		6F14E5D51EE6438A0049AE56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D41EE6438A0049AE56 /* main.m */; };
 		6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D71EE6438A0049AE56 /* AppDelegate.m */; };
 		6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5DA1EE6438A0049AE56 /* ViewController.m */; };
@@ -68,15 +67,11 @@
 		6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */; };
 		C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */ = {isa = PBXBuildFile; fileRef = C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */; };
 		C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */ = {isa = PBXBuildFile; fileRef = C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */; };
-		C7269F552099462700A88CA7 /* 4.gif in Resources */ = {isa = PBXBuildFile; fileRef = C7269F542099462700A88CA7 /* 4.gif */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		148F5F9EE8645DAFC53E4A98 /* libPods-LFMediaEditingController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LFMediaEditingController.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		50AB9C3340B5B51427B4CF19 /* Pods-LFMediaEditingController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LFMediaEditingController.release.xcconfig"; path = "../Pods/Target Support Files/Pods-LFMediaEditingController/Pods-LFMediaEditingController.release.xcconfig"; sourceTree = "<group>"; };
-		63571953B2FFD720279222F8 /* Pods-LFMediaEditingController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LFMediaEditingController.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-LFMediaEditingController/Pods-LFMediaEditingController.debug.xcconfig"; sourceTree = "<group>"; };
 		6F14E5D01EE6438A0049AE56 /* LFMediaEditingController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LFMediaEditingController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F14E5D41EE6438A0049AE56 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6F14E5D61EE6438A0049AE56 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -192,7 +187,6 @@
 		C70BAD39205A50DC005B7894 /* NSBundle+LFMediaEditing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LFMediaEditing.h"; sourceTree = "<group>"; };
 		C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LFMediaEditing.m"; sourceTree = "<group>"; };
 		C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = LFMediaEditingController.strings; sourceTree = "<group>"; };
-		C7269F542099462700A88CA7 /* 4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = 4.gif; path = ../../../../Pictures/simulator/4.gif; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -204,28 +198,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06B5C6B8E0E458AF4F214A1E /* libPods-LFMediaEditingController.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0D101B04E739D8C6420B0FA9 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				148F5F9EE8645DAFC53E4A98 /* libPods-LFMediaEditingController.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		6F14E5C71EE643890049AE56 = {
 			isa = PBXGroup;
 			children = (
 				6F14E5D21EE6438A0049AE56 /* LFMediaEditingController */,
 				6F14E5D11EE6438A0049AE56 /* Products */,
-				D93E9A1ACF75579BA8B5F253 /* Pods */,
-				0D101B04E739D8C6420B0FA9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -266,7 +249,6 @@
 				6F359B241F1C9B40009F2035 /* 1.mp4 */,
 				6F61BC1C1F298BEE005A1E63 /* 2.mp4 */,
 				6F61BC1E1F29B880005A1E63 /* 3.m4v */,
-				C7269F542099462700A88CA7 /* 4.gif */,
 				6F14E65F1EE647820049AE56 /* 1.jpg */,
 				6F384D461EEA54550077D207 /* 2.png */,
 				6F307D271F3AF6A700A48B49 /* 3.jpg */,
@@ -587,15 +569,6 @@
 			path = category;
 			sourceTree = "<group>";
 		};
-		D93E9A1ACF75579BA8B5F253 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				63571953B2FFD720279222F8 /* Pods-LFMediaEditingController.debug.xcconfig */,
-				50AB9C3340B5B51427B4CF19 /* Pods-LFMediaEditingController.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -603,7 +576,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6F14E5E71EE6438A0049AE56 /* Build configuration list for PBXNativeTarget "LFMediaEditingController" */;
 			buildPhases = (
-				3489F8F2D6AAB528C01F88A1 /* [CP] Check Pods Manifest.lock */,
 				6F14E5CC1EE6438A0049AE56 /* Sources */,
 				6F14E5CD1EE6438A0049AE56 /* Frameworks */,
 				6F14E5CE1EE6438A0049AE56 /* Resources */,
@@ -663,7 +635,6 @@
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				6F307D281F3AF6A700A48B49 /* 3.jpg in Resources */,
 				6F14E6601EE647820049AE56 /* 1.jpg in Resources */,
-				C7269F552099462700A88CA7 /* 4.gif in Resources */,
 				6F359B4A1F21A326009F2035 /* LFMediaEditingController.bundle in Resources */,
 				C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */,
 				6F61BC1D1F298BF8005A1E63 /* 2.mp4 in Resources */,
@@ -672,27 +643,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		3489F8F2D6AAB528C01F88A1 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-LFMediaEditingController-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6F14E5CC1EE6438A0049AE56 /* Sources */ = {
@@ -867,7 +817,6 @@
 		};
 		6F14E5E81EE6438A0049AE56 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63571953B2FFD720279222F8 /* Pods-LFMediaEditingController.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 3VDRUN62M8;
@@ -881,7 +830,6 @@
 		};
 		6F14E5E91EE6438A0049AE56 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50AB9C3340B5B51427B4CF19 /* Pods-LFMediaEditingController.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 3VDRUN62M8;
