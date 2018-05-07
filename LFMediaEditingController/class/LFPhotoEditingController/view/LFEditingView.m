@@ -167,6 +167,16 @@
 - (void)setClippingMaxRect:(CGRect)clippingMaxRect
 {
     if (CGRectEqualToRect(CGRectZero, _clippingMaxRect) || (CGRectGetWidth(clippingMaxRect) > _clippingMinSize.width && CGRectGetHeight(clippingMaxRect) > _clippingMinSize.height)) {
+        
+        CGFloat toolbarHeight = self.editToolbarDefaultHeight;
+        if (@available(iOS 11.0, *)) {
+            toolbarHeight += self.safeAreaInsets.bottom;
+        }
+        CGFloat clippingMinY = MAX(CGRectGetHeight(self.frame)-toolbarHeight-kClipZoom_margin-CGRectGetHeight(clippingMaxRect), 0);
+        if (clippingMaxRect.origin.y > clippingMinY) {
+            clippingMaxRect.origin.y = clippingMinY;
+        }
+        
         _clippingMaxRect = clippingMaxRect;
         self.gridView.controlMaxRect = clippingMaxRect;
         self.clippingView.editRect = clippingMaxRect;
