@@ -67,6 +67,8 @@
 		6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */; };
 		C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */ = {isa = PBXBuildFile; fileRef = C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */; };
 		C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */ = {isa = PBXBuildFile; fileRef = C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */; };
+		C7269FBB20996DAE00A88CA7 /* 4.gif in Resources */ = {isa = PBXBuildFile; fileRef = C7269FBA20996DAE00A88CA7 /* 4.gif */; };
+		C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */ = {isa = PBXBuildFile; fileRef = C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 /* End PBXBuildFile section */
@@ -187,6 +189,9 @@
 		C70BAD39205A50DC005B7894 /* NSBundle+LFMediaEditing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LFMediaEditing.h"; sourceTree = "<group>"; };
 		C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LFMediaEditing.m"; sourceTree = "<group>"; };
 		C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = LFMediaEditingController.strings; sourceTree = "<group>"; };
+		C7269FBA20996DAE00A88CA7 /* 4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 4.gif; sourceTree = "<group>"; };
+		C7269FBC20999FC900A88CA7 /* UIImage+LF_Format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+LF_Format.h"; sourceTree = "<group>"; };
+		C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+LF_Format.m"; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -234,6 +239,8 @@
 				6F14E65D1EE643AB0049AE56 /* PhotoViewController.m */,
 				6F359B111F1C678D009F2035 /* VideoViewController.h */,
 				6F359B121F1C678D009F2035 /* VideoViewController.m */,
+				C7269FBC20999FC900A88CA7 /* UIImage+LF_Format.h */,
+				C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */,
 				6F14E5DC1EE6438A0049AE56 /* Main.storyboard */,
 				6F14E5DF1EE6438A0049AE56 /* Assets.xcassets */,
 				6F14E5E11EE6438A0049AE56 /* LaunchScreen.storyboard */,
@@ -252,6 +259,7 @@
 				6F14E65F1EE647820049AE56 /* 1.jpg */,
 				6F384D461EEA54550077D207 /* 2.png */,
 				6F307D271F3AF6A700A48B49 /* 3.jpg */,
+				C7269FBA20996DAE00A88CA7 /* 4.gif */,
 				C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */,
 				6F14E5D41EE6438A0049AE56 /* main.m */,
 			);
@@ -637,6 +645,7 @@
 				6F14E6601EE647820049AE56 /* 1.jpg in Resources */,
 				6F359B4A1F21A326009F2035 /* LFMediaEditingController.bundle in Resources */,
 				C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */,
+				C7269FBB20996DAE00A88CA7 /* 4.gif in Resources */,
 				6F61BC1D1F298BF8005A1E63 /* 2.mp4 in Resources */,
 				6F14E5DE1EE6438A0049AE56 /* Main.storyboard in Resources */,
 			);
@@ -673,6 +682,7 @@
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
 				6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */,
 				6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */,
+				C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */,
 				6F359B3B1F1DE99F009F2035 /* LFVideoTrimmerView.m in Sources */,
 				6F14E6561EE6439E0049AE56 /* LFClipToolbar.m in Sources */,
 				6F14E6491EE6439E0049AE56 /* LFZoomingView.m in Sources */,

@@ -109,7 +109,16 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.saveRect = self.frame;
     self.contentSize = self.size;
     [self.zoomingView setImage:image];
-    
+}
+
+- (void)setImageViewHidden:(BOOL)imageViewHidden
+{
+    self.zoomingView.imageViewHidden = imageViewHidden;
+}
+
+- (BOOL)isImageViewHidden
+{
+    return self.zoomingView.imageViewHidden;
 }
 
 - (void)setCropRect:(CGRect)cropRect

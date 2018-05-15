@@ -118,8 +118,17 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
     }
     
     [self.imageView setImage:image];
-    /** 创建马赛克模糊 */
-//    [self.splashView setImage:image mosaicLevel:10];
+    [self.imageView startAnimating];
+}
+
+- (void)setImageViewHidden:(BOOL)imageViewHidden
+{
+    self.imageView.hidden = imageViewHidden;
+}
+
+- (BOOL)isImageViewHidden
+{
+    return self.imageView.hidden;
 }
 
 - (void)setMoveCenter:(BOOL (^)(CGRect))moveCenter

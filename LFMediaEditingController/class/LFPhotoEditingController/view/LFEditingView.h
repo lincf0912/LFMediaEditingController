@@ -39,7 +39,7 @@
 - (void)setAspectRatio:(NSString *)aspectRatio;
 
 /** 创建编辑图片 */
-- (UIImage *)createEditImage;
+- (void)createEditImage:(void (^)(UIImage *editImage))complete;
 
 - (NSArray <NSString *>*)aspectRatioDescs;
 

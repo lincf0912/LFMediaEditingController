@@ -225,7 +225,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (data) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL, NSError *error) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf->_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL, NSError *error) {
                     videoEdit = [[LFVideoEdit alloc] initWithEditAsset:weakSelf.asset editFinalURL:trimURL data:data];
                     if (error) {
                         [[[UIAlertView alloc] initWithTitle:nil message:error.localizedDescription delegate:nil cancelButtonTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_alertViewCancelTitle"] otherButtonTitles:nil] show];

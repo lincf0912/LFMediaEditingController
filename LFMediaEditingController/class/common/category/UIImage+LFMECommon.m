@@ -153,6 +153,9 @@
 
 - (UIImage*)LFME_scaleToSize:(CGSize)size
 {
+    if (CGSizeEqualToSize(self.size, size)) {
+        return self;
+    }
     CGFloat width = CGImageGetWidth(self.CGImage);
     CGFloat height = CGImageGetHeight(self.CGImage);
     
@@ -190,6 +193,49 @@
     
     // 返回新的改变大小后的图片
     return scaledImage;
+}
+
+- (UIImage *)LFME_mergeimages:(NSArray <UIImage *>*)images
+{
+    UIGraphicsBeginImageContextWithOptions(self.size ,NO, 0);
+    [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
+    for (UIImage *image in images) {
+        [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
+    }
+    UIImage *mergeImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return mergeImage;
+}
+
+/** 将图片旋转弧度radians */
+- (UIImage *)LFME_imageRotatedByRadians:(CGFloat)radians
+{
+    // calculate the size of the rotated view's containing box for our drawing space
+    UIView *rotatedViewBox = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.size.width, self.size.height)];
+    CGAffineTransform t = CGAffineTransformMakeRotation(radians);
+    rotatedViewBox.transform = t;
+    CGSize rotatedSize = rotatedViewBox.frame.size;
+    rotatedSize.width = ((int)(rotatedSize.width+0.5)*1.f);
+    rotatedSize.height = ((int)(rotatedSize.height+0.5)*1.f);
+    
+    // Create the bitmap context
+    UIGraphicsBeginImageContext(rotatedSize);
+    CGContextRef bitmap = UIGraphicsGetCurrentContext();
+    
+    // Move the origin to the middle of the image so we will rotate and scale around the center.
+    CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
+    
+    // Rotate the image context
+    CGContextRotateCTM(bitmap, radians);
+    
+    // Now, draw the rotated/scaled image into the context
+    CGContextScaleCTM(bitmap, 1.0, -1.0);
+    CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), [self CGImage]);
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 #define kBitsPerComponent (8)

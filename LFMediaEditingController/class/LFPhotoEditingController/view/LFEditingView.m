@@ -307,7 +307,7 @@
     [self.gridView setAspectRatio:(LFGridViewAspectRatioType)index];
 }
 
-/** 补低操作-多手势同时触发时，部分逻辑没有实时处理，当手势完全停止后补充处理 */
+/** 补底操作-多手势同时触发时，部分逻辑没有实时处理，当手势完全停止后补充处理 */
 - (void)supplementHandle
 {
     if (!CGRectEqualToRect(self.gridView.gridRect, self.clippingView.frame)) {
@@ -318,14 +318,100 @@
 }
 
 /** 创建编辑图片 */
-- (UIImage *)createEditImage
+- (void)createEditImage:(void (^)(UIImage *editImage))complete
 {
     CGFloat zoomScale = self.zoomScale;
     [self setZoomScale:1.f];
-    UIImage *image = [self.clipZoomView LFME_captureImageAtFrame:self.clippingView.frame];
-    [self setZoomScale:zoomScale];
+    /** 忽略原图的显示，仅需要原图以上的编辑图层 */
+    self.clippingView.imageViewHidden = YES;
+    /** 获取编辑图层视图 */
+    UIImage *otherImage = [self.clipZoomView LFME_captureImageAtFrame:self.clippingView.frame];
+    /** 恢复原图的显示 */
+    self.clippingView.imageViewHidden = NO;
     
-    return image;
+    CGFloat scale = self.clippingView.zoomScale;
+    CGAffineTransform trans = self.clippingView.transform;
+    CGPoint contentOffset = self.clippingView.contentOffset;
+    CGSize size = self.clippingView.frame.size;
+    /* Return a transform which rotates by `angle' radians:
+     t' = [ cos(angle) sin(angle) -sin(angle) cos(angle) 0 0 ] */
+    CGFloat rotate = acosf(trans.a);
+    if (trans.b < 0) {
+        rotate = M_PI-asinf(trans.b);
+    }
+    // 将弧度转换为角度
+//    CGFloat degree = rotate/M_PI * 180;
+    
+    __block UIImage *editImage = self.image;
+    /** UIScrollView的缩放率 * 剪裁尺寸变化比例 / 图片屏幕缩放率 */
+    CGFloat clipScale = scale * (self.clippingView.frame.size.width/(editImage.size.width*editImage.scale));
+    /** 计算被剪裁的原尺寸图片位置 */
+    CGRect clipRect;
+    if (fabs(trans.b) == 1.f) {
+        clipRect = CGRectMake(contentOffset.x/clipScale, contentOffset.y/clipScale, size.height/clipScale, size.width/clipScale);
+    } else {
+        clipRect = CGRectMake(contentOffset.x/clipScale, contentOffset.y/clipScale, size.width/clipScale, size.height/clipScale);
+    }
+    /** 参数取整，否则可能会出现1像素偏差 */
+    clipRect.origin.x = ((int)(clipRect.origin.x+0.5)*1.f);
+    clipRect.origin.y = ((int)(clipRect.origin.y+0.5)*1.f);
+    clipRect.size.width = ((int)(clipRect.size.width+0.5)*1.f);
+    clipRect.size.height = ((int)(clipRect.size.height+0.5)*1.f);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        /** 创建方法 */
+        UIImage *(^ClipEditImage)(UIImage *) = ^UIImage * (UIImage *image) {
+            
+            /** 剪裁图片 */
+            CGImageRef sourceImageRef = [image CGImage];
+            CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, clipRect);
+            UIImage *clipEditImage = [UIImage imageWithCGImage:newImageRef];
+            if (rotate > 0) {
+                /** 调整图片方向 */
+                clipEditImage = [clipEditImage LFME_imageRotatedByRadians:rotate];
+            }
+            /** 缩放至原图尺寸 */
+            UIImage *scaleOtherImage = [otherImage LFME_scaleToSize:clipEditImage.size];
+            if (scaleOtherImage) {
+                /** 合并图层 */
+                clipEditImage = [clipEditImage LFME_mergeimages:@[scaleOtherImage]];
+            }
+            return clipEditImage;
+        };
+        
+        if (self.image.images.count) {
+            NSMutableArray *images = [NSMutableArray arrayWithCapacity:self.image.images.count];
+            for (UIImage *image in self.image.images) {
+                UIImage *newImage = ClipEditImage(image);
+                if (newImage) {
+                    [images addObject:newImage];
+                } else {
+                    break;
+                }
+            }
+            /** 解析gif失败，生成静态图片 */
+            if (images.count == self.image.images.count) {
+                editImage = [UIImage animatedImageWithImages:images duration:self.image.duration];
+            }
+        } else {
+            editImage = ClipEditImage(self.image);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIImage *resultImage = editImage;
+            
+            if (!resultImage) {
+                /** 合并操作有误，直接截取原始图层 */
+                resultImage = [self.clipZoomView LFME_captureImageAtFrame:self.clippingView.frame];
+            }
+            [self setZoomScale:zoomScale];
+            
+            if (complete) {
+                complete(resultImage);
+            }
+        });
+    });
 }
 
 #pragma mark - LFClippingViewDelegate

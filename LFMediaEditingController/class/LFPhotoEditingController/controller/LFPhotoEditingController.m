@@ -55,11 +55,13 @@
 - (void)setEditImage:(UIImage *)editImage
 {
     _editImage = editImage;
-    /** GIF图片仅支持编辑第一帧 */
-    if (editImage.images.count) {
-        editImage = editImage.images.firstObject;
-    }
     _EditingView.image = editImage;
+    if (editImage.images.count) {
+        /** gif不能使用模糊功能 */
+        if (_operationType & LFPhotoEditOperationType_splash) {        
+            _operationType ^= LFPhotoEditOperationType_splash;
+        }
+    }
 }
 
 - (void)viewDidLoad {
@@ -217,21 +219,29 @@
     /** 处理编辑图片 */
     __block LFPhotoEdit *photoEdit = nil;
     NSDictionary *data = [_EditingView photoEditData];
-    UIImage *image = nil;
-    if (data) {
-        image = [_EditingView createEditImage];
-    }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if (data) {
-            photoEdit = [[LFPhotoEdit alloc] initWithEditImage:self.editImage previewImage:image data:data];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(lf_PhotoEditingController:didFinishPhotoEdit:)]) {
-                [self.delegate lf_PhotoEditingController:self didFinishPhotoEdit:photoEdit];
+    __weak typeof(self) weakSelf = self;
+    
+    void (^finishImage)(UIImage *) = ^(UIImage *image){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if (data) {
+                photoEdit = [[LFPhotoEdit alloc] initWithEditImage:weakSelf.editImage previewImage:image data:data];
             }
-            [self hideProgressHUD];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(lf_PhotoEditingController:didFinishPhotoEdit:)]) {
+                    [weakSelf.delegate lf_PhotoEditingController:self didFinishPhotoEdit:photoEdit];
+                }
+                [weakSelf hideProgressHUD];
+            });
         });
-    });
+    };
+    
+    if (data) {
+        [_EditingView createEditImage:^(UIImage *editImage) {
+            finishImage(editImage);
+        }];
+    } else {
+        finishImage(nil);
+    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate

@@ -7,6 +7,8 @@
 //
 
 #import "PhotoViewController.h"
+#import "UIImage+LF_Format.h"
+
 #import "LFPhotoEditingController.h"
 
 @interface PhotoViewController () <LFPhotoEditingControllerDelegate>
@@ -28,15 +30,23 @@
     
     /** 拍照图片 */
     UIImage *image = [UIImage imageNamed:@"1.jpg"];
+    /** gif */
+//    UIImage *image = [UIImage LF_imageWithImagePath:[[NSBundle mainBundle] pathForResource:@"4.gif" ofType:nil]];
     /** 非拍照图片 */
 //    UIImage *image = [UIImage imageNamed:@"2.png"];
     /** 必须确保图片方向是正确的，当然有很多方法更正图片的方向，这里只是举例，请酌情参考。 */
-    self.image = [UIImage imageWithCGImage:image.CGImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+    if (image.images.count) {
+        self.image = image;
+    } else {
+        /** 普通图片更正方向 */
+        self.image = [UIImage imageWithCGImage:image.CGImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+    }
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [imageView setImage:self.image];
     [self.view addSubview:imageView];
+    [imageView startAnimating];
     
     _imageView = imageView;
     
