@@ -85,7 +85,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     zoomingView.moveCenter = ^BOOL(CGRect rect) {
         /** 判断缩放后贴图是否超出边界线 */
         CGRect newRect = [weakSelf.zoomingView convertRect:rect toView:weakSelf];
-        CGRect screenRect = (CGRect){weakSelf.contentOffset, weakSelf.frame.size};
+        CGRect clipTransRect = CGRectApplyAffineTransform(weakSelf.frame, weakSelf.transform);
+        CGRect screenRect = (CGRect){weakSelf.contentOffset, clipTransRect.size};
         return !CGRectIntersectsRect(screenRect, newRect);
     };
     [self addSubview:zoomingView];
