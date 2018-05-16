@@ -344,7 +344,7 @@
     
     __block UIImage *editImage = self.image;
     /** UIScrollView的缩放率 * 剪裁尺寸变化比例 / 图片屏幕缩放率 */
-    CGFloat clipScale = scale * (self.clippingView.frame.size.width/(editImage.size.width*editImage.scale));
+    CGFloat clipScale = scale * (self.clipZoomView.size.width/(editImage.size.width*editImage.scale));
     /** 计算被剪裁的原尺寸图片位置 */
     CGRect clipRect;
     if (fabs(trans.b) == 1.f) {

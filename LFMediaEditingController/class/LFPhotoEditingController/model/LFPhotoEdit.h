@@ -14,7 +14,9 @@
 @property (nonatomic, readonly) UIImage *editPosterImage;
 /** 编辑预览图片 */
 @property (nonatomic, readonly) UIImage *editPreviewImage;
-/** 编辑图片 */
+/** 编辑图片数据 */
+@property (nonatomic, readonly) NSData *editPreviewData;
+/** 编辑原图片 */
 @property (nonatomic, readonly) UIImage *editImage;
 /** 编辑数据 */
 @property (nonatomic, readonly) NSDictionary *editData;

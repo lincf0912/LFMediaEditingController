@@ -172,8 +172,8 @@
         radio = verticalRadio < horizontalRadio ? verticalRadio : horizontalRadio;
     }
     
-    width = floorf(width*radio);
-    height = floorf(height*radio);
+    width = roundf(width*radio);
+    height = roundf(height*radio);
     
     int xPos = (size.width - width)/2;
     int yPos = (size.height-height)/2;

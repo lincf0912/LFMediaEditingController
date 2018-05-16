@@ -71,6 +71,7 @@
 		C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */ = {isa = PBXBuildFile; fileRef = C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
+		C7ED893C20ABBC7100D37465 /* LFMEGIFImageSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C7ED893B20ABBC7100D37465 /* LFMEGIFImageSerialization.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -196,6 +197,8 @@
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
 		C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFEditCollectionView.m; sourceTree = "<group>"; };
+		C7ED893A20ABBC7100D37465 /* LFMEGIFImageSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMEGIFImageSerialization.h; sourceTree = "<group>"; };
+		C7ED893B20ABBC7100D37465 /* LFMEGIFImageSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMEGIFImageSerialization.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,6 +314,7 @@
 		6F14E6021EE6439E0049AE56 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				C7ED893920ABBC7100D37465 /* GIFUtils */,
 				6F14E6031EE6439E0049AE56 /* CancelBlock */,
 			);
 			path = utils;
@@ -577,6 +581,15 @@
 			path = category;
 			sourceTree = "<group>";
 		};
+		C7ED893920ABBC7100D37465 /* GIFUtils */ = {
+			isa = PBXGroup;
+			children = (
+				C7ED893A20ABBC7100D37465 /* LFMEGIFImageSerialization.h */,
+				C7ED893B20ABBC7100D37465 /* LFMEGIFImageSerialization.m */,
+			);
+			path = GIFUtils;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -674,6 +687,7 @@
 				6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */,
 				6F359B371F1DDE6D009F2035 /* LFVideoClipToolbar.m in Sources */,
 				6F14E6541EE6439E0049AE56 /* LFSplashView.m in Sources */,
+				C7ED893C20ABBC7100D37465 /* LFMEGIFImageSerialization.m in Sources */,
 				6F384D3F1EE7D9E70077D207 /* LFSplashView_new.m in Sources */,
 				6F14E65E1EE643AB0049AE56 /* PhotoViewController.m in Sources */,
 				6F359B211F1C8F24009F2035 /* LFVideoEdit.m in Sources */,
