@@ -322,17 +322,22 @@
 {
     CGFloat zoomScale = self.zoomScale;
     [self setZoomScale:1.f];
-    /** 忽略原图的显示，仅需要原图以上的编辑图层 */
-    self.clippingView.imageViewHidden = YES;
-    /** 获取编辑图层视图 */
-    UIImage *otherImage = [self.clipZoomView LFME_captureImageAtFrame:self.clippingView.frame];
-    /** 恢复原图的显示 */
-    self.clippingView.imageViewHidden = NO;
     
     CGFloat scale = self.clippingView.zoomScale;
     CGAffineTransform trans = self.clippingView.transform;
     CGPoint contentOffset = self.clippingView.contentOffset;
     CGSize size = self.clippingView.frame.size;
+    
+    size.width = ((int)(size.width+0.5)*1.f);
+    size.height = ((int)(size.height+0.5)*1.f);
+    
+    /** 忽略原图的显示，仅需要原图以上的编辑图层 */
+    self.clippingView.imageViewHidden = YES;
+    /** 获取编辑图层视图 */
+    UIImage *otherImage = [self.clipZoomView LFME_captureImageAtFrame:(CGRect){self.clippingView.frame.origin, size}];
+    /** 恢复原图的显示 */
+    self.clippingView.imageViewHidden = NO;
+    
     /* Return a transform which rotates by `angle' radians:
      t' = [ cos(angle) sin(angle) -sin(angle) cos(angle) 0 0 ] */
     CGFloat rotate = acosf(trans.a);
@@ -343,8 +348,9 @@
 //    CGFloat degree = rotate/M_PI * 180;
     
     __block UIImage *editImage = self.image;
+    CGRect clipViewRect = self.clippingView.normalRect;
     /** UIScrollView的缩放率 * 剪裁尺寸变化比例 / 图片屏幕缩放率 */
-    CGFloat clipScale = scale * (self.clipZoomView.size.width/(editImage.size.width*editImage.scale));
+    CGFloat clipScale = scale * (clipViewRect.size.width/(editImage.size.width*editImage.scale));
     /** 计算被剪裁的原尺寸图片位置 */
     CGRect clipRect;
     if (fabs(trans.b) == 1.f) {
@@ -362,11 +368,10 @@
         
         /** 创建方法 */
         UIImage *(^ClipEditImage)(UIImage *) = ^UIImage * (UIImage *image) {
-            
             /** 剪裁图片 */
             CGImageRef sourceImageRef = [image CGImage];
             CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, clipRect);
-            UIImage *clipEditImage = [UIImage imageWithCGImage:newImageRef];
+            UIImage *clipEditImage = [UIImage imageWithCGImage:newImageRef scale:image.scale orientation:image.imageOrientation];
             if (rotate > 0) {
                 /** 调整图片方向 */
                 clipEditImage = [clipEditImage LFME_imageRotatedByRadians:rotate];

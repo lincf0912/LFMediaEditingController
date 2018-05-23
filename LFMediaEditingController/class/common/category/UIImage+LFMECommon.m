@@ -211,12 +211,11 @@
 - (UIImage *)LFME_imageRotatedByRadians:(CGFloat)radians
 {
     // calculate the size of the rotated view's containing box for our drawing space
-    UIView *rotatedViewBox = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.size.width, self.size.height)];
     CGAffineTransform t = CGAffineTransformMakeRotation(radians);
-    rotatedViewBox.transform = t;
-    CGSize rotatedSize = rotatedViewBox.frame.size;
-    rotatedSize.width = ((int)(rotatedSize.width+0.5)*1.f);
-    rotatedSize.height = ((int)(rotatedSize.height+0.5)*1.f);
+    CGRect clipTransRect = CGRectApplyAffineTransform(CGRectMake(0,0,self.size.width, self.size.height), t);
+    CGSize rotatedSize = clipTransRect.size;
+    rotatedSize.width = (rotatedSize.width+FLT_EPSILON);
+    rotatedSize.height = (rotatedSize.height+FLT_EPSILON);
     
     // Create the bitmap context
     UIGraphicsBeginImageContext(rotatedSize);

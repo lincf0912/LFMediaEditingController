@@ -17,6 +17,12 @@
 
 - (UIImage *)LFME_captureImageAtFrame:(CGRect)rect
 {
+    /** 参数取整，否则可能会出现1像素偏差 */
+    rect.origin.x = (rect.origin.x+FLT_EPSILON);
+    rect.origin.y = (rect.origin.y+FLT_EPSILON);
+    rect.size.width = (rect.size.width+FLT_EPSILON);
+    rect.size.height = (rect.size.height+FLT_EPSILON);
+    
     UIImage* image = nil;
     
     CGSize size = !CGRectEqualToRect(CGRectZero, rect) ? rect.size : self.frame.size;

@@ -45,6 +45,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 @property (nonatomic, assign) CGFloat first_minimumZoomScale;
 /** 旋转系数 */
 @property (nonatomic, assign) NSInteger angle;
+/** 与父视图中心偏差坐标 */
+@property (nonatomic, assign) CGPoint offsetSuperCenter;
 
 /** 记录剪裁前的数据 */
 @property (nonatomic, assign) CGRect old_frame;
@@ -79,6 +81,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.alwaysBounceHorizontal = YES;
     self.alwaysBounceVertical = YES;
     self.angle = 0;
+    self.offsetSuperCenter = CGPointZero;
     
     LFZoomingView *zoomingView = [[LFZoomingView alloc] initWithFrame:self.bounds];
     __weak typeof(self) weakSelf = self;
@@ -145,6 +148,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     CGRect oldFrame = self.frame;
     self.frame = cropRect;
     self.saveRect = self.frame;
+    /** 计算与父界面的中心偏差坐标 */
+    CGFloat offset_x = (CGRectGetWidth(self.superview.frame)-CGRectGetWidth(cropRect))/2-cropRect.origin.x;
+    CGFloat offset_y = (CGRectGetHeight(self.superview.frame)-CGRectGetHeight(cropRect))/2-cropRect.origin.y;
+    self.offsetSuperCenter = CGPointMake(offset_x, offset_y);
     
     
     CGFloat scale = self.zoomScale;
@@ -203,7 +210,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                              self.minimumZoomScale = self.first_minimumZoomScale;
                              [self setZoomScale:self.minimumZoomScale];
                              self.frame = (CGRect){CGPointZero, self.zoomingView.size};
-                             self.center = self.superview.center;
+                             self.center = CGPointMake(self.superview.center.x-self.offsetSuperCenter.x/2, self.superview.center.y-self.offsetSuperCenter.y/2);
                              self.saveRect = self.frame;
                              /** 重设contentSize */
                              self.contentSize = self.zoomingView.size;
@@ -224,8 +231,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 - (BOOL)canReset
 {
-    CGRect trueFrame = CGRectMake((CGRectGetWidth(self.superview.frame)-CGRectGetWidth(self.zoomingView.frame))/2
-                                  , (CGRectGetHeight(self.superview.frame)-CGRectGetHeight(self.zoomingView.frame))/2
+    CGRect trueFrame = CGRectMake((CGRectGetWidth(self.superview.frame)-CGRectGetWidth(self.zoomingView.frame))/2-self.offsetSuperCenter.x
+                                  , (CGRectGetHeight(self.superview.frame)-CGRectGetHeight(self.zoomingView.frame))/2-self.offsetSuperCenter.y
                                   , CGRectGetWidth(self.zoomingView.frame)
                                   , CGRectGetHeight(self.zoomingView.frame));
     
@@ -280,7 +287,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                             options:UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
                              /** 只需要移动到中点 */
-                             self.center = self.superview.center;
+                             self.center = CGPointMake(self.superview.center.x-self.offsetSuperCenter.x/2, self.superview.center.y-self.offsetSuperCenter.y/2);
                              self.saveRect = self.frame;
                              
                              if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {

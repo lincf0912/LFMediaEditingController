@@ -21,6 +21,11 @@
 /** 首次缩放后需要记录最小缩放值 */
 @property (nonatomic, readonly) CGFloat first_minimumZoomScale;
 
+/** 原始坐标 */
+@property (nonatomic, readonly) CGRect originalRect;
+/** 开始的基础坐标 */
+@property (nonatomic, readonly) CGRect normalRect;
+
 /** 是否重置中 */
 @property (nonatomic, readonly) BOOL isReseting;
 /** 是否旋转中 */
