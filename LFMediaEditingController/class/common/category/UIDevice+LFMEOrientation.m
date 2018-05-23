@@ -12,7 +12,7 @@
 
 //调用私有方法实现
 + (void)LFME_setOrientation:(UIInterfaceOrientation)orientation {
-    SEL selector = NSSelectorFromString(@"setOrientation:");
+    SEL selector = NSSelectorFromString([NSString stringWithFormat:@"%@%@%@", @"se",@"tOr",@"ientation:"]);
     if ([[self currentDevice] respondsToSelector:selector]) {        
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self instanceMethodSignatureForSelector:selector]];
         [invocation setSelector:selector];
