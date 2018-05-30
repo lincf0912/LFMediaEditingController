@@ -17,22 +17,28 @@
 
 - (UIImage *)LFME_captureImageAtFrame:(CGRect)rect
 {
+    UIImage* image = nil;
+    
+    BOOL translateCTM = !CGRectEqualToRect(CGRectZero, rect);
+    
+    if (!translateCTM) {
+        rect = self.frame;
+    }
+    
     /** 参数取整，否则可能会出现1像素偏差 */
     rect.origin.x = (rect.origin.x+FLT_EPSILON);
     rect.origin.y = (rect.origin.y+FLT_EPSILON);
     rect.size.width = (rect.size.width+FLT_EPSILON);
     rect.size.height = (rect.size.height+FLT_EPSILON);
     
-    UIImage* image = nil;
-    
-    CGSize size = !CGRectEqualToRect(CGRectZero, rect) ? rect.size : self.frame.size;
+    CGSize size = rect.size;
     
     //1.开启上下文
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    if (!CGRectEqualToRect(CGRectZero, rect)) {
+    if (translateCTM) {
         /** 移动上下文 */
         CGContextTranslateCTM(context, -rect.origin.x, -rect.origin.y);
     }

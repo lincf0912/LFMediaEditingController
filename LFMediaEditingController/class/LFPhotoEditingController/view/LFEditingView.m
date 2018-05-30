@@ -328,8 +328,8 @@
     CGPoint contentOffset = self.clippingView.contentOffset;
     CGSize size = self.clippingView.frame.size;
     
-    size.width = ((int)(size.width+0.5)*1.f);
-    size.height = ((int)(size.height+0.5)*1.f);
+//    size.width = ((int)(size.width+0.5)*1.f);
+//    size.height = ((int)(size.height+0.5)*1.f);
     
     /** 忽略原图的显示，仅需要原图以上的编辑图层 */
     self.clippingView.imageViewHidden = YES;

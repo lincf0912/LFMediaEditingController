@@ -289,15 +289,21 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
         copyZoomView.backgroundColor = [UIColor clearColor];
         copyZoomView.userInteractionEnabled = NO;
         
-        /** 绘画 */
-        LFDrawView *drawView = [[LFDrawView alloc] initWithFrame:copyZoomView.bounds];
-        [copyZoomView addSubview:drawView];
-        [drawView setData:data[kLFVideoCLippingViewData_draw]];
+        NSDictionary *drawData = data[kLFVideoCLippingViewData_draw];
+        if (drawData) {
+            /** 绘画 */
+            LFDrawView *drawView = [[LFDrawView alloc] initWithFrame:copyZoomView.bounds];
+            [copyZoomView addSubview:drawView];
+            [drawView setData:drawData];
+        }
         
-        /** 贴图 */
-        LFStickerView *stickerView = [[LFStickerView alloc] initWithFrame:copyZoomView.bounds];
-        [copyZoomView addSubview:stickerView];
-        [stickerView setData:data[kLFVideoCLippingViewData_sticker]];
+        NSDictionary *stickerData = data[kLFVideoCLippingViewData_sticker];
+        if (stickerData) {
+            /** 贴图 */
+            LFStickerView *stickerView = [[LFStickerView alloc] initWithFrame:copyZoomView.bounds];
+            [copyZoomView addSubview:stickerView];
+            [stickerView setData:stickerData];
+        }
         
         return copyZoomView;
     }
