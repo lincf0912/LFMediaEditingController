@@ -10,6 +10,8 @@
 #import "LFVideoTrimmerGridView.h"
 #import "UIView+LFMEFrame.h"
 
+#define LFVideoTrimmerView_timeLabel_height 11.f
+
 @interface LFVideoTrimmerView () <LFVideoTrimmerGridViewDelegate>
 
 /** 视频图片解析器 */
@@ -17,9 +19,18 @@
 
 /** 内容容器 */
 @property (nonatomic, weak) UIView *contentView;
+/** 起始时间 */
+@property (nonatomic, weak) UILabel *startTimeLabel;
+/** 结束时间 */
+@property (nonatomic, weak) UILabel *endTimeLabel;
+/** 总时间 */
+@property (nonatomic, weak) UILabel *totalTimeLabel;
 
 /** 控制操作视图 */
 @property (nonatomic, weak) LFVideoTrimmerGridView *gridView;
+
+/** 视频总时长 */
+@property (nonatomic, assign) double totalDuration;
 
 @end
 
@@ -36,20 +47,54 @@
 
 - (void)customInit
 {
-    _maxImageCount = 10;
+    _maxImageCount = 15;
+    
+    /** 时间标签 */
+    CGRect timeLabelRect = CGRectMake(0, 0, 60, LFVideoTrimmerView_timeLabel_height);
+    UILabel *startTimeLabel = [self timeLabel];
+    startTimeLabel.frame = timeLabelRect;
+    startTimeLabel.text = @"00:00";
+    [self addSubview:startTimeLabel];
+    _startTimeLabel = startTimeLabel;
+    
+    UILabel *endTimeLabel = [self timeLabel];
+    timeLabelRect.origin.x = CGRectGetWidth(self.frame)-timeLabelRect.size.width;
+    endTimeLabel.frame = timeLabelRect;
+    endTimeLabel.textAlignment = NSTextAlignmentRight;
+    endTimeLabel.text = @"00:00";
+    [self addSubview:endTimeLabel];
+    _endTimeLabel = endTimeLabel;
+    
+    UILabel *totalTimeLabel = [self timeLabel];
+    timeLabelRect.origin.x = (CGRectGetWidth(self.frame)-timeLabelRect.size.width)/2;
+    timeLabelRect.origin.y = CGRectGetHeight(self.frame)-timeLabelRect.size.height;
+    totalTimeLabel.frame = timeLabelRect;
+    totalTimeLabel.textAlignment = NSTextAlignmentCenter;
+    totalTimeLabel.text = @"00:00";
+    [self addSubview:totalTimeLabel];
+    _totalTimeLabel = totalTimeLabel;
+    
     
     /** 每帧图片的容器 */
-    UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, LFVideoTrimmerView_timeLabel_height+1, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)-2*(LFVideoTrimmerView_timeLabel_height+1))];
     contentView.clipsToBounds = YES;
     [self addSubview:contentView];
     _contentView = contentView;
     
     /** 时间轴 */
-    LFVideoTrimmerGridView *gridView = [[LFVideoTrimmerGridView alloc] initWithFrame:self.bounds];
+    LFVideoTrimmerGridView *gridView = [[LFVideoTrimmerGridView alloc] initWithFrame:contentView.frame];
     gridView.delegate = self;
     [self addSubview:gridView];
     _gridView = gridView;
-    
+}
+
+- (UILabel *)timeLabel
+{
+    UILabel *timeLabel = [[UILabel alloc] init];
+    timeLabel.textColor = [UIColor whiteColor];
+    timeLabel.font = [UIFont boldSystemFontOfSize:10.f];
+    timeLabel.numberOfLines = 1.f;
+    return timeLabel;
 }
 
 - (void)setMaxImageCount:(NSInteger)maxImageCount
@@ -107,9 +152,10 @@
 }
 
 /** 重设控制区域 */
-- (void)setGridRect:(CGRect)gridRect animated:(BOOL)animated
+- (void)setGridRange:(NSRange)gridRange animated:(BOOL)animated
 {
-    [self.gridView setGridRect:gridRect animated:animated];
+    [self.gridView setGridRect:CGRectMake(gridRange.location, 0, gridRange.length, self.gridView.frame.size.height) animated:animated];
+    [self calcTime];
 }
 
 - (void)analysisVideo
@@ -139,6 +185,8 @@
     _imageGenerator.appliesPreferredTrackTransform = YES;
     
     CMTime duration = _asset.duration;
+    self.totalDuration = CMTimeGetSeconds(duration);
+    [self calcTime];
     
     NSInteger index = maxImageCount;
     CMTimeValue intervalSeconds = duration.value/index;
@@ -172,34 +220,59 @@
             imageView.contentMode = UIViewContentModeScaleAspectFit;
             [self.contentView addSubview:imageView];
             maxContentWidth = CGRectGetMaxX(imageView.frame);
-
-            if (self.contentView.subviews.count == times.count) {
-                CGRect frame = self.contentView.frame;
-                frame.size.width = MIN(self.bounds.size.width, maxContentWidth);
-                frame.origin.x = (self.bounds.size.width - frame.size.width)/2;
-                self.contentView.frame = frame;
-            }
+//
+//            if (self.contentView.subviews.count == times.count) {
+//                CGRect frame = self.contentView.frame;
+//                frame.size.width = MIN(self.bounds.size.width, maxContentWidth);
+//                frame.origin.x = (self.bounds.size.width - frame.size.width)/2;
+//                self.contentView.frame = frame;
+//            }
         });
     }];
+}
+
+- (void)calcTime
+{
+    if (self.totalDuration) {
+        double startTime = self.gridView.gridRect.origin.x/self.width*self.totalDuration;
+        double endTime = (self.gridView.gridRect.origin.x+self.gridView.gridRect.size.width)/self.width*self.totalDuration;
+        
+        self.startTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:ceil(startTime)];
+        self.endTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:ceil(endTime)];
+        self.totalTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:ceil(endTime)-ceil(startTime)];
+    }
+}
+
++ (NSString *)getMMSSWithSecond:(NSInteger)second{
+    NSString *tmpmm = [NSString stringWithFormat:@"%d",(int)(second/60)%60];
+    if (tmpmm.length == 1) {
+        tmpmm = [NSString stringWithFormat:@"0%@",tmpmm];
+    }
+    NSString *tmpss = [NSString stringWithFormat:@"%d",(int)second%60];
+    if (tmpss.length == 1) {
+        tmpss = [NSString stringWithFormat:@"0%@",tmpss];
+    }
+    return [NSString stringWithFormat:@"%@:%@",tmpmm,tmpss];
 }
 
 #pragma mark - LFVideoTrimmerGridViewDelegate
 - (void)lf_videoTrimmerGridViewDidBeginResizing:(LFVideoTrimmerGridView *)gridView
 {
-    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidBeginResizing:gridRect:)]) {
-        [self.delegate lf_videoTrimmerViewDidBeginResizing:self gridRect:gridView.gridRect];
+    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidBeginResizing:gridRange:)]) {
+        [self.delegate lf_videoTrimmerViewDidBeginResizing:self gridRange:NSMakeRange(gridView.gridRect.origin.x, gridView.gridRect.size.width)];
     }
 }
 - (void)lf_videoTrimmerGridViewDidResizing:(LFVideoTrimmerGridView *)gridView
 {
-    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidResizing:gridRect:)]) {
-        [self.delegate lf_videoTrimmerViewDidResizing:self gridRect:gridView.gridRect];
+    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidResizing:gridRange:)]) {
+        [self.delegate lf_videoTrimmerViewDidResizing:self gridRange:NSMakeRange(gridView.gridRect.origin.x, gridView.gridRect.size.width)];
     }
+    [self calcTime];
 }
 - (void)lf_videoTrimmerGridViewDidEndResizing:(LFVideoTrimmerGridView *)gridView
 {
-    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidEndResizing:gridRect:)]) {
-        [self.delegate lf_videoTrimmerViewDidEndResizing:self gridRect:gridView.gridRect];
+    if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerViewDidEndResizing:gridRange:)]) {
+        [self.delegate lf_videoTrimmerViewDidEndResizing:self gridRange:NSMakeRange(gridView.gridRect.origin.x, gridView.gridRect.size.width)];
     }
 }
 

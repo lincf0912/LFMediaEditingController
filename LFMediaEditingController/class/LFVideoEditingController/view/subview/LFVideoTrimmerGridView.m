@@ -117,7 +117,7 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
 {
     /** 进度 */
     UIView *slider = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 2, self.bounds.size.height)];
-    slider.backgroundColor = [UIColor colorWithWhite:1.f alpha:0.5f];
+    slider.backgroundColor = [UIColor colorWithWhite:1.f alpha:0.8f];
     slider.userInteractionEnabled = NO;
     [self addSubview:slider];
     _slider = slider;
@@ -269,32 +269,32 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
     
     if (resizeControlView == self.leftCornerView) {
         /** 限制宽度 超出 最大限度 */
-        if (ceil(rect.size.width) > ceil(self.controlMaxWidth) || ceil(rect.origin.x) < 0) {
-            CGFloat diff = ceil(rect.origin.x) < 0 ? (rect.origin.x-0) : (self.controlMaxWidth - rect.size.width);
+        if (rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON || rect.origin.x < 0) {
+            CGFloat diff = rect.origin.x < 0 ? (rect.origin.x-0) : (self.controlMaxWidth - rect.size.width);
             rect.origin.x -= diff;
             rect.size.width += diff;
         } else
         /** 限制宽度 超出 最小限度 */
-        if (ceil(rect.size.width) < ceil(self.controlMinWidth)) {
+        if (rect.size.width+FLT_EPSILON < self.controlMinWidth+FLT_EPSILON) {
             CGFloat diff = self.controlMinWidth - rect.size.width;
             rect.origin.x -= diff;
             rect.size.width += diff;
         }
     } else if (resizeControlView == self.rightCornerView) {
         /** 限制宽度 超出 最大限度 */
-        if (ceil(rect.size.width) > ceil(self.controlMaxWidth) || ceil(rect.origin.x+rect.size.width) > ceil(self.controlMaxWidth)) {
-            CGFloat diff = ceil(rect.size.width) > ceil(self.controlMaxWidth) ? (self.controlMaxWidth - rect.size.width) : (self.controlMaxWidth-ceil(rect.origin.x+rect.size.width));
+        if (rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON || rect.origin.x+FLT_EPSILON+rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON) {
+            CGFloat diff = rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON ? (self.controlMaxWidth - rect.size.width) : (self.controlMaxWidth-(rect.origin.x+FLT_EPSILON+rect.size.width+FLT_EPSILON));
             rect.size.width += diff;
         } else
         /** 限制宽度 超出 最小限度 */
-        if (ceil(rect.size.width) < ceil(self.controlMinWidth)) {
+        if (rect.size.width+FLT_EPSILON < self.controlMinWidth+FLT_EPSILON) {
             CGFloat diff = self.controlMinWidth - rect.size.width;
             rect.size.width += diff;
         }
     }
     
     
-    return CGRectMake(ceil(rect.origin.x), ceil(rect.origin.y), ceil(rect.size.width), ceil(rect.size.height));
+    return rect;
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event

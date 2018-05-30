@@ -24,7 +24,7 @@
 - (void)setHiddenProgress:(BOOL)hidden;
 
 /** 重设控制区域 */
-- (void)setGridRect:(CGRect)gridRect animated:(BOOL)animated;
+- (void)setGridRange:(NSRange)gridRange animated:(BOOL)animated;
 
 /** 代理 */
 @property (nonatomic, weak) id delegate;
@@ -34,8 +34,8 @@
 
 @protocol LFVideoTrimmerViewDelegate <NSObject>
 
-- (void)lf_videoTrimmerViewDidBeginResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect;
-- (void)lf_videoTrimmerViewDidResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect;
-- (void)lf_videoTrimmerViewDidEndResizing:(LFVideoTrimmerView *)trimmerView gridRect:(CGRect)gridRect;
+- (void)lf_videoTrimmerViewDidBeginResizing:(LFVideoTrimmerView *)trimmerView gridRange:(NSRange)gridRange;
+- (void)lf_videoTrimmerViewDidResizing:(LFVideoTrimmerView *)trimmerView gridRange:(NSRange)gridRange;
+- (void)lf_videoTrimmerViewDidEndResizing:(LFVideoTrimmerView *)trimmerView gridRange:(NSRange)gridRange;
 
 @end
