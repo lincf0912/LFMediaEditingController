@@ -67,6 +67,7 @@
 		6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */; };
 		C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */ = {isa = PBXBuildFile; fileRef = C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */; };
 		C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */ = {isa = PBXBuildFile; fileRef = C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */; };
+		C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C70FDAB020E46CF50053A02C /* longImage.jpg */; };
 		C7269FBB20996DAE00A88CA7 /* 4.gif in Resources */ = {isa = PBXBuildFile; fileRef = C7269FBA20996DAE00A88CA7 /* 4.gif */; };
 		C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */ = {isa = PBXBuildFile; fileRef = C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
@@ -190,6 +191,7 @@
 		C70BAD39205A50DC005B7894 /* NSBundle+LFMediaEditing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LFMediaEditing.h"; sourceTree = "<group>"; };
 		C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LFMediaEditing.m"; sourceTree = "<group>"; };
 		C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = LFMediaEditingController.strings; sourceTree = "<group>"; };
+		C70FDAB020E46CF50053A02C /* longImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = longImage.jpg; sourceTree = "<group>"; };
 		C7269FBA20996DAE00A88CA7 /* 4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 4.gif; sourceTree = "<group>"; };
 		C7269FBC20999FC900A88CA7 /* UIImage+LF_Format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+LF_Format.h"; sourceTree = "<group>"; };
 		C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+LF_Format.m"; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				6F14E65F1EE647820049AE56 /* 1.jpg */,
 				6F384D461EEA54550077D207 /* 2.png */,
 				6F307D271F3AF6A700A48B49 /* 3.jpg */,
+				C70FDAB020E46CF50053A02C /* longImage.jpg */,
 				C7269FBA20996DAE00A88CA7 /* 4.gif */,
 				C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */,
 				6F14E5D41EE6438A0049AE56 /* main.m */,
@@ -652,6 +655,7 @@
 				6F61BC1F1F29B880005A1E63 /* 3.m4v in Resources */,
 				6F359B251F1C9B40009F2035 /* 1.mp4 in Resources */,
 				6F384D471EEA54550077D207 /* 2.png in Resources */,
+				C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */,
 				6F14E5E31EE6438A0049AE56 /* LaunchScreen.storyboard in Resources */,
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				6F307D281F3AF6A700A48B49 /* 3.jpg in Resources */,

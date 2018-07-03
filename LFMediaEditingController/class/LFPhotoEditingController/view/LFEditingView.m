@@ -19,7 +19,7 @@
 
 #define kMaxZoomScale 2.5f
 
-#define kClipZoom_margin 15.f
+#define kClipZoom_margin 10.f
 
 @interface LFEditingView () <UIScrollViewDelegate, LFClippingViewDelegate, LFGridViewDelegate>
 
@@ -44,6 +44,9 @@
 
 /** 编辑操作次数记录-有3种编辑操作 拖动、缩放、网格 并且可以同时触发任意2种，避免多次回调代理 */
 @property (nonatomic, assign) int editedCount;
+
+/** 默认最大化缩放 */
+@property (nonatomic, assign) CGFloat defaultMaximumZoomScale;
 
 @end
 
@@ -115,6 +118,13 @@
     self.imagePixel = imagePixel;
 }
 
+- (void)safeAreaInsetsDidChange
+{
+    [super safeAreaInsetsDidChange];
+    self.clippingMinSize = self.clippingMinSize;
+    self.clippingMaxRect = self.clippingMaxRect;
+}
+
 - (void)setImage:(UIImage *)image
 {
     _image = image;
@@ -123,6 +133,14 @@
         self.gridView.controlSize = cropRect.size;
         self.gridView.gridRect = cropRect;
         self.imagePixel.center = CGPointMake(CGRectGetMidX(cropRect), CGRectGetMidY(cropRect));
+        {
+            if (cropRect.size.width < cropRect.size.height) {
+                self.defaultMaximumZoomScale = self.frame.size.width * kMaxZoomScale / cropRect.size.width;
+            } else {
+                self.defaultMaximumZoomScale = self.frame.size.height * kMaxZoomScale / cropRect.size.height;
+            }
+            self.maximumZoomScale = self.defaultMaximumZoomScale;
+        }
     }
     self.clippingView.image = image;
     
@@ -132,33 +150,73 @@
 
 - (void)setClippingRect:(CGRect)clippingRect
 {
-    CGFloat toolbarHeight = self.editToolbarDefaultHeight;
-    if (@available(iOS 11.0, *)) {
-        toolbarHeight += self.safeAreaInsets.bottom;
-    }
     if (_isClipping) {
-        CGFloat clippingMinY = MAX(CGRectGetHeight(self.frame)-toolbarHeight-kClipZoom_margin-CGRectGetHeight(clippingRect), 0);
-        if (clippingRect.origin.y > clippingMinY) {
+        /** 关闭缩放 */
+        self.maximumZoomScale = self.minimumZoomScale;
+        [self setZoomScale:self.zoomScale];
+        self.contentInset = UIEdgeInsetsZero;
+        self.scrollIndicatorInsets = UIEdgeInsetsZero;
+    } else {
+        self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
+    }
+    
+    if (_isClipping) {
+        CGFloat clippingMinY = CGRectGetMinY(self.clippingMaxRect);
+        if (clippingRect.origin.y < clippingMinY) {
             clippingRect.origin.y = clippingMinY;
         }
+        CGFloat clippingMaxY = CGRectGetMaxY(self.clippingMaxRect);
+        if (CGRectGetMaxY(clippingRect) > clippingMaxY) {
+            clippingRect.size.height = self.clippingMaxRect.size.height;
+        }
+        CGFloat clippingMinX = CGRectGetMinX(self.clippingMaxRect);
+        if (clippingRect.origin.x < clippingMinX) {
+            clippingRect.origin.x = clippingMinX;
+        }
+        CGFloat clippingMaxX = CGRectGetMaxX(self.clippingMaxRect);
+        if (CGRectGetMaxX(clippingRect) > clippingMaxX) {
+            clippingRect.size.width = self.clippingMaxRect.size.width;
+        }
+        
+        /** 调整最小尺寸 */
+        CGSize clippingMinSize = self.clippingMinSize;
+        if (clippingMinSize.width > clippingRect.size.width) {
+            clippingMinSize.width = clippingRect.size.width;
+        }
+        if (clippingMinSize.height > clippingRect.size.height) {
+            clippingMinSize.height = clippingRect.size.height;
+        }
+        self.clippingMinSize = clippingMinSize;
     }
     _clippingRect = clippingRect;
     self.gridView.gridRect = clippingRect;
     self.clippingView.cropRect = clippingRect;
     self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
-    
-    if (_isClipping) {
-        /** 关闭缩放 */
-        self.maximumZoomScale = self.minimumZoomScale;
-        [self setZoomScale:self.zoomScale];
-    } else {
-        self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + kMaxZoomScale - kMaxZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), kMaxZoomScale);
-    }
 }
 
 - (void)setClippingMinSize:(CGSize)clippingMinSize
 {
     if (CGSizeEqualToSize(CGSizeZero, _clippingMinSize) || (clippingMinSize.width < CGRectGetWidth(_clippingMaxRect) && clippingMinSize.height < CGRectGetHeight(_clippingMaxRect))) {
+        
+        CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
+        CGFloat topHeight = 0;
+        if (@available(iOS 11.0, *)) {
+            toolbarHeight += self.safeAreaInsets.bottom;
+            topHeight += self.safeAreaInsets.top;
+        }
+        
+        CGRect rect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
+        CGSize newClippingMinSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect).size;
+        
+        {
+            if (clippingMinSize.width > newClippingMinSize.width) {
+                clippingMinSize.width = newClippingMinSize.width;
+            }
+            if (clippingMinSize.height > newClippingMinSize.height) {
+                clippingMinSize.height = newClippingMinSize.height;
+            }
+        }
+        
         _clippingMinSize = clippingMinSize;
         self.gridView.controlMinSize = clippingMinSize;
     }
@@ -168,13 +226,26 @@
 {
     if (CGRectEqualToRect(CGRectZero, _clippingMaxRect) || (CGRectGetWidth(clippingMaxRect) > _clippingMinSize.width && CGRectGetHeight(clippingMaxRect) > _clippingMinSize.height)) {
         
-        CGFloat toolbarHeight = self.editToolbarDefaultHeight;
+        CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
+        CGFloat topHeight = 0;
         if (@available(iOS 11.0, *)) {
             toolbarHeight += self.safeAreaInsets.bottom;
+            topHeight += self.safeAreaInsets.top;
         }
-        CGFloat clippingMinY = MAX(CGRectGetHeight(self.frame)-toolbarHeight-kClipZoom_margin-CGRectGetHeight(clippingMaxRect), 0);
-        if (clippingMaxRect.origin.y > clippingMinY) {
-            clippingMaxRect.origin.y = clippingMinY;
+        
+        CGRect newClippingMaxRect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
+        
+        if (clippingMaxRect.origin.y < newClippingMaxRect.origin.y) {
+            clippingMaxRect.origin.y = newClippingMaxRect.origin.y;
+        }
+        if (clippingMaxRect.origin.x < newClippingMaxRect.origin.x) {
+            clippingMaxRect.origin.x = newClippingMaxRect.origin.x;
+        }
+        if (CGRectGetMaxY(clippingMaxRect) > CGRectGetMaxY(newClippingMaxRect)) {
+            clippingMaxRect.size.height = newClippingMaxRect.size.height;
+        }
+        if (CGRectGetMaxX(clippingMaxRect) > CGRectGetMaxX(newClippingMaxRect)) {
+            clippingMaxRect.size.width = newClippingMaxRect.size.width;
         }
         
         _clippingMaxRect = clippingMaxRect;
@@ -195,10 +266,14 @@
     _isClipping = isClipping;
     self.clippingView.scrollEnabled = isClipping;
     if (isClipping) {
+        CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
+        if (@available(iOS 11.0, *)) {
+            toolbarHeight += self.safeAreaInsets.bottom;
+        }
         /** 动画切换 */
         if (animated) {
             [UIView animateWithDuration:0.25f animations:^{
-                CGRect rect = CGRectInset(self.frame , 20, 50);
+                CGRect rect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
                 self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect);
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.25f animations:^{
@@ -210,7 +285,7 @@
                 }];
             }];
         } else {
-            CGRect rect = CGRectInset(self.frame , 20, 50);
+            CGRect rect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
             self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect);
             self.gridView.alpha = 1.f;
             self.imagePixel.alpha = 1.f;
@@ -269,7 +344,7 @@
     [self.clippingView cancel];
     self.gridView.gridRect = self.clippingView.frame;
     self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
-    self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + kMaxZoomScale - kMaxZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), kMaxZoomScale);
+    self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
 }
 
 /** 还原 */
@@ -552,7 +627,7 @@
     CGFloat diffHeight = (height-self.clipZoomView.frame.size.height)/2;
     self.contentInset = UIEdgeInsetsMake(diffHeight, diffWidth, 0, 0);
     self.scrollIndicatorInsets = UIEdgeInsetsMake(diffHeight, diffWidth, 0, 0);
-    self.contentSize = CGSizeMake(width, height);
+    self.contentSize = CGSizeMake(width-diffWidth, height-diffHeight);
 }
 
 
@@ -642,7 +717,7 @@
 - (void)setPhotoEditData:(NSDictionary *)photoEditData
 {
     self.clippingView.photoEditData = photoEditData;
-    self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + kMaxZoomScale - kMaxZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), kMaxZoomScale);
+    self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
 }
 
 #pragma mark - 绘画功能

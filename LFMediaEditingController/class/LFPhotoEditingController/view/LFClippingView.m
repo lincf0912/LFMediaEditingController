@@ -15,6 +15,8 @@
 
 #define kRoundFrame(rect) CGRectMake(kRound(rect.origin.x), kRound(rect.origin.y), kRound(rect.size.width), kRound(rect.size.height))
 
+#define kDefaultMaximumZoomScale 5.f
+
 NSString *const kLFClippingViewData = @"LFClippingViewData";
 
 NSString *const kLFClippingViewData_frame = @"LFClippingViewData_frame";
@@ -47,6 +49,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 @property (nonatomic, assign) NSInteger angle;
 /** 与父视图中心偏差坐标 */
 @property (nonatomic, assign) CGPoint offsetSuperCenter;
+/** 默认最大化缩放 */
+@property (nonatomic, assign) CGFloat defaultMaximumZoomScale;
 
 /** 记录剪裁前的数据 */
 @property (nonatomic, assign) CGRect old_frame;
@@ -77,7 +81,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.clipsToBounds = NO;
     self.delegate = self;
     self.minimumZoomScale = 1.0f;
-    self.maximumZoomScale = 5.0f;
+    self.maximumZoomScale = kDefaultMaximumZoomScale;
     self.alwaysBounceHorizontal = YES;
     self.alwaysBounceVertical = YES;
     self.angle = 0;
@@ -106,6 +110,14 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     if (image) {        
         CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(image.size, self.originalRect);
         self.frame = cropRect;
+        {
+            if (cropRect.size.width < cropRect.size.height) {
+                self.defaultMaximumZoomScale = self.originalRect.size.width * kDefaultMaximumZoomScale / cropRect.size.width;
+            } else {
+                self.defaultMaximumZoomScale = self.originalRect.size.height * kDefaultMaximumZoomScale / cropRect.size.height;
+            }
+            self.maximumZoomScale = self.defaultMaximumZoomScale;
+        }
     } else {
         self.frame = _originalRect;
     }
@@ -162,7 +174,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     CGFloat zoomScale = MIN(scaleZX, scaleZY);
     
     [self resetMinimumZoomScale];
-    self.maximumZoomScale = (zoomScale > 5 ? zoomScale : 5);
+    self.maximumZoomScale = (zoomScale > self.defaultMaximumZoomScale ? zoomScale : self.defaultMaximumZoomScale);
     [self setZoomScale:zoomScale];
     
     /** 记录首次最小缩放值 */

@@ -110,12 +110,6 @@
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
     _EditingView.clippingDelegate = self;
-    if (_photoEdit) {
-        [self setEditImage:_photoEdit.editImage];
-        _EditingView.photoEditData = _photoEdit.editData;
-    } else {
-        [self setEditImage:_editImage];
-    }
     
     /** 单击的 Recognizer */
     singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singlePressed)];
@@ -126,6 +120,13 @@
     [self.view addGestureRecognizer:singleTapRecognizer];
     
     [self.view addSubview:_EditingView];
+    
+    if (_photoEdit) {
+        [self setEditImage:_photoEdit.editImage];
+        _EditingView.photoEditData = _photoEdit.editData;
+    } else {
+        [self setEditImage:_editImage];
+    }
 }
 
 - (void)configCustomNaviBar
