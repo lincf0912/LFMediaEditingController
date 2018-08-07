@@ -143,6 +143,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 - (void)setImageViewHidden:(BOOL)imageViewHidden
 {
     self.imageView.hidden = imageViewHidden;
+    self.filterView.hidden = imageViewHidden;
 }
 
 - (BOOL)isImageViewHidden
@@ -274,6 +275,11 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 - (LFColorMatrixType)getFilterColorMatrixType
 {
     return self.filterView.cmType;
+}
+/** 获取滤镜图片 */
+- (UIImage *)getFilterImage
+{
+    return self.filterView.image;
 }
 
 #pragma mark - 绘画功能

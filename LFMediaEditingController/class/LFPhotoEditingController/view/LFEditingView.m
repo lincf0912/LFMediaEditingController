@@ -439,6 +439,12 @@
     clipRect.size.width = ((int)(clipRect.size.width+0.5)*1.f);
     clipRect.size.height = ((int)(clipRect.size.height+0.5)*1.f);
     
+    /** 滤镜图片 */
+    UIImage *showImage = [self getFilterImage];
+    if (showImage == nil) {
+        showImage = self.image;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         /** 创建方法 */
@@ -460,9 +466,9 @@
             return clipEditImage;
         };
         
-        if (self.image.images.count) {
-            NSMutableArray *images = [NSMutableArray arrayWithCapacity:self.image.images.count];
-            for (UIImage *image in self.image.images) {
+        if (showImage.images.count) {
+            NSMutableArray *images = [NSMutableArray arrayWithCapacity:showImage.images.count];
+            for (UIImage *image in showImage.images) {
                 UIImage *newImage = ClipEditImage(image);
                 if (newImage) {
                     [images addObject:newImage];
@@ -470,12 +476,12 @@
                     break;
                 }
             }
-            /** 解析gif失败，生成静态图片 */
-            if (images.count == self.image.images.count) {
-                editImage = [UIImage animatedImageWithImages:images duration:self.image.duration];
+            /** 若数量不一致，解析gif失败，生成静态图片 */
+            if (images.count == showImage.images.count) {
+                editImage = [UIImage animatedImageWithImages:images duration:showImage.duration];
             }
         } else {
-            editImage = ClipEditImage(self.image);
+            editImage = ClipEditImage(showImage);
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -730,6 +736,11 @@
 - (LFColorMatrixType)getFilterColorMatrixType
 {
     return [self.clippingView getFilterColorMatrixType];
+}
+/** 获取滤镜图片 */
+- (UIImage *)getFilterImage
+{
+    return [self.clippingView getFilterImage];
 }
 
 #pragma mark - 绘画功能

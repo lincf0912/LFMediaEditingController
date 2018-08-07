@@ -667,6 +667,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     return [self.zoomingView getFilterColorMatrixType];
 }
+/** 获取滤镜图片 */
+- (UIImage *)getFilterImage
+{
+    return [self.zoomingView getFilterImage];
+}
 
 #pragma mark - 绘画功能
 /** 启用绘画功能 */

@@ -29,6 +29,8 @@
 - (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType;
 /** 当前使用滤镜类型 */
 - (LFColorMatrixType)getFilterColorMatrixType;
+/** 获取滤镜图片 */
+- (UIImage *)getFilterImage;
 
 /** =====================绘画功能===================== */
 
