@@ -720,6 +720,18 @@
     self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
 }
 
+#pragma mark - 滤镜功能
+/** 滤镜类型 */
+- (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType
+{
+    [self.clippingView changeFilterColorMatrixType:cmType];
+}
+/** 当前使用滤镜类型 */
+- (LFColorMatrixType)getFilterColorMatrixType
+{
+    return [self.clippingView getFilterColorMatrixType];
+}
+
 #pragma mark - 绘画功能
 /** 启用绘画功能 */
 - (void)setDrawEnable:(BOOL)drawEnable

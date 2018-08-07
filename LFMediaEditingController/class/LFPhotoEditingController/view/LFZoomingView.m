@@ -13,6 +13,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 /** 编辑功能 */
+#import "LFFilterView.h"
 #import "LFDrawView.h"
 #import "LFSplashView.h"
 #import "LFSplashView_new.h"
@@ -21,6 +22,7 @@
 NSString *const kLFZoomingViewData_draw = @"LFZoomingViewData_draw";
 NSString *const kLFZoomingViewData_sticker = @"LFZoomingViewData_sticker";
 NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
+NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 
 @interface LFZoomingView ()
 
@@ -29,6 +31,8 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
 
 @property (nonatomic, weak) UIImageView *imageView;
 
+/** 滤镜 */
+@property (nonatomic, weak) LFFilterView *filterView;
 /** 绘画 */
 @property (nonatomic, weak) LFDrawView *drawView;
 /** 贴图 */
@@ -72,6 +76,13 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:imageView];
     self.imageView = imageView;
+    
+    /** 新增滤镜层 */
+    LFFilterView *filterView = [[LFFilterView alloc] initWithFrame:self.bounds];
+    /** 不需要触摸 */
+    filterView.userInteractionEnabled = NO;
+    [self addSubview:filterView];
+    self.filterView = filterView;
     
     /** 涂抹 - 最底层 */
 //    LFSplashView *splashView = [[LFSplashView alloc] initWithFrame:self.bounds];
@@ -119,6 +130,14 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
     
     [self.imageView setImage:image];
     [self.imageView startAnimating];
+    
+    
+    if (image.images.count) {
+        /** gif 不生成滤镜效果 */
+        self.filterView.image = nil;
+    } else {
+        self.filterView.image = image;
+    }
 }
 
 - (void)setImageViewHidden:(BOOL)imageViewHidden
@@ -223,8 +242,10 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
     NSDictionary *drawData = _drawView.data;
     NSDictionary *stickerData = _stickerView.data;
     NSDictionary *splashData = _splashView.data;
+    NSDictionary *filterData = _filterView.data;
     
     NSMutableDictionary *data = [@{} mutableCopy];
+    if (filterData) [data setObject:filterData forKey:kLFZoomingViewData_filter];
     if (drawData) [data setObject:drawData forKey:kLFZoomingViewData_draw];
     if (stickerData) [data setObject:stickerData forKey:kLFZoomingViewData_sticker];
     if (splashData) [data setObject:splashData forKey:kLFZoomingViewData_splash];
@@ -237,9 +258,22 @@ NSString *const kLFZoomingViewData_splash = @"LFZoomingViewData_splash";
 
 - (void)setPhotoEditData:(NSDictionary *)photoEditData
 {
+    _filterView.data = photoEditData[kLFZoomingViewData_filter];
     _drawView.data = photoEditData[kLFZoomingViewData_draw];
     _stickerView.data = photoEditData[kLFZoomingViewData_sticker];
     _splashView.data = photoEditData[kLFZoomingViewData_splash];
+}
+
+#pragma mark - 滤镜功能
+/** 滤镜类型 */
+- (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType
+{
+    self.filterView.cmType = cmType;
+}
+/** 当前使用滤镜类型 */
+- (LFColorMatrixType)getFilterColorMatrixType
+{
+    return self.filterView.cmType;
 }
 
 #pragma mark - 绘画功能

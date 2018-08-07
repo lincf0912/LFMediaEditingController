@@ -11,8 +11,8 @@
 #import "LFMediaEditingHeader.h"
 #import "JRPickColorView.h"
 
-#define EditToolbarButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png", @"EditImageAudioToolBtn.png", @"EditVideoCropToolBtn.png"]
-#define EditToolbarButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png", @"EditImageAudioToolBtn_HL.png", @"EditVideoCropToolBtn_HL.png"]
+#define EditToolbarButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png", @"EditImageAudioToolBtn.png", @"EditVideoCropToolBtn.png", @"EditImageFilterToolBtn.png"]
+#define EditToolbarButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png", @"EditImageAudioToolBtn_HL.png", @"EditVideoCropToolBtn_HL.png", @"EditImageFilterToolBtn_HL.png"]
 
 #define kToolbar_MainHeight 44
 #define kToolbar_SubHeight 55
@@ -133,6 +133,11 @@
     if (self.type&LFEditToolbarType_splash) {
         [_imageIndexs addObject:@3];
         [_selectIndexs addObject:@(LFEditToolbarType_splash)];
+        buttonCount ++;
+    }
+    if (self.type&LFEditToolbarType_filter) {
+        [_imageIndexs addObject:@7];
+        [_selectIndexs addObject:@(LFEditToolbarType_filter)];
         buttonCount ++;
     }
     if (self.type&LFEditToolbarType_crop) {

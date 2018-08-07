@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LFPhotoEditDelegate.h"
+#import "LFColorMatrixType.h"
 
 @class LFText;
 @protocol LFEditingProtocol <NSObject>
@@ -22,6 +23,12 @@
 
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *photoEditData;
+
+/** =====================滤镜功能===================== */
+/** 滤镜类型 */
+- (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType;
+/** 当前使用滤镜类型 */
+- (LFColorMatrixType)getFilterColorMatrixType;
 
 /** =====================绘画功能===================== */
 

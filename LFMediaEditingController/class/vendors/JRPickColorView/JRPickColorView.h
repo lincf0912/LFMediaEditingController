@@ -8,11 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIColor (isEqualToColor)
-
-- (BOOL)isEqualToColor:(UIColor *)color;
-@end
-
 @class JRPickColorView;
 @protocol JRPickColorViewDelegate <NSObject>
 @optional

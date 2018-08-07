@@ -16,9 +16,10 @@
 #import "LFStickerBar.h"
 #import "LFTextBar.h"
 #import "LFClipToolbar.h"
+#import "JRFilterBar.h"
 
 
-@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
+@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
     /** 编辑模式 */
     LFEditingView *_EditingView;
@@ -31,6 +32,9 @@
     
     /** 贴图菜单 */
     LFStickerBar *_edit_sticker_toolBar;
+    
+    /** 滤镜菜单 */
+    JRFilterBar *_edit_filter_toolBar;
     
     /** 单击手势 */
     UITapGestureRecognizer *singleTapRecognizer;
@@ -60,6 +64,10 @@
         /** gif不能使用模糊功能 */
         if (_operationType & LFPhotoEditOperationType_splash) {        
             _operationType ^= LFPhotoEditOperationType_splash;
+        }
+        /** gif不能使用滤镜功能 */
+        if (_operationType & LFPhotoEditOperationType_filter) {
+            _operationType ^= LFPhotoEditOperationType_filter;
         }
     }
 }
@@ -188,6 +196,9 @@
     if (self.operationType&LFPhotoEditOperationType_crop) {
         toolbarType |= LFEditToolbarType_crop;
     }
+    if (self.operationType&LFPhotoEditOperationType_filter) {
+        toolbarType |= LFEditToolbarType_filter;
+    }
     
     _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -288,6 +299,12 @@
             _EditingView.drawEnable = NO;
             /** 打开涂抹 */
             _EditingView.splashEnable = !_EditingView.splashEnable;
+        }
+            break;
+        case LFEditToolbarType_filter:
+        {
+            [self singlePressed];
+            [self changeFilterMenu:YES];
         }
             break;
         case LFEditToolbarType_crop:
@@ -489,6 +506,30 @@
 }
 #pragma clang diagnostic pop
 
+#pragma mark - 滤镜菜单（懒加载）
+- (JRFilterBar *)edit_filter_toolBar
+{
+    if (_edit_filter_toolBar == nil) {
+        CGFloat w=self.view.width, h=100.f;
+        if (@available(iOS 11.0, *)) {
+            h += self.view.safeAreaInsets.bottom;
+        }
+        _edit_filter_toolBar = [[JRFilterBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) defaultImg:self.editImage defalutEffectType:[_EditingView getFilterColorMatrixType] colorNum:17];
+        CGFloat rgb = 34 / 255.0;
+        _edit_filter_toolBar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.85];
+        _edit_filter_toolBar.defaultColor = self.cancelButtonTitleColorNormal;
+        _edit_filter_toolBar.selectColor = self.oKButtonTitleColorNormal;
+        _edit_filter_toolBar.delegate = self;
+    }
+    return _edit_filter_toolBar;
+}
+
+#pragma mark - JRFilterBarDelegate
+- (void)jr_filterBar:(JRFilterBar *)jr_filterBar didSelectImage:(UIImage *)image effectType:(LFColorMatrixType)effectType
+{
+    [_EditingView changeFilterColorMatrixType:effectType];
+}
+
 #pragma mark - 贴图菜单（懒加载）
 - (LFStickerBar *)edit_sticker_toolBar
 {
@@ -621,6 +662,8 @@
 {
     /** 隐藏贴图菜单 */
     [self changeStickerMenu:NO];
+    /** 隐藏滤镜菜单 */
+    [self changeFilterMenu:NO];
     
     [UIView animateWithDuration:.25f animations:^{
         CGFloat alpha = _isHideNaviBar ? 0.f : 1.f;
@@ -677,6 +720,29 @@
         } completion:^(BOOL finished) {
             [_edit_sticker_toolBar removeFromSuperview];
             _edit_sticker_toolBar = nil;
+        }];
+    }
+}
+
+- (void)changeFilterMenu:(BOOL)isChanged
+{
+    if (isChanged) {
+        [self.view addSubview:self.edit_filter_toolBar];
+        CGRect frame = self.edit_filter_toolBar.frame;
+        frame.origin.y = self.view.height-frame.size.height;
+        [UIView animateWithDuration:.25f animations:^{
+            self.edit_filter_toolBar.frame = frame;
+        }];
+    } else {
+        if (_edit_filter_toolBar.superview == nil) return;
+        
+        CGRect frame = self.edit_filter_toolBar.frame;
+        frame.origin.y = self.view.height;
+        [UIView animateWithDuration:.25f animations:^{
+            self.edit_filter_toolBar.frame = frame;
+        } completion:^(BOOL finished) {
+            [_edit_filter_toolBar removeFromSuperview];
+            _edit_filter_toolBar = nil;
         }];
     }
 }

@@ -18,8 +18,10 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationType) {
     LFPhotoEditOperationType_text = 1 << 2,
     /** 模糊 */
     LFPhotoEditOperationType_splash = 1 << 3,
+    /** 滤镜 */
+    LFPhotoEditOperationType_filter = 1 << 4,
     /** 修剪 */
-    LFPhotoEditOperationType_crop = 1 << 4,
+    LFPhotoEditOperationType_crop = 1 << 5,
     /** 所有 */
     LFPhotoEditOperationType_All = ~0UL,
 };

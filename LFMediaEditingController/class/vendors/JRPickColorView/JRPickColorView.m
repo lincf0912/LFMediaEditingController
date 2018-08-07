@@ -9,9 +9,14 @@
 #import "JRPickColorView.h"
 
 
+@interface UIColor (isEqualToColor)
+
+- (BOOL)jr_isEqualToColor:(UIColor *)color;
+@end
+
 @implementation UIColor (isEqualToColor)
 
-- (BOOL)isEqualToColor:(UIColor *)color{
+- (BOOL)jr_isEqualToColor:(UIColor *)color{
     return CGColorEqualToColor(self.CGColor, color.CGColor);;
 }
 
@@ -132,7 +137,7 @@ CGFloat const JRPickColorView_magnifierView_Margin = 15.0f; //!放大镜距离�
     BOOL isYES = NO;
     for (NSInteger i=0; i<self.colors.count; i++) {
         UIColor *color1 = self.colors[i];
-        if ([color isEqualToColor:color1]) {
+        if ([color jr_isEqualToColor:color1]) {
             currentIndex = i;
             isYES = YES;
             break;

@@ -656,6 +656,18 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.zoomingView.photoEditData = photoEditData[kLFClippingViewData_zoomingView];
 }
 
+#pragma mark - 滤镜功能
+/** 滤镜类型 */
+- (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType
+{
+    [self.zoomingView changeFilterColorMatrixType:cmType];
+}
+/** 当前使用滤镜类型 */
+- (LFColorMatrixType)getFilterColorMatrixType
+{
+    return [self.zoomingView getFilterColorMatrixType];
+}
+
 #pragma mark - 绘画功能
 /** 启用绘画功能 */
 - (void)setDrawEnable:(BOOL)drawEnable

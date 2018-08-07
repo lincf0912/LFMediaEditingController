@@ -23,6 +23,8 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
     LFEditToolbarType_audio = 1 << 5,
     /** 剪辑 */
     LFEditToolbarType_clip = 1 << 6,
+    /** 滤镜 */
+    LFEditToolbarType_filter = 1 << 7,
     /** 所有 */
     LFEditToolbarType_All = ~0UL,
 };
