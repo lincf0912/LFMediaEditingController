@@ -233,7 +233,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 }
 
 /** 剪辑视频 */
-- (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete
+- (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete progress:(void (^)(float progress))progress
 {
     NSError *error = nil;
     NSFileManager *fm = [NSFileManager new];
@@ -296,7 +296,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(NSError *error) {
         if (complete) complete(trimURL, error);
-    }];
+    } progress:progress];
 }
 
 /** 播放 */

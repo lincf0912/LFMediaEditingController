@@ -28,6 +28,7 @@
 
 /** 处理视频 */
 - (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler;
+- (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler progress:(void (^)(float progress))progress;
 - (void)cancelExport;
 
 @end

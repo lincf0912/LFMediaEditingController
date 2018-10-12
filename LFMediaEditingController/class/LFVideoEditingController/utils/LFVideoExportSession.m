@@ -18,6 +18,8 @@
 @property (nonatomic, strong) AVMutableVideoComposition *videoComposition;
 @property (nonatomic, strong) AVMutableAudioMix *audioMix;
 
+@property (nonatomic, strong) NSTimer *exportProgressBarTimer;
+
 @end
 
 @implementation LFVideoExportSession
@@ -60,6 +62,10 @@
 }
 
 - (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler
+{
+    [self exportAsynchronouslyWithCompletionHandler:handler progress:nil];
+}
+- (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler progress:(void (^)(float progress))progress
 {
     [self.exportSession cancelExport];
     self.exportSession = nil;
@@ -245,6 +251,23 @@
             }
         });
     }];
+    
+    self.exportProgressBarTimer = [NSTimer scheduledTimerWithTimeInterval:0.25f target:self selector:@selector(updateExportDisplay) userInfo:progress repeats:YES];
+    
+    
+}
+
+- (void)updateExportDisplay
+{
+    float progress = self.exportSession.progress;
+    if (self.exportProgressBarTimer.userInfo) {
+        void (^progressHandler)(float progress) = self.exportProgressBarTimer.userInfo;
+        progressHandler(progress);
+    }
+    if (progress > .9999f) {
+        [self.exportProgressBarTimer invalidate];
+        self.exportProgressBarTimer = nil;
+    }
 }
 
 - (void)cancelExport

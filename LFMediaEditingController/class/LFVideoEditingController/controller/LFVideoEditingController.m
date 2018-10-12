@@ -235,6 +235,8 @@
                         [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
                     }
                     [weakSelf hideProgressHUD];
+                } progress:^(float progress) {
+                    NSLog(@"%f", progress);
                 }];
             });
         } else {
