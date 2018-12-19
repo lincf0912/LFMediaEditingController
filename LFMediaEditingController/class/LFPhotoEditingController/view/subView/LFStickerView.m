@@ -133,6 +133,8 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     if (self.selectMovingView.type == LFMovingViewType_label) {
         LFStickerLabel *label = (LFStickerLabel *)self.selectMovingView.view;
         label.lf_text = text;
+        //阴影颜色
+        label.layer.shadowColor = ([text.textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
         [label drawText];
         [self.selectMovingView updateFrameWithViewSize:label.size];
     }
@@ -213,11 +215,11 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     label.lf_text = text;
     [label drawText];
     //阴影透明度
-    label.layer.shadowOpacity = 1.0;
+    label.layer.shadowOpacity = .8;
     //阴影宽度
     label.layer.shadowRadius = 3.0;
     //阴影颜色
-    label.layer.shadowColor = [UIColor blackColor].CGColor;
+    label.layer.shadowColor = ([text.textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
     //映影偏移
     label.layer.shadowOffset = CGSizeMake(1, 1);
     

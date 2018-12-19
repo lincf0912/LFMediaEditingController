@@ -215,7 +215,7 @@
 
 - (void)finishButtonClick
 {
-    [self showProgressHUD];
+    [self showProgressVideoHUD];
     /** 取消贴图激活 */
     [_EditingView stickerDeactivated];
     /** 处理编辑图片 */
@@ -236,7 +236,7 @@
                     }
                     [weakSelf hideProgressHUD];
                 } progress:^(float progress) {
-                    NSLog(@"%f", progress);
+                    [weakSelf setProgress:progress];
                 }];
             });
         } else {

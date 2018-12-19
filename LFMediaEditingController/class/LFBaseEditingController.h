@@ -25,6 +25,9 @@
 - (void)showProgressHUD;
 - (void)hideProgressHUD;
 
+- (void)showProgressVideoHUD;
+- (void)setProgress:(float)progress;
+
 /** 初始化 */
 - (instancetype)initWithOrientation:(UIInterfaceOrientation)orientation;
 
