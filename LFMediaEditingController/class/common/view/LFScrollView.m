@@ -42,6 +42,14 @@
     }
 }
 
+- (void)scrollViewEnabled:(BOOL)enabled
+{
+    /** 手势 */
+    self.pinchGestureRecognizer.enabled = enabled;
+    self.panGestureRecognizer.enabled = enabled;
+    self.scrollEnabled = enabled;
+}
+
 - (BOOL)touchesShouldBegin:(NSSet *)touches withEvent:(UIEvent *)event inContentView:(UIView *)view
 {
     return [super touchesShouldBegin:touches withEvent:event inContentView:view];

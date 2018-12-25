@@ -87,6 +87,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.alwaysBounceVertical = YES;
     self.angle = 0;
     self.offsetSuperCenter = CGPointZero;
+    self.useGesture = NO;
     
     LFZoomingView *zoomingView = [[LFZoomingView alloc] initWithFrame:self.bounds];
     __weak typeof(self) weakSelf = self;
@@ -472,6 +473,9 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
+    self.contentInset = UIEdgeInsetsZero;
+    self.scrollIndicatorInsets = UIEdgeInsetsZero;
+    [self refreshImageZoomViewCenter];
     if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidZoom:)]) {
         [self.clippingDelegate lf_clippingViewDidZoom:self];
     }
@@ -482,6 +486,13 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidEndZooming:)]) {
         [self.clippingDelegate lf_clippingViewDidEndZooming:self];
     }
+}
+
+#pragma mark - Private
+- (void)refreshImageZoomViewCenter {
+    CGFloat offsetX = (self.width > self.contentSize.width) ? ((self.width - self.contentSize.width) * 0.5) : 0.0;
+    CGFloat offsetY = (self.height > self.contentSize.height) ? ((self.height - self.contentSize.height) * 0.5) : 0.0;
+    self.zoomingView.center = CGPointMake(self.contentSize.width * 0.5 + offsetX, self.contentSize.height * 0.5 + offsetY);
 }
 
 #pragma mark - 验证当前大小是否被修改
@@ -592,6 +603,12 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
         return self;
     }
     return view;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    /** 控制自身手势 */
+    return self.useGesture;
 }
 
 #pragma mark - LFEditingProtocol

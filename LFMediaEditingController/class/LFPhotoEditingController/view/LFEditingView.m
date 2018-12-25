@@ -94,8 +94,6 @@ CGFloat const lf_editingView_paintWidth = 50.f;
     clippingView.clippingDelegate = self;
     [self.clipZoomView addSubview:clippingView];
     self.clippingView = clippingView;
-    /** 非剪裁情况禁止剪裁层移动 */
-    [self clippingViewEnabled:NO];
     
     LFGridView *gridView = [[LFGridView alloc] initWithFrame:self.bounds];
     gridView.delegate = self;
@@ -157,8 +155,6 @@ CGFloat const lf_editingView_paintWidth = 50.f;
     /** 计算图片像素参照坐标 */
     self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clippingMaxRect).size;
     
-    /** 非剪裁情况禁止剪裁层移动 */
-    [self clippingViewEnabled:NO];
 }
 
 - (void)setClippingRect:(CGRect)clippingRect
@@ -282,8 +278,7 @@ CGFloat const lf_editingView_paintWidth = 50.f;
     }
     self.editedCount = 0;
     _isClipping = isClipping;
-    /** 非剪裁情况禁止剪裁层移动 */
-    [self clippingViewEnabled:isClipping];
+    self.clippingView.useGesture = isClipping;
     if (isClipping) {
         CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
         if (@available(iOS 11.0, *)) {
@@ -342,6 +337,7 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 {
     self.editedCount = 0;
     _isClipping = NO;
+    self.clippingView.useGesture = _isClipping;
     /** 剪裁多余部分 */
     self.clippingView.clipsToBounds = YES;
     if (animated) {
@@ -716,18 +712,6 @@ CGFloat const lf_editingView_paintWidth = 50.f;
     self.clipZoomView.center = CGPointMake(self.contentSize.width * 0.5 + offsetX, self.contentSize.height * 0.5 + offsetY);
 }
 
-- (void)clippingViewEnabled:(BOOL)enabled
-{
-    /** 主视图与剪辑视图的手势冲突区分 */
-    self.clippingView.pinchGestureRecognizer.enabled = enabled;
-    self.clippingView.panGestureRecognizer.enabled = enabled;
-    self.clippingView.scrollEnabled = enabled;
-    
-    self.pinchGestureRecognizer.enabled = !enabled;
-    self.panGestureRecognizer.enabled = !enabled;
-    self.scrollEnabled = !enabled;
-}
-
 - (void)setSubViewData
 {
     /** 默认绘画线粗 */
@@ -800,8 +784,8 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 /** 启用绘画功能 */
 - (void)setDrawEnable:(BOOL)drawEnable
 {
-    /** 非剪裁情况禁止剪裁层移动 */
-    [self clippingViewEnabled:NO];
+    /** 禁止移动 */
+    self.panGestureRecognizer.enabled = !drawEnable;
     self.clippingView.drawEnable = drawEnable;
 }
 - (BOOL)drawEnable
@@ -877,8 +861,8 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 /** 启用模糊功能 */
 - (void)setSplashEnable:(BOOL)splashEnable
 {
-    /** 非剪裁情况禁止剪裁层移动 */
-    [self clippingViewEnabled:NO];
+    /** 禁止移动 */
+    self.panGestureRecognizer.enabled = !splashEnable;
     self.clippingView.splashEnable = splashEnable;
 }
 - (BOOL)splashEnable

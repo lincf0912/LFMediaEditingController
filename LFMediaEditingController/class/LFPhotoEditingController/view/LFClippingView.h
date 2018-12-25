@@ -39,6 +39,8 @@
 @property (nonatomic, assign) CGRect editRect;
 /** 剪切范围 */
 @property (nonatomic, assign) CGRect cropRect;
+/** 手势开关，一般编辑模式下开启 默认NO */
+@property (nonatomic, assign) BOOL useGesture;
 
 /** 缩小到指定坐标 */
 - (void)zoomOutToRect:(CGRect)toRect;
