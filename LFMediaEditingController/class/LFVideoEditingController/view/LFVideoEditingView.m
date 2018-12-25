@@ -489,6 +489,10 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 {
     [self.clippingView removeSelectStickerView];
 }
+- (void)setScreenScale:(CGFloat)scale
+{
+    [self.clippingView setScreenScale:scale];
+}
 /** 获取选中贴图的内容 */
 - (LFText *)getSelectStickerText
 {

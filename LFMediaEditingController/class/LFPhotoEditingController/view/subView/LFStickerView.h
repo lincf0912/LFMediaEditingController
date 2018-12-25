@@ -29,8 +29,13 @@
 
 /** 创建图片 */
 - (void)createImage:(UIImage *)image;
+- (void)createImage:(UIImage *)image scale:(CGFloat)scale;
 /** 创建文字 */
 - (void)createText:(LFText *)text;
+- (void)createText:(LFText *)text scale:(CGFloat)scale;
+
+/** 显示界面的缩放率，例如在UIScrollView上显示，scrollView放大了5倍，movingView的视图控件会显得较大，这个属性是适配当前屏幕的比例调整控件大小 */
+@property (nonatomic, assign) CGFloat screenScale;
 
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *data;

@@ -154,6 +154,9 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     /** 屏幕中心 */
     movingView.center = [self convertPoint:[UIApplication sharedApplication].keyWindow.center fromView:(UIView *)[UIApplication sharedApplication].keyWindow];
     
+    /** 屏幕缩放率 */
+    movingView.screenScale = self.screenScale;
+    
     [self addSubview:movingView];
     
     if (active) {
@@ -183,7 +186,7 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 {
     LFMovingView *movingView = [self doCreateImage:image active:YES];
     CGFloat ratio = MIN( (0.2 * self.width) / movingView.width, (0.5 * self.height) / movingView.height);
-    [movingView setScale:ratio];
+    [movingView setScale:ratio*(1.f/self.screenScale)];
     self.selectMovingView = movingView;
 }
 
@@ -202,7 +205,7 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 {
     LFMovingView *movingView = [self doCreateText:text active:YES];
     //    CGFloat ratio = MIN( (0.5 * self.width) / movingView.width, (0.5 * self.height) / movingView.height);
-    [movingView setScale:0.8f];
+    [movingView setScale:0.8f*(1.f/self.screenScale)];
     self.selectMovingView = movingView;
 }
 
@@ -227,6 +230,16 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     movingView.maxScale = 1.5f;
     
     return movingView;
+}
+
+- (void)setScreenScale:(CGFloat)screenScale
+{
+    _screenScale = MAX(screenScale, 0.1f);
+    for (LFMovingView *subView in self.subviews) {
+        if ([subView isKindOfClass:[LFMovingView class]]) {
+            subView.screenScale = screenScale;
+        }
+    }
 }
 
 #pragma mark  - 数据

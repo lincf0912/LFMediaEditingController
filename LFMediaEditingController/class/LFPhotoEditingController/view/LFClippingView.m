@@ -746,6 +746,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     [self.zoomingView removeSelectStickerView];
 }
+/** 屏幕缩放率 */
+- (void)setScreenScale:(CGFloat)scale
+{
+    [self.zoomingView setScreenScale:scale];
+}
 /** 获取选中贴图的内容 */
 - (LFText *)getSelectStickerText
 {

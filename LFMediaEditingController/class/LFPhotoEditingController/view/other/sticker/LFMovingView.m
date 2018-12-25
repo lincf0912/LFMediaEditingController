@@ -196,11 +196,21 @@
     _contentView.center = CGPointMake(rct.size.width/2, rct.size.height/2);
     
     self.transform = CGAffineTransformMakeRotation(_arg);
-    
+
     if (_isActive) {        
         _contentView.layer.borderWidth = 1/_scale;
         _contentView.layer.cornerRadius = 3/_scale;
     }
+}
+
+- (void)setScreenScale:(CGFloat)screenScale
+{
+    _screenScale = screenScale;
+    CGFloat scale = 1.f/screenScale;
+    _deleteButton.transform = CGAffineTransformMakeScale(scale, scale);
+    _circleView.transform = CGAffineTransformMakeScale(scale, scale);
+    _deleteButton.center = _contentView.frame.origin;
+    _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
 }
 
 - (CGFloat)scale
@@ -242,6 +252,7 @@
     
     [[self class] setActiveEmoticonView:nextTarget];
      */
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setActiveEmoticonView:) object:nil];
     [self removeFromSuperview];
 }
 

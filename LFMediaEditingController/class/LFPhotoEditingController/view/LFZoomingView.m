@@ -333,6 +333,11 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     [_stickerView removeSelectStickerView];
 }
+/** 屏幕缩放率 */
+- (void)setScreenScale:(CGFloat)scale
+{
+    _stickerView.screenScale = scale;
+}
 /** 获取选中贴图的内容 */
 - (LFText *)getSelectStickerText
 {
@@ -347,7 +352,9 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 /** 创建贴图 */
 - (void)createStickerImage:(UIImage *)image
 {
-    [_stickerView createImage:image];
+    if (image) {
+        [_stickerView createImage:image];
+    }
 }
 
 #pragma mark - 文字功能

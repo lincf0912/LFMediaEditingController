@@ -720,6 +720,8 @@ CGFloat const lf_editingView_paintWidth = 50.f;
     [self setSplashWidth:lf_editingView_splashWidth/self.zoomScale];
     /** 默认画笔大小 */
     [self setPaintWidth:lf_editingView_paintWidth/self.zoomScale];
+    /** 屏幕缩放率 */
+    [self setScreenScale:self.zoomScale];
 }
 
 #pragma mark - 更新图片像素
@@ -832,6 +834,11 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 - (void)removeSelectStickerView
 {
     [self.clippingView removeSelectStickerView];
+}
+/** 屏幕缩放率 */
+- (void)setScreenScale:(CGFloat)scale
+{
+    [self.clippingView setScreenScale:scale];
 }
 /** 获取选中贴图的内容 */
 - (LFText *)getSelectStickerText

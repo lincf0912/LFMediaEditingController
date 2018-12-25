@@ -56,6 +56,8 @@
 - (void)activeSelectStickerView;
 /** 删除选中贴图 */
 - (void)removeSelectStickerView;
+/** 屏幕缩放率 */
+- (void)setScreenScale:(CGFloat)scale;
 
 /** 创建贴图 */
 - (void)createStickerImage:(UIImage *)image;
