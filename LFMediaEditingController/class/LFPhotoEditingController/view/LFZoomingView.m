@@ -15,7 +15,6 @@
 /** 编辑功能 */
 #import "LFFilterView.h"
 #import "LFDrawView.h"
-#import "LFSplashView.h"
 #import "LFSplashView_new.h"
 #import "LFStickerView.h"
 
@@ -292,6 +291,11 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     return _drawView.userInteractionEnabled;
 }
+/** 正在绘画 */
+- (BOOL)isDrawing
+{
+    return _drawView.isDrawing;
+}
 
 - (BOOL)drawCanUndo
 {
@@ -305,6 +309,12 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 - (void)setDrawColor:(UIColor *)color
 {
     _drawView.lineColor = color;
+}
+
+/** 设置绘画线粗 */
+- (void)setDrawLineWidth:(CGFloat)lineWidth
+{
+    _drawView.lineWidth = lineWidth;
 }
 
 #pragma mark - 贴图功能
@@ -359,6 +369,11 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     return _splashView.userInteractionEnabled;
 }
+/** 正在模糊 */
+- (BOOL)isSplashing
+{
+    return _splashView.isDrawing;
+}
 /** 是否可撤销 */
 - (BOOL)splashCanUndo
 {
@@ -382,6 +397,17 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 - (BOOL)splashState
 {
     return _splashView.state == LFSplashStateType_Paintbrush;
+}
+
+/** 设置马赛克大小 */
+- (void)setSplashWidth:(CGFloat)squareWidth
+{
+    _splashView.squareWidth = squareWidth;
+}
+/** 设置画笔大小 */
+- (void)setPaintWidth:(CGFloat)paintWidth
+{
+    _splashView.paintSize = CGSizeMake(paintWidth, paintWidth);
 }
 
 @end

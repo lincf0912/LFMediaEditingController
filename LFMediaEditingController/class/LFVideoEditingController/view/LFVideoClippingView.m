@@ -15,7 +15,6 @@
 
 /** 编辑功能 */
 #import "LFDrawView.h"
-#import "LFSplashView.h"
 #import "LFSplashView_new.h"
 #import "LFStickerView.h"
 
@@ -503,6 +502,11 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     return _drawView.userInteractionEnabled;
 }
 
+- (BOOL)isDrawing
+{
+    return _drawView.isDrawing;
+}
+
 - (BOOL)drawCanUndo
 {
     return _drawView.canUndo;
@@ -515,6 +519,12 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 - (void)setDrawColor:(UIColor *)color
 {
     _drawView.lineColor = color;
+}
+
+/** 设置绘画线粗 */
+- (void)setDrawLineWidth:(CGFloat)lineWidth
+{
+    _drawView.lineWidth = lineWidth;
 }
 
 #pragma mark - 贴图功能
@@ -579,7 +589,10 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 {
     [_splashView undo];
 }
-
+- (BOOL)isSplashing
+{
+    return _splashView.isDrawing;
+}
 - (void)setSplashState:(BOOL)splashState
 {
     if (splashState) {
@@ -592,6 +605,17 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 - (BOOL)splashState
 {
     return _splashView.state == LFSplashStateType_Paintbrush;
+}
+
+/** 设置马赛克大小 */
+- (void)setSplashWidth:(CGFloat)squareWidth
+{
+    _splashView.squareWidth = squareWidth;
+}
+/** 设置画笔大小 */
+- (void)setPaintWidth:(CGFloat)paintWidth
+{
+    _splashView.paintSize = CGSizeMake(paintWidth, paintWidth);
 }
 
 @end

@@ -21,6 +21,11 @@
 
 #define kClipZoom_margin 10.f
 
+CGFloat const lf_editingView_drawLineWidth = 5.f;
+CGFloat const lf_editingView_splashWidth = 15.f;
+CGFloat const lf_editingView_paintWidth = 50.f;
+
+
 @interface LFEditingView () <UIScrollViewDelegate, LFClippingViewDelegate, LFGridViewDelegate>
 
 @property (nonatomic, weak) LFClippingView *clippingView;
@@ -76,6 +81,7 @@
     self.maximumZoomScale = kMaxZoomScale;
     self.minimumZoomScale = 1.0;
     _editToolbarDefaultHeight = 44.f;
+    _defaultMaximumZoomScale = kMaxZoomScale;
     
     /** 创建缩放层，避免直接缩放LFClippingView，会改变其transform */
     UIView *clipZoomView = [[UIView alloc] initWithFrame:self.bounds];
@@ -86,10 +92,10 @@
     /** 创建剪裁层 */
     LFClippingView *clippingView = [[LFClippingView alloc] initWithFrame:self.bounds];
     clippingView.clippingDelegate = self;
-    /** 非剪裁情况禁止剪裁层移动 */
-    clippingView.scrollEnabled = NO;
     [self.clipZoomView addSubview:clippingView];
     self.clippingView = clippingView;
+    /** 非剪裁情况禁止剪裁层移动 */
+    [self clippingViewEnabled:NO];
     
     LFGridView *gridView = [[LFGridView alloc] initWithFrame:self.bounds];
     gridView.delegate = self;
@@ -116,6 +122,10 @@
     imagePixel.alpha = 0.f;
     [self addSubview:imagePixel];
     self.imagePixel = imagePixel;
+    
+    
+    [self setSubViewData];
+    
 }
 
 - (void)safeAreaInsetsDidChange
@@ -146,6 +156,9 @@
     
     /** 计算图片像素参照坐标 */
     self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clippingMaxRect).size;
+    
+    /** 非剪裁情况禁止剪裁层移动 */
+    [self clippingViewEnabled:NO];
 }
 
 - (void)setClippingRect:(CGRect)clippingRect
@@ -156,6 +169,7 @@
         [self setZoomScale:self.zoomScale];
         self.contentInset = UIEdgeInsetsZero;
         self.scrollIndicatorInsets = UIEdgeInsetsZero;
+        [self setSubViewData];
     } else {
         self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
     }
@@ -262,9 +276,14 @@
 }
 - (void)setIsClipping:(BOOL)isClipping animated:(BOOL)animated
 {
+    if (!self.image) {
+        /** 没有图片禁止开启编辑模式 */
+        return;
+    }
     self.editedCount = 0;
     _isClipping = isClipping;
-    self.clippingView.scrollEnabled = isClipping;
+    /** 非剪裁情况禁止剪裁层移动 */
+    [self clippingViewEnabled:isClipping];
     if (isClipping) {
         CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
         if (@available(iOS 11.0, *)) {
@@ -634,6 +653,8 @@
     self.contentInset = UIEdgeInsetsMake(diffHeight, diffWidth, 0, 0);
     self.scrollIndicatorInsets = UIEdgeInsetsMake(diffHeight, diffWidth, 0, 0);
     self.contentSize = CGSizeMake(width-diffWidth, height-diffHeight);
+    
+    [self setSubViewData];
 }
 
 
@@ -641,9 +662,12 @@
 
 - (BOOL)touchesShouldBegin:(NSSet *)touches withEvent:(UIEvent *)event inContentView:(UIView *)view {
     
+//    NSLog(@"touchesShouldBegin -- %@ -- :%ld", view, event.allTouches.count );
     if (!([[self subviews] containsObject:view] || [[self.clipZoomView subviews] containsObject:view])) { /** 非自身子视图 */
         if (event.allTouches.count == 2) { /** 2个手指 */
             return NO;
+        } else {
+            /** 因为关闭了手势延迟，2指缩放时，但屏幕未能及时检测到2指，导致不会进入event.allTouches.count == 2的判断，随后屏幕检测到2指，从而重新触发hitTest:withEvent:，需要重新指派正确的手势响应对象。 */
         }
     }
     return [super touchesShouldBegin:touches withEvent:event inContentView:view];
@@ -661,18 +685,25 @@
 {
     UIView *view = [super hitTest:point withEvent:event];
     if (!self.isClipping && (self.clippingView == view || self.clipZoomView == view)) { /** 非编辑状态，改变触发响应最顶层的scrollView */
-        return self;
+        view = self;
     } else if (self.isClipping && (view == self || self.clipZoomView == view)) {
-        return self.clippingView;
+        view = self.clippingView;
     }
+//    NSLog(@"%@", [view class]);
     return view;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     /** 解决部分机型在编辑期间会触发滑动导致无法编辑的情况 */
-    if (gestureRecognizer.view == self && touch.view != self && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        /** 自身手势被触发、响应视图非自身、被触发收拾为滑动手势 */
+    if (self.isClipping) {
+        /** 自身手势被触发、响应视图非自身、被触发手势为滑动手势 */
+        return NO;
+    } else if ([self drawEnable] && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        /** 绘画时候，禁用滑动手势 */
+        return NO;
+    } else if ([self splashEnable] && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        /** 模糊时候，禁用滑动手势 */
         return NO;
     }
     return YES;
@@ -683,6 +714,28 @@
     CGFloat offsetX = (self.width > self.contentSize.width) ? ((self.width - self.contentSize.width) * 0.5) : 0.0;
     CGFloat offsetY = (self.height > self.contentSize.height) ? ((self.height - self.contentSize.height) * 0.5) : 0.0;
     self.clipZoomView.center = CGPointMake(self.contentSize.width * 0.5 + offsetX, self.contentSize.height * 0.5 + offsetY);
+}
+
+- (void)clippingViewEnabled:(BOOL)enabled
+{
+    /** 主视图与剪辑视图的手势冲突区分 */
+    self.clippingView.pinchGestureRecognizer.enabled = enabled;
+    self.clippingView.panGestureRecognizer.enabled = enabled;
+    self.clippingView.scrollEnabled = enabled;
+    
+    self.pinchGestureRecognizer.enabled = !enabled;
+    self.panGestureRecognizer.enabled = !enabled;
+    self.scrollEnabled = !enabled;
+}
+
+- (void)setSubViewData
+{
+    /** 默认绘画线粗 */
+    [self setDrawLineWidth:lf_editingView_drawLineWidth/self.zoomScale];
+    /** 默认马赛克大小 */
+    [self setSplashWidth:lf_editingView_splashWidth/self.zoomScale];
+    /** 默认画笔大小 */
+    [self setPaintWidth:lf_editingView_paintWidth/self.zoomScale];
 }
 
 #pragma mark - 更新图片像素
@@ -747,11 +800,18 @@
 /** 启用绘画功能 */
 - (void)setDrawEnable:(BOOL)drawEnable
 {
+    /** 非剪裁情况禁止剪裁层移动 */
+    [self clippingViewEnabled:NO];
     self.clippingView.drawEnable = drawEnable;
 }
 - (BOOL)drawEnable
 {
     return self.clippingView.drawEnable;
+}
+
+- (BOOL)isDrawing
+{
+    return self.clippingView.isDrawing;
 }
 
 - (BOOL)drawCanUndo
@@ -766,6 +826,12 @@
 - (void)setDrawColor:(UIColor *)color
 {
     [self.clippingView setDrawColor:color];
+}
+
+/** 设置绘画线粗 */
+- (void)setDrawLineWidth:(CGFloat)lineWidth
+{
+    [self.clippingView setDrawLineWidth:lineWidth];
 }
 
 #pragma mark - 贴图功能
@@ -811,6 +877,8 @@
 /** 启用模糊功能 */
 - (void)setSplashEnable:(BOOL)splashEnable
 {
+    /** 非剪裁情况禁止剪裁层移动 */
+    [self clippingViewEnabled:NO];
     self.clippingView.splashEnable = splashEnable;
 }
 - (BOOL)splashEnable
@@ -821,6 +889,10 @@
 - (BOOL)splashCanUndo
 {
     return [self.clippingView splashCanUndo];
+}
+- (BOOL)isSplashing
+{
+    return self.clippingView.isSplashing;
 }
 /** 撤销模糊 */
 - (void)splashUndo
@@ -836,6 +908,17 @@
 - (BOOL)splashState
 {
     return self.clippingView.splashState;
+}
+
+/** 设置马赛克大小 */
+- (void)setSplashWidth:(CGFloat)squareWidth
+{
+    [self.clippingView setSplashWidth:squareWidth];
+}
+/** 设置画笔大小 */
+- (void)setPaintWidth:(CGFloat)paintWidth
+{
+    [self.clippingView setPaintWidth:paintWidth];
 }
 
 @end

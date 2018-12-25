@@ -449,6 +449,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     return self.clippingView.drawEnable;
 }
 
+- (BOOL)isDrawing
+{
+    return self.clippingView.isDrawing;
+}
+
 - (BOOL)drawCanUndo
 {
     return [self.clippingView drawCanUndo];
@@ -461,6 +466,12 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 - (void)setDrawColor:(UIColor *)color
 {
     [self.clippingView setDrawColor:color];
+}
+
+/** 设置绘画线粗 */
+- (void)setDrawLineWidth:(CGFloat)lineWidth
+{
+    [self.clippingView setDrawLineWidth:lineWidth];
 }
 
 #pragma mark - 贴图功能
@@ -522,7 +533,10 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 {
     [self.clippingView splashUndo];
 }
-
+- (BOOL)isSplashing
+{
+    return self.clippingView.isSplashing;
+}
 - (void)setSplashState:(BOOL)splashState
 {
     self.clippingView.splashState = splashState;
@@ -532,4 +546,16 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 {
     return self.clippingView.splashState;
 }
+
+/** 设置马赛克大小 */
+- (void)setSplashWidth:(CGFloat)squareWidth
+{
+    [self.clippingView setSplashWidth:squareWidth];
+}
+/** 设置画笔大小 */
+- (void)setPaintWidth:(CGFloat)paintWidth
+{
+    [self.clippingView setPaintWidth:paintWidth];
+}
+
 @end

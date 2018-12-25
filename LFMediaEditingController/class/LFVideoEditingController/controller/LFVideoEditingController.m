@@ -10,6 +10,7 @@
 #import "LFMediaEditingHeader.h"
 #import "UIView+LFMEFrame.h"
 #import "LFMediaEditingType.h"
+#import "LFMECancelBlock.h"
 
 #import "LFVideoEditingView.h"
 #import "LFEditToolbar.h"
@@ -38,6 +39,9 @@
 
 /** 隐藏控件 */
 @property (nonatomic, assign) BOOL isHideNaviBar;
+
+@property (nonatomic, copy) lf_me_dispatch_cancelable_block_t delayCancelBlock;
+
 @end
 
 @implementation LFVideoEditingController
@@ -202,8 +206,10 @@
 #pragma mark - 顶部栏(action)
 - (void)singlePressed
 {
-    _isHideNaviBar = !_isHideNaviBar;
-    [self changedBarState];
+    if (!(_EditingView.isDrawing || _EditingView.isSplashing)) {
+        _isHideNaviBar = !_isHideNaviBar;
+        [self changedBarState];
+    }
 }
 - (void)cancelButtonClick
 {
@@ -501,8 +507,12 @@
     /** 撤销生效 */
     if (_EditingView.drawCanUndo) [_edit_toolBar setRevokeAtIndex:LFEditToolbarType_draw];
     
-    _isHideNaviBar = NO;
-    [self changedBarState];
+    __weak typeof(self) weakSelf = self;
+    lf_me_dispatch_cancel(self.delayCancelBlock);
+    self.delayCancelBlock = lf_dispatch_block_t(1.f, ^{
+        weakSelf.isHideNaviBar = NO;
+        [weakSelf changedBarState];
+    });
 }
 
 #pragma mark - LFPhotoEditStickerDelegate
@@ -532,13 +542,18 @@
     /** 撤销生效 */
     if (_EditingView.splashCanUndo) [_edit_toolBar setRevokeAtIndex:LFEditToolbarType_splash];
     
-    _isHideNaviBar = NO;
-    [self changedBarState];
+    __weak typeof(self) weakSelf = self;
+    lf_me_dispatch_cancel(self.delayCancelBlock);
+    self.delayCancelBlock = lf_dispatch_block_t(1.f, ^{
+        weakSelf.isHideNaviBar = NO;
+        [weakSelf changedBarState];
+    });
 }
 
 #pragma mark - private
 - (void)changedBarState
 {
+    lf_me_dispatch_cancel(self.delayCancelBlock);
     /** 隐藏贴图菜单 */
     [self changeStickerMenu:NO];
     

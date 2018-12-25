@@ -25,10 +25,7 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
 @property (nonatomic, strong) NSMutableArray <NSValue *>*frameArray;
 
 @property (nonatomic, assign) BOOL isErase;
-/** 方形大小 */
-@property (nonatomic, assign) CGFloat squareWidth;
-/** 画笔大小 */
-@property (nonatomic, assign) CGSize paintSize;
+
 @end
 
 @implementation LFSplashView_new
@@ -140,22 +137,20 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
         
 
     
-    } else {
-        [super touchesBegan:touches withEvent:event];
     }
+    
+    [super touchesBegan:touches withEvent:event];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (touches.allObjects.count == 1) {
+    if (_isBegan || _isWork) {
         
         
         //1、触摸坐标
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
-        if (_isBegan && self.splashBegan) self.splashBegan();
-        _isWork = YES;
-        _isBegan = NO;
+        
         /** 获取上一个对象坐标判断是否重叠 */
         LFSplashLayer *layer = self.layerArray.lastObject;
         LFSplashBlur *prevBlur = layer.lineArray.lastObject;
@@ -164,6 +159,11 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
             CGPoint mosaicPoint = [self divideMosaicPoint:point];
             NSValue *value = [NSValue valueWithCGPoint:mosaicPoint];
             if (![self.frameArray containsObject:value]) {
+                
+                if (_isBegan && self.splashBegan) self.splashBegan();
+                _isWork = YES;
+                _isBegan = NO;
+                
                 [self.frameArray addObject:value];
                 //2、创建LFSplashBlur
                 LFSplashBlur *blur = [LFSplashBlur new];
@@ -176,6 +176,11 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
         } else if (self.state == LFSplashStateType_Paintbrush) {
             /** 限制绘画的间隙 */
             if (CGRectContainsPoint(prevBlur.rect, point) == NO) {
+                
+                if (_isBegan && self.splashBegan) self.splashBegan();
+                _isWork = YES;
+                _isBegan = NO;
+                
                 //2、创建LFSplashBlur
                 LFSplashImageBlur *blur = [LFSplashImageBlur new];
                 blur.imageName = @"EditImageMosaicBrush.png";
@@ -196,44 +201,47 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
             }
         }
         
-        
-    } else {
-        [super touchesMoved:touches withEvent:event];
     }
+    [super touchesMoved:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if ([event allTouches].count == 1){
-        if (_isWork) {
-            if (self.splashEnded) self.splashEnded();
-            LFSplashLayer *layer = self.layerArray.lastObject;
-            if (layer.lineArray.count == 0) {
-                [self undo];
-            }
-        } else {
+    if (_isWork) {
+        LFSplashLayer *layer = self.layerArray.lastObject;
+        if (layer.lineArray.count < 2) {
             [self undo];
+        } else {
+            if (self.splashEnded) self.splashEnded();
         }
     } else {
-        [super touchesEnded:touches withEvent:event];
+        [self undo];
     }
+    _isBegan = NO;
+    _isWork = NO;
+    [super touchesEnded:touches withEvent:event];
 }
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    if ([event allTouches].count == 1){
-        if (_isWork) {
-            if (self.splashEnded) self.splashEnded();
-            LFSplashLayer *layer = self.layerArray.lastObject;
-            if (layer.lineArray.count == 0) {
-                [self undo];
-            }
-        } else {
+    if (_isWork) {
+        LFSplashLayer *layer = self.layerArray.lastObject;
+        if (layer.lineArray.count < 2) {
             [self undo];
+        } else {
+            if (self.splashEnded) self.splashEnded();
         }
     } else {
-        [super touchesEnded:touches withEvent:event];
+        [self undo];
     }
+    _isBegan = NO;
+    _isWork = NO;
+    [super touchesCancelled:touches withEvent:event];
+}
+
+- (BOOL)isDrawing
+{
+    return _isWork;
 }
 
 /** 是否可撤销 */

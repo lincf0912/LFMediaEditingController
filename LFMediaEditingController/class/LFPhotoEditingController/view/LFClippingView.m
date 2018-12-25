@@ -82,6 +82,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.delegate = self;
     self.minimumZoomScale = 1.0f;
     self.maximumZoomScale = kDefaultMaximumZoomScale;
+    self.defaultMaximumZoomScale = kDefaultMaximumZoomScale;
     self.alwaysBounceHorizontal = YES;
     self.alwaysBounceVertical = YES;
     self.angle = 0;
@@ -552,6 +553,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     /** 重置最小缩放比例 */
     CGRect rotateNormalRect = CGRectApplyAffineTransform(self.normalRect, self.transform);
+    if (CGSizeEqualToSize(rotateNormalRect.size, CGSizeZero)) {
+        /** size为0时候不能继续，否则minimumZoomScale=+Inf，会无法缩放 */
+        return;
+    }
     CGFloat minimumZoomScale = MAX(CGRectGetWidth(self.frame) / CGRectGetWidth(rotateNormalRect), CGRectGetHeight(self.frame) / CGRectGetHeight(rotateNormalRect));
     self.minimumZoomScale = minimumZoomScale;
 }
@@ -684,6 +689,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     return self.zoomingView.drawEnable;
 }
 
+- (BOOL)isDrawing
+{
+    return self.zoomingView.isDrawing;
+}
+
 - (BOOL)drawCanUndo
 {
     return [self.zoomingView drawCanUndo];
@@ -696,6 +706,12 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 - (void)setDrawColor:(UIColor *)color
 {
     [self.zoomingView setDrawColor:color];
+}
+
+/** 设置绘画线粗 */
+- (void)setDrawLineWidth:(CGFloat)lineWidth
+{
+    [self.zoomingView setDrawLineWidth:lineWidth];
 }
 
 #pragma mark - 贴图功能
@@ -747,6 +763,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     return self.zoomingView.splashEnable;
 }
+- (BOOL)isSplashing
+{
+    return self.zoomingView.isSplashing;
+}
 /** 是否可撤销 */
 - (BOOL)splashCanUndo
 {
@@ -766,6 +786,17 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 - (BOOL)splashState
 {
     return self.zoomingView.splashState;
+}
+
+/** 设置马赛克大小 */
+- (void)setSplashWidth:(CGFloat)squareWidth
+{
+    [self.zoomingView setSplashWidth:squareWidth];
+}
+/** 设置画笔大小 */
+- (void)setPaintWidth:(CGFloat)paintWidth
+{
+    [self.zoomingView setPaintWidth:paintWidth];
 }
 
 @end

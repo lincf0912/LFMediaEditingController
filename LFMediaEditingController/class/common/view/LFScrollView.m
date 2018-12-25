@@ -30,8 +30,8 @@
 
 - (void)lf_customInit
 {
-    self.delaysContentTouches = NO;
-    self.canCancelContentTouches = NO;
+//    self.delaysContentTouches = NO;
+//    self.canCancelContentTouches = NO;
     
     self.scrollsToTop = NO;
     self.showsHorizontalScrollIndicator = NO;

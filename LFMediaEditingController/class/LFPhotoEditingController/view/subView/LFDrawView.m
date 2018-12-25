@@ -62,6 +62,7 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     _lineArray = [@[] mutableCopy];
     self.backgroundColor = [UIColor clearColor];
     self.clipsToBounds = YES;
+    self.exclusiveTouch = YES;
 //    self.layer.anchorPoint = CGPointMake(0, 0);
 //    self.layer.position = CGPointMake(0, 0);
 }
@@ -111,16 +112,13 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
         [self.layer addSublayer:slayer];
         [self.slayerArray addObject:slayer];
         
-    } else {
-        [super touchesBegan:touches withEvent:event];
     }
+    [super touchesBegan:touches withEvent:event];
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     
-    if ([event allTouches].count == 1){
-        
-    
+    if (_isBegan || _isWork) {
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
         LFDrawBezierPath *path = self.lineArray.lastObject;
@@ -131,36 +129,35 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
             [path addLineToPoint:point];
             CAShapeLayer *slayer = self.slayerArray.lastObject;
             slayer.path = path.CGPath;
-        }
-        
-    } else {
-        [super touchesMoved:touches withEvent:event];
+        }        
     }
+    
+    [super touchesMoved:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event{
-    if ([event allTouches].count == 1){
-        if (_isWork) {
-            if (self.drawEnded) self.drawEnded();
-        } else {
-            [self undo];
-        }
+    if (_isWork) {
+        if (self.drawEnded) self.drawEnded();
     } else {
-        [super touchesEnded:touches withEvent:event];
+        [self undo];
     }
+    _isBegan = NO;
+    _isWork = NO;
+    
+    [super touchesEnded:touches withEvent:event];
 }
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    if ([event allTouches].count == 1){
-        if (_isWork) {
-            if (self.drawEnded) self.drawEnded();
-        } else {
-            [self undo];
-        }
+    if (_isWork) {
+        if (self.drawEnded) self.drawEnded();
     } else {
-        [super touchesCancelled:touches withEvent:event];
+        [self undo];
     }
+    _isBegan = NO;
+    _isWork = NO;
+    
+    [super touchesCancelled:touches withEvent:event];
 }
 
 //- (void)drawRect:(CGRect)rect{
@@ -171,6 +168,11 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
 //        [path stroke];
 //    }
 //}
+
+- (BOOL)isDrawing
+{
+    return _isWork;
+}
 
 /** 是否可撤销 */
 - (BOOL)canUndo
