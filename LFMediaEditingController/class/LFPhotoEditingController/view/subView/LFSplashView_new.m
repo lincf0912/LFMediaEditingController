@@ -215,7 +215,9 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
             if (self.splashEnded) self.splashEnded();
         }
     } else {
-        [self undo];
+        if ((_isBegan)) {
+            [self undo];
+        }
     }
     _isBegan = NO;
     _isWork = NO;
@@ -232,7 +234,9 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
             if (self.splashEnded) self.splashEnded();
         }
     } else {
-        [self undo];
+        if ((_isBegan)) {
+            [self undo];
+        }
     }
     _isBegan = NO;
     _isWork = NO;

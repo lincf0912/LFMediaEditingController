@@ -139,7 +139,9 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     if (_isWork) {
         if (self.drawEnded) self.drawEnded();
     } else {
-        [self undo];
+        if ((_isBegan)) {
+            [self undo];
+        }
     }
     _isBegan = NO;
     _isWork = NO;
@@ -152,7 +154,9 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     if (_isWork) {
         if (self.drawEnded) self.drawEnded();
     } else {
-        [self undo];
+        if ((_isBegan)) {
+            [self undo];
+        }
     }
     _isBegan = NO;
     _isWork = NO;
