@@ -74,7 +74,7 @@
 		C77BFBFB21197FD3003BD7AE /* JRFilterBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C77BFBF821197FD3003BD7AE /* JRFilterBar.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
-		C7E4245421CB6B4F00CAE08C /* LFMECancelBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E4245321CB6B4F00CAE08C /* LFMECancelBlock.m */; };
+		C7E2F85721D3655B000A9CAE /* LFMECancelBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */; };
 		C7E750F121182F6700022FCF /* LFFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F021182F6700022FCF /* LFFilterView.m */; };
 		C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F321183A5300022FCF /* LFImageUtil.m */; };
 		C7E750F92119294F00022FCF /* LFColorMatrixType.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F82119294F00022FCF /* LFColorMatrixType.m */; };
@@ -208,8 +208,8 @@
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
 		C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFEditCollectionView.m; sourceTree = "<group>"; };
-		C7E4245221CB6B4F00CAE08C /* LFMECancelBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFMECancelBlock.h; sourceTree = "<group>"; };
-		C7E4245321CB6B4F00CAE08C /* LFMECancelBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFMECancelBlock.m; sourceTree = "<group>"; };
+		C7E2F85521D3655B000A9CAE /* LFMECancelBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMECancelBlock.h; sourceTree = "<group>"; };
+		C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMECancelBlock.m; sourceTree = "<group>"; };
 		C7E750EF21182F6700022FCF /* LFFilterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterView.h; sourceTree = "<group>"; };
 		C7E750F021182F6700022FCF /* LFFilterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFilterView.m; sourceTree = "<group>"; };
 		C7E750F321183A5300022FCF /* LFImageUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFImageUtil.m; sourceTree = "<group>"; };
@@ -336,18 +336,8 @@
 			isa = PBXGroup;
 			children = (
 				C7ED893920ABBC7100D37465 /* GIFUtils */,
-				6F14E6031EE6439E0049AE56 /* CancelBlock */,
 			);
 			path = utils;
-			sourceTree = "<group>";
-		};
-		6F14E6031EE6439E0049AE56 /* CancelBlock */ = {
-			isa = PBXGroup;
-			children = (
-				C7E4245221CB6B4F00CAE08C /* LFMECancelBlock.h */,
-				C7E4245321CB6B4F00CAE08C /* LFMECancelBlock.m */,
-			);
-			path = CancelBlock;
 			sourceTree = "<group>";
 		};
 		6F14E6051EE6439E0049AE56 /* view */ = {
@@ -490,6 +480,7 @@
 			children = (
 				6F359B491F21A326009F2035 /* LFMediaEditingController.bundle */,
 				6F359B181F1C8AA3009F2035 /* define */,
+				C7E2F85321D3655B000A9CAE /* utils */,
 				6FAB0D341F27345600C1BCFD /* view */,
 				6FAB0D3E1F2735D800C1BCFD /* category */,
 			);
@@ -634,6 +625,23 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		C7E2F85321D3655B000A9CAE /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				C7E2F85421D3655B000A9CAE /* CancelBlock */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		C7E2F85421D3655B000A9CAE /* CancelBlock */ = {
+			isa = PBXGroup;
+			children = (
+				C7E2F85521D3655B000A9CAE /* LFMECancelBlock.h */,
+				C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */,
+			);
+			path = CancelBlock;
+			sourceTree = "<group>";
+		};
 		C7E750F221183A5300022FCF /* ColorMatrix */ = {
 			isa = PBXGroup;
 			children = (
@@ -738,6 +746,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F359B321F1D95E2009F2035 /* LFVideoPlayer.m in Sources */,
+				C7E2F85721D3655B000A9CAE /* LFMECancelBlock.m in Sources */,
 				6F14E6471EE6439E0049AE56 /* LFEditingView.m in Sources */,
 				6F14E65B1EE6439E0049AE56 /* JRPickColorView.m in Sources */,
 				6F14E6591EE6439E0049AE56 /* LFStickerBar.m in Sources */,
@@ -777,7 +786,6 @@
 				6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */,
 				6F14E6571EE6439E0049AE56 /* LFColorSlider.m in Sources */,
 				6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */,
-				C7E4245421CB6B4F00CAE08C /* LFMECancelBlock.m in Sources */,
 				6F61BC1B1F2987DA005A1E63 /* LFVideoExportSession.m in Sources */,
 				6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
