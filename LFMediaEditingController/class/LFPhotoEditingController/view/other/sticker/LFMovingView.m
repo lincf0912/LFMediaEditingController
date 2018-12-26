@@ -252,7 +252,7 @@
     
     [[self class] setActiveEmoticonView:nextTarget];
      */
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setActiveEmoticonView:) object:nil];
+    [self cancelDeactivated];
     [self removeFromSuperview];
 }
 
