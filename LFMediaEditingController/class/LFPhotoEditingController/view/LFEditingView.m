@@ -25,6 +25,13 @@ CGFloat const lf_editingView_drawLineWidth = 5.f;
 CGFloat const lf_editingView_splashWidth = 15.f;
 CGFloat const lf_editingView_paintWidth = 50.f;
 
+typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
+    LFEditingViewOperationNone = 0,
+    LFEditingViewOperationDragging = 1 << 0,
+    LFEditingViewOperationZooming = 1 << 1,
+    LFEditingViewOperationGridResizing = 1 << 2,
+};
+
 
 @interface LFEditingView () <UIScrollViewDelegate, LFClippingViewDelegate, LFGridViewDelegate>
 
@@ -48,7 +55,7 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 @property (nonatomic, copy) lf_me_dispatch_cancelable_block_t maskViewBlock;
 
 /** 编辑操作次数记录-有3种编辑操作 拖动、缩放、网格 并且可以同时触发任意2种，避免多次回调代理 */
-@property (nonatomic, assign) int editedCount;
+@property (nonatomic, assign) LFEditingViewOperation editedOperation;
 
 /** 默认最大化缩放 */
 @property (nonatomic, assign) CGFloat defaultMaximumZoomScale;
@@ -276,7 +283,7 @@ CGFloat const lf_editingView_paintWidth = 50.f;
         /** 没有图片禁止开启编辑模式 */
         return;
     }
-    self.editedCount = 0;
+    self.editedOperation = LFEditingViewOperationNone;
     _isClipping = isClipping;
     self.clippingView.useGesture = isClipping;
     if (isClipping) {
@@ -335,7 +342,7 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 /** 取消剪裁 */
 - (void)cancelClipping:(BOOL)animated
 {
-    self.editedCount = 0;
+    self.editedOperation = LFEditingViewOperationNone;
     _isClipping = NO;
     self.clippingView.useGesture = _isClipping;
     /** 剪裁多余部分 */
@@ -518,10 +525,10 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 #pragma mark - LFClippingViewDelegate
 - (void (^)(CGRect))lf_clippingViewWillBeginZooming:(LFClippingView *)clippingView
 {
-    if (self.editedCount==0 && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillBeginEditing:)]) {
+    if (self.editedOperation == LFEditingViewOperationNone && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillBeginEditing:)]) {
         [self.clippingDelegate lf_EditingViewWillBeginEditing:self];
     }
-    self.editedCount++;
+    self.editedOperation |= LFEditingViewOperationZooming;
     
     __weak typeof(self) weakSelf = self;
     void (^block)(CGRect) = ^(CGRect rect){
@@ -557,18 +564,20 @@ CGFloat const lf_editingView_paintWidth = 50.f;
     
     [self updateImagePixelText];
     
-    self.editedCount--;
-    if (self.editedCount==0 && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
+    if (self.editedOperation & LFEditingViewOperationZooming) {
+        self.editedOperation ^= LFEditingViewOperationZooming;
+    }
+    if (self.editedOperation == LFEditingViewOperationNone && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
         [self.clippingDelegate lf_EditingViewDidEndEditing:self];
     }
 }
 
 - (void)lf_clippingViewWillBeginDragging:(LFClippingView *)clippingView
 {
-    if (self.editedCount==0 && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillBeginEditing:)]) {
+    if (self.editedOperation == LFEditingViewOperationNone && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillBeginEditing:)]) {
         [self.clippingDelegate lf_EditingViewWillBeginEditing:self];
     }
-    self.editedCount++;
+    self.editedOperation |= LFEditingViewOperationDragging;
     /** 移动开始，隐藏 */
     self.gridView.showMaskLayer = NO;
     lf_me_dispatch_cancel(self.maskViewBlock);
@@ -578,7 +587,9 @@ CGFloat const lf_editingView_paintWidth = 50.f;
     /** 移动结束，显示 */
     if (!self.gridView.isDragging && !CGRectEqualToRect(self.gridView.gridRect, self.clippingView.frame)) {
         [self supplementHandle];
-        self.editedCount--;
+        if (self.editedOperation & LFEditingViewOperationDragging) {
+            self.editedOperation ^= LFEditingViewOperationDragging;
+        }
     } else {
         __weak typeof(self) weakSelf = self;
         self.maskViewBlock = lf_dispatch_block_t(0.25f, ^{
@@ -586,8 +597,10 @@ CGFloat const lf_editingView_paintWidth = 50.f;
                 weakSelf.gridView.showMaskLayer = YES;
             }
         });
-        self.editedCount--;
-        if (self.editedCount==0 && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
+        if (self.editedOperation & LFEditingViewOperationDragging) {
+            self.editedOperation ^= LFEditingViewOperationDragging;
+        }
+        if (self.editedOperation == LFEditingViewOperationNone && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
             [self.clippingDelegate lf_EditingViewDidEndEditing:self];
         }
     }
@@ -596,10 +609,10 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 #pragma mark - LFGridViewDelegate
 - (void)lf_gridViewDidBeginResizing:(LFGridView *)gridView
 {
-    if (self.editedCount==0 && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillBeginEditing:)]) {
+    if (self.editedOperation == LFEditingViewOperationNone && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillBeginEditing:)]) {
         [self.clippingDelegate lf_EditingViewWillBeginEditing:self];
     }
-    self.editedCount++;
+    self.editedOperation |= LFEditingViewOperationGridResizing;
     gridView.showMaskLayer = NO;
     lf_me_dispatch_cancel(self.maskViewBlock);
 }
@@ -615,7 +628,9 @@ CGFloat const lf_editingView_paintWidth = 50.f;
 {
     /** 缩小 */
     [self.clippingView zoomOutToRect:gridView.gridRect];
-    self.editedCount--;
+    if (self.editedOperation & LFEditingViewOperationGridResizing) {
+        self.editedOperation ^= LFEditingViewOperationGridResizing;
+    }
     /** 让clippingView的动画回调后才显示showMaskLayer */
     //    self.gridView.showMaskLayer = YES;
 }
