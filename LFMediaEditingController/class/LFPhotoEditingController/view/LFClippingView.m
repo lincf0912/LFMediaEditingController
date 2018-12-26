@@ -475,7 +475,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     self.contentInset = UIEdgeInsetsZero;
     self.scrollIndicatorInsets = UIEdgeInsetsZero;
-    [self refreshImageZoomViewCenter];
+    if (scrollView.isZooming || scrollView.isZoomBouncing) {
+        /** 代码调整zoom，会导致居中计算错误，必须2指控制UI自动缩放时才调用 */
+        [self refreshImageZoomViewCenter];
+    }
     if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidZoom:)]) {
         [self.clippingDelegate lf_clippingViewDidZoom:self];
     }
