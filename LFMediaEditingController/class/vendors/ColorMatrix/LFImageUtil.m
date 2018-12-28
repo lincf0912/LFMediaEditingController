@@ -145,11 +145,12 @@ static void lf_changeRGBA(int *red,int *green,int *blue,int *alpha, const float*
     //下面的代码创建要输出的图像的相关参数
 	CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, imgPixel, dataLength, NULL);
 
-	int bitsPerComponent = 8;
-	int bitsPerPixel = 32;
-	int bytesPerRow = 4 * w;
-	CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-	CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+    size_t bitsPerComponent = CGImageGetBitsPerComponent(inImageRef);
+    size_t bitsPerPixel = CGImageGetBitsPerPixel(inImageRef);
+    size_t bytesPerRow = CGImageGetBytesPerRow(inImageRef);
+    
+	CGColorSpaceRef colorSpaceRef = CGImageGetColorSpace(inImageRef);
+	CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(inImageRef);
 	CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
 	
 	
