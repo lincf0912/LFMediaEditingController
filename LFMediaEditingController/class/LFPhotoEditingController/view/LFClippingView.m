@@ -493,8 +493,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 #pragma mark - Private
 - (void)refreshImageZoomViewCenter {
-    CGFloat offsetX = (self.width > self.contentSize.width) ? ((self.width - self.contentSize.width) * 0.5) : 0.0;
-    CGFloat offsetY = (self.height > self.contentSize.height) ? ((self.height - self.contentSize.height) * 0.5) : 0.0;
+    
+    CGRect rect = CGRectApplyAffineTransform(self.frame, self.transform);
+    
+    CGFloat offsetX = (rect.size.width > self.contentSize.width) ? ((rect.size.width - self.contentSize.width) * 0.5) : 0.0;
+    CGFloat offsetY = (rect.size.height > self.contentSize.height) ? ((rect.size.height - self.contentSize.height) * 0.5) : 0.0;
     self.zoomingView.center = CGPointMake(self.contentSize.width * 0.5 + offsetX, self.contentSize.height * 0.5 + offsetY);
 }
 
@@ -731,7 +734,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 /** 设置绘画线粗 */
 - (void)setDrawLineWidth:(CGFloat)lineWidth
 {
-    [self.zoomingView setDrawLineWidth:lineWidth];
+    [self.zoomingView setDrawLineWidth:lineWidth/self.zoomScale];
 }
 
 #pragma mark - 贴图功能
@@ -752,7 +755,25 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 /** 屏幕缩放率 */
 - (void)setScreenScale:(CGFloat)scale
 {
-    [self.zoomingView setScreenScale:scale];
+    [self.zoomingView setScreenScale:scale*self.zoomScale];
+}
+/** 最小缩放率 默认0.2 */
+- (void)setStickerMinScale:(CGFloat)stickerMinScale
+{
+    self.zoomingView.stickerMinScale = stickerMinScale;
+}
+- (CGFloat)stickerMinScale
+{
+    return self.zoomingView.stickerMinScale;
+}
+/** 最大缩放率 默认3.0 */
+- (void)setStickerMaxScale:(CGFloat)stickerMaxScale
+{
+    self.zoomingView.stickerMaxScale = stickerMaxScale;
+}
+- (CGFloat)stickerMaxScale
+{
+    return self.zoomingView.stickerMaxScale;
 }
 /** 获取选中贴图的内容 */
 - (LFText *)getSelectStickerText
@@ -816,12 +837,12 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 /** 设置马赛克大小 */
 - (void)setSplashWidth:(CGFloat)squareWidth
 {
-    [self.zoomingView setSplashWidth:squareWidth];
+    [self.zoomingView setSplashWidth:squareWidth/self.zoomScale];
 }
 /** 设置画笔大小 */
 - (void)setPaintWidth:(CGFloat)paintWidth
 {
-    [self.zoomingView setPaintWidth:paintWidth];
+    [self.zoomingView setPaintWidth:paintWidth/self.zoomScale];
 }
 
 @end

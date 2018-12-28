@@ -83,7 +83,6 @@
         _customView = view;
         _contentView = [[UIView alloc] initWithFrame:view.bounds];
         _contentView.layer.borderColor = [[UIColor colorWithWhite:1.f alpha:0.8] CGColor];
-        _contentView.layer.cornerRadius = 3;
         _contentView.center = self.center;
         [_contentView addSubview:view];
         view.frame = _contentView.bounds;
@@ -92,18 +91,17 @@
         _deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _deleteButton.frame = CGRectMake(0, 0, margin, margin);
         _deleteButton.center = _contentView.frame.origin;
-        _deleteButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
         [_deleteButton addTarget:self action:@selector(pushedDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
         [_deleteButton setImage:bundleEditImageNamed(@"ZoomingViewDelete.png") forState:UIControlStateNormal];
         [self addSubview:_deleteButton];
         
         _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, margin, margin)];
         _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
-        _circleView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
         [_circleView setImage:bundleEditImageNamed(@"ZoomingViewCircle.png")];
         [self addSubview:_circleView];
         
-        _scale = 1;
+        _scale = 1.f;
+        _screenScale = 1.f;
         _arg = 0;
         _minScale = .2f;
         _maxScale = 3.f;
@@ -133,6 +131,8 @@
     contentFrame.size = viewSize;
     _contentView.frame = contentFrame;
     _contentView.center = center;
+    _deleteButton.center = _contentView.frame.origin;
+    _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
     
     /** 更新显示视图大小 */
     _customView.frame = _contentView.bounds;
@@ -154,7 +154,7 @@
 {
     UIView* view= [super hitTest:point withEvent:event];
     if(view==self){
-        return nil;
+        view = nil;
     }
     if (view == nil) {
         [LFMovingView setActiveEmoticonView:nil];
@@ -167,7 +167,8 @@
     _isActive = active;
     _deleteButton.hidden = !active;
     _circleView.hidden = !active;
-    _contentView.layer.borderWidth = (active) ? 1/_scale : 0;
+    _contentView.layer.borderWidth = (active) ? 1/_scale/self.screenScale : 0;
+    _contentView.layer.cornerRadius = (active) ? 3/_scale/self.screenScale : 0;
 }
 
 - (void)setScale:(CGFloat)scale
@@ -194,12 +195,14 @@
     self.frame = rct;
     
     _contentView.center = CGPointMake(rct.size.width/2, rct.size.height/2);
+    _deleteButton.center = _contentView.frame.origin;
+    _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
     
     self.transform = CGAffineTransformMakeRotation(_arg);
 
     if (_isActive) {        
-        _contentView.layer.borderWidth = 1/_scale;
-        _contentView.layer.cornerRadius = 3/_scale;
+        _contentView.layer.borderWidth = 1/_scale/self.screenScale;
+        _contentView.layer.cornerRadius = 3/_scale/self.screenScale;
     }
 }
 

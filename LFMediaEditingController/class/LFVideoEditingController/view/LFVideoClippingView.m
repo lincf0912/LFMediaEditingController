@@ -548,6 +548,24 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 {
     _stickerView.screenScale = scale;
 }
+/** 最小缩放率 默认0.2 */
+- (void)setStickerMinScale:(CGFloat)stickerMinScale
+{
+    _stickerView.minScale = stickerMinScale;
+}
+- (CGFloat)stickerMinScale
+{
+    return _stickerView.minScale;
+}
+/** 最大缩放率 默认3.0 */
+- (void)setStickerMaxScale:(CGFloat)stickerMaxScale
+{
+    _stickerView.maxScale = stickerMaxScale;
+}
+- (CGFloat)stickerMaxScale
+{
+    return _stickerView.maxScale;
+}
 /** 获取选中贴图的内容 */
 - (LFText *)getSelectStickerText
 {

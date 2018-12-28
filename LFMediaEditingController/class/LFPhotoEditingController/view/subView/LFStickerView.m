@@ -48,6 +48,9 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 {
     self.userInteractionEnabled = YES;
     self.clipsToBounds = YES;
+    _screenScale = 1.f;
+    _minScale = .2f;
+    _maxScale = 3.f;
 }
 
 #pragma mark - 解除响应事件
@@ -154,6 +157,11 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     /** 屏幕中心 */
     movingView.center = [self convertPoint:[UIApplication sharedApplication].keyWindow.center fromView:(UIView *)[UIApplication sharedApplication].keyWindow];
     
+    /** 最小缩放率 */
+    movingView.minScale = self.minScale;
+    /** 最大缩放率 额外调整最大缩放率的比例，比例以屏幕为标准。 */
+    CGFloat diffScale = [UIScreen mainScreen].bounds.size.width / view.frame.size.width;
+    movingView.maxScale = self.maxScale * diffScale;
     /** 屏幕缩放率 */
     movingView.screenScale = self.screenScale;
     
@@ -185,8 +193,9 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 - (void)createImage:(UIImage *)image
 {
     LFMovingView *movingView = [self doCreateImage:image active:YES];
-    CGFloat ratio = MIN( (0.2 * self.width) / movingView.width, (0.5 * self.height) / movingView.height);
-    [movingView setScale:ratio*(1.f/self.screenScale)];
+    CGFloat ratio = MIN( (0.2 * [UIScreen mainScreen].bounds.size.width) / movingView.width, (0.5 * [UIScreen mainScreen].bounds.size.height) / movingView.height);
+    CGFloat scale = ratio/self.screenScale;
+    [movingView setScale:scale];
     self.selectMovingView = movingView;
 }
 
@@ -195,7 +204,6 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
     LFMovingView *movingView = [self createBaseMovingView:imageView active:active];
-    movingView.maxScale = 2.f;
     
     return movingView;
 }
@@ -205,7 +213,8 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 {
     LFMovingView *movingView = [self doCreateText:text active:YES];
     //    CGFloat ratio = MIN( (0.5 * self.width) / movingView.width, (0.5 * self.height) / movingView.height);
-    [movingView setScale:0.8f*(1.f/self.screenScale)];
+    CGFloat scale = 0.8f/self.screenScale;
+    [movingView setScale:scale];
     self.selectMovingView = movingView;
 }
 
@@ -227,17 +236,18 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     label.layer.shadowOffset = CGSizeMake(1, 1);
     
     LFMovingView *movingView = [self createBaseMovingView:label active:active];
-    movingView.maxScale = 1.5f;
     
     return movingView;
 }
 
 - (void)setScreenScale:(CGFloat)screenScale
 {
-    _screenScale = MAX(screenScale, 0.1f);
-    for (LFMovingView *subView in self.subviews) {
-        if ([subView isKindOfClass:[LFMovingView class]]) {
-            subView.screenScale = screenScale;
+    if (screenScale > 0) {
+        _screenScale = screenScale;
+        for (LFMovingView *subView in self.subviews) {
+            if ([subView isKindOfClass:[LFMovingView class]]) {
+                subView.screenScale = screenScale;
+            }
         }
     }
 }

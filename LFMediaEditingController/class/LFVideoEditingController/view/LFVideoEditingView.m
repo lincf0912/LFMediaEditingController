@@ -493,6 +493,24 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 {
     [self.clippingView setScreenScale:scale];
 }
+/** 最小缩放率 默认0.2 */
+- (void)setStickerMinScale:(CGFloat)stickerMinScale
+{
+    self.clippingView.stickerMinScale = stickerMinScale;
+}
+- (CGFloat)stickerMinScale
+{
+    return self.clippingView.stickerMinScale;
+}
+/** 最大缩放率 默认3.0 */
+- (void)setStickerMaxScale:(CGFloat)stickerMaxScale
+{
+    self.clippingView.stickerMaxScale = stickerMaxScale;
+}
+- (CGFloat)stickerMaxScale
+{
+    return self.clippingView.stickerMaxScale;
+}
 /** 获取选中贴图的内容 */
 - (LFText *)getSelectStickerText
 {

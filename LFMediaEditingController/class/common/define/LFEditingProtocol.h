@@ -58,6 +58,10 @@
 - (void)removeSelectStickerView;
 /** 屏幕缩放率 */
 - (void)setScreenScale:(CGFloat)scale;
+/** 最小缩放率 默认0.2 */
+@property (nonatomic, assign) CGFloat stickerMinScale;
+/** 最大缩放率 默认3.0 */
+@property (nonatomic, assign) CGFloat stickerMaxScale;
 
 /** 创建贴图 */
 - (void)createStickerImage:(UIImage *)image;
