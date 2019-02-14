@@ -12,6 +12,7 @@
 @interface LFFilterView : UIView
 
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, readonly) UIImage *filterImage;
 @property (nonatomic, assign) LFColorMatrixType cmType;
 
 /** 数据 */

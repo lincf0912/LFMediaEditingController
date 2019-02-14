@@ -48,9 +48,14 @@ NSString *const kLFFilterViewData = @"LFFilterViewData";
     self.imageView.frame = self.bounds;
 }
 
-- (UIImage *)image
+- (UIImage *)filterImage
 {
     return self.imageView.image;
+}
+
+- (UIImage *)image
+{
+    return self.defaultImage;
 }
 
 - (void)setImage:(UIImage *)image

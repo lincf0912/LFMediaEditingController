@@ -147,7 +147,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 
 - (BOOL)isImageViewHidden
 {
-    return self.imageView.hidden;
+    return self.imageView.isHidden;
 }
 
 - (void)setMoveCenter:(BOOL (^)(CGRect))moveCenter
@@ -278,7 +278,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 /** 获取滤镜图片 */
 - (UIImage *)getFilterImage
 {
-    return self.filterView.image;
+    return self.filterView.filterImage;
 }
 
 #pragma mark - 绘画功能
