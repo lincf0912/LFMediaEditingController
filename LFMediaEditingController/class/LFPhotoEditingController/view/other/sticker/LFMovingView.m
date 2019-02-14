@@ -83,6 +83,10 @@
         _customView = view;
         _contentView = [[UIView alloc] initWithFrame:view.bounds];
         _contentView.layer.borderColor = [[UIColor colorWithWhite:1.f alpha:0.8] CGColor];
+        _contentView.layer.shadowColor = [UIColor blackColor].CGColor;
+        _contentView.layer.shadowOpacity = 1.f;
+        _contentView.layer.shadowOffset = CGSizeMake(0, 0);
+        _contentView.layer.shadowRadius = 2;
         _contentView.center = self.center;
         [_contentView addSubview:view];
         view.frame = _contentView.bounds;
@@ -93,11 +97,18 @@
         _deleteButton.center = _contentView.frame.origin;
         [_deleteButton addTarget:self action:@selector(pushedDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
         [_deleteButton setImage:bundleEditImageNamed(@"ZoomingViewDelete.png") forState:UIControlStateNormal];
+        _deleteButton.layer.shadowColor = [UIColor blackColor].CGColor;
+        _deleteButton.layer.shadowOpacity = 1.f;
+        _deleteButton.layer.shadowOffset = CGSizeMake(0, 0);
+        _deleteButton.layer.shadowRadius = 3;
         [self addSubview:_deleteButton];
         
         _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, margin, margin)];
         _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
         [_circleView setImage:bundleEditImageNamed(@"ZoomingViewCircle.png")];
+        _circleView.layer.shadowOpacity = 1.f;
+        _circleView.layer.shadowOffset = CGSizeMake(0, 0);
+        _circleView.layer.shadowRadius = 3;
         [self addSubview:_circleView];
         
         _scale = 1.f;
