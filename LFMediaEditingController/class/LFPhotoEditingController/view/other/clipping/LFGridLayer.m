@@ -18,6 +18,11 @@
         self.contentsScale = [[UIScreen mainScreen] scale];
         _bgColor = [UIColor clearColor];
         _gridColor = [UIColor blackColor];
+        self.shadowColor = [UIColor blackColor].CGColor;
+        self.shadowRadius = 3.f;
+        self.shadowOffset = CGSizeZero;
+        self.shadowOpacity = .5f;
+
     }
     return self;
 }
