@@ -186,7 +186,7 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
                 blur.imageName = @"EditImageMosaicBrush.png";
                 blur.color = self.splashColor ? self.splashColor(point) : nil;
                 /** 新增随机位置 */
-                int x = self.paintSize.width + 20;
+                int x = self.paintSize.width + MIN(1, (int)(self.paintSize.width*0.4));
                 float randomX = floorf(arc4random()%x) - x/2;
                 blur.rect = CGRectMake(point.x-self.paintSize.width/2 + randomX, point.y-self.paintSize.height/2, self.paintSize.width, self.paintSize.height);
                 
