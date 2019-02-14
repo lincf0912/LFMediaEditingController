@@ -21,7 +21,7 @@
 
 /** 最小尺寸 CGSizeMake(80, 80) */
 @property (nonatomic, assign) CGSize clippingMinSize;
-/** 最大尺寸 CGRectInset(self.frame , 20, 50) */
+/** 最大尺寸 CGRectInset(self.bounds , 20, 20) */
 @property (nonatomic, assign) CGRect clippingMaxRect;
 
 /** 开关编辑模式 */

@@ -117,7 +117,16 @@
 #pragma mark - 创建视图
 - (void)configScrollView
 {
-    _EditingView = [[LFEditingView alloc] initWithFrame:self.view.bounds];
+    CGRect editRect = self.view.bounds;
+    
+    if (@available(iOS 11.0, *)) {
+        editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
+        editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
+        editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
+        editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
+    }
+    
+    _EditingView = [[LFEditingView alloc] initWithFrame:editRect];
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
     _EditingView.clippingDelegate = self;

@@ -69,9 +69,9 @@ const CGFloat kControlWidth = 30.f;
     [self.layer addSublayer:gridLayer];
     self.gridLayer = gridLayer;
     
-    self.gridRect = CGRectInset(self.bounds, 50, 50);
+    self.gridRect = CGRectInset(self.bounds, 20, 20);
     self.controlMinSize = CGSizeMake(80, 80);
-    self.controlMaxRect = CGRectInset(self.bounds, 50, 50);
+    self.controlMaxRect = CGRectInset(self.bounds, 20, 20);
     self.controlSize = CGSizeZero;
     /** 遮罩范围 */
     self.showMaskLayer = YES;

@@ -19,7 +19,7 @@
 
 #define kMaxZoomScale 2.5f
 
-#define kClipZoom_margin 10.f
+#define kClipZoom_margin 20.f
 
 CGFloat const lf_editingView_drawLineWidth = 5.f;
 CGFloat const lf_editingView_splashWidth = 15.f;
@@ -112,7 +112,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     self.gridView = gridView;
     
     self.clippingMinSize = CGSizeMake(80, 80);
-    self.clippingMaxRect = CGRectInset(self.frame , 20, 50);
+    self.clippingMaxRect = [self refer_clippingRect];
     
     /** 创建显示图片像素控件 */
     UILabel *imagePixel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.width-40, 30)];
@@ -135,11 +135,27 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     
 }
 
-- (void)safeAreaInsetsDidChange
+- (UIEdgeInsets)refer_clippingInsets
 {
-    [super safeAreaInsetsDidChange];
-    self.clippingMinSize = self.clippingMinSize;
-    self.clippingMaxRect = self.clippingMaxRect;
+    CGFloat top = kClipZoom_margin;
+    CGFloat left = kClipZoom_margin;
+    CGFloat bottom = self.editToolbarDefaultHeight + kClipZoom_margin;
+    CGFloat right = kClipZoom_margin;
+    
+    return UIEdgeInsetsMake(top, left, bottom, right);
+}
+
+- (CGRect)refer_clippingRect
+{
+    UIEdgeInsets insets = [self refer_clippingInsets];
+    
+    CGRect referRect = self.bounds;
+    referRect.origin.x += insets.left;
+    referRect.origin.y += insets.top;
+    referRect.size.width -= (insets.left+insets.right);
+    referRect.size.height -= (insets.top+insets.bottom);
+    
+    return referRect;
 }
 
 - (void)setImage:(UIImage *)image
@@ -206,6 +222,9 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     }
     _clippingRect = clippingRect;
     self.gridView.gridRect = clippingRect;
+    UIEdgeInsets insets = [self refer_clippingInsets];
+    /** 计算clippingView与父界面的中心偏差坐标 */
+    self.clippingView.offsetSuperCenter = _isClipping ? CGPointMake(insets.right-insets.left, insets.bottom-insets.top) : CGPointZero;
     self.clippingView.cropRect = clippingRect;
     self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
 }
@@ -214,15 +233,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 {
     if (CGSizeEqualToSize(CGSizeZero, _clippingMinSize) || (clippingMinSize.width < CGRectGetWidth(_clippingMaxRect) && clippingMinSize.height < CGRectGetHeight(_clippingMaxRect))) {
         
-        CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
-        CGFloat topHeight = 0;
-        if (@available(iOS 11.0, *)) {
-            toolbarHeight += self.safeAreaInsets.bottom;
-            topHeight += self.safeAreaInsets.top;
-        }
-        
-        CGRect rect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
-        CGSize newClippingMinSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect).size;
+        CGSize newClippingMinSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]).size;
         
         {
             if (clippingMinSize.width > newClippingMinSize.width) {
@@ -242,14 +253,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 {
     if (CGRectEqualToRect(CGRectZero, _clippingMaxRect) || (CGRectGetWidth(clippingMaxRect) > _clippingMinSize.width && CGRectGetHeight(clippingMaxRect) > _clippingMinSize.height)) {
         
-        CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
-        CGFloat topHeight = 0;
-        if (@available(iOS 11.0, *)) {
-            toolbarHeight += self.safeAreaInsets.bottom;
-            topHeight += self.safeAreaInsets.top;
-        }
-        
-        CGRect newClippingMaxRect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
+        CGRect newClippingMaxRect = [self refer_clippingRect];
         
         if (clippingMaxRect.origin.y < newClippingMaxRect.origin.y) {
             clippingMaxRect.origin.y = newClippingMaxRect.origin.y;
@@ -299,15 +303,10 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     }
     
     if (isClipping) {
-        CGFloat toolbarHeight = self.editToolbarDefaultHeight + kClipZoom_margin;
-        if (@available(iOS 11.0, *)) {
-            toolbarHeight += self.safeAreaInsets.bottom;
-        }
         /** 动画切换 */
         if (animated) {
             [UIView animateWithDuration:0.25f animations:^{
-                CGRect rect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
-                self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect);
+                self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]);
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.25f animations:^{
                     self.gridView.alpha = 1.f;
@@ -318,8 +317,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
                 }];
             }];
         } else {
-            CGRect rect = CGRectInset(self.frame , 20, MAX(50, toolbarHeight));
-            self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, rect);
+            self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]);
             self.gridView.alpha = 1.f;
             self.imagePixel.alpha = 1.f;
             /** 显示多余部分 */
@@ -336,7 +334,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
                 self.imagePixel.alpha = 0.f;
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.25f animations:^{
-                    CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.frame);
+                    CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.bounds);
                     self.clippingRect = cropRect;
                 }];
                 
@@ -352,7 +350,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
             self.clippingView.clipsToBounds = YES;
             self.gridView.alpha = 0.f;
             self.imagePixel.alpha = 0.f;
-            CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.frame);
+            CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.bounds);
             self.clippingRect = cropRect;
             /** 针对长图的展示 */
             [self fixedLongImage];

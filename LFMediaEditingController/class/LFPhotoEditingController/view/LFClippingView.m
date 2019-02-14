@@ -47,8 +47,6 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 @property (nonatomic, assign) CGFloat first_minimumZoomScale;
 /** 旋转系数 */
 @property (nonatomic, assign) NSInteger angle;
-/** 与父视图中心偏差坐标 */
-@property (nonatomic, assign) CGPoint offsetSuperCenter;
 /** 默认最大化缩放 */
 @property (nonatomic, assign) CGFloat defaultMaximumZoomScale;
 
@@ -162,11 +160,6 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     CGRect oldFrame = self.frame;
     self.frame = cropRect;
     self.saveRect = self.frame;
-    /** 计算与父界面的中心偏差坐标 */
-    CGFloat offset_x = (CGRectGetWidth(self.superview.frame)-CGRectGetWidth(cropRect))/2-cropRect.origin.x;
-    CGFloat offset_y = (CGRectGetHeight(self.superview.frame)-CGRectGetHeight(cropRect))/2-cropRect.origin.y;
-    self.offsetSuperCenter = CGPointMake(offset_x, offset_y);
-    
     
     CGFloat scale = self.zoomScale;
     /** 视图位移 */
@@ -245,8 +238,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 - (BOOL)canReset
 {
-    CGRect trueFrame = CGRectMake((CGRectGetWidth(self.superview.frame)-CGRectGetWidth(self.zoomingView.frame))/2-self.offsetSuperCenter.x
-                                  , (CGRectGetHeight(self.superview.frame)-CGRectGetHeight(self.zoomingView.frame))/2-self.offsetSuperCenter.y
+    CGRect trueFrame = CGRectMake((CGRectGetWidth(self.superview.frame)-CGRectGetWidth(self.zoomingView.frame))/2-self.offsetSuperCenter.x/2
+                                  , (CGRectGetHeight(self.superview.frame)-CGRectGetHeight(self.zoomingView.frame))/2-self.offsetSuperCenter.y/2
                                   , CGRectGetWidth(self.zoomingView.frame)
                                   , CGRectGetHeight(self.zoomingView.frame));
     
@@ -326,8 +319,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     scaledHeight = MIN(scaledHeight, CGRectGetHeight(zoomViewRect) * (zoomScale / self.minimumZoomScale));
     
     /** 计算实际显示坐标 */
-    CGRect cropRect = CGRectMake((CGRectGetWidth(self.superview.bounds) - scaledWidth) / 2,
-                                 (CGRectGetHeight(self.superview.bounds) - scaledHeight) / 2,
+    CGRect cropRect = CGRectMake((CGRectGetWidth(self.superview.bounds) - scaledWidth) / 2 - self.offsetSuperCenter.x/2,
+                                 (CGRectGetHeight(self.superview.bounds) - scaledHeight) / 2  - self.offsetSuperCenter.y/2,
                                  scaledWidth,
                                  scaledHeight);
     

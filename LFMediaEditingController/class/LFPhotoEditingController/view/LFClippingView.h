@@ -20,6 +20,8 @@
 @property (nonatomic, weak) id<LFClippingViewDelegate> clippingDelegate;
 /** 首次缩放后需要记录最小缩放值 */
 @property (nonatomic, readonly) CGFloat first_minimumZoomScale;
+/** 与父视图中心偏差坐标 */
+@property (nonatomic, assign) CGPoint offsetSuperCenter;
 
 /** 原始坐标 */
 @property (nonatomic, readonly) CGRect originalRect;

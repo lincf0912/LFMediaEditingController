@@ -28,7 +28,7 @@ typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
 - (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer animated:(BOOL)animated;
 /** 最小尺寸 CGSizeMake(80, 80); */
 @property (nonatomic, assign) CGSize controlMinSize;
-/** 最大尺寸 CGRectInset(self.bounds, 50, 50) */
+/** 最大尺寸 CGRectInset(self.bounds, 20, 20) */
 @property (nonatomic, assign) CGRect controlMaxRect;
 /** 原图尺寸 */
 @property (nonatomic, assign) CGSize controlSize;
