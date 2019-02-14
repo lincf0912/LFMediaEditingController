@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 {
     self.backgroundColor = [UIColor blackColor];
     self.delegate = self;
+    self.clipsToBounds = NO;
     /** 缩放 */
     self.maximumZoomScale = kMaxZoomScale;
     self.minimumZoomScale = 1.0;
