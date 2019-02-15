@@ -22,6 +22,8 @@
 @property (nonatomic, readonly) CGFloat first_minimumZoomScale;
 /** 与父视图中心偏差坐标 */
 @property (nonatomic, assign) CGPoint offsetSuperCenter;
+/** 是否存在剪切以外的编辑操作 */
+@property (nonatomic, readonly) BOOL hasZoomingViewData;
 
 /** 原始坐标 */
 @property (nonatomic, readonly) CGRect originalRect;

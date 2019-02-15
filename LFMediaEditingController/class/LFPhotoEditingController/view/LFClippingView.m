@@ -127,6 +127,14 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     [self.zoomingView setImage:image];
 }
 
+- (BOOL)hasZoomingViewData
+{
+    if (self.zoomingView.photoEditData) {
+        return YES;
+    }
+    return NO;
+}
+
 - (void)setImageViewHidden:(BOOL)imageViewHidden
 {
     self.zoomingView.imageViewHidden = imageViewHidden;

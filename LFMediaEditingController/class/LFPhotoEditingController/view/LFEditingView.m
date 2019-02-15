@@ -460,12 +460,15 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     
     CGSize size = clippingRect.size;
     
-    /** 忽略原图的显示，仅需要原图以上的编辑图层 */
-    self.clippingView.imageViewHidden = YES;
-    /** 获取编辑图层视图 */
-    UIImage *otherImage = [self.clipZoomView LFME_captureImageAtFrame:clippingRect];
-    /** 恢复原图的显示 */
-    self.clippingView.imageViewHidden = NO;
+    UIImage *otherImage = nil;
+    if (self.clippingView.hasZoomingViewData) {
+        /** 忽略原图的显示，仅需要原图以上的编辑图层 */
+        self.clippingView.imageViewHidden = YES;
+        /** 获取编辑图层视图 */
+        otherImage = [self.clipZoomView LFME_captureImageAtFrame:clippingRect];
+        /** 恢复原图的显示 */
+        self.clippingView.imageViewHidden = NO;
+    }
     
     /* Return a transform which rotates by `angle' radians:
      t' = [ cos(angle) sin(angle) -sin(angle) cos(angle) 0 0 ] */
@@ -511,21 +514,25 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
                 /** 调整图片方向 */
                 clipEditImage = [clipEditImage LFME_imageRotatedByRadians:rotate];
             }
-            /** 缩放至原图尺寸 */
-            /** 新增保证编辑图片质量，参考原图尺寸，但尺寸至少为屏幕宽度的缩放比例，即编辑图片宽度>=屏幕宽度 */
-            if (clipEditImage.size.width < otherImage.size.width) {
-                UIImage *scaleClipEditImage = [clipEditImage LFME_scaleToSize:otherImage.size];
-                if (scaleClipEditImage) {
-                    /** 合并图层 */
-                    clipEditImage = [scaleClipEditImage LFME_mergeimages:@[otherImage]];
-                }
-                return clipEditImage;
+            if (otherImage) {
+                /** 缩放至原图尺寸 */
+                /** 新增保证编辑图片质量，参考原图尺寸，但尺寸至少为屏幕宽度的缩放比例，即编辑图片宽度>=屏幕宽度 */
+//                if (clipEditImage.size.width < otherImage.size.width) {
+//                    UIImage *scaleClipEditImage = [clipEditImage LFME_scaleToSize:otherImage.size];
+//                    if (scaleClipEditImage) {
+//                        /** 合并图层 */
+//                        clipEditImage = [scaleClipEditImage LFME_mergeimages:@[otherImage]];
+//                    }
+//                    return clipEditImage;
+//                } else {
+                    UIImage *scaleOtherImage = [otherImage LFME_scaleToSize:clipEditImage.size];
+                    if (scaleOtherImage) {
+                        /** 合并图层 */
+                        clipEditImage = [clipEditImage LFME_mergeimages:@[scaleOtherImage]];
+                    }
+                    return clipEditImage;
+//                }
             } else {
-                UIImage *scaleOtherImage = [otherImage LFME_scaleToSize:clipEditImage.size];
-                if (scaleOtherImage) {
-                    /** 合并图层 */
-                    clipEditImage = [clipEditImage LFME_mergeimages:@[scaleOtherImage]];
-                }
                 return clipEditImage;
             }
         };
