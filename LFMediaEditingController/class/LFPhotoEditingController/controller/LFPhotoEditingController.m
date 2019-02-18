@@ -43,6 +43,8 @@
 
 /** 隐藏控件 */
 @property (nonatomic, assign) BOOL isHideNaviBar;
+/** 初始化以选择的功能类型，已经初始化过的将被去掉类型，最终类型为0 */
+@property (nonatomic, assign) LFPhotoEditOperationType initSelectedOperationType;
 
 @property (nonatomic, copy) lf_me_dispatch_cancelable_block_t delayCancelBlock;
 
@@ -75,6 +77,12 @@
     }
 }
 
+- (void)setDefaultOperationType:(LFPhotoEditOperationType)defaultOperationType
+{
+    _defaultOperationType = defaultOperationType;
+    _initSelectedOperationType = defaultOperationType;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -82,6 +90,7 @@
     [self configScrollView];
     [self configCustomNaviBar];
     [self configBottomToolBar];
+    [self configDefaultOperation];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -222,12 +231,49 @@
     [self.view addSubview:_edit_toolBar];
 }
 
+- (void)configDefaultOperation
+{
+    if (self.initSelectedOperationType > 0) {
+        __weak typeof(self) weakSelf = self;
+        BOOL (^containOperation)(LFPhotoEditOperationType type) = ^(LFPhotoEditOperationType type){
+            if (weakSelf.operationType&type && weakSelf.initSelectedOperationType&type) {
+                weakSelf.initSelectedOperationType ^= type;
+                return YES;
+            }
+            return NO;
+        };
+        
+        if (containOperation(LFPhotoEditOperationType_crop)) {
+            [_EditingView setIsClipping:YES animated:NO];
+            [self changeClipMenu:YES animated:NO];
+            _edit_clipping_toolBar.enableReset = _EditingView.canReset;
+        } else {
+            if (containOperation(LFPhotoEditOperationType_draw)) {
+                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_draw];
+            } else if (containOperation(LFPhotoEditOperationType_sticker)) {
+                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_sticker];
+            } else if (containOperation(LFPhotoEditOperationType_text)) {
+                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_text];
+            } else if (containOperation(LFPhotoEditOperationType_splash)) {
+                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_splash];
+            } else if (containOperation(LFPhotoEditOperationType_filter)) {
+                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+            }
+            self.initSelectedOperationType = 0;
+        }
+    }
+}
+
 #pragma mark - 顶部栏(action)
 - (void)singlePressed
 {
+    [self singlePressedWithAnimated:YES];
+}
+- (void)singlePressedWithAnimated:(BOOL)animated
+{
     if (!(_EditingView.isDrawing || _EditingView.isSplashing)) {
         _isHideNaviBar = !_isHideNaviBar;
-        [self changedBarState];
+        [self changedBarStateWithAnimated:animated];
     }
 }
 - (void)cancelButtonClick
@@ -300,7 +346,7 @@
         case LFEditToolbarType_sticker:
         {
             [self singlePressed];
-            [self changeStickerMenu:YES];
+            [self changeStickerMenu:YES animated:YES];
         }
             break;
         case LFEditToolbarType_text:
@@ -319,7 +365,7 @@
         case LFEditToolbarType_filter:
         {
             [self singlePressed];
-            [self changeFilterMenu:YES];
+            [self changeFilterMenu:YES animated:YES];
         }
             break;
         case LFEditToolbarType_crop:
@@ -417,9 +463,10 @@
     if (_edit_clipping_toolBar == nil) {
         CGFloat h = 44.f;
         if (@available(iOS 11.0, *)) {
-            h += self.view.safeAreaInsets.bottom;
+            h += self.navigationController.view.safeAreaInsets.bottom;
         }
         _edit_clipping_toolBar = [[LFClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
+        _edit_clipping_toolBar.alpha = 0.f;
         _edit_clipping_toolBar.delegate = self;
     }
     return _edit_clipping_toolBar;
@@ -433,6 +480,7 @@
     [self changeClipMenu:NO];
     _edit_clipping_toolBar.selectAspectRatio = NO;
     [_EditingView setAspectRatio:nil];
+    [self configDefaultOperation];
 }
 /** 完成 */
 - (void)lf_clipToolbarDidFinish:(LFClipToolbar *)clipToolbar
@@ -441,6 +489,7 @@
     [self changeClipMenu:NO];
     _edit_clipping_toolBar.selectAspectRatio = NO;
     [_EditingView setAspectRatio:nil];
+    [self configDefaultOperation];
 }
 /** 重置 */
 - (void)lf_clipToolbarDidReset:(LFClipToolbar *)clipToolbar
@@ -527,7 +576,7 @@
     if (_edit_filter_toolBar == nil) {
         CGFloat w=self.view.width, h=100.f;
         if (@available(iOS 11.0, *)) {
-            h += self.view.safeAreaInsets.bottom;
+            h += self.navigationController.view.safeAreaInsets.bottom;
         }
         _edit_filter_toolBar = [[JRFilterBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) defaultImg:self.editImage defalutEffectType:[_EditingView getFilterColorMatrixType] colorNum:17];
         CGFloat rgb = 34 / 255.0;
@@ -552,7 +601,7 @@
         CGFloat row = 2;
         CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
         if (@available(iOS 11.0, *)) {
-            h += self.view.safeAreaInsets.bottom;
+            h += self.navigationController.view.safeAreaInsets.bottom;
         }
         _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:self.stickerPath];
         _edit_sticker_toolBar.delegate = self;
@@ -683,31 +732,50 @@
 #pragma mark - private
 - (void)changedBarState
 {
+    [self changedBarStateWithAnimated:YES];
+}
+- (void)changedBarStateWithAnimated:(BOOL)animated
+{
     lf_me_dispatch_cancel(self.delayCancelBlock);
     /** 隐藏贴图菜单 */
-    [self changeStickerMenu:NO];
+    [self changeStickerMenu:NO animated:animated];
     /** 隐藏滤镜菜单 */
-    [self changeFilterMenu:NO];
+    [self changeFilterMenu:NO animated:animated];
     
-    [UIView animateWithDuration:.25f animations:^{
+    if (animated) {
+        [UIView animateWithDuration:.25f animations:^{
+            CGFloat alpha = self->_isHideNaviBar ? 0.f : 1.f;
+            self->_edit_naviBar.alpha = alpha;
+            self->_edit_toolBar.alpha = alpha;
+        }];
+    } else {
         CGFloat alpha = _isHideNaviBar ? 0.f : 1.f;
         _edit_naviBar.alpha = alpha;
         _edit_toolBar.alpha = alpha;
-    }];
+    }
 }
 
 - (void)changeClipMenu:(BOOL)isChanged
+{
+    [self changeClipMenu:isChanged animated:YES];
+}
+
+- (void)changeClipMenu:(BOOL)isChanged animated:(BOOL)animated
 {
     if (isChanged) {
         /** 关闭所有编辑 */
         [_EditingView photoEditEnable:NO];
         /** 切换菜单 */
         [self.view addSubview:self.edit_clipping_toolBar];
-        [UIView animateWithDuration:0.25f animations:^{
-            self.edit_clipping_toolBar.alpha = 1.f;
-        }];
+        if (animated) {
+            [UIView animateWithDuration:0.25f animations:^{
+                self->_edit_clipping_toolBar.alpha = 1.f;
+            }];
+        } else {
+            _edit_clipping_toolBar.alpha = 1.f;
+        }
         singleTapRecognizer.enabled = NO;
-        [self singlePressed];
+        [self singlePressedWithAnimated:animated];
     } else {
         if (_edit_clipping_toolBar.superview == nil) return;
 
@@ -715,59 +783,81 @@
         [_EditingView photoEditEnable:YES];
         
         singleTapRecognizer.enabled = YES;
-        [UIView animateWithDuration:.25f animations:^{
-            self.edit_clipping_toolBar.alpha = 0.f;
-        } completion:^(BOOL finished) {
-            [self.edit_clipping_toolBar removeFromSuperview];
-        }];
+        if (animated) {
+            [UIView animateWithDuration:.25f animations:^{
+                self->_edit_clipping_toolBar.alpha = 0.f;
+            } completion:^(BOOL finished) {
+                [self->_edit_clipping_toolBar removeFromSuperview];
+            }];            
+        } else {
+            [_edit_clipping_toolBar removeFromSuperview];
+        }
         
-        [self singlePressed];
+        [self singlePressedWithAnimated:animated];
     }
 }
 
-- (void)changeStickerMenu:(BOOL)isChanged
+- (void)changeStickerMenu:(BOOL)isChanged animated:(BOOL)animated
 {
     if (isChanged) {
         [self.view addSubview:self.edit_sticker_toolBar];
         CGRect frame = self.edit_sticker_toolBar.frame;
         frame.origin.y = self.view.height-frame.size.height;
-        [UIView animateWithDuration:.25f animations:^{
-            self.edit_sticker_toolBar.frame = frame;
-        }];
+        if (animated) {
+            [UIView animateWithDuration:.25f animations:^{
+                self->_edit_sticker_toolBar.frame = frame;
+            }];
+        } else {
+            _edit_sticker_toolBar.frame = frame;
+        }
     } else {
         if (_edit_sticker_toolBar.superview == nil) return;
         
         CGRect frame = self.edit_sticker_toolBar.frame;
         frame.origin.y = self.view.height;
-        [UIView animateWithDuration:.25f animations:^{
-            self.edit_sticker_toolBar.frame = frame;
-        } completion:^(BOOL finished) {
+        if (animated) {
+            [UIView animateWithDuration:.25f animations:^{
+                self->_edit_sticker_toolBar.frame = frame;
+            } completion:^(BOOL finished) {
+                [self->_edit_sticker_toolBar removeFromSuperview];
+                self->_edit_sticker_toolBar = nil;
+            }];
+        } else {
             [_edit_sticker_toolBar removeFromSuperview];
             _edit_sticker_toolBar = nil;
-        }];
+        }
     }
 }
 
-- (void)changeFilterMenu:(BOOL)isChanged
+- (void)changeFilterMenu:(BOOL)isChanged animated:(BOOL)animated
 {
     if (isChanged) {
         [self.view addSubview:self.edit_filter_toolBar];
         CGRect frame = self.edit_filter_toolBar.frame;
         frame.origin.y = self.view.height-frame.size.height;
-        [UIView animateWithDuration:.25f animations:^{
-            self.edit_filter_toolBar.frame = frame;
-        }];
+        if (animated) {
+            [UIView animateWithDuration:.25f animations:^{
+                self->_edit_filter_toolBar.frame = frame;
+            }];
+        } else {
+            _edit_filter_toolBar.frame = frame;
+        }
     } else {
         if (_edit_filter_toolBar.superview == nil) return;
         
         CGRect frame = self.edit_filter_toolBar.frame;
         frame.origin.y = self.view.height;
-        [UIView animateWithDuration:.25f animations:^{
-            self.edit_filter_toolBar.frame = frame;
-        } completion:^(BOOL finished) {
+        if (animated) {
+            [UIView animateWithDuration:.25f animations:^{
+                self->_edit_filter_toolBar.frame = frame;
+            } completion:^(BOOL finished) {
+                [self->_edit_filter_toolBar removeFromSuperview];
+                self->_edit_filter_toolBar = nil;
+            }];
+        } else {
             [_edit_filter_toolBar removeFromSuperview];
             _edit_filter_toolBar = nil;
-        }];
+        }
     }
 }
 

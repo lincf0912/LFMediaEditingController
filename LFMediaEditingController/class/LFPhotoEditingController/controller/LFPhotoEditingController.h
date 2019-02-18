@@ -36,6 +36,8 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationType) {
 
 /** 设置操作类型 default is LFPhotoEditOperationType_All */
 @property (nonatomic, assign) LFPhotoEditOperationType operationType;
+/** 设置默认的操作类型(可以选择最多2种操作，优先级以类型为准，但修剪类型优于所有。所有类型可与修剪类型搭配显示2种；修剪以外的其它多种类型搭配以优先级排序仅显示1种) default is 0 */
+@property (nonatomic, assign) LFPhotoEditOperationType defaultOperationType;
 
 /** 自定义贴图资源 */
 @property (nonatomic, strong) NSString *stickerPath;

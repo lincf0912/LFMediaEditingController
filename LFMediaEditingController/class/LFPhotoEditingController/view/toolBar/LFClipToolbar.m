@@ -53,7 +53,6 @@
     
     CGFloat rgb = 34 / 255.0;
     self.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.7];
-    self.alpha = 0.f;
     
     CGSize size = CGSizeMake(44, 44);
     CGFloat margin = 10.f;

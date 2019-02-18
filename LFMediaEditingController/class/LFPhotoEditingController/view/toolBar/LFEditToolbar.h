@@ -50,6 +50,9 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
 - (void)setDrawSliderColor:(UIColor *)color;
 - (void)setDrawSliderColorAtIndex:(NSUInteger)index;
 
+/** 选择主菜单的功能类型（会触发代理） */
+- (void)selectMainMenuIndex:(NSUInteger)index;
+
 @end
 
 @protocol LFEditToolbarDelegate <NSObject>

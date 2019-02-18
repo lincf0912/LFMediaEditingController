@@ -486,4 +486,13 @@
     }
 }
 
+#pragma mark - 对外
+- (void)selectMainMenuIndex:(NSUInteger)index
+{
+    UIButton *button = [self.edit_menu viewWithTag:index];
+    if ([button isKindOfClass:[UIButton class]]) {
+        [self edit_toolBar_buttonClick:button];
+    }
+}
+
 @end
