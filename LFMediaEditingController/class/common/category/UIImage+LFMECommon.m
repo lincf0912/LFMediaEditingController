@@ -214,6 +214,8 @@
     CGAffineTransform t = CGAffineTransformMakeRotation(radians);
     CGRect clipTransRect = CGRectApplyAffineTransform(CGRectMake(0,0,self.size.width, self.size.height), t);
     CGSize rotatedSize = clipTransRect.size;
+    rotatedSize.width = ((int)(rotatedSize.width+0.5)*1.f);
+    rotatedSize.height = ((int)(rotatedSize.height+0.5)*1.f);
     
     // Create the bitmap context
     UIGraphicsBeginImageContext(rotatedSize);
