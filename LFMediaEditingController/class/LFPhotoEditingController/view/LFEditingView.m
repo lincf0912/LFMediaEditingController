@@ -444,9 +444,6 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 /** 创建编辑图片 */
 - (void)createEditImage:(void (^)(UIImage *editImage))complete
 {
-    CGFloat zoomScale = self.zoomScale;
-    [self setZoomScale:1.f];
-    
     CGFloat scale = self.clippingView.zoomScale;
     CGAffineTransform trans = self.clippingView.transform;
     CGPoint contentOffset = self.clippingView.contentOffset;
@@ -562,7 +559,6 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
                 /** 合并操作有误，直接截取原始图层 */
                 resultImage = [self.clipZoomView LFME_captureImageAtFrame:self.clippingView.frame];
             }
-            [self setZoomScale:zoomScale];
             
             if (complete) {
                 complete(resultImage);
