@@ -41,7 +41,7 @@
         self.image = image;
     } else {
         /** 普通图片更正方向 */
-        self.image = [UIImage imageWithCGImage:image.CGImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+        self.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationUp];
     }
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
