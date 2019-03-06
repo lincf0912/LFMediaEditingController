@@ -368,8 +368,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 }
 - (void)lf_videoTrimmerViewDidResizing:(LFVideoTrimmerView *)trimmerView gridRange:(NSRange)gridRange
 {
-    double startTime = MIN(ceil(gridRange.location/trimmerView.width*self.clippingView.totalDuration), self.clippingView.totalDuration);
-    double endTime = MIN(ceil((gridRange.location+gridRange.length)/trimmerView.width*self.clippingView.totalDuration), self.clippingView.totalDuration);
+//    double startTime = MIN(lfme_videoDuration(gridRange.location/trimmerView.width*self.clippingView.totalDuration), self.clippingView.totalDuration);
+//    double endTime = MIN(lfme_videoDuration((gridRange.location+gridRange.length)/trimmerView.width*self.clippingView.totalDuration), self.clippingView.totalDuration);
+
+    double startTime = gridRange.location/trimmerView.width*self.clippingView.totalDuration;
+    double endTime = (gridRange.location+gridRange.length)/trimmerView.width*self.clippingView.totalDuration;
     
     [self.clippingView seekToTime:((self.clippingView.startTime != startTime) ? startTime : endTime)];
     

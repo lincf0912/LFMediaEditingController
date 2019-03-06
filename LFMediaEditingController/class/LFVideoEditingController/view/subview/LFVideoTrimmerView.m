@@ -12,6 +12,13 @@
 
 #define LFVideoTrimmerView_timeLabel_height 11.f
 
+/** 视频时间（取整：四舍五入） */
+NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
+{
+    return (NSInteger)(duration+0.5f)*1.f;
+}
+
+
 @interface LFVideoTrimmerView () <LFVideoTrimmerGridViewDelegate>
 
 /** 视频图片解析器 */
@@ -234,12 +241,14 @@
 - (void)calcTime
 {
     if (self.totalDuration) {
-        double startTime = self.gridView.gridRect.origin.x/self.width*self.totalDuration;
-        double endTime = (self.gridView.gridRect.origin.x+self.gridView.gridRect.size.width)/self.width*self.totalDuration;
+
+        double startTime = MIN(lfme_videoDuration(self.gridView.gridRect.origin.x/self.width*self.totalDuration), self.totalDuration);
+        double endTime = MIN(lfme_videoDuration((self.gridView.gridRect.origin.x+self.gridView.gridRect.size.width)/self.width*self.totalDuration), self.totalDuration);
         
-        self.startTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:ceil(startTime)];
-        self.endTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:ceil(endTime)];
-        self.totalTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:ceil(endTime)-ceil(startTime)];
+        
+        self.startTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:startTime];
+        self.endTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:endTime];
+        self.totalTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:endTime-startTime];
     }
 }
 

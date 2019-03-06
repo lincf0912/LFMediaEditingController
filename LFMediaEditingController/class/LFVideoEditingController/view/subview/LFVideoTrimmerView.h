@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+OBJC_EXTERN NSTimeInterval lfme_videoDuration(NSTimeInterval duration);
+
 @interface LFVideoTrimmerView : UIView
 
 /** 视频对象 */
