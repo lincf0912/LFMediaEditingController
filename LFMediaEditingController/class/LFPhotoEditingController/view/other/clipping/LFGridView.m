@@ -150,6 +150,7 @@ const CGFloat kControlWidth = 30.f;
 }
 - (void)lf_resizeConrolDidEndResizing:(LFResizeControl *)resizeConrol
 {
+    [self enableCornerViewUserInteraction:nil];
 //    self.showMaskLayer = YES;
     if ([self.delegate respondsToSelector:@selector(lf_gridViewDidEndResizing:)]) {
         [self.delegate lf_gridViewDidEndResizing:self];
@@ -470,7 +471,25 @@ const CGFloat kControlWidth = 30.f;
     if (self == view) {
         return nil;
     }
+    [self enableCornerViewUserInteraction:view];
     return view;
+}
+
+- (void)enableCornerViewUserInteraction:(UIView *)view
+{
+    for (UIView *control in self.subviews) {
+        if ([control isKindOfClass:[LFResizeControl class]]) {
+            if (view) {
+                if (control == view) {
+                    control.userInteractionEnabled = YES;
+                } else {
+                    control.userInteractionEnabled = NO;
+                }
+            } else {
+                control.userInteractionEnabled = YES;
+            }
+        }
+    }
 }
 
 @end

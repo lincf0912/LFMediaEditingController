@@ -213,6 +213,8 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
 - (void)lf_resizeConrolDidEndResizing:(LFResizeControl *)resizeConrol
 {
     self.bg_gridLayer.hidden = YES;
+    self.leftCornerView.userInteractionEnabled = YES;
+    self.rightCornerView.userInteractionEnabled = YES;
     if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerGridViewDidEndResizing:)]) {
         [self.delegate lf_videoTrimmerGridViewDidEndResizing:self];
     }
@@ -302,6 +304,11 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
     UIView *view = [super hitTest:point withEvent:event];
     if (self == view) {
         return nil;
+    }
+    if (self.leftCornerView == view) {
+        self.rightCornerView.userInteractionEnabled = NO;
+    } else if (self.rightCornerView == view) {
+        self.leftCornerView.userInteractionEnabled = NO;
     }
     return view;
 }
