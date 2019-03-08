@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'LFMediaEditingController'
-s.version      = '1.2.6'
+s.version      = '1.2.7'
 s.summary      = 'Media Editor (edit photo、edit video)'
 s.homepage     = 'https://github.com/lincf0912/LFMediaEditingController'
 s.license      = 'MIT'
@@ -19,6 +19,8 @@ ss.source_files = 'LFMediaEditingController/class/*.{h,m}','LFMediaEditingContro
 ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/class/LFPhotoEditingController/model/*.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
+ss.dependency 'LFMediaEditingController/LFColorMatrix'
+ss.dependency 'LFMediaEditingController/LFFilterSuite'
 end
 
 # LFVideoEditingController模块
@@ -28,6 +30,8 @@ ss.source_files = 'LFMediaEditingController/class/*.{h,m}','LFMediaEditingContro
 ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFVideoEditingController/controller/*.h','LFMediaEditingController/class/LFVideoEditingController/model/*.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
+ss.dependency 'LFMediaEditingController/LFColorMatrix'
+ss.dependency 'LFMediaEditingController/LFFilterSuite'
 end
 
 # JRPickColorView模块
@@ -40,13 +44,18 @@ end
 s.subspec 'JRFilterBar' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/JRFilterBar/*.{h,m}','LFMediaEditingController/class/vendors/JRFilterBar/**/*.{h,m}'
 ss.public_header_files = 'LFMediaEditingController/class/vendors/JRFilterBar/JRFilterBar.h'
-ss.dependency 'LFMediaEditingController/LFColorMatrix'
 end
 
 # LFColorMatrix模块
 s.subspec 'LFColorMatrix' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/ColorMatrix/*.{h,m}'
 ss.public_header_files = 'LFMediaEditingController/class/vendors/ColorMatrix/*.h'
+end
+
+# LFFilterSuite模块
+s.subspec 'LFFilterSuite' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/LFFilterSuite/*.{h,m}','LFMediaEditingController/class/vendors/LFFilterSuite/**/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/LFFilterSuite/*.h','LFMediaEditingController/class/vendors/LFFilterSuite/**/*.h'
 end
 
 end
