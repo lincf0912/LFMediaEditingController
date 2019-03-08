@@ -253,6 +253,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 /** 剪辑视频 */
 - (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete progress:(void (^)(float progress))progress
 {
+    [self pauseVideo];
     NSError *error = nil;
     NSFileManager *fm = [NSFileManager new];
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"com.LFMediaEditing.video"];
@@ -295,12 +296,16 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     CMTime start = CMTimeMakeWithSeconds(self.clippingView.startTime, self.asset.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.clippingView.endTime - self.clippingView.startTime, self.asset.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
-    
-    
+        
     self.exportSession = [[LFVideoExportSession alloc] initWithAsset:self.asset];
+    // 输出路径
     self.exportSession.outputURL = trimURL;
+    // 视频剪辑
     self.exportSession.timeRange = range;
+    // 水印
     self.exportSession.overlayView = self.clippingView.overlayView;
+    // 滤镜
+    self.exportSession.filter = self.clippingView.filter;
     NSMutableArray *audioUrls = [@[] mutableCopy];
     for (LFAudioItem *item in self.audioUrls) {
         if (item.isEnable && item.url) {
@@ -463,6 +468,23 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         }
     }
     self.clippingView.photoEditData = photoEditData[kLFVideoEditingViewData_clipping];
+}
+
+#pragma mark - 滤镜功能
+/** 滤镜类型 */
+- (void)changeFilterType:(NSInteger)cmType
+{
+    [self.clippingView changeFilterType:cmType];
+}
+/** 当前使用滤镜类型 */
+- (NSInteger)getFilterType
+{
+    return [self.clippingView getFilterType];
+}
+/** 获取滤镜图片 */
+- (UIImage *)getFilterImage
+{
+    return [self.clippingView getFilterImage];
 }
 
 #pragma mark - 绘画功能

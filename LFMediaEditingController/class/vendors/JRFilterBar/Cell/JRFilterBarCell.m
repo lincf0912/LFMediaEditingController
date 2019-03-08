@@ -18,8 +18,6 @@ CGFloat const JR_LABEL_HEIGHT = 25.f;
 
 @property (nonatomic, weak) UILabel *bottomLab;
 
-@property (nonatomic, strong) dispatch_queue_t serialQueue;
-
 @end
 
 @implementation JRFilterBarCell
@@ -27,8 +25,6 @@ CGFloat const JR_LABEL_HEIGHT = 25.f;
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.contentView.backgroundColor = [UIColor clearColor];
-        _serialQueue = dispatch_queue_create("JRFilterBarCellQueue", DISPATCH_QUEUE_SERIAL);
         [self _createShowImageView_jr];
     } return self;
 }
@@ -37,13 +33,8 @@ CGFloat const JR_LABEL_HEIGHT = 25.f;
     return NSStringFromClass([JRFilterBarCell class]);
 }
 
-- (void)setCellData:(JRFilterModel *)cellData image:(UIImage *)image{
-    dispatch_async(self.serialQueue, ^{
-        [cellData createFilterImage:image];
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            self.showImgView.image = cellData.image;
-        });
-    });
+- (void)setCellData:(JRFilterModel *)cellData{
+    self.showImgView.image = cellData.image;
     self.bottomLab.text = cellData.name;
 }
 

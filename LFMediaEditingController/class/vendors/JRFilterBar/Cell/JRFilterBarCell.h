@@ -19,7 +19,7 @@ extern CGFloat const JR_LABEL_HEIGHT;
 
 @property (nonatomic, assign) BOOL isSelectedModel;
 
-- (void)setCellData:(JRFilterModel *)cellData image:(UIImage *)image;
+- (void)setCellData:(JRFilterModel *)cellData;
 
 + (NSString *)identifier;
 

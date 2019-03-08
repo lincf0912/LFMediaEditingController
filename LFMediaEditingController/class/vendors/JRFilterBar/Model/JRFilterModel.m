@@ -10,22 +10,4 @@
 
 @implementation JRFilterModel
 
-@synthesize image = _image;
-
-- (instancetype)initWithEffectType:(LFColorMatrixType)type
-{
-    self = [super init];
-    if (self) {
-        _name = lf_colorMatrixName(type);
-        _effectType = type;
-    } return self;
-}
-
-- (void)createFilterImage:(UIImage *)image
-{
-    if (_image == nil) {
-        _image = lf_colorMatrixImage(image, _effectType);
-    }
-}
-
 @end

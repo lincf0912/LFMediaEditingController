@@ -9,6 +9,7 @@
 #import "LFVideoEdit.h"
 #import <AVFoundation/AVFoundation.h>
 #import "UIImage+LFMECommon.h"
+#import "AVAsset+LFMECommon.h"
 
 @implementation LFVideoEdit
 
@@ -35,21 +36,7 @@
     
     _duration = CMTimeGetSeconds(asset.duration);
     
-    NSParameterAssert(asset);
-    AVAssetImageGenerator *assetImageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    assetImageGenerator.appliesPreferredTrackTransform = YES;
-    assetImageGenerator.apertureMode =AVAssetImageGeneratorApertureModeEncodedPixels;
-    assetImageGenerator.maximumSize = CGSizeMake([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale);
-    
-    CGImageRef thumbnailImageRef = NULL;
-    CFTimeInterval thumbnailImageTime = 1;
-    NSError *thumbnailImageGenerationError = nil;
-    thumbnailImageRef = [assetImageGenerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, asset.duration.timescale) actualTime:NULL error:&thumbnailImageGenerationError];
-    
-    if(!thumbnailImageRef)
-        NSLog(@"thumbnailImageGenerationError %@",thumbnailImageGenerationError);
-    
-    _editPreviewImage = thumbnailImageRef ? [[UIImage alloc]initWithCGImage:thumbnailImageRef] : nil;
+    _editPreviewImage = [asset lf_firstImage:nil];
     CGFloat width = 80.f * 2.f;
     CGSize size = [UIImage LFME_scaleImageSizeBySize:_editPreviewImage.size targetSize:CGSizeMake(width, width) isBoth:NO];
     _editPosterImage = [_editPreviewImage LFME_scaleToSize:size];

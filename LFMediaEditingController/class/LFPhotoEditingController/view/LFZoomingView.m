@@ -245,10 +245,10 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     NSDictionary *filterData = _filterView.data;
     
     NSMutableDictionary *data = [@{} mutableCopy];
-    if (filterData) [data setObject:filterData forKey:kLFZoomingViewData_filter];
     if (drawData) [data setObject:drawData forKey:kLFZoomingViewData_draw];
     if (stickerData) [data setObject:stickerData forKey:kLFZoomingViewData_sticker];
     if (splashData) [data setObject:splashData forKey:kLFZoomingViewData_splash];
+    if (filterData) [data setObject:filterData forKey:kLFZoomingViewData_filter];
     
     if (data.count) {
         return data;
@@ -258,20 +258,20 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 
 - (void)setPhotoEditData:(NSDictionary *)photoEditData
 {
-    _filterView.data = photoEditData[kLFZoomingViewData_filter];
     _drawView.data = photoEditData[kLFZoomingViewData_draw];
     _stickerView.data = photoEditData[kLFZoomingViewData_sticker];
     _splashView.data = photoEditData[kLFZoomingViewData_splash];
+    _filterView.data = photoEditData[kLFZoomingViewData_filter];
 }
 
 #pragma mark - 滤镜功能
 /** 滤镜类型 */
-- (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType
+- (void)changeFilterType:(NSInteger)cmType
 {
     self.filterView.cmType = cmType;
 }
 /** 当前使用滤镜类型 */
-- (LFColorMatrixType)getFilterColorMatrixType
+- (NSInteger)getFilterType
 {
     return self.filterView.cmType;
 }

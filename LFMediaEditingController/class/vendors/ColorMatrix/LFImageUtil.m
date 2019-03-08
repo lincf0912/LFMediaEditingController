@@ -147,7 +147,7 @@ static void lf_changeRGBA(int *red,int *green,int *blue,int *alpha, const float*
 
     size_t bitsPerComponent = CGImageGetBitsPerComponent(inImageRef);
     size_t bitsPerPixel = CGImageGetBitsPerPixel(inImageRef);
-    size_t bytesPerRow = CGImageGetBytesPerRow(inImageRef);
+    size_t bytesPerRow = 4*w;// CGImageGetBytesPerRow(inImageRef);
     
 	CGColorSpaceRef colorSpaceRef = CGImageGetColorSpace(inImageRef);
 	CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(inImageRef);

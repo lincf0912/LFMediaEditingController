@@ -18,6 +18,9 @@
 #import "LFSplashView_new.h"
 #import "LFStickerView.h"
 
+/** 滤镜框架 */
+#import "LFDataFilterVideoView.h"
+
 NSString *const kLFVideoCLippingViewData = @"LFVideoCLippingViewData";
 
 NSString *const kLFVideoCLippingViewData_startTime = @"LFVideoCLippingViewData_startTime";
@@ -26,10 +29,11 @@ NSString *const kLFVideoCLippingViewData_endTime = @"LFVideoCLippingViewData_end
 NSString *const kLFVideoCLippingViewData_draw = @"LFVideoCLippingViewData_draw";
 NSString *const kLFVideoCLippingViewData_sticker = @"LFVideoCLippingViewData_sticker";
 NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_splash";
+NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filter";
 
 @interface LFVideoClippingView () <LFVideoPlayerDelegate, UIScrollViewDelegate>
 
-@property (nonatomic, weak) LFVideoPlayerLayerView *playerLayerView;
+@property (nonatomic, weak) LFDataFilterVideoView *playerView;
 @property (nonatomic, strong) LFVideoPlayer *videoPlayer;
 
 /** 原始坐标 */
@@ -100,10 +104,10 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     
     
     /** 播放视图 */
-    LFVideoPlayerLayerView *playerLayerView = [[LFVideoPlayerLayerView alloc] initWithFrame:self.bounds];
-    playerLayerView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.zoomView addSubview:playerLayerView];
-    _playerLayerView = playerLayerView;
+    LFDataFilterVideoView *playerView = [[LFDataFilterVideoView alloc] initWithFrame:self.bounds];
+    playerView.contentMode = UIViewContentModeScaleAspectFit;
+    [self.zoomView addSubview:playerView];
+    _playerView = playerView;
     
     /** 涂抹 - 最底层 */
 //    LFSplashView_new *splashView = [[LFSplashView_new alloc] initWithFrame:self.bounds];
@@ -141,7 +145,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
     _asset = asset;
-    [self.playerLayerView setImage:image];
+    [self.playerView setImageByUIImage:image];
     if (self.videoPlayer == nil) {
         self.videoPlayer = [LFVideoPlayer new];
         self.videoPlayer.delegate = self;
@@ -159,7 +163,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     CGRect editRect = AVMakeRectWithAspectRatioInsideRect(videoSize, self.superview.bounds);
     self.frame = editRect;
     _zoomView.size = editRect.size;
-    _playerLayerView.frame = _drawView.frame = _splashView.frame = _stickerView.frame = _zoomView.bounds;
+    _playerView.frame = _drawView.frame = _splashView.frame = _stickerView.frame = _zoomView.bounds;
 }
 
 - (void)setMoveCenter:(BOOL (^)(CGRect))moveCenter
@@ -309,6 +313,11 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     return nil;
 }
 
+- (LFFilter *)filter
+{
+    return self.playerView.filter;
+}
+
 #pragma mark - UIScrollViewDelegate
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
@@ -322,7 +331,7 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     if (self.startTime > 0) {
         [player seekToTime:self.startTime];
     }
-    [self.playerLayerView setPlayer:avplayer];
+    [self.playerView setPlayer:avplayer];
 //    [self.playerLayerView setImage:nil];
 }
 /** 可以播放 */
@@ -460,11 +469,13 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     NSDictionary *drawData = _drawView.data;
     NSDictionary *stickerData = _stickerView.data;
     NSDictionary *splashData = _splashView.data;
+    NSDictionary *filterData = _playerView.data;
     
     NSMutableDictionary *data = [@{} mutableCopy];
     if (drawData) [data setObject:drawData forKey:kLFVideoCLippingViewData_draw];
     if (stickerData) [data setObject:stickerData forKey:kLFVideoCLippingViewData_sticker];
     if (splashData) [data setObject:splashData forKey:kLFVideoCLippingViewData_splash];
+    if (filterData) [data setObject:filterData forKey:kLFVideoCLippingViewData_filter];
     
     if (self.startTime > 0 || self.endTime < self.totalDuration) {
         NSDictionary *myData = @{kLFVideoCLippingViewData_startTime:@(self.startTime)
@@ -489,6 +500,24 @@ NSString *const kLFVideoCLippingViewData_splash = @"LFVideoCLippingViewData_spla
     _drawView.data = photoEditData[kLFVideoCLippingViewData_draw];
     _stickerView.data = photoEditData[kLFVideoCLippingViewData_sticker];
     _splashView.data = photoEditData[kLFVideoCLippingViewData_splash];
+    _playerView.data = photoEditData[kLFVideoCLippingViewData_filter];
+}
+
+#pragma mark - 滤镜功能
+/** 滤镜类型 */
+- (void)changeFilterType:(NSInteger)cmType
+{
+    self.playerView.type = cmType;
+}
+/** 当前使用滤镜类型 */
+- (NSInteger)getFilterType
+{
+    return self.playerView.type;
+}
+/** 获取滤镜图片 */
+- (UIImage *)getFilterImage
+{
+    return [self.playerView renderedUIImage];
 }
 
 #pragma mark - 绘画功能

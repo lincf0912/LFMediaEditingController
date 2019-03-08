@@ -11,6 +11,8 @@
 #import "LFScrollView.h"
 #import "LFEditingProtocol.h"
 
+@class LFFilter;
+
 @protocol LFVideoClippingViewDelegate;
 
 @interface LFVideoClippingView : LFScrollView <LFEditingProtocol>
@@ -30,6 +32,8 @@
 @property (nonatomic, readonly) BOOL hasWatermark;
 /** 水印层 */
 @property (nonatomic, weak, readonly) UIView *overlayView;
+/** 滤镜 */
+@property (nonatomic, readonly, nullable) LFFilter *filter;
 
 /** 数据 */
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;

@@ -10,14 +10,13 @@
 #import "JRFilterModel.h"
 #import "JRFilterBarCell.h"
 
-CGFloat const JR_MAX_WIDTH = 60.f;
+CGFloat const JR_FilterBar_MAX_WIDTH = 60.f;
 
 @interface JRFilterBar () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (assign, nonatomic) CGSize cellSize;
-@property (nonatomic, strong) NSMutableArray <JRFilterModel *>*dataSource;
+@property (nonatomic, strong) NSMutableArray <JRFilterModel *>*list;
 @property (nonatomic, strong) JRFilterModel *selectModel;
-@property (nonatomic, assign) NSUInteger nums;
 
 @property (weak, nonatomic) UICollectionView *collectionView;
 @property (weak, nonatomic) UIView *backgroundView;
@@ -26,16 +25,15 @@ CGFloat const JR_MAX_WIDTH = 60.f;
 
 @implementation JRFilterBar
 
--(instancetype)initWithFrame:(CGRect)frame defaultImg:(UIImage *)defaultImg defalutEffectType:(LFColorMatrixType)defalutEffectType colorNum:(NSUInteger)colorNum{
+
+- (instancetype)initWithFrame:(CGRect)frame defalutEffectType:(NSInteger)defalutEffectType dataSource:(NSArray<NSNumber *> *)dataSource
+{
     self = [super initWithFrame:frame];
     if (self) {
-        _nums = colorNum;
-        _defaultImg = defaultImg;
-        [self _initCustomObj_jr];
-        if (_nums > defalutEffectType) {
-            _defalutEffectType = defalutEffectType;
-        }
-        [self _createDataSource_jr];
+        _list = @[].mutableCopy;
+        _defaultColor = [UIColor grayColor];
+        _selectColor = [UIColor blueColor];
+        [self _createDataSource:dataSource];
         [self _createCustomView_jr];
     } return self;
 }
@@ -48,20 +46,12 @@ CGFloat const JR_MAX_WIDTH = 60.f;
         rect.size.height -= self.safeAreaInsets.bottom;
         _backgroundView.frame = rect;
         _collectionView.frame = _backgroundView.bounds;
-        
-        _cellSize = CGSizeMake(JR_MAX_WIDTH, CGRectGetHeight(_backgroundView.frame));
+        _cellSize = CGSizeMake(JR_FilterBar_MAX_WIDTH, CGRectGetHeight(_backgroundView.frame));
         [_collectionView.collectionViewLayout invalidateLayout];
     }
 }
 
 #pragma mark - Private Methods
-#pragma mark 初始化
-- (void)_initCustomObj_jr {
-    _dataSource = @[].mutableCopy;
-    _defalutEffectType = LFColorMatrixType_None;
-    _defaultColor = [UIColor grayColor];
-    _selectColor = [UIColor blueColor];
-}
 
 #pragma mark 创建collectionView
 - (void)_createCustomView_jr {
@@ -72,6 +62,7 @@ CGFloat const JR_MAX_WIDTH = 60.f;
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:_backgroundView.bounds collectionViewLayout:flowLayout];
+    collectionView.backgroundColor = [UIColor clearColor];
     collectionView.showsHorizontalScrollIndicator = YES;
     collectionView.dataSource = self;
     collectionView.delegate = self;
@@ -85,22 +76,24 @@ CGFloat const JR_MAX_WIDTH = 60.f;
 }
 
 #pragma mark 创建数据源
-- (void)_createDataSource_jr {
-    for (NSUInteger i = 0; i < _nums; i ++) {
-        JRFilterModel *obj = [[JRFilterModel alloc] initWithEffectType:i];
-        if (obj) {
-            [_dataSource addObject:obj];
-            if (i == self.defalutEffectType) {
-                _selectModel = obj;
-            }
+- (void)_createDataSource:(NSArray <NSNumber *>*)typeCollects {
+    for (NSNumber *number in typeCollects) {
+        JRFilterModel *obj = [JRFilterModel new];
+        obj.effectType = [number integerValue];
+        [self.list addObject:obj];
+        if (_defalutEffectType == obj.effectType) {
+            self.selectModel = obj;
         }
+    }
+    if (self.selectModel == nil) {
+        self.selectModel = self.list.firstObject;
     }
 }
 
 #pragma mark 滚动
 - (void)_scrollView_jr {
     if (self.selectModel) {
-        NSInteger index = [self.dataSource indexOfObject:self.selectModel];
+        NSInteger index = [self.list indexOfObject:self.selectModel];
         NSIndexPath *selectIndexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [_collectionView scrollToItemAtIndexPath:selectIndexPath atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:YES];
     }
@@ -108,9 +101,9 @@ CGFloat const JR_MAX_WIDTH = 60.f;
 
 #pragma mark - UICollectionViewDataSource
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    JRFilterModel *item = [_dataSource objectAtIndex:indexPath.row];
+    JRFilterModel *item = [_list objectAtIndex:indexPath.row];
     if (_selectModel) {
-        NSInteger index = [_dataSource indexOfObject:_selectModel];
+        NSInteger index = [_list indexOfObject:_selectModel];
         _selectModel = nil;
         NSIndexPath *oldIndexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [_collectionView reloadItemsAtIndexPaths:@[oldIndexPath]];
@@ -126,16 +119,26 @@ CGFloat const JR_MAX_WIDTH = 60.f;
 #pragma mark - UICollectionViewDelegate
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     JRFilterBarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[JRFilterBarCell identifier] forIndexPath:indexPath];
-    JRFilterModel *item = [_dataSource objectAtIndex:indexPath.row];
+    JRFilterModel *item = [_list objectAtIndex:indexPath.row];
     cell.defaultColor = self.defaultColor;
     cell.selectColor = self.selectColor;
-    [cell setCellData:item image:self.defaultImg];
-    cell.isSelectedModel = (item == _selectModel);
+    if (!item.image) {
+        if ([self.dataSource respondsToSelector:@selector(jr_filterBarImageForEffectType:)]) {
+            item.image = [self.dataSource jr_filterBarImageForEffectType:item.effectType];
+        }
+    }
+    if (!item.name) {
+        if ([self.dataSource respondsToSelector:@selector(jr_filterBarNameForEffectType:)]) {
+            item.name = [self.dataSource jr_filterBarNameForEffectType:item.effectType];
+        }
+    }
+    cell.isSelectedModel = [item isEqual:_selectModel];
+    [cell setCellData:item];
     return cell;
 }
 
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _dataSource.count;
+    return _list.count;
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout

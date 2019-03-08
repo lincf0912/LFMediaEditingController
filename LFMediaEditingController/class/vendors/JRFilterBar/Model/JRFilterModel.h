@@ -8,20 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "LFColorMatrixType.h"
 
 @interface JRFilterModel : NSObject
 
-@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, copy) NSString *name;
 
-@property (nonatomic, readonly) UIImage *image;
+@property (nonatomic, strong) UIImage *image;
 
-@property (nonatomic, readonly) LFColorMatrixType effectType;
+@property (nonatomic, assign) NSInteger effectType;
 
-@property (nonatomic, assign) BOOL isSelect;
-
-- (instancetype)initWithEffectType:(LFColorMatrixType)type;
-
-- (void)createFilterImage:(UIImage *)image;
 
 @end

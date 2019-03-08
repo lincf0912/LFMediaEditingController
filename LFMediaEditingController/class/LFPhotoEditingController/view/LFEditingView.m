@@ -850,14 +850,14 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 
 #pragma mark - 滤镜功能
 /** 滤镜类型 */
-- (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType
+- (void)changeFilterType:(NSInteger)cmType
 {
-    [self.clippingView changeFilterColorMatrixType:cmType];
+    [self.clippingView changeFilterType:cmType];
 }
 /** 当前使用滤镜类型 */
-- (LFColorMatrixType)getFilterColorMatrixType
+- (NSInteger)getFilterType
 {
-    return [self.clippingView getFilterColorMatrixType];
+    return [self.clippingView getFilterType];
 }
 /** 获取滤镜图片 */
 - (UIImage *)getFilterImage

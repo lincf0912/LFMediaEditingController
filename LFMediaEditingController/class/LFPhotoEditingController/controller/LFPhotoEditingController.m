@@ -9,6 +9,7 @@
 #import "LFPhotoEditingController.h"
 #import "LFMediaEditingHeader.h"
 #import "UIView+LFMEFrame.h"
+#import "UIImage+LFMECommon.h"
 #import "LFMediaEditingType.h"
 #import "LFMECancelBlock.h"
 
@@ -20,7 +21,7 @@
 #import "JRFilterBar.h"
 
 
-@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
+@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
     /** 编辑模式 */
     LFEditingView *_EditingView;
@@ -47,6 +48,9 @@
 @property (nonatomic, assign) LFPhotoEditOperationType initSelectedOperationType;
 
 @property (nonatomic, copy) lf_me_dispatch_cancelable_block_t delayCancelBlock;
+
+/** 滤镜缩略图 */
+@property (nonatomic, strong) UIImage *filterSmallImage;
 
 @end
 
@@ -578,20 +582,73 @@
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
-        _edit_filter_toolBar = [[JRFilterBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) defaultImg:self.editImage defalutEffectType:[_EditingView getFilterColorMatrixType] colorNum:17];
+        _edit_filter_toolBar = [[JRFilterBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) defalutEffectType:[_EditingView getFilterType] dataSource:@[
+                                                                                                                                                                               /** 原图 */                                                                                                 @(LFColorMatrixType_None),
+                                                                                                                                                                               /** LOMO */
+                                                                                                                                                                               @(LFColorMatrixType_LOMO),
+                                                                                                                                                                               /** 黑白 */
+                                                                                                                                                                               @(LFColorMatrixType_Heibai),
+                                                                                                                                                                               /** 复古 */
+                                                                                                                                                                               @(LFColorMatrixType_Fugu),
+                                                                                                                                                                               /** 哥特 */
+                                                                                                                                                                               @(LFColorMatrixType_Gete),
+                                                                                                                                                                               /** 锐化 */
+                                                                                                                                                                               @(LFColorMatrixType_Ruise),
+                                                                                                                                                                               /** 淡雅 */
+                                                                                                                                                                               @(LFColorMatrixType_Danya),
+                                                                                                                                                                               /** 酒红 */
+                                                                                                                                                                               @(LFColorMatrixType_Jiuhong),
+                                                                                                                                                                               /** 清宁 */
+                                                                                                                                                                               @(LFColorMatrixType_Qingning),
+                                                                                                                                                                               /** 浪漫 */
+                                                                                                                                                                               @(LFColorMatrixType_Langman),
+                                                                                                                                                                               /** 怀旧 */
+                                                                                                                                                                               @(LFColorMatrixType_Huaijiu),
+                                                                                                                                                                               /** 蓝调 */
+                                                                                                                                                                               @(LFColorMatrixType_Landiao),
+                                                                                                                                                                               /** 梦幻 */
+                                                                                                                                                                               @(LFColorMatrixType_Menghuan),
+                                                                                                                                                                               /** 夜色 */
+                                                                                                                                                                               @(LFColorMatrixType_Yese),
+                                                                                                                                                                               /** 灰度 */
+                                                                                                                                                                               @(LFColorMatrixType_Huidu),
+                                                                                                                                                                               /** 图片旋转 */
+                                                                                                                                                                               @(LFColorMatrixType_Imagerevolve),
+                                                                                                                                                                               /** 高饱和度 */
+                                                                                                                                                                               @(LFColorMatrixType_Heighsaturatedcolour),
+                                                                                                                                                                               /** 去色 */
+                                                                                                                                                                               @(LFColorMatrixType_Cleancolor),                                                                                               ]];
         CGFloat rgb = 34 / 255.0;
         _edit_filter_toolBar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.85];
         _edit_filter_toolBar.defaultColor = self.cancelButtonTitleColorNormal;
         _edit_filter_toolBar.selectColor = self.oKButtonTitleColorNormal;
         _edit_filter_toolBar.delegate = self;
+        _edit_filter_toolBar.dataSource = self;
+        if (_filterSmallImage == nil) {
+            CGSize size = CGSizeZero;
+            size.width = JR_FilterBar_MAX_WIDTH;
+            size.height = (int)(self.editImage.size.height*size.width/self.editImage.size.width)*1.f;
+            self.filterSmallImage = [self.editImage LFME_scaleToSize:size];            
+        }
     }
     return _edit_filter_toolBar;
 }
 
 #pragma mark - JRFilterBarDelegate
-- (void)jr_filterBar:(JRFilterBar *)jr_filterBar didSelectImage:(UIImage *)image effectType:(LFColorMatrixType)effectType
+- (void)jr_filterBar:(JRFilterBar *)jr_filterBar didSelectImage:(UIImage *)image effectType:(NSInteger)effectType
 {
-    [_EditingView changeFilterColorMatrixType:effectType];
+    [_EditingView changeFilterType:effectType];
+}
+
+#pragma mark - JRFilterBarDataSource
+- (UIImage *)jr_filterBarImageForEffectType:(NSInteger)type
+{
+    return lf_colorMatrixImage(self.filterSmallImage, type);
+}
+
+- (NSString *)jr_filterBarNameForEffectType:(NSInteger)type
+{
+    return lf_colorMatrixName(type);
 }
 
 #pragma mark - 贴图菜单（懒加载）

@@ -7,15 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LFColorMatrixType.h"
 
-@protocol JRFilterBarDelegate;
+extern CGFloat const JR_FilterBar_MAX_WIDTH;
+
+@protocol JRFilterBarDelegate, JRFilterBarDataSource;
 
 @interface JRFilterBar : UIView
-/** 初始化图片 */
-@property (nonatomic, readonly) UIImage *defaultImg;
 /** 默认选择图片类型 */
-@property (nonatomic, readonly) LFColorMatrixType defalutEffectType;
+@property (nonatomic, readonly) NSInteger defalutEffectType;
 /** 默认字体和框框颜色 */
 @property (nonatomic, strong) UIColor *defaultColor;
 /** 已选字体和框框颜色 */
@@ -23,13 +22,22 @@
 
 @property (nonatomic, weak) id<JRFilterBarDelegate> delegate;
 
-- (instancetype)initWithFrame:(CGRect)frame defaultImg:(UIImage *)defaultImg defalutEffectType:(LFColorMatrixType)defalutEffectType colorNum:(NSUInteger)colorNum;
+@property (nonatomic, weak) id<JRFilterBarDataSource>dataSource;
 
+- (instancetype)initWithFrame:(CGRect)frame defalutEffectType:(NSInteger)defalutEffectType dataSource:(NSArray<NSNumber *> *)dataSource;
 
 @end
 
 @protocol JRFilterBarDelegate <NSObject>
 
-- (void)jr_filterBar:(JRFilterBar *)jr_filterBar didSelectImage:(UIImage *)image effectType:(LFColorMatrixType)effectType;
+- (void)jr_filterBar:(JRFilterBar *)jr_filterBar didSelectImage:(UIImage *)image effectType:(NSInteger)effectType;
+
+@end
+
+@protocol JRFilterBarDataSource <NSObject>
+
+- (UIImage *)jr_filterBarImageForEffectType:(NSInteger)type;
+
+- (NSString *)jr_filterBarNameForEffectType:(NSInteger)type;
 
 @end

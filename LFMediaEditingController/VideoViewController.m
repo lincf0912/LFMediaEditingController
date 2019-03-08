@@ -9,6 +9,7 @@
 #import "VideoViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "LFVideoEditingController.h"
+#import "AVAsset+LFMECommon.h"
 
 @interface VideoViewController () <LFVideoEditingControllerDelegate>
 
@@ -35,7 +36,8 @@
     self.url = [[NSBundle mainBundle] URLForResource:@"2" withExtension:@"mp4"];
 //    self.url = [[NSBundle mainBundle] URLForResource:@"3" withExtension:@"m4v"];
     
-    self.firstImage = [self getVideoFirstImage:self.url];
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:self.url options:nil];
+    self.firstImage = [asset lf_firstImage:nil];
     _player = [AVPlayer playerWithURL:self.url];
     [self.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
@@ -44,26 +46,6 @@
     _playerLayer = playerLayer;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(videoEditing)];
-}
-
-- (UIImage *)getVideoFirstImage:(NSURL *)videoURL
-{
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
-    NSParameterAssert(asset);
-    AVAssetImageGenerator *assetImageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    assetImageGenerator.appliesPreferredTrackTransform = YES;
-    assetImageGenerator.apertureMode =AVAssetImageGeneratorApertureModeEncodedPixels;
-    assetImageGenerator.maximumSize = CGSizeMake([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].scale, [UIScreen mainScreen].bounds.size.height * [UIScreen mainScreen].scale);
-    
-    CGImageRef thumbnailImageRef = NULL;
-    CFTimeInterval thumbnailImageTime = 1;
-    NSError *thumbnailImageGenerationError = nil;
-    thumbnailImageRef = [assetImageGenerator copyCGImageAtTime:CMTimeMake(thumbnailImageTime, asset.duration.timescale) actualTime:NULL error:&thumbnailImageGenerationError];
-    
-    if(!thumbnailImageRef)
-        NSLog(@"thumbnailImageGenerationError %@",thumbnailImageGenerationError);
-    
-    return thumbnailImageRef ? [[UIImage alloc]initWithCGImage:thumbnailImageRef] : nil;
 }
 
 - (void)dealloc

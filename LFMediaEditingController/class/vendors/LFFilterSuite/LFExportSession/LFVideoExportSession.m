@@ -7,8 +7,11 @@
 //
 
 #import "LFVideoExportSession.h"
-#import "UIView+LFMECommon.h"
-#import "UIImage+LFMECommon.h"
+#import "LFFilter.h"
+#import "LFFilter+Initialize.h"
+#import "LFMutableFilter.h"
+#import "LFMutableFilter+Initialize.h"
+
 
 @interface LFVideoExportSession ()
 
@@ -148,10 +151,6 @@
     
     UIImageOrientation orientation = [self orientationFromAVAssetTrack:assetVideoTrack];
     
-    if (orientation != UIImageOrientationUp || self.overlayView) {
-        self.videoComposition = [AVMutableVideoComposition videoComposition];
-        self.videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
-    }
     
     CGAffineTransform transform = CGAffineTransformIdentity;
     CGSize renderSize = assetVideoTrack.naturalSize;
@@ -182,10 +181,33 @@
             break;
     }
     
-    if (self.videoComposition) {
+    /** 创建滤镜 （水印也当成一种滤镜，效率更佳） */
+    LFFilter *renderingFilter = [self _generateRenderingFilterForVideoSize:renderSize];
+    
+    
+    if (orientation != UIImageOrientationUp || renderingFilter) {
         
+        AVMutableVideoComposition *videoCompsition = nil;
+        if (renderingFilter && [[AVVideoComposition class] respondsToSelector:@selector(videoCompositionWithAsset:applyingCIFiltersWithHandler:)]) {
+            CIContext *context = [CIContext contextWithOptions:@{kCIContextWorkingColorSpace : [NSNull null], kCIContextOutputColorSpace : [NSNull null]}];
+            videoCompsition = [AVMutableVideoComposition videoCompositionWithAsset:self.composition applyingCIFiltersWithHandler:^(AVAsynchronousCIImageFilteringRequest * _Nonnull request) {
+                CIImage *image = [renderingFilter imageByProcessingImage:request.sourceImage atTime:CMTimeGetSeconds(request.compositionTime)];
+                
+                [request finishWithImage:image context:context];
+            }];
+            
+        }
+        
+        if (videoCompsition) {
+            self.videoComposition = videoCompsition;
+        } else {
+            self.videoComposition = [AVMutableVideoComposition videoComposition];
+        }
+        self.videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
         self.videoComposition.renderSize = renderSize;
-        
+    }
+    
+    if (orientation != UIImageOrientationUp) {
         AVAssetTrack *videoTrack = [self.composition tracksWithMediaType:AVMediaTypeVideo][0];
         
         AVMutableVideoCompositionInstruction *roateInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
@@ -197,19 +219,6 @@
         roateInstruction.layerInstructions = @[roateLayerInstruction];
         //将视频方向旋转加入到视频处理中
         self.videoComposition.instructions = @[roateInstruction];
-    }
-    
-    /** 水印 */
-    if(self.overlayView) {
-        CALayer *animatedLayer = [self buildAnimatedTitleLayerForSize:renderSize];
-        CALayer *parentLayer = [CALayer layer];
-        CALayer *videoLayer = [CALayer layer];
-        parentLayer.frame = CGRectMake(0, 0, self.videoComposition.renderSize.width, self.videoComposition.renderSize.height);
-        videoLayer.frame = CGRectMake(0, 0, self.videoComposition.renderSize.width, self.videoComposition.renderSize.height);
-        [parentLayer addSublayer:videoLayer];
-        [parentLayer addSublayer:animatedLayer];
-        
-        self.videoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:videoLayer inLayer:parentLayer];
     }
     
     self.exportSession = [[AVAssetExportSession alloc] initWithAsset:self.composition presetName:AVAssetExportPresetHighestQuality];
@@ -275,20 +284,66 @@
     [self.exportSession cancelExport];
 }
 
-
-- (CALayer *)buildAnimatedTitleLayerForSize:(CGSize)size
-{
-    UIView *overlayView = self.overlayView;
-    UIImage *image = [overlayView LFME_captureImage];
-    image = [image LFME_scaleToSize:size];
-    // 1 - The usual overlay
-    CALayer *overlayLayer = [CALayer layer];
-    overlayLayer.contentsScale = [UIScreen mainScreen].scale;
-    overlayLayer.contents = (__bridge id _Nullable)(image.CGImage);
-    overlayLayer.frame = CGRectMake(0, 0, size.width, size.height);
-    [overlayLayer setMasksToBounds:YES];
+- (LFFilter *)_generateRenderingFilterForVideoSize:(CGSize)videoSize {
+    LFFilter *watermarkFilter = [self _generateWaterFilterForVideoSize:videoSize];
+    LFFilter *renderingFilter = nil;
+    LFFilter *customFilter = self.filter;
     
-    return overlayLayer;
+    if (customFilter != nil) {
+        if (watermarkFilter != nil) {
+            LFMutableFilter *tempFilter = (LFMutableFilter *)[LFMutableFilter emptyFilter];
+            [tempFilter addSubFilter:customFilter];
+            [tempFilter addSubFilter:watermarkFilter];
+            renderingFilter = tempFilter;
+        } else {
+            renderingFilter = customFilter;
+        }
+    } else {
+        renderingFilter = watermarkFilter;
+    }
+    
+    if (renderingFilter.isEmpty) {
+        renderingFilter = nil;
+    }
+    
+    return renderingFilter;
+}
+
+- (LFFilter *)_generateWaterFilterForVideoSize:(CGSize)videoSize
+{
+    if (self.overlayView) {
+        UIView *overlayView = self.overlayView;
+        
+        CGRect rect = overlayView.frame;
+        /** 参数取整，否则可能会出现1像素偏差 */
+        /** 有小数部分才调整差值 */
+#define lfme_export_fixDecimal(d) ((fmod(d, (int)d)) > 0.59f ? ((int)(d+0.5)*1.f) : (((fmod(d, (int)d)) < 0.59f && (fmod(d, (int)d)) > 0.1f) ? ((int)(d)*1.f+0.5f) : (int)(d)*1.f))
+        rect.origin.x = lfme_export_fixDecimal(rect.origin.x);
+        rect.origin.y = lfme_export_fixDecimal(rect.origin.y);
+        rect.size.width = lfme_export_fixDecimal(rect.size.width);
+        rect.size.height = lfme_export_fixDecimal(rect.size.height);
+#undef lfme_export_fixDecimal
+        CGSize size = rect.size;
+        //1.开启上下文
+        UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        //2.绘制图层
+        [overlayView.layer renderInContext: context];
+        //3.从上下文中获取新图片
+        UIImage *watermarkImage = UIGraphicsGetImageFromCurrentImageContext();
+        //4.关闭图形上下文
+        UIGraphicsEndImageContext();
+        
+        /** 缩放至视频大小 */
+        UIGraphicsBeginImageContextWithOptions(videoSize, NO, 1);
+        [watermarkImage drawInRect:CGRectMake(0, 0, videoSize.width, videoSize.height)];
+        UIImage *generatedWatermarkImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        CIImage *watermarkCIImage = [CIImage imageWithCGImage:generatedWatermarkImage.CGImage];
+        return [LFFilter filterWithCIImage:watermarkCIImage];
+    }
+    return nil;
 }
 
 - (UIImageOrientation)orientationFromAVAssetTrack:(AVAssetTrack *)videoTrack

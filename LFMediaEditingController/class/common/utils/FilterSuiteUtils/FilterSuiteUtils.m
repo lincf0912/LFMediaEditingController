@@ -1,0 +1,113 @@
+//
+//  FilterSuiteUtils.m
+//  LFMediaEditingController
+//
+//  Created by TsanFeng Lam on 2019/3/6.
+//  Copyright © 2019 LamTsanFeng. All rights reserved.
+//
+
+#import "FilterSuiteUtils.h"
+#import "LFFilterSuiteHeader.h"
+
+NSString *lf_descWithType(LFFilterNameType type)
+{
+    NSString *desc = @"Original";
+    switch (type) {
+        case LFFilterNameType_None:
+            break;
+        case LFFilterNameType_LinearCurve:
+            desc = @"LCurve";
+            break;
+        case LFFilterNameType_Chrome:
+            desc = @"Chrome";
+            break;
+        case LFFilterNameType_Fade:
+            desc = @"Fade";
+            break;
+        case LFFilterNameType_Instant:
+            desc = @"Instant";
+            break;
+        case LFFilterNameType_Mono:
+            desc = @"Mono";
+            break;
+        case LFFilterNameType_Noir:
+            desc = @"Noir";
+            break;
+        case LFFilterNameType_Process:
+            desc = @"Process";
+            break;
+        case LFFilterNameType_Tonal:
+            desc = @"Tonal";
+            break;
+        case LFFilterNameType_Transfer:
+            desc = @"Trans";
+            break;
+        case LFFilterNameType_CurveLinear:
+            desc = @"CLinear";
+            break;
+        case LFFilterNameType_Invert:
+            desc = @"Invert";
+            break;
+        case LFFilterNameType_Monochrome:
+            desc = @"MoChro";
+            break;
+    }
+    return desc;
+}
+
+NSString *lf_filterNameWithType(LFFilterNameType type)
+{
+    NSString *filterName = nil;
+    switch (type) {
+        case LFFilterNameType_None:
+            break;
+        case LFFilterNameType_LinearCurve:
+            filterName = @"CILinearToSRGBToneCurve";
+            break;
+        case LFFilterNameType_Chrome:
+            filterName = @"CIPhotoEffectChrome";
+            break;
+        case LFFilterNameType_Fade:
+            filterName = @"CIPhotoEffectFade";
+            break;
+        case LFFilterNameType_Instant:
+            filterName = @"CIPhotoEffectInstant";
+            break;
+        case LFFilterNameType_Mono:
+            filterName = @"CIPhotoEffectMono";
+            break;
+        case LFFilterNameType_Noir:
+            filterName = @"CIPhotoEffectNoir";
+            break;
+        case LFFilterNameType_Process:
+            filterName = @"CIPhotoEffectProcess";
+            break;
+        case LFFilterNameType_Tonal:
+            filterName = @"CIPhotoEffectTonal";
+            break;
+        case LFFilterNameType_Transfer:
+            filterName = @"CIPhotoEffectTransfer";
+            break;
+        case LFFilterNameType_CurveLinear:
+            filterName = @"CISRGBToneCurveToLinear";
+            break;
+        case LFFilterNameType_Invert:
+            filterName = @"CIColorInvert";
+            break;
+        case LFFilterNameType_Monochrome:
+            filterName = @"CIColorMonochrome";
+            break;
+    }
+    return filterName;
+}
+
+UIImage *lf_filterImageWithType(UIImage *image, LFFilterNameType type)
+{
+    NSString *name = lf_filterNameWithType(type);
+    LFFilter *filter = [LFFilter filterWithCIFilterName:name];
+    if (filter) {
+        return [filter UIImageByProcessingUIImage:image];
+    } else {
+        return image;
+    }
+}

@@ -687,14 +687,14 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 #pragma mark - 滤镜功能
 /** 滤镜类型 */
-- (void)changeFilterColorMatrixType:(LFColorMatrixType)cmType
+- (void)changeFilterType:(NSInteger)cmType
 {
-    [self.zoomingView changeFilterColorMatrixType:cmType];
+    [self.zoomingView changeFilterType:cmType];
 }
 /** 当前使用滤镜类型 */
-- (LFColorMatrixType)getFilterColorMatrixType
+- (NSInteger)getFilterType
 {
-    return [self.zoomingView getFilterColorMatrixType];
+    return [self.zoomingView getFilterType];
 }
 /** 获取滤镜图片 */
 - (UIImage *)getFilterImage

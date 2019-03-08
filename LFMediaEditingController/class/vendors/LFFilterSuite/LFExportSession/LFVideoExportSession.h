@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "LFFilter.h"
 
 @interface LFVideoExportSession : NSObject
 
@@ -22,9 +23,11 @@
 /** 是否需要原音频 default is YES */
 @property (nonatomic, assign) BOOL isOrignalSound;
 /** 添加音频 */
-@property (nonatomic, strong) NSArray <NSURL *>*audioUrls;
-/** 水印层 */
-@property (nonatomic, strong) UIView *overlayView;
+@property (nonatomic, strong, nullable) NSArray <NSURL *>*audioUrls;
+/** 水印层 (overlayView的大小必须与视频大小比例相同，否则会被拉伸。) */
+@property (nonatomic, strong, nullable) UIView *overlayView;
+/** 滤镜 */
+@property (nonatomic, strong, nullable) LFFilter *filter;
 
 /** 处理视频 */
 - (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler;

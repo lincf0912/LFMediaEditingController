@@ -9,6 +9,7 @@
 #import "LFVideoEditingController.h"
 #import "LFMediaEditingHeader.h"
 #import "UIView+LFMEFrame.h"
+#import "UIImage+LFMECommon.h"
 #import "LFMediaEditingType.h"
 #import "LFMECancelBlock.h"
 
@@ -18,8 +19,11 @@
 #import "LFTextBar.h"
 #import "LFVideoClipToolbar.h"
 #import "LFAudioTrackBar.h"
+#import "JRFilterBar.h"
+#import "FilterSuiteUtils.h"
+#import "AVAsset+LFMECommon.h"
 
-@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate, UIGestureRecognizerDelegate>
+@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate, UIGestureRecognizerDelegate>
 {
     /** 编辑模式 */
     LFVideoEditingView *_EditingView;
@@ -30,6 +34,8 @@
     
     /** 贴图菜单 */
     LFStickerBar *_edit_sticker_toolBar;
+    /** 滤镜菜单 */
+    JRFilterBar *_edit_filter_toolBar;
     /** 剪切菜单 */
     LFVideoClipToolbar *_edit_clipping_toolBar;
     
@@ -43,6 +49,9 @@
 @property (nonatomic, assign) LFVideoEditOperationType initSelectedOperationType;
 
 @property (nonatomic, copy) lf_me_dispatch_cancelable_block_t delayCancelBlock;
+
+/** 滤镜缩略图 */
+@property (nonatomic, strong) UIImage *filterSmallImage;
 
 @end
 
@@ -208,6 +217,9 @@
     if (self.operationType&LFVideoEditOperationType_audio) {
         toolbarType |= LFEditToolbarType_audio;
     }
+    if (self.operationType&LFVideoEditOperationType_filter) {
+        toolbarType |= LFEditToolbarType_filter;
+    }
     if (self.operationType&LFVideoEditOperationType_clip) {
         toolbarType |= LFEditToolbarType_clip;
     }
@@ -246,6 +258,8 @@
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_text];
             } else if (containOperation(LFVideoEditOperationType_audio)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_audio];
+            } else if (containOperation(LFVideoEditOperationType_filter)) {
+                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
             }
             self.initSelectedOperationType = 0;
         }
@@ -358,6 +372,12 @@
         {
             /** 音轨编辑UI */
             [self showAudioTrackBar];
+        }
+            break;
+        case LFEditToolbarType_filter:
+        {
+            [self singlePressed];
+            [self changeFilterMenu:YES animated:YES];
         }
             break;
         case LFEditToolbarType_clip:
@@ -615,6 +635,8 @@
     lf_me_dispatch_cancel(self.delayCancelBlock);
     /** 隐藏贴图菜单 */
     [self changeStickerMenu:NO animated:animated];
+    /** 隐藏滤镜菜单 */
+    [self changeFilterMenu:NO animated:animated];
     
     if (animated) {
         [UIView animateWithDuration:.25f animations:^{
@@ -729,36 +751,6 @@
     }];
 }
 
-#pragma mark - 贴图菜单（懒加载）
-- (LFStickerBar *)edit_sticker_toolBar
-{
-    if (_edit_sticker_toolBar == nil) {
-        CGFloat row = 2;
-        CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
-        if (@available(iOS 11.0, *)) {
-            h += self.navigationController.view.safeAreaInsets.bottom;
-        }
-        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:self.stickerPath];
-        _edit_sticker_toolBar.delegate = self;
-    }
-    return _edit_sticker_toolBar;
-}
-
-#pragma mark - 剪切底部栏（懒加载）
-- (UIView *)edit_clipping_toolBar
-{
-    if (_edit_clipping_toolBar == nil) {
-        CGFloat h = 44.f;
-        if (@available(iOS 11.0, *)) {
-            h += self.navigationController.view.safeAreaInsets.bottom;
-        }
-        _edit_clipping_toolBar = [[LFVideoClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
-        _edit_clipping_toolBar.alpha = 0.f;
-        _edit_clipping_toolBar.delegate = self;
-    }
-    return _edit_clipping_toolBar;
-}
-
 #pragma mark - 音轨菜单
 - (void)showAudioTrackBar
 {
@@ -792,4 +784,123 @@
         [_EditingView resetVideoDisplay];
     }];
 }
+
+- (void)changeFilterMenu:(BOOL)isChanged animated:(BOOL)animated
+{
+    if (isChanged) {
+        [self.view addSubview:self.edit_filter_toolBar];
+        CGRect frame = self.edit_filter_toolBar.frame;
+        frame.origin.y = self.view.height-frame.size.height;
+        if (animated) {
+            [UIView animateWithDuration:.25f animations:^{
+                self->_edit_filter_toolBar.frame = frame;
+            }];
+        } else {
+            _edit_filter_toolBar.frame = frame;
+        }
+    } else {
+        if (_edit_filter_toolBar.superview == nil) return;
+        
+        CGRect frame = self.edit_filter_toolBar.frame;
+        frame.origin.y = self.view.height;
+        if (animated) {
+            [UIView animateWithDuration:.25f animations:^{
+                self->_edit_filter_toolBar.frame = frame;
+            } completion:^(BOOL finished) {
+                [self->_edit_filter_toolBar removeFromSuperview];
+                self->_edit_filter_toolBar = nil;
+            }];
+        } else {
+            [_edit_filter_toolBar removeFromSuperview];
+            _edit_filter_toolBar = nil;
+        }
+    }
+}
+
+#pragma mark - 贴图菜单（懒加载）
+- (LFStickerBar *)edit_sticker_toolBar
+{
+    if (_edit_sticker_toolBar == nil) {
+        CGFloat row = 2;
+        CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
+        if (@available(iOS 11.0, *)) {
+            h += self.navigationController.view.safeAreaInsets.bottom;
+        }
+        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:self.stickerPath];
+        _edit_sticker_toolBar.delegate = self;
+    }
+    return _edit_sticker_toolBar;
+}
+
+#pragma mark - 剪切底部栏（懒加载）
+- (UIView *)edit_clipping_toolBar
+{
+    if (_edit_clipping_toolBar == nil) {
+        CGFloat h = 44.f;
+        if (@available(iOS 11.0, *)) {
+            h += self.navigationController.view.safeAreaInsets.bottom;
+        }
+        _edit_clipping_toolBar = [[LFVideoClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
+        _edit_clipping_toolBar.alpha = 0.f;
+        _edit_clipping_toolBar.delegate = self;
+    }
+    return _edit_clipping_toolBar;
+}
+
+#pragma mark - 滤镜菜单（懒加载）
+- (JRFilterBar *)edit_filter_toolBar
+{
+    if (_edit_filter_toolBar == nil) {
+        CGFloat w=self.view.width, h=100.f;
+        if (@available(iOS 11.0, *)) {
+            h += self.navigationController.view.safeAreaInsets.bottom;
+        }
+        _edit_filter_toolBar = [[JRFilterBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) defalutEffectType:[_EditingView getFilterType] dataSource:@[
+                                                                                                                                                                    @(LFFilterNameType_None),
+                                                                                                                                                                    @(LFFilterNameType_LinearCurve),
+                                                                                                                                                                    @(LFFilterNameType_Chrome),
+                                                                                                                                                                    @(LFFilterNameType_Fade),
+                                                                                                                                                                    @(LFFilterNameType_Instant),
+                                                                                                                                                                    @(LFFilterNameType_Mono),
+                                                                                                                                                                    @(LFFilterNameType_Noir),
+                                                                                                                                                                    @(LFFilterNameType_Process),
+                                                                                                                                                                    @(LFFilterNameType_Tonal),
+                                                                                                                                                                    @(LFFilterNameType_Transfer),
+                                                                                                                                                                    @(LFFilterNameType_CurveLinear),
+                                                                                                                                                                    @(LFFilterNameType_Invert),
+                                                                                                                                                                    @(LFFilterNameType_Monochrome),                                                                                    ]];
+        CGFloat rgb = 34 / 255.0;
+        _edit_filter_toolBar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.85];
+        _edit_filter_toolBar.defaultColor = self.cancelButtonTitleColorNormal;
+        _edit_filter_toolBar.selectColor = self.oKButtonTitleColorNormal;
+        _edit_filter_toolBar.delegate = self;
+        _edit_filter_toolBar.dataSource = self;
+        
+        if (_filterSmallImage == nil) {
+            CGSize size = CGSizeZero;
+            size.width = JR_FilterBar_MAX_WIDTH;
+            size.height = (int)(self.placeholderImage.size.height*size.width/self.placeholderImage.size.width)*1.f;
+            self.filterSmallImage = [[self.asset lf_firstImage:nil] LFME_scaleToSize:size];
+        }
+    }
+    return _edit_filter_toolBar;
+}
+
+#pragma mark - JRFilterBarDelegate
+- (void)jr_filterBar:(JRFilterBar *)jr_filterBar didSelectImage:(UIImage *)image effectType:(NSInteger)effectType
+{
+    [_EditingView changeFilterType:effectType];
+}
+
+#pragma mark - JRFilterBarDataSource
+- (UIImage *)jr_filterBarImageForEffectType:(NSInteger)type
+{
+    return lf_filterImageWithType(self.filterSmallImage, type);
+}
+
+- (NSString *)jr_filterBarNameForEffectType:(NSInteger)type
+{
+    return lf_descWithType(type);
+}
+
 @end
