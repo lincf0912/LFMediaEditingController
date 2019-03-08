@@ -1,7 +1,11 @@
 # LFMediaEditingController
 
 * 图片编辑 (详细使用见LFPhotoEditingController.h 的初始化方法)
+`绘画、贴图、文本、模糊、滤镜、修剪`
+
 * 视频编辑 (详细使用见LFVideoEditingController.h 的初始化方法)
+`绘画、贴图、文本、音频、剪辑、滤镜（iOS9）`
+
 * 视频编辑 需要访问音乐库 需要在info.plist 添加 NSAppleMusicUsageDescription
 * 支持国际化配置（复制LFMediaEditingController.bundle\LFMediaEditingController.strings到项目中，修改对应的值即可；详情见DEMO；注意：不跟随系统语言切换显示）
 * （因数据可以多次重复编辑，暂时未能处理横竖屏切换。）
@@ -40,7 +44,7 @@
 * [self.navigationController setNavigationBarHidden:YES]; //隐藏导航栏（方式因项目自身适配）
 * [self.navigationController pushViewController:lfPhotoEditVC animated:NO]; 
 
-## 图片展示
+## 视频展示
 
 ![image](https://github.com/lincf0912/LFMediaEditingController/blob/master/ScreenShots/screenshot_video.gif)
 
