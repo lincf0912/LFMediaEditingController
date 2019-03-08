@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "LFPhotoEditDelegate.h"
-#import "LFColorMatrixType.h"
 
 @class LFText;
 @protocol LFEditingProtocol <NSObject>

@@ -19,10 +19,10 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
     LFVideoEditOperationType_text = 1 << 2,
     /** 音频 */
     LFVideoEditOperationType_audio = 1 << 3,
-    /** 滤镜 */
-    LFVideoEditOperationType_filter = 1 << 4,
     /** 剪辑 */
-    LFVideoEditOperationType_clip = 1 << 5,
+    LFVideoEditOperationType_clip = 1 << 4,
+    /** 滤镜 */
+    LFVideoEditOperationType_filter NS_ENUM_AVAILABLE_IOS(9_0) = 1 << 5,
     /** 所有 */
     LFVideoEditOperationType_All = ~0UL,
 };

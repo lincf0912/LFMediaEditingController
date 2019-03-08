@@ -33,6 +33,7 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 60.f;
         _list = @[].mutableCopy;
         _defaultColor = [UIColor grayColor];
         _selectColor = [UIColor blueColor];
+        _defalutEffectType = defalutEffectType;
         [self _createDataSource:dataSource];
         [self _createCustomView_jr];
     } return self;

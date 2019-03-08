@@ -30,11 +30,12 @@
     
     self.view.backgroundColor = [UIColor blackColor];
     
-    /** 非拍摄视频 */
-//    self.url = [[NSBundle mainBundle] URLForResource:@"1" withExtension:@"mp4"];
     /** 拍摄视频 */
-    self.url = [[NSBundle mainBundle] URLForResource:@"2" withExtension:@"mp4"];
-//    self.url = [[NSBundle mainBundle] URLForResource:@"3" withExtension:@"m4v"];
+//    self.url = [[NSBundle mainBundle] URLForResource:@"2" withExtension:@"mp4"];
+    /** 非拍摄视频 */
+    //  self.url = [[NSBundle mainBundle] URLForResource:@"3" withExtension:@"m4v"];
+    /** 相册视频（方向不正确） */
+    self.url = [[NSBundle mainBundle] URLForResource:@"4" withExtension:@"MOV"];
     
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:self.url options:nil];
     self.firstImage = [asset lf_firstImage:nil];

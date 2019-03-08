@@ -217,8 +217,10 @@
     if (self.operationType&LFVideoEditOperationType_audio) {
         toolbarType |= LFEditToolbarType_audio;
     }
-    if (self.operationType&LFVideoEditOperationType_filter) {
-        toolbarType |= LFEditToolbarType_filter;
+    if (@available(iOS 9.0, *)) {
+        if (self.operationType&LFVideoEditOperationType_filter) {
+            toolbarType |= LFEditToolbarType_filter;
+        }
     }
     if (self.operationType&LFVideoEditOperationType_clip) {
         toolbarType |= LFEditToolbarType_clip;
@@ -259,7 +261,9 @@
             } else if (containOperation(LFVideoEditOperationType_audio)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_audio];
             } else if (containOperation(LFVideoEditOperationType_filter)) {
-                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+                if (@available(iOS 9.0, *)) {
+                    [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+                }
             }
             self.initSelectedOperationType = 0;
         }

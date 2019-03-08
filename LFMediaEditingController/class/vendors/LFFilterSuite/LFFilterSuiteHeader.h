@@ -15,7 +15,7 @@
 #import "LFMutableFilter+Initialize.h"
 #import "LFFilter+save.h"
 #import "LFFilter+UIImage.h"
-#import "LFImageView.h"
+#import "LFContextImageView.h"
 #import "LFFilterImageView.h"
 #import "LFFilterVideoView.h"
 #import "LFVideoExportSession.h"

@@ -19,6 +19,7 @@
 #import "LFTextBar.h"
 #import "LFClipToolbar.h"
 #import "JRFilterBar.h"
+#import "LFColorMatrixType.h"
 
 
 @interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>

@@ -6,12 +6,12 @@
 //  Copyright © 2019 LamTsanFeng. All rights reserved.
 //
 
-#import "LFImageView.h"
+#import "LFContextImageView.h"
 #import "LFFilter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LFFilterImageView : LFImageView
+@interface LFFilterImageView : LFContextImageView
 
 /**
  The filter to apply when rendering. If nil is set, no filter will be applied

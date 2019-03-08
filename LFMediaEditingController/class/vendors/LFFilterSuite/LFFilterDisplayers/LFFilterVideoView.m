@@ -18,7 +18,6 @@ static char* LFItemChanged = "CurrentItemContext";
     AVPlayerItemVideoOutput *_videoOutput;
     AVPlayerItem *_oldItem;
     id _timeObserver;
-    CGAffineTransform _rendererTransform;
 }
 @end
 
@@ -215,7 +214,7 @@ static char* LFItemChanged = "CurrentItemContext";
                 }
             }
         }
-        _rendererTransform = transform;
+        self.preferredCIImageTransform = transform;
     }
 }
 
