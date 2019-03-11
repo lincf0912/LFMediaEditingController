@@ -51,6 +51,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSAssert(self.navigationController, @"You must wrap it with UINavigationController");
+    self.view.backgroundColor = [UIColor blackColor];
 }
 
 - (void)dealloc
