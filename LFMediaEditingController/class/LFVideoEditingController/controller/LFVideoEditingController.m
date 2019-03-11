@@ -880,12 +880,7 @@
         _edit_filter_toolBar.delegate = self;
         _edit_filter_toolBar.dataSource = self;
         
-        if (_filterSmallImage == nil) {
-            CGSize size = CGSizeZero;
-            size.width = JR_FilterBar_MAX_WIDTH;
-            size.height = (int)(self.placeholderImage.size.height*size.width/self.placeholderImage.size.width)*1.f;
-            self.filterSmallImage = [[self.asset lf_firstImage:nil] LFME_scaleToSize:size];
-        }
+        
     }
     return _edit_filter_toolBar;
 }
@@ -897,8 +892,15 @@
 }
 
 #pragma mark - JRFilterBarDataSource
-- (UIImage *)jr_filterBarImageForEffectType:(NSInteger)type
+- (UIImage *)jr_async_filterBarImageForEffectType:(NSInteger)type
 {
+    if (_filterSmallImage == nil) {
+        CGSize videoSize = [self.asset videoNaturalSize];
+        CGSize size = CGSizeZero;
+        size.width = JR_FilterBar_MAX_WIDTH;
+        size.height = (int)(videoSize.height*size.width/videoSize.width)*1.f;
+        self.filterSmallImage = [self.asset lf_firstImageWithSize:size error:nil];
+    }
     return lf_filterImageWithType(self.filterSmallImage, type);
 }
 

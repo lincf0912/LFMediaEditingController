@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AVAsset (LFMECommon)
 
 - (UIImage *)lf_firstImage:(NSError **)error;
+- (UIImage *)lf_firstImageWithSize:(CGSize)size error:(NSError **)error;
+
+- (CGSize)videoNaturalSize;
 
 @end
 

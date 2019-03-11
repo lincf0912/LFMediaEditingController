@@ -625,12 +625,6 @@
         _edit_filter_toolBar.selectColor = self.oKButtonTitleColorNormal;
         _edit_filter_toolBar.delegate = self;
         _edit_filter_toolBar.dataSource = self;
-        if (_filterSmallImage == nil) {
-            CGSize size = CGSizeZero;
-            size.width = JR_FilterBar_MAX_WIDTH;
-            size.height = (int)(self.editImage.size.height*size.width/self.editImage.size.width)*1.f;
-            self.filterSmallImage = [self.editImage LFME_scaleToSize:size];            
-        }
     }
     return _edit_filter_toolBar;
 }
@@ -642,8 +636,14 @@
 }
 
 #pragma mark - JRFilterBarDataSource
-- (UIImage *)jr_filterBarImageForEffectType:(NSInteger)type
+- (UIImage *)jr_async_filterBarImageForEffectType:(NSInteger)type
 {
+    if (_filterSmallImage == nil) {
+        CGSize size = CGSizeZero;
+        size.width = JR_FilterBar_MAX_WIDTH;
+        size.height = (int)(self.editImage.size.height*size.width/self.editImage.size.width)*1.f;
+        self.filterSmallImage = [self.editImage LFME_scaleToSize:size];
+    }
     return lf_colorMatrixImage(self.filterSmallImage, type);
 }
 

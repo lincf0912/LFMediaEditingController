@@ -21,6 +21,8 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 60.f;
 @property (weak, nonatomic) UICollectionView *collectionView;
 @property (weak, nonatomic) UIView *backgroundView;
 
+@property (strong, nonatomic) dispatch_queue_t serialQueue;
+
 @end
 
 @implementation JRFilterBar
@@ -30,6 +32,7 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 60.f;
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _serialQueue = dispatch_queue_create("com.JRFilterBar.SerialQueue", DISPATCH_QUEUE_SERIAL);
         _list = @[].mutableCopy;
         _defaultColor = [UIColor grayColor];
         _selectColor = [UIColor blueColor];
@@ -124,8 +127,18 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 60.f;
     cell.defaultColor = self.defaultColor;
     cell.selectColor = self.selectColor;
     if (!item.image) {
-        if ([self.dataSource respondsToSelector:@selector(jr_filterBarImageForEffectType:)]) {
-            item.image = [self.dataSource jr_filterBarImageForEffectType:item.effectType];
+        if ([self.dataSource respondsToSelector:@selector(jr_async_filterBarImageForEffectType:)]) {
+            dispatch_async(self.serialQueue, ^{
+                UIImage *image = [self.dataSource jr_async_filterBarImageForEffectType:item.effectType];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [collectionView performBatchUpdates:^{
+                        item.image = image;
+                        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                    } completion:^(BOOL finished) {
+                        
+                    }];
+                });
+            });
         }
     }
     if (!item.name) {

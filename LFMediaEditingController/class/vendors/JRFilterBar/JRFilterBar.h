@@ -36,7 +36,7 @@ extern CGFloat const JR_FilterBar_MAX_WIDTH;
 
 @protocol JRFilterBarDataSource <NSObject>
 
-- (UIImage *)jr_filterBarImageForEffectType:(NSInteger)type;
+- (UIImage *)jr_async_filterBarImageForEffectType:(NSInteger)type;
 
 - (NSString *)jr_filterBarNameForEffectType:(NSInteger)type;
 
