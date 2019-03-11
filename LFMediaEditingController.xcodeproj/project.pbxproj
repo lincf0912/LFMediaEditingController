@@ -75,6 +75,7 @@
 		C73F4CBA2230FE1800ED40B7 /* LFDataFilterVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CB92230FE1800ED40B7 /* LFDataFilterVideoView.m */; };
 		C73F4CBE223110EB00ED40B7 /* AVAsset+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */; };
 		C73F4CC72232540400ED40B7 /* 4.MOV in Resources */ = {isa = PBXBuildFile; fileRef = C73F4CC62232540300ED40B7 /* 4.MOV */; };
+		C73F4CEC2235F61A00ED40B7 /* LFFilterGifView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CEB2235F61A00ED40B7 /* LFFilterGifView.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 		C79A00C3222CBEC30091EB4C /* LFFilterVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A00C2222CBEC30091EB4C /* LFFilterVideoView.m */; };
@@ -223,6 +224,8 @@
 		C73F4CBC223110EB00ED40B7 /* AVAsset+LFMECommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVAsset+LFMECommon.h"; sourceTree = "<group>"; };
 		C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+LFMECommon.m"; sourceTree = "<group>"; };
 		C73F4CC62232540300ED40B7 /* 4.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 4.MOV; sourceTree = "<group>"; };
+		C73F4CEA2235F61A00ED40B7 /* LFFilterGifView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterGifView.h; sourceTree = "<group>"; };
+		C73F4CEB2235F61A00ED40B7 /* LFFilterGifView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFilterGifView.m; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -697,6 +700,8 @@
 				C7B4492A222904AA00FA460D /* LFContextImageView.m */,
 				C7B4494022292E6500FA460D /* LFFilterImageView.h */,
 				C7B4494122292E6500FA460D /* LFFilterImageView.m */,
+				C73F4CEA2235F61A00ED40B7 /* LFFilterGifView.h */,
+				C73F4CEB2235F61A00ED40B7 /* LFFilterGifView.m */,
 				C79A00C1222CBEC30091EB4C /* LFFilterVideoView.h */,
 				C79A00C2222CBEC30091EB4C /* LFFilterVideoView.m */,
 			);
@@ -920,6 +925,7 @@
 				C73F4CB22230C99C00ED40B7 /* JRFilterModel.m in Sources */,
 				6F61BC1B1F2987DA005A1E63 /* LFVideoExportSession.m in Sources */,
 				C7B4493A22291DDD00FA460D /* LFMutableFilter.m in Sources */,
+				C73F4CEC2235F61A00ED40B7 /* LFFilterGifView.m in Sources */,
 				6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
 				6F14E6521EE6439E0049AE56 /* LFStickerLabel.m in Sources */,

@@ -7,29 +7,44 @@
 ## 套件使用
 1. `#import "LFFilterSuiteHeader.h"`
 2. 滤镜展示
-2.1. 使用LFFilterImageView代替UIImageView。
 
- ````
- LFFilterImageView *imageView = [[LFFilterImageView alloc] initWithFrame:self.bounds];
-imageView.contentMode = UIViewContentModeScaleAspectFit;
-[imageView setImageByUIImage:image];
-// 滤镜
-imageView.filter = [LFFilter filterWithCIFilterName:@"CIPhotoEffectChrome"];
-[self addSubview:imageView];
- ````
-2.2. 使用LFFilterVideoView代替AVPlayerLayer。
+	2.1. 使用LFFilterImageView代替UIImageView。
 	
- ````
-LFFilterVideoView *videoView = [[LFFilterVideoView alloc] initWithFrame:self.bounds];
-videoView.contentMode = UIViewContentModeScaleAspectFit;
-/** 第一帧图片 */
-[videoView setImageByUIImage:image];
-/** 关联视频播放 */
-[videoView setPlayer:player];
-// 滤镜
-videoView.filter = [LFFilter filterWithCIFilterName:@"CIPhotoEffectChrome"];
-[self addSubview:videoView];
- ````
+	 ````
+	 LFFilterImageView *imageView = [[LFFilterImageView alloc] initWithFrame:self.bounds];
+	imageView.contentMode = UIViewContentModeScaleAspectFit;
+	[imageView setImageByUIImage:image];
+	// 滤镜
+	imageView.filter = [LFFilter filterWithCIFilterName:@"CIPhotoEffectChrome"];
+	[self addSubview:imageView];
+	 ````
+	2.2. 使用LFFilterVideoView代替AVPlayerLayer。
+	
+		
+	 ````
+	LFFilterVideoView *videoView = [[LFFilterVideoView alloc] initWithFrame:self.bounds];
+	videoView.contentMode = UIViewContentModeScaleAspectFit;
+	/** 第一帧图片 */
+	[videoView setImageByUIImage:image];
+	/** 关联视频播放 */
+	[videoView setPlayer:player];
+	// 滤镜
+	videoView.filter = [LFFilter filterWithCIFilterName:@"CIPhotoEffectChrome"];
+	[self addSubview:videoView];
+	 ````
+	 2.3.使用LFFilterGifView代替UIImageView(GIF)。
+	 
+	 ````
+	 LFFilterGifView *gifView = [[LFFilterGifView alloc] initWithFrame:self.bounds];
+	gifView.contentMode = UIViewContentModeScaleAspectFit;
+	// 使用UIImage初始化image.images.count > 0
+	[gifView setImageByUIImage:image];
+	// 使用NSData初始化
+	// gifView.gifData = data;
+	// 滤镜
+	gifView.filter = [LFFilter filterWithCIFilterName:@"CIPhotoEffectChrome"];
+	[self addSubview: gifView];
+	 ````
  
 3. 混合滤镜
 	
@@ -73,4 +88,5 @@ videoView.filter = [LFFilter filterWithCIFilterName:@"CIPhotoEffectChrome"];
 	````
 	
 ## 注意事项
-* 如果视频播放（LFFilterVideoView）的filter属性与视频导出（LFVideoExportSession）的filter属性是**同一个对象**。导出之前请将视频**暂停播放**，否则播放视频与导出视频都有可能出现**闪烁**的情况。
+* 请使用真机调试，模拟器测试GPU可能会出现卡顿的情况。
+* 如果视频播放（LFFilterVideoView）的filter属性与视频导出（LFVideoExportSession）的filter属性是**同一个对象地址(LFVideoExportSession.filter = LFFilterVideoView.filter)**。导出之前请将视频**暂停播放[AVPlayer pause]**，否则播放视频与导出视频都有可能出现**画面闪烁**的情况。

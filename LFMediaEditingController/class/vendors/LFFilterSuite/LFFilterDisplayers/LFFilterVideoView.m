@@ -27,10 +27,33 @@ static char* LFItemChanged = "CurrentItemContext";
     self = [super init];
     
     if (self) {
-        _shouldSuppressPlayerRendering = YES;
+        [self customInit];
     }
     
     return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (void)customInit
+{
+    _shouldSuppressPlayerRendering = YES;
 }
 
 - (void)dealloc {
