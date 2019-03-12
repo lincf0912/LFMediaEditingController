@@ -10,7 +10,7 @@
 #import "JRFilterModel.h"
 #import "JRFilterBarCell.h"
 
-CGFloat const JR_FilterBar_MAX_WIDTH = 60.f;
+CGFloat const JR_FilterBar_MAX_WIDTH = 100.f;
 
 @interface JRFilterBar () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 

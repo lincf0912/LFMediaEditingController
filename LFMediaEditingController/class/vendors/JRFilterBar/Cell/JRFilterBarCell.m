@@ -74,7 +74,7 @@ CGFloat const JR_LABEL_HEIGHT = 25.f;
         UILabel *aLab = [[UILabel alloc] initWithFrame:self.contentView.frame];
         aLab.font = [UIFont systemFontOfSize:15.f];
         aLab.textAlignment = NSTextAlignmentCenter;
-        aLab.lineBreakMode = NSLineBreakByTruncatingMiddle;
+        aLab.lineBreakMode = NSLineBreakByTruncatingHead;
         [self.contentView addSubview:aLab];
         self.bottomLab = aLab;
     }

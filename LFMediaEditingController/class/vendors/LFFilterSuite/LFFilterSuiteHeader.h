@@ -18,6 +18,7 @@
 #import "LFContextImageView.h"
 #import "LFFilterImageView.h"
 #import "LFFilterVideoView.h"
+#import "LFFilterGifView.h"
 #import "LFVideoExportSession.h"
 
 #endif /* LFFilterSuiteHeader_h */

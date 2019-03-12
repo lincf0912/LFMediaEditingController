@@ -16,7 +16,7 @@ NSString *lf_descWithType(LFFilterNameType type)
         case LFFilterNameType_None:
             break;
         case LFFilterNameType_LinearCurve:
-            desc = @"LCurve";
+            desc = @"Curve";
             break;
         case LFFilterNameType_Chrome:
             desc = @"Chrome";
@@ -40,16 +40,16 @@ NSString *lf_descWithType(LFFilterNameType type)
             desc = @"Tonal";
             break;
         case LFFilterNameType_Transfer:
-            desc = @"Trans";
+            desc = @"Transfer";
             break;
         case LFFilterNameType_CurveLinear:
-            desc = @"CLinear";
+            desc = @"Linear";
             break;
         case LFFilterNameType_Invert:
             desc = @"Invert";
             break;
         case LFFilterNameType_Monochrome:
-            desc = @"MoChro";
+            desc = @"Monochrome";
             break;
     }
     return desc;
