@@ -77,7 +77,10 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     LFSplashView *splashView = [[LFSplashView alloc] initWithFrame:self.bounds];
     __weak typeof(self) weakSelf = self;
     splashView.splashColor = ^UIColor *(CGPoint point) {
-        return [weakSelf.imageView LFME_colorOfPoint:point];
+//        return [weakSelf.imageView LFME_colorOfPoint:point];
+        point.x = point.x/weakSelf.frame.size.width*weakSelf.image.size.width;
+        point.y = point.y/weakSelf.frame.size.height*weakSelf.image.size.height;
+        return [weakSelf.image colorAtPixel:point];
     };
     /** 默认不能涂抹 */
     splashView.userInteractionEnabled = NO;

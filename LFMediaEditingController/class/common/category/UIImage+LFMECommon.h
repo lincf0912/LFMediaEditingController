@@ -25,6 +25,9 @@
 /** 将图片旋转弧度radians */
 - (UIImage *)LFME_imageRotatedByRadians:(CGFloat)radians;
 
+/** 提取图片上的颜色 */
+- (UIColor *)colorAtPixel:(CGPoint)point;
+
 /*
  *转换成马赛克,level代表一个点转为多少level*level的正方形
  */
