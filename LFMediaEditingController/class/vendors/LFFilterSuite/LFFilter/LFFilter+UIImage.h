@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (UIImage *__nullable)UIImageByProcessingUIImage:(UIImage *__nullable)image;
 
+/**
+ Returns a UIImage by processing this filter into the given animated UIImage
+ */
+- (UIImage *__nullable)UIImageByProcessingAnimatedUIImage:(UIImage *__nullable)image;
+
 @end
 
 NS_ASSUME_NONNULL_END

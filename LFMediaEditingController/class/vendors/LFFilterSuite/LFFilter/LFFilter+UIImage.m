@@ -52,4 +52,28 @@
     }
 }
 
+- (UIImage *__nullable)UIImageByProcessingAnimatedUIImage:(UIImage *__nullable)image
+{
+    if (image.images.count) {
+        NSInteger frameCount = image.images.count;
+        NSTimeInterval duration = image.duration;
+        NSMutableArray <UIImage *>*outputImages = [NSMutableArray arrayWithCapacity:image.images.count];
+        UIImage *outputImage = nil;
+        for (NSInteger i=0; i<frameCount; i++) {
+            UIImage *img = image.images[i];
+            outputImage = [self UIImageByProcessingUIImage:img atTime:i];
+            if (outputImage) {
+                [outputImages addObject:outputImage];
+            }
+        }
+        if (frameCount == outputImages.count) {
+            return [UIImage animatedImageWithImages:outputImages duration:duration];
+        } else {
+            return [self UIImageByProcessingUIImage:image.images.firstObject];
+        }
+    } else {
+        return [self UIImageByProcessingUIImage:image];
+    }
+}
+
 @end
