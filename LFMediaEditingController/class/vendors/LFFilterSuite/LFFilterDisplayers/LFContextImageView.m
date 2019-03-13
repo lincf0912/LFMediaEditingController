@@ -116,8 +116,14 @@
 }
 
 - (UIImage *)renderedUIImageInRect:(CGRect)rect {
-    UIImage *returnedImage = nil;
+    
     CIImage *image = [self renderedCIImageInRect:rect];
+    return [self renderedUIImageInCIImage:image];
+}
+
+- (UIImage *)renderedUIImageInCIImage:(CIImage * __nullable)image
+{
+    UIImage *returnedImage = nil;
     
     if (image != nil) {
         CIContext *context = nil;

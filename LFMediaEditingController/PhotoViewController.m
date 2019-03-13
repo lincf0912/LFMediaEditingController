@@ -31,7 +31,7 @@
     /** 拍照图片 */
     UIImage *image = [UIImage imageNamed:@"1.jpg"];
     /** gif */
-//    UIImage *image = [UIImage LF_imageWithImagePath:[[NSBundle mainBundle] pathForResource:@"4.gif" ofType:nil]];
+//    UIImage *image = [UIImage LF_imageWithImagePath:[[NSBundle mainBundle] pathForResource:@"5.gif" ofType:nil]];
     /** 非拍照图片 */
 //    UIImage *image = [UIImage imageNamed:@"2.png"];
     /** 长图 */

@@ -15,7 +15,7 @@
 
 /** 编辑功能 */
 #import "LFDrawView.h"
-#import "LFSplashView_new.h"
+#import "LFSplashView.h"
 #import "LFStickerView.h"
 
 /** 滤镜框架 */
@@ -47,7 +47,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 /** 贴图 */
 @property (nonatomic, weak) LFStickerView *stickerView;
 /** 模糊 */
-@property (nonatomic, weak) LFSplashView_new *splashView;
+@property (nonatomic, weak) LFSplashView *splashView;
 
 /** 代理 */
 @property (nonatomic ,weak) id<LFPhotoEditDelegate> editDelegate_self;

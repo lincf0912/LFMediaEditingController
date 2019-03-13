@@ -6,7 +6,7 @@
 //  Copyright © 2017年 LamTsanFeng. All rights reserved.
 //
 
-#import "LFSplashView_new.h"
+#import "LFSplashView.h"
 #import "LFSplashLayer.h"
 #import "LFMediaEditingHeader.h"
 
@@ -14,7 +14,7 @@ NSString *const kLFSplashViewData = @"LFSplashViewData";
 NSString *const kLFSplashViewData_layerArray = @"LFSplashViewData_layerArray";
 NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
 
-@interface LFSplashView_new ()
+@interface LFSplashView ()
 {
     BOOL _isWork;
     BOOL _isBegan;
@@ -28,7 +28,7 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
 
 @end
 
-@implementation LFSplashView_new
+@implementation LFSplashView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -126,6 +126,7 @@ NSString *const kLFSplashViewData_frameArray = @"LFSplashViewData_frameArray";
         } else if (self.state == LFSplashStateType_Paintbrush) {
             LFSplashImageBlur *blur = [LFSplashImageBlur new];
             blur.rect = CGRectMake(point.x-self.paintSize.width/2, point.y-self.paintSize.height/2, self.paintSize.width, self.paintSize.height);
+            blur.imageName = @"EditImageMosaicBrush.png";
             blur.color = self.splashColor ? self.splashColor(blur.rect.origin) : nil;
             LFSplashLayer *layer = [LFSplashLayer layer];
             layer.frame = self.bounds;

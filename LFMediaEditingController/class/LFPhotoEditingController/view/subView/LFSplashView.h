@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LFMediaEditingType.h"
 
-@interface LFSplashView_new : UIView
+@interface LFSplashView : UIView
 
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *data;

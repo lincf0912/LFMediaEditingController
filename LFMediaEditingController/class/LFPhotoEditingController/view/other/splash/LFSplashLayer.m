@@ -75,21 +75,11 @@ CGFloat angleBetweenLines(CGPoint line1Start, CGPoint line1End, CGPoint line2Sta
         LFSplashBlur *blur = self.lineArray[i];
         CGRect rect = blur.rect;
         
-        CGContextSetStrokeColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
-        
-        // 模糊矩形可以用到，用于填充矩形
-        CGContextSetFillColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
-        
         
         if ([blur isMemberOfClass:[LFSplashImageBlur class]]) {
             
             UIImage *image = bundleEditImageNamed(((LFSplashImageBlur *)blur).imageName);
             if (image) {
-                CGPoint firstPoint = CGPointZero;
-                if (i > 0) {
-                    LFSplashBlur *prevBlur = self.lineArray[i-1];
-                    firstPoint = prevBlur.rect.origin;
-                }
                 /** 创建颜色图片 */
                 CGColorSpaceRef colorRef = CGColorSpaceCreateDeviceRGB();
                 CGContextRef contextRef = CGBitmapContextCreate(nil, image.size.width, image.size.height, 8, image.size.width*4, colorRef, kCGImageAlphaPremultipliedFirst);
@@ -110,6 +100,10 @@ CGFloat angleBetweenLines(CGPoint line1Start, CGPoint line1End, CGPoint line2Sta
             }
             
         } else {
+            // 设置描边颜色
+//            CGContextSetStrokeColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
+            // 模糊矩形可以用到，用于填充矩形
+            CGContextSetFillColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
             // 模糊矩形  填充 画完一个小正方形
             CGContextFillRect(context, rect);
         }

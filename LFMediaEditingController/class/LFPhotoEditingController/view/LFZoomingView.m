@@ -9,13 +9,14 @@
 #import "LFZoomingView.h"
 #import "UIView+LFMEFrame.h"
 #import "UIView+LFMECommon.h"
+#import "UIImage+LFMECommon.h"
 
 #import <AVFoundation/AVFoundation.h>
 
 /** 编辑功能 */
-#import "LFFilterView.h"
+#import "LFDataFilterImageView.h"
 #import "LFDrawView.h"
-#import "LFSplashView_new.h"
+#import "LFSplashView.h"
 #import "LFStickerView.h"
 
 NSString *const kLFZoomingViewData_draw = @"LFZoomingViewData_draw";
@@ -28,10 +29,8 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 /** 原始坐标 */
 @property (nonatomic, assign) CGRect originalRect;
 
-@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic, weak) LFDataFilterImageView *imageView;
 
-/** 滤镜 */
-@property (nonatomic, weak) LFFilterView *filterView;
 /** 绘画 */
 @property (nonatomic, weak) LFDrawView *drawView;
 /** 贴图 */
@@ -39,7 +38,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 /** 模糊（马赛克、高斯模糊） */
 //@property (nonatomic, weak) LFSplashView *splashView;
 /** 模糊 */
-@property (nonatomic, weak) LFSplashView_new *splashView;
+@property (nonatomic, weak) LFSplashView *splashView;
 
 /** 代理 */
 @property (nonatomic ,weak) id delegate;
@@ -70,26 +69,12 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     self.contentMode = UIViewContentModeScaleAspectFit;
     self.editEnable = YES;
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    LFDataFilterImageView *imageView = [[LFDataFilterImageView alloc] initWithFrame:self.bounds];
     imageView.backgroundColor = [UIColor clearColor];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:imageView];
     self.imageView = imageView;
-    
-    /** 新增滤镜层 */
-    LFFilterView *filterView = [[LFFilterView alloc] initWithFrame:self.bounds];
-    /** 不需要触摸 */
-    filterView.userInteractionEnabled = NO;
-    [self addSubview:filterView];
-    self.filterView = filterView;
-    
-    /** 涂抹 - 最底层 */
-//    LFSplashView *splashView = [[LFSplashView alloc] initWithFrame:self.bounds];
-//    /** 默认不能涂抹 */
-//    splashView.userInteractionEnabled = NO;
-//    [self addSubview:splashView];
-//    self.splashView = splashView;
-    LFSplashView_new *splashView = [[LFSplashView_new alloc] initWithFrame:self.bounds];
+    LFSplashView *splashView = [[LFSplashView alloc] initWithFrame:self.bounds];
     __weak typeof(self) weakSelf = self;
     splashView.splashColor = ^UIColor *(CGPoint point) {
         return [weakSelf.imageView LFME_colorOfPoint:point];
@@ -127,22 +112,12 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
         }];
     }
     
-    [self.imageView setImage:image];
-    [self.imageView startAnimating];
-    
-    
-    if (image.images.count) {
-        /** gif 不生成滤镜效果 */
-        self.filterView.image = nil;
-    } else {
-        self.filterView.image = image;
-    }
+    [self.imageView setImageByUIImage:image];
 }
 
 - (void)setImageViewHidden:(BOOL)imageViewHidden
 {
     self.imageView.hidden = imageViewHidden;
-    self.filterView.hidden = imageViewHidden;
 }
 
 - (BOOL)isImageViewHidden
@@ -242,7 +217,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     NSDictionary *drawData = _drawView.data;
     NSDictionary *stickerData = _stickerView.data;
     NSDictionary *splashData = _splashView.data;
-    NSDictionary *filterData = _filterView.data;
+    NSDictionary *filterData = _imageView.data;
     
     NSMutableDictionary *data = [@{} mutableCopy];
     if (drawData) [data setObject:drawData forKey:kLFZoomingViewData_draw];
@@ -261,24 +236,24 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     _drawView.data = photoEditData[kLFZoomingViewData_draw];
     _stickerView.data = photoEditData[kLFZoomingViewData_sticker];
     _splashView.data = photoEditData[kLFZoomingViewData_splash];
-    _filterView.data = photoEditData[kLFZoomingViewData_filter];
+    _imageView.data = photoEditData[kLFZoomingViewData_filter];
 }
 
 #pragma mark - 滤镜功能
 /** 滤镜类型 */
 - (void)changeFilterType:(NSInteger)cmType
 {
-    self.filterView.cmType = cmType;
+    self.imageView.type = cmType;
 }
 /** 当前使用滤镜类型 */
 - (NSInteger)getFilterType
 {
-    return self.filterView.cmType;
+    return self.imageView.type;
 }
 /** 获取滤镜图片 */
 - (UIImage *)getFilterImage
 {
-    return self.filterView.filterImage;
+    return [self.imageView renderedAnimatedUIImage];
 }
 
 #pragma mark - 绘画功能

@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSData *gifData;
 
-@property (nonatomic, readonly, nullable) UIImage *gifImage;
 /**
  Set the CIImage using an UIImage(images)
  */
@@ -38,6 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
  Whether this instance stop gif.
  */
 - (void)stopGif;
+
+/**
+ Returns the rendered UIImage(gif) in its natural size.
+ Subclass should not override this method.
+ */
+- (UIImage *__nullable)renderedAnimatedUIImage;
 
 @end
 

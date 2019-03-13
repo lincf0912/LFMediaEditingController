@@ -8,6 +8,7 @@
 
 #import "LFFilterGifView.h"
 #import "LFWeakSelectorTarget.h"
+#import "LFContextImageView+private.h"
 
 @interface LFFilterGifView ()
 {
@@ -21,6 +22,9 @@
     
     NSTimeInterval _duration;
 }
+
+@property (nonatomic, strong) UIImage *gifImage;
+
 @end
 
 @implementation LFFilterGifView
@@ -61,14 +65,24 @@
 
 - (void)dealloc
 {
+    [self freeData];
     [self unsetupDisplayLink];
+}
+
+- (void)freeData
+{
+    if (_gifSourceRef) {
+        CFRelease(_gifSourceRef);
+    }
+    _gifData = nil;
+    _frameCount = 0;
+    _duration = 0.1f;
+    _loopTimes = 0;
 }
 
 - (void)setImageByUIImage:(UIImage *)image
 {
-    if (image == nil) {
-        [self unsetupDisplayLink];
-    }
+    [self freeData];
     if (image.images.count) {
         [super setImageByUIImage:image.images.firstObject];
         _gifImage = image;
@@ -76,6 +90,7 @@
         _duration = image.duration / image.images.count;
         [self setupDisplayLink];
     } else {
+        [self unsetupDisplayLink];
         [super setImageByUIImage:image];
     }
 }
@@ -83,6 +98,7 @@
 - (void)setGifData:(NSData *)gifData
 {
     if (_gifData != gifData) {
+        [self freeData];
         _gifData = gifData;
         if (gifData) {
             _gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(gifData), NULL);
@@ -90,14 +106,12 @@
             [self setupDisplayLink];
             
             /** 处理第一帧的图片 */
-            CGImageRef imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, 1, NULL);
+            CGImageRef imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, 0, NULL);
             self.CIImageTime = 1;
             self.CIImage = [CIImage imageWithCGImage:imageRef];
             CGImageRelease(imageRef);
         } else {
             [self unsetupDisplayLink];
-            _gifSourceRef = nil;
-            _frameCount = 0;
         }
     }
 }
@@ -121,6 +135,67 @@
 - (void)playGif
 {
     _displayLink.paused = NO;
+}
+
+- (UIImage *__nullable)renderedAnimatedUIImage
+{
+    NSMutableArray <UIImage *>*returnedImages = [NSMutableArray arrayWithCapacity:_frameCount];
+    CGImageRef imageRef = nil;
+    UIImage *returnedImage = nil;
+    for (NSInteger i=0; i<_frameCount; i++) {
+        if (_gifSourceRef) {
+            imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, i, NULL);
+        } else if (_gifImage) {
+            imageRef = [[_gifImage.images objectAtIndex:i] CGImage];
+        }
+        CIImage *image = nil;
+        if (imageRef) {
+            image = [CIImage imageWithCGImage:imageRef];
+            if (_gifSourceRef) {
+                CGImageRelease(imageRef);
+            }
+        }
+        
+        if (image != nil) {
+            if (self.filter != nil) {
+                image = [self.filter imageByProcessingImage:image atTime:i+1];
+            }
+        }
+        
+        returnedImage = [self renderedUIImageInCIImage:image];
+        if (returnedImage) {
+            [returnedImages addObject:returnedImage];
+        }
+    }
+    
+    if (_frameCount > 0 && returnedImages.count == _frameCount) {
+        /** gif */
+        return [UIImage animatedImageWithImages:returnedImages duration:_duration*_frameCount];
+    } else {
+        if (_gifSourceRef) {
+            imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, 0, NULL);
+        } else if (_gifImage) {
+            imageRef = [[_gifImage.images objectAtIndex:0] CGImage];
+        }
+        CIImage *image = nil;
+        if (imageRef) {
+            image = [CIImage imageWithCGImage:imageRef];
+            if (_gifSourceRef) {
+                CGImageRelease(imageRef);
+            }
+        }
+        
+        if (image != nil) {
+            if (self.filter != nil) {
+                image = [self.filter imageByProcessingImage:image atTime:1];
+            }
+            /** first frame image */
+            return [self renderedUIImageInCIImage:image];
+        } else {
+            /** display image */
+            return [self renderedUIImage];
+        }
+    }
 }
 
 #pragma mark - CADisplayLink
@@ -154,6 +229,8 @@
     if (sizeMin == SIZE_MAX) {
         //若该Gif文件无法解释为图片，需要立即返回避免内存crash
         NSLog(@"Unable to interpret gif data");
+        [self freeData];
+        [self unsetupDisplayLink];
         return;
     }
     
@@ -162,15 +239,6 @@
         _timestamp = _timestamp+_displayLink.duration;
         return;
     }
-    _index += 1;
-    if (_index > _frameCount) {
-        _loopTimes ++;
-        if (_loopCount == _loopTimes) {
-            [self stopGif];
-        }
-    }
-    _index = _index % _frameCount;
-    
     
     CGImageRef imageRef = nil;
     if (_gifSourceRef) {
@@ -180,12 +248,21 @@
     }
     
     if (imageRef) {
-        self.CIImageTime = _index;
+        self.CIImageTime = _index+1;
         self.CIImage = [CIImage imageWithCGImage:imageRef];
         if (_gifSourceRef) {
             CGImageRelease(imageRef);
         }
     }
+    
+    _index += 1;
+    if (_index == _frameCount) {
+        if (_loopCount == ++_loopTimes) {
+            [self stopGif];
+        }
+    }
+    _index = _index % _frameCount;
+    
     _timestamp = 0.f;
 }
 
