@@ -158,7 +158,7 @@
         
         if (image != nil) {
             if (self.filter != nil) {
-                image = [self.filter imageByProcessingImage:image atTime:i+1];
+                image = [self.filter imageByProcessingImage:image atTime:i];
             }
         }
         
@@ -187,7 +187,7 @@
         
         if (image != nil) {
             if (self.filter != nil) {
-                image = [self.filter imageByProcessingImage:image atTime:1];
+                image = [self.filter imageByProcessingImage:image atTime:0];
             }
             /** first frame image */
             return [self renderedUIImageInCIImage:image];
