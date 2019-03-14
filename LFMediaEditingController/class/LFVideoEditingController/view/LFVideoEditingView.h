@@ -30,7 +30,7 @@
 /** 数据 */
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;
 
-/** 剪辑视频 */
+/** 导出视频 */
 - (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete progress:(void (^)(float progress))progress;
 
 /** 播放 */

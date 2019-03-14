@@ -16,3 +16,4 @@
 /* -------- LFAudioItem  -------*/
 "_LFME_defaultAudioItem_name" = "Default AudioTrack";
 "_LFME_MediaPicker_prompt" = "请选择需要的歌曲";
+"_LFME_AudioTackTitle_prompt" = "自定义音乐";

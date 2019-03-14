@@ -44,10 +44,12 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
 @property (nonatomic, assign) LFVideoEditOperationType operationType;
 /** 设置默认的操作类型(可以选择最多2种操作，优先级以类型为准，但剪辑类型优于所有。所有类型可与剪辑类型搭配显示2种；剪辑以外的其它多种类型搭配以优先级排序仅显示1种) default is 0 */
 @property (nonatomic, assign) LFVideoEditOperationType defaultOperationType;
-/** 自定义贴图资源 */
-@property (nonatomic, strong) NSString *stickerPath;
 /** 允许剪辑的最小时长 1秒 */
 @property (nonatomic, assign) double minClippingDuration;
+/** 自定义贴图资源 */
+@property (nonatomic, strong) NSString *stickerPath;
+/** 自定义音频资源（fileURLWithPath:） */
+@property (nonatomic, strong) NSArray <NSURL *>*defaultAudioUrls;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFVideoEditingControllerDelegate> delegate;

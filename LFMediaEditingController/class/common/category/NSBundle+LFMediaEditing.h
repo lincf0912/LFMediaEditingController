@@ -15,6 +15,7 @@
 + (UIImage *)LFME_imageNamed:(NSString *)name;
 + (UIImage *)LFME_stickersImageNamed:(NSString *)name;
 + (NSString *)LFME_stickersPath;
++ (UIImage *)LFME_audioTrackImageNamed:(NSString *)name;
 
 + (NSString *)LFME_localizedStringForKey:(NSString *)key;
 + (NSString *)LFME_localizedStringForKey:(NSString *)key value:(NSString *)value;

@@ -55,6 +55,11 @@ NSString *const LFMediaEditingStrings = @"LFMediaEditingController";
     return [self LFME_imageNamed:name inDirectory:@"stickers"];
 }
 
++ (UIImage *)LFME_audioTrackImageNamed:(NSString *)name
+{
+    return [self LFME_imageNamed:name inDirectory:@"AudioTrack"];
+}
+
 + (NSString *)LFME_stickersPath
 {
     return [[self LFME_imagePickerBundle] pathForResource:@"stickers" ofType:nil];

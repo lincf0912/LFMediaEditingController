@@ -79,6 +79,19 @@
     _asset = asset;
     _placeholderImage = image;
     [_EditingView setVideoAsset:asset placeholderImage:image];
+    /** default audio urls */
+    if (self.defaultAudioUrls.count) {
+        NSMutableArray *m_audioUrls = [_EditingView.audioUrls mutableCopy];
+        for (NSURL *url in self.defaultAudioUrls) {
+            if ([url isKindOfClass:[NSURL class]]) {
+                LFAudioItem *item = [LFAudioItem new];
+                item.title = [url.lastPathComponent stringByDeletingPathExtension];;
+                item.url = url;
+                [m_audioUrls addObject:item];
+            }
+        }
+        _EditingView.audioUrls = m_audioUrls;
+    }
 }
 
 - (void)setMinClippingDuration:(double)minClippingDuration
@@ -528,15 +541,6 @@
 /** 完成回调 */
 - (void)lf_audioTrackBar:(LFAudioTrackBar *)audioTrackBar didFinishAudioUrls:(NSArray <LFAudioItem *> *)audioUrls
 {
-    /** 过滤没有启用的音轨 */
-    NSMutableArray <LFAudioItem *> *results = [@[] mutableCopy];
-    for (LFAudioItem *item in audioUrls) {
-        if (item.isEnable) { /** 选中的音轨 */
-            [results addObject:item];
-        } else if (item.isOriginal) { /** 默认音轨 */
-            [results addObject:item];
-        }
-    }
     _EditingView.audioUrls = audioUrls;
     [self lf_audioTrackBarDidCancel:audioTrackBar];
 }

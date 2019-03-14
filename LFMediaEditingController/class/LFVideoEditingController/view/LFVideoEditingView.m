@@ -250,7 +250,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     return view;
 }
 
-/** 剪辑视频 */
+/** 导出视频 */
 - (void)exportAsynchronouslyWithTrimVideo:(void (^)(NSURL *trimURL, NSError *error))complete progress:(void (^)(float progress))progress
 {
     [self pauseVideo];
@@ -418,7 +418,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     
     if (self.audioUrls.count) {
         NSMutableArray *audioDatas = [@[] mutableCopy];
-        BOOL hasOriginal = NO;
+//        BOOL hasOriginal = NO;
         for (LFAudioItem *item in self.audioUrls) {
             
             NSMutableDictionary *myData = [@{} mutableCopy];
@@ -432,16 +432,17 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
             [myData setObject:@(item.isEnable) forKey:kLFVideoEditingViewData_audioEnable];
             
             /** 忽略没有启用的音频 */
-            if (item.isEnable || item.isOriginal) {
-                [audioDatas addObject:myData];
-            }
-            if (item.isOriginal && item.isEnable) {
-                hasOriginal = YES;
-            }
+//            if (item.isEnable || item.isOriginal) {
+//                [audioDatas addObject:myData];
+//            }
+//            if (item.isOriginal && item.isEnable) {
+//                hasOriginal = YES;
+//            }
+            [audioDatas addObject:myData];
         }
-        if (!(hasOriginal && audioDatas.count == 1)) { /** 只有1个并且是原音，忽略数据 */
+//        if (!(hasOriginal && audioDatas.count == 1)) { /** 只有1个并且是原音，忽略数据 */
             [data setObject:@{kLFVideoEditingViewData_audioUrlList:audioDatas} forKey:kLFVideoEditingViewData];
-        }
+//        }
     }
     if (data.count) {
         return data;
@@ -459,7 +460,6 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
             LFAudioItem *item = [LFAudioItem new];
             item.title = audioDict[kLFVideoEditingViewData_audioTitle];
             item.url = audioDict[kLFVideoEditingViewData_audioUrl];
-            item.isOriginal = [audioDict[kLFVideoEditingViewData_audioOriginal] boolValue];
             item.isEnable = [audioDict[kLFVideoEditingViewData_audioEnable] boolValue];
             [audioUrls addObject:item];
         }
