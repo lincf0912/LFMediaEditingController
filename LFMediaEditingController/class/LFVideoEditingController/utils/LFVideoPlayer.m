@@ -21,6 +21,8 @@ enum
 /** 视频播放器 */
 @property (strong) AVPlayer* player;
 
+@property (nonatomic, copy) AVAudioTimePitchAlgorithm audioTimePitchAlgorithm;
+
 @property (nonatomic, copy) AVMutableComposition *composition;
 @property (nonatomic ,strong) AVMutableAudioMix *audioMix;
 
@@ -39,6 +41,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     if (self) {
         _size = CGSizeZero;
         _rate = 1.f;
+        _audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
     }
     return self;
 }
@@ -171,7 +174,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
         /** 创建原音混音 */
         self.audioMix = [AVMutableAudioMix audioMix];
         AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:compositionAudioTrack];
-        audioInputParams.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
+        audioInputParams.audioTimePitchAlgorithm = self.audioTimePitchAlgorithm;
         [audioInputParams setVolume:1.f atTime:kCMTimeZero];
         self.audioMix.inputParameters = @[audioInputParams];
     }
@@ -230,7 +233,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
             [additional_compositionAudioTrack setPreferredTransform:additional_assetAudioTrack.preferredTransform];
             [additional_compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, duration) ofTrack:additional_assetAudioTrack atTime:insertionPoint error:nil];
             AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:additional_compositionAudioTrack];
-            mixParameters.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
+            mixParameters.audioTimePitchAlgorithm = self.audioTimePitchAlgorithm;
             [mixParameters setVolumeRampFromStartVolume:1.f toEndVolume:0.3 timeRange:CMTimeRangeMake(kCMTimeZero, duration)];
             [inputParameters addObject:mixParameters];
         }
@@ -260,7 +263,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
         
         for (AVAssetTrack *track in audioTracks) {
             AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:track];
-            audioInputParams.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
+            audioInputParams.audioTimePitchAlgorithm = self.audioTimePitchAlgorithm;
             if ([track trackID] == kCMPersistentTrackID_Orignail_Audio_Invalid) {
                 [audioInputParams setVolume:(muteOriginalSound ? 0 : 1) atTime:kCMTimeZero];
                 [inputParameters insertObject:audioInputParams atIndex:0];
@@ -635,6 +638,7 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
     self.mPlayerItem = [AVPlayerItem playerItemWithAsset:asset];
     self.mPlayerItem.audioMix = self.audioMix;
+    self.mPlayerItem.audioTimePitchAlgorithm = self.audioTimePitchAlgorithm;
     
     /* Observe the player item "status" key to determine when it is ready to play. */
     [self.mPlayerItem addObserver:self
