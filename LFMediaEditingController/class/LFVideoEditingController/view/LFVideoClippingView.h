@@ -44,6 +44,9 @@
 /** 剪切范围 */
 @property (nonatomic, assign) CGRect cropRect;
 
+/** 播放速率 */
+@property (nonatomic, assign) float rate;
+
 /** 保存 */
 - (void)save;
 /** 取消 */

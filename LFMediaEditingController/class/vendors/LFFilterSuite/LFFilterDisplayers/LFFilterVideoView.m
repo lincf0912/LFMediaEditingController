@@ -134,7 +134,7 @@ static char* LFItemChanged = "CurrentItemContext";
         [self initObservers];
     } else
     if (context == LFStatusChanged) {
-        void (^block)() = ^{
+        void (^block)(void) = ^{
             [self setupVideoOutputToItem:self.player.currentItem];
         };
         if ([NSThread isMainThread]) {

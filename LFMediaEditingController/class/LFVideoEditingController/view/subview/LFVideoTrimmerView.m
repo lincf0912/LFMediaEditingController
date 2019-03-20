@@ -104,6 +104,26 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
     return timeLabel;
 }
 
+- (BOOL)isEnabledLeftCorner
+{
+    return self.gridView.isEnabledLeftCorner;
+}
+
+- (void)setEnabledLeftCorner:(BOOL)enabledLeftCorner
+{
+    self.gridView.enabledLeftCorner = enabledLeftCorner;
+}
+
+- (BOOL)isEnabledRightCorner
+{
+    return self.gridView.isEnabledRightCorner;
+}
+
+- (void)setEnabledRightCorner:(BOOL)enabledRightCorner
+{
+    self.gridView.enabledRightCorner = enabledRightCorner;
+}
+
 - (void)setMaxImageCount:(NSInteger)maxImageCount
 {
     if (maxImageCount > 0) {

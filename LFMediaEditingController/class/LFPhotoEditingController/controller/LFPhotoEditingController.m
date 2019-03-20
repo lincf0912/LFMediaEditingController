@@ -513,16 +513,16 @@
     if (NSClassFromString(@"UIAlertController")) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            _edit_clipping_toolBar.selectAspectRatio = NO;
-            [_EditingView setAspectRatio:nil];
+            self->_edit_clipping_toolBar.selectAspectRatio = NO;
+            [self->_EditingView setAspectRatio:nil];
         }]];
         
         //Add each item to the alert controller
         for (NSInteger i=0; i<items.count; i++) {
             NSString *item = items[i];
             UIAlertAction *action = [UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                _edit_clipping_toolBar.selectAspectRatio = YES;
-                [_EditingView setAspectRatio:item];
+                self->_edit_clipping_toolBar.selectAspectRatio = YES;
+                [self->_EditingView setAspectRatio:item];
             }];
             [alertController addAction:action];
         }
@@ -558,7 +558,7 @@
 
 #pragma mark - UIActionSheetDelegate
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == [actionSheet cancelButtonIndex]) {
@@ -614,7 +614,7 @@
 {
     if (_filterSmallImage == nil) {
         CGSize size = CGSizeZero;
-        size.width = JR_FilterBar_MAX_WIDTH;
+        size.width = JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale;
         size.height = (int)(self.editImage.size.height*size.width/self.editImage.size.width)*1.f;
         self.filterSmallImage = [self.editImage LFME_scaleToSize:size];
     }
@@ -749,14 +749,14 @@
 - (void)lf_EditingViewWillBeginEditing:(LFEditingView *)EditingView
 {
     [UIView animateWithDuration:0.25f animations:^{
-        _edit_clipping_toolBar.alpha = 0.f;
+        self->_edit_clipping_toolBar.alpha = 0.f;
     }];
 }
 /** 停止编辑目标 */
 - (void)lf_EditingViewDidEndEditing:(LFEditingView *)EditingView
 {
     [UIView animateWithDuration:0.25f animations:^{
-        _edit_clipping_toolBar.alpha = 1.f;
+        self->_edit_clipping_toolBar.alpha = 1.f;
     }];
     _edit_clipping_toolBar.enableReset = EditingView.canReset;
 }
@@ -914,7 +914,7 @@
         textBar.y = 0;
     } completion:^(BOOL finished) {
         /** 隐藏顶部栏 */
-        _isHideNaviBar = YES;
+        self->_isHideNaviBar = YES;
         [self changedBarState];
     }];
 }

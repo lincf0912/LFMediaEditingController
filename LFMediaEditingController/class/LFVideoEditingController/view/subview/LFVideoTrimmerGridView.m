@@ -172,6 +172,26 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
     self.rightCornerView.frame = (CGRect){CGRectGetMaxX(rect) - CGRectGetWidth(self.rightCornerView.bounds) / 2, (CGRectGetHeight(rect) - CGRectGetHeight(self.rightCornerView.bounds)) / 2, self.rightCornerView.bounds.size};
 }
 
+- (BOOL)isEnabledLeftCorner
+{
+    return self.leftCornerView.userInteractionEnabled;
+}
+
+- (void)setEnabledLeftCorner:(BOOL)enabledLeftCorner
+{
+    self.leftCornerView.userInteractionEnabled = enabledLeftCorner;
+}
+
+- (BOOL)isEnabledRightCorner
+{
+    return self.rightCornerView.userInteractionEnabled;
+}
+
+- (void)setEnabledRightCorner:(BOOL)enabledRightCorner
+{
+    self.rightCornerView.userInteractionEnabled = enabledRightCorner;
+}
+
 - (void)setProgress:(double)progress
 {
     if (isnan(progress) || progress < 0) {
@@ -213,8 +233,8 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
 - (void)lf_resizeConrolDidEndResizing:(LFResizeControl *)resizeConrol
 {
     self.bg_gridLayer.hidden = YES;
-    self.leftCornerView.userInteractionEnabled = YES;
-    self.rightCornerView.userInteractionEnabled = YES;
+    self.leftCornerView.enabled = YES;
+    self.rightCornerView.enabled = YES;
     if ([self.delegate respondsToSelector:@selector(lf_videoTrimmerGridViewDidEndResizing:)]) {
         [self.delegate lf_videoTrimmerGridViewDidEndResizing:self];
     }
@@ -271,25 +291,25 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
     
     if (resizeControlView == self.leftCornerView) {
         /** 限制宽度 超出 最大限度 */
-        if (rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON || rect.origin.x < 0) {
+        if (rect.size.width > self.controlMaxWidth || rect.origin.x < 0) {
             CGFloat diff = rect.origin.x < 0 ? (rect.origin.x-0) : (self.controlMaxWidth - rect.size.width);
             rect.origin.x -= diff;
             rect.size.width += diff;
         } else
         /** 限制宽度 超出 最小限度 */
-        if (rect.size.width+FLT_EPSILON < self.controlMinWidth+FLT_EPSILON) {
+        if (rect.size.width < self.controlMinWidth) {
             CGFloat diff = self.controlMinWidth - rect.size.width;
             rect.origin.x -= diff;
             rect.size.width += diff;
         }
     } else if (resizeControlView == self.rightCornerView) {
         /** 限制宽度 超出 最大限度 */
-        if (rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON || rect.origin.x+FLT_EPSILON+rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON) {
-            CGFloat diff = rect.size.width+FLT_EPSILON > self.controlMaxWidth+FLT_EPSILON ? (self.controlMaxWidth - rect.size.width) : (self.controlMaxWidth-(rect.origin.x+FLT_EPSILON+rect.size.width+FLT_EPSILON));
+        if (rect.size.width > self.controlMaxWidth || rect.origin.x+rect.size.width > self.controlMaxWidth) {
+            CGFloat diff = rect.size.width > self.controlMaxWidth ? (self.controlMaxWidth - rect.size.width) : (self.controlMaxWidth-(rect.origin.x+rect.size.width));
             rect.size.width += diff;
         } else
         /** 限制宽度 超出 最小限度 */
-        if (rect.size.width+FLT_EPSILON < self.controlMinWidth+FLT_EPSILON) {
+        if (rect.size.width < self.controlMinWidth) {
             CGFloat diff = self.controlMinWidth - rect.size.width;
             rect.size.width += diff;
         }
@@ -306,9 +326,9 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
         return nil;
     }
     if (self.leftCornerView == view) {
-        self.rightCornerView.userInteractionEnabled = NO;
+        self.rightCornerView.enabled = NO;
     } else if (self.rightCornerView == view) {
-        self.leftCornerView.userInteractionEnabled = NO;
+        self.leftCornerView.enabled = NO;
     }
     return view;
 }

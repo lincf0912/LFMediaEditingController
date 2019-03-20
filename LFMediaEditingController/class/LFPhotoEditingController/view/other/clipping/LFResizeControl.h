@@ -14,6 +14,7 @@
 
 @property (weak, nonatomic) id<lf_resizeConrolDelegate> delegate;
 @property (nonatomic, readonly) CGPoint translation;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
 
 @end
 

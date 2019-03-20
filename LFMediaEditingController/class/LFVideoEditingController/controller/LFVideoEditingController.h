@@ -23,6 +23,8 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
     LFVideoEditOperationType_clip = 1 << 4,
     /** 滤镜 */
     LFVideoEditOperationType_filter NS_ENUM_AVAILABLE_IOS(9_0) = 1 << 5,
+    /** 速率 */
+    LFVideoEditOperationType_rate = 1 << 6,
     /** 所有 */
     LFVideoEditOperationType_All = ~0UL,
 };

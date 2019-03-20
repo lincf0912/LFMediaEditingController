@@ -13,6 +13,8 @@
 @property (nonatomic, readwrite) CGPoint translation;
 @property (nonatomic) CGPoint startPoint;
 
+@property (nonatomic, strong) UIPanGestureRecognizer *gestureRecognizer;
+
 @end
 
 @implementation LFResizeControl
@@ -25,9 +27,20 @@
         
         UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
         [self addGestureRecognizer:gestureRecognizer];
+        _gestureRecognizer = gestureRecognizer;
     }
     
     return self;
+}
+
+- (BOOL)isEnabled
+{
+    return _gestureRecognizer.isEnabled;
+}
+
+- (void)setEnabled:(BOOL)enabled
+{
+    _gestureRecognizer.enabled = enabled;
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer

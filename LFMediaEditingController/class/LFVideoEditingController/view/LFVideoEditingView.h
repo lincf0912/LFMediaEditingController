@@ -24,6 +24,9 @@
 /** 允许剪辑的最小时长 1秒 */
 @property (nonatomic, assign) double minClippingDuration;
 
+/** 播放速率 */
+@property (nonatomic, assign) float rate;
+
 /** 取消剪辑 */
 - (void)cancelClipping:(BOOL)animated;
 

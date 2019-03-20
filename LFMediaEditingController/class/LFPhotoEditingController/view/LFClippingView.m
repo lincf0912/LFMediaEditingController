@@ -239,7 +239,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                              if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidEndZooming:)]) {
                                  [self.clippingDelegate lf_clippingViewDidEndZooming:self];
                              }
-                             _isReseting = NO;
+                             self->_isReseting = NO;
                          }];
     }
 }
@@ -426,7 +426,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
             }
             
         } completion:^(BOOL complete) {
-            _isRotating = NO;
+            self->_isRotating = NO;
             if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidEndZooming:)]) {
                 [self.clippingDelegate lf_clippingViewDidEndZooming:self];
             }

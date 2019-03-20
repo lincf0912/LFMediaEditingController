@@ -28,6 +28,8 @@
 @property (nonatomic, strong, nullable) UIView *overlayView;
 /** 滤镜 */
 @property (nonatomic, strong, nullable) LFFilter *filter NS_AVAILABLE_IOS(9_0) __TVOS_PROHIBITED;
+/** 速率 推荐:0.5~2.0 */
+@property (nonatomic, assign) float rate;
 
 /** 处理视频 */
 - (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler;

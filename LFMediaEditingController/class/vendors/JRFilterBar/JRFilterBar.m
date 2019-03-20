@@ -128,15 +128,16 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 100.f;
     cell.selectColor = self.selectColor;
     if (!item.image) {
         if ([self.dataSource respondsToSelector:@selector(jr_async_filterBarImageForEffectType:)]) {
+            __weak typeof(self) weakSelf = self;
+            __weak typeof(cell) weakCell = cell;
+            __weak typeof(item) weakitem = item;
             dispatch_async(self.serialQueue, ^{
-                UIImage *image = [self.dataSource jr_async_filterBarImageForEffectType:item.effectType];
+                UIImage *image = [weakSelf.dataSource jr_async_filterBarImageForEffectType:weakitem.effectType];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [collectionView performBatchUpdates:^{
-                        item.image = image;
-                        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                    } completion:^(BOOL finished) {
-                        
-                    }];
+                    if (weakSelf) {
+                        weakitem.image = image;
+                        [weakCell setCellData:weakitem];
+                    }
                 });
             });
         }

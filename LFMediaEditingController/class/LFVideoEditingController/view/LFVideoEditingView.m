@@ -306,6 +306,9 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     self.exportSession.overlayView = self.clippingView.overlayView;
     // 滤镜
     self.exportSession.filter = self.clippingView.filter;
+    // 速率
+    self.exportSession.rate = self.rate;
+    // 音频
     NSMutableArray *audioUrls = [@[] mutableCopy];
     for (LFAudioItem *item in self.audioUrls) {
         if (item.isEnable && item.url) {
@@ -320,6 +323,16 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(NSError *error) {
         if (complete) complete(trimURL, error);
     } progress:progress];
+}
+
+- (float)rate
+{
+    return self.clippingView.rate;
+}
+
+- (void)setRate:(float)rate
+{
+    self.clippingView.rate = rate;
 }
 
 /** 播放 */
@@ -418,7 +431,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     
     if (self.audioUrls.count) {
         NSMutableArray *audioDatas = [@[] mutableCopy];
-//        BOOL hasOriginal = NO;
+        BOOL hasOriginal = NO;
         for (LFAudioItem *item in self.audioUrls) {
             
             NSMutableDictionary *myData = [@{} mutableCopy];
@@ -435,14 +448,14 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 //            if (item.isEnable || item.isOriginal) {
 //                [audioDatas addObject:myData];
 //            }
-//            if (item.isOriginal && item.isEnable) {
-//                hasOriginal = YES;
-//            }
+            if (item.isOriginal && item.isEnable) {
+                hasOriginal = YES;
+            }
             [audioDatas addObject:myData];
         }
-//        if (!(hasOriginal && audioDatas.count == 1)) { /** 只有1个并且是原音，忽略数据 */
+        if (!(hasOriginal && audioDatas.count == 1)) { /** 只有1个并且是原音，忽略数据 */
             [data setObject:@{kLFVideoEditingViewData_audioUrlList:audioDatas} forKey:kLFVideoEditingViewData];
-//        }
+        }
     }
     if (data.count) {
         return data;

@@ -283,9 +283,9 @@ CGFloat const JRPickColorView_magnifierView_Margin = 15.0f; //!放大镜距离�
     CGFloat x = _index * _colorWidth + (_colorWidth / 2);
     if (self.animation) {
         [UIView animateWithDuration:0.25f delay:0.f usingSpringWithDamping:1.0f initialSpringVelocity:0.1f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            CGPoint point = _showColorsContainer.center;
+            CGPoint point = self.showColorsContainer.center;
             point.x = x;
-            _showColorsContainer.center = point;
+            self.showColorsContainer.center = point;
         } completion:nil];
     } else {
         CGPoint point = _showColorsContainer.center;

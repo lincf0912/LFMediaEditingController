@@ -29,7 +29,6 @@
 		6F14E6531EE6439E0049AE56 /* LFDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6291EE6439E0049AE56 /* LFDrawView.m */; };
 		6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E62D1EE6439E0049AE56 /* LFStickerView.m */; };
 		6F14E6561EE6439E0049AE56 /* LFClipToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6301EE6439E0049AE56 /* LFClipToolbar.m */; };
-		6F14E6571EE6439E0049AE56 /* LFColorSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6321EE6439E0049AE56 /* LFColorSlider.m */; };
 		6F14E6581EE6439E0049AE56 /* LFEditToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6341EE6439E0049AE56 /* LFEditToolbar.m */; };
 		6F14E6591EE6439E0049AE56 /* LFStickerBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6361EE6439E0049AE56 /* LFStickerBar.m */; };
 		6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6381EE6439E0049AE56 /* LFTextBar.m */; };
@@ -140,8 +139,6 @@
 		6F14E62D1EE6439E0049AE56 /* LFStickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStickerView.m; sourceTree = "<group>"; };
 		6F14E62F1EE6439E0049AE56 /* LFClipToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFClipToolbar.h; sourceTree = "<group>"; };
 		6F14E6301EE6439E0049AE56 /* LFClipToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFClipToolbar.m; sourceTree = "<group>"; };
-		6F14E6311EE6439E0049AE56 /* LFColorSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFColorSlider.h; sourceTree = "<group>"; };
-		6F14E6321EE6439E0049AE56 /* LFColorSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFColorSlider.m; sourceTree = "<group>"; };
 		6F14E6331EE6439E0049AE56 /* LFEditToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditToolbar.h; sourceTree = "<group>"; };
 		6F14E6341EE6439E0049AE56 /* LFEditToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFEditToolbar.m; sourceTree = "<group>"; };
 		6F14E6351EE6439E0049AE56 /* LFStickerBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStickerBar.h; sourceTree = "<group>"; };
@@ -487,8 +484,6 @@
 			children = (
 				6F14E62F1EE6439E0049AE56 /* LFClipToolbar.h */,
 				6F14E6301EE6439E0049AE56 /* LFClipToolbar.m */,
-				6F14E6311EE6439E0049AE56 /* LFColorSlider.h */,
-				6F14E6321EE6439E0049AE56 /* LFColorSlider.m */,
 				6F14E6331EE6439E0049AE56 /* LFEditToolbar.h */,
 				6F14E6341EE6439E0049AE56 /* LFEditToolbar.m */,
 				6F14E6351EE6439E0049AE56 /* LFStickerBar.h */,
@@ -930,7 +925,6 @@
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,
 				6F359B131F1C678D009F2035 /* VideoViewController.m in Sources */,
 				6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */,
-				6F14E6571EE6439E0049AE56 /* LFColorSlider.m in Sources */,
 				6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */,
 				C7B4493422291A7D00FA460D /* LFSampleBufferHolder.m in Sources */,
 				C73F4CB22230C99C00ED40B7 /* JRFilterModel.m in Sources */,

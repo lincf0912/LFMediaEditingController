@@ -20,6 +20,9 @@
 /** 最大尺寸 */
 @property (nonatomic, assign) CGFloat controlMaxWidth;
 
+@property (nonatomic, getter=isEnabledLeftCorner) BOOL enabledLeftCorner;
+@property (nonatomic, getter=isEnabledRightCorner) BOOL enabledRightCorner;
+
 /** 进度 */
 @property (nonatomic, assign) double progress;
 - (void)setHiddenProgress:(BOOL)hidden;

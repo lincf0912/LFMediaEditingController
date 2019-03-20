@@ -239,6 +239,12 @@
         toolbarType |= LFEditToolbarType_clip;
     }
     
+    if (isiPad) {
+        if (self.operationType&LFVideoEditOperationType_rate) {
+            toolbarType |= LFEditToolbarType_rate;
+        }
+    }
+    
     _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
@@ -403,6 +409,11 @@
             [self changeClipMenu:YES];
         }
             break;
+        case LFEditToolbarType_rate:
+        {
+            editToolbar.rate = _EditingView.rate;
+        }
+            break;
         default:
             break;
     }
@@ -490,6 +501,11 @@
 {
     [_EditingView setDrawColor:color];
 }
+/** 二级菜单滑动事件-速率 */
+- (void)lf_editToolbar:(LFEditToolbar *)editToolbar rateDidChange:(float)value
+{
+    _EditingView.rate = value;
+}
 
 #pragma mark - LFStickerBarDelegate
 - (void)lf_stickerBar:(LFStickerBar *)lf_stickerBar didSelectImage:(UIImage *)image
@@ -556,7 +572,8 @@
         audioTrackBar.y = self.view.height;
     } completion:^(BOOL finished) {
         [audioTrackBar removeFromSuperview];
-        singleTapRecognizer.enabled = YES;
+        
+        self->singleTapRecognizer.enabled = YES;
     }];
 }
 
@@ -754,7 +771,7 @@
         textBar.y = 0;
     } completion:^(BOOL finished) {
         /** 隐藏顶部栏 */
-        _isHideNaviBar = YES;
+        self->_isHideNaviBar = YES;
         [self changedBarState];
     }];
 }
@@ -786,10 +803,10 @@
         audioTrackBar.y = 0;
     } completion:^(BOOL finished) {
         /** 隐藏顶部栏 */
-        _isHideNaviBar = YES;
+        self->_isHideNaviBar = YES;
         [self changedBarState];
-        singleTapRecognizer.enabled = NO;
-        [_EditingView resetVideoDisplay];
+        self->singleTapRecognizer.enabled = NO;
+        [self->_EditingView resetVideoDisplay];
     }];
 }
 
@@ -901,7 +918,7 @@
     if (_filterSmallImage == nil) {
         CGSize videoSize = [self.asset videoNaturalSize];
         CGSize size = CGSizeZero;
-        size.width = JR_FilterBar_MAX_WIDTH;
+        size.width = JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale;
         size.height = (int)(videoSize.height*size.width/videoSize.width)*1.f;
         self.filterSmallImage = [self.asset lf_firstImageWithSize:size error:nil];
     }

@@ -25,6 +25,7 @@ NSString *const kLFVideoCLippingViewData = @"LFVideoCLippingViewData";
 
 NSString *const kLFVideoCLippingViewData_startTime = @"LFVideoCLippingViewData_startTime";
 NSString *const kLFVideoCLippingViewData_endTime = @"LFVideoCLippingViewData_endTime";
+NSString *const kLFVideoCLippingViewData_rate = @"LFVideoCLippingViewData_rate";
 
 NSString *const kLFVideoCLippingViewData_draw = @"LFVideoCLippingViewData_draw";
 NSString *const kLFVideoCLippingViewData_sticker = @"LFVideoCLippingViewData_sticker";
@@ -52,7 +53,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 /** 代理 */
 @property (nonatomic ,weak) id<LFPhotoEditDelegate> editDelegate_self;
 @property (nonatomic, assign) BOOL muteOriginal;
-@property (nonatomic, strong) NSArray *audioMix;
+@property (nonatomic, strong) NSArray <NSURL *>*audioUrls;
 @property (nonatomic, strong) AVAsset *asset;
 
 /** 记录编辑层是否可控 */
@@ -71,6 +72,8 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 @end
 
 @implementation LFVideoClippingView
+
+@synthesize rate = _rate;
 
 /*
  1、播放功能（无限循环）
@@ -149,11 +152,12 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     if (self.videoPlayer == nil) {
         self.videoPlayer = [LFVideoPlayer new];
         self.videoPlayer.delegate = self;
-        if (self.endTime > 0) {
-            self.videoPlayer.endTime = self.endTime;
-        }
     }
-    [self.videoPlayer setAsset:asset audioUrls:self.audioMix];
+    [self.videoPlayer setAsset:asset];
+    [self.videoPlayer setAudioUrls:self.audioUrls];
+    if (_rate > 0 && !(_rate + FLT_EPSILON > 1.0 && _rate - FLT_EPSILON < 1.0)) {
+        self.videoPlayer.rate = _rate;
+    }
     
     /** 重置编辑UI位置 */
     CGSize videoSize = self.videoPlayer.size;
@@ -225,6 +229,17 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     self.videoPlayer.muteOriginalSound = mute;
 }
 
+- (float)rate
+{
+    return self.videoPlayer.rate ?: 1.0;
+}
+
+- (void)setRate:(float)rate
+{
+    _rate = rate;
+    self.videoPlayer.rate = rate;
+}
+
 /** 是否播放 */
 - (BOOL)isPlaying
 {
@@ -252,8 +267,8 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 /** 增加音效 */
 - (void)addAudioMix:(NSArray <NSURL *>*)audioMix
 {
-    _audioMix = audioMix;
-    [self.videoPlayer setAsset:self.asset audioUrls:audioMix];
+    _audioUrls = audioMix;
+    [self.videoPlayer setAudioUrls:self.audioUrls];
 }
 
 /** 移动到某帧 */
@@ -272,7 +287,6 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 {
     _isScrubbing = NO;
     [self.videoPlayer endScrubbing];
-    self.videoPlayer.endTime = self.endTime;
 }
 
 /** 是否存在水印 */
@@ -337,9 +351,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 /** 可以播放 */
 - (void)LFVideoPlayerReadyToPlay:(LFVideoPlayer *)player duration:(double)duration
 {
-    if (self.endTime == 0) {
-        _endTime = duration;
-    }
+    _endTime = duration;
     _totalDuration = duration;
     self.videoPlayer.muteOriginalSound = self.muteOriginal;
     [self playVideo];
@@ -477,10 +489,10 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     if (splashData) [data setObject:splashData forKey:kLFVideoCLippingViewData_splash];
     if (filterData) [data setObject:filterData forKey:kLFVideoCLippingViewData_filter];
     
-    if (self.startTime > 0 || self.endTime < self.totalDuration) {
+    if (self.startTime > 0 || self.endTime < self.totalDuration || (_rate > 0 && !(_rate + FLT_EPSILON > 1.0 && _rate - FLT_EPSILON < 1.0))) {
         NSDictionary *myData = @{kLFVideoCLippingViewData_startTime:@(self.startTime)
                                  , kLFVideoCLippingViewData_endTime:@(self.endTime)
-                                 };
+                                 , kLFVideoCLippingViewData_rate:@(self.rate)};
         [data setObject:myData forKey:kLFVideoCLippingViewData];
     }
     
@@ -496,6 +508,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     if (myData) {
         self.startTime = self.old_startTime = [myData[kLFVideoCLippingViewData_startTime] doubleValue];
         self.endTime = self.old_endTime = [myData[kLFVideoCLippingViewData_endTime] doubleValue];
+        self.rate = [myData[kLFVideoCLippingViewData_rate] floatValue];
     }
     _drawView.data = photoEditData[kLFVideoCLippingViewData_draw];
     _stickerView.data = photoEditData[kLFVideoCLippingViewData_sticker];

@@ -40,15 +40,15 @@
     id mTimeObserver;
     BOOL isSeeking;
 }
-/** 视频URL */
-@property (nonatomic, copy) NSURL* URL;
-@property (nonatomic, copy) AVAsset* asset;
-/** 音效 */
-@property (nonatomic, readonly) NSArray <NSURL *> *audioUrls;
-- (void)setAsset:(AVAsset *)asset audioUrls:(NSArray <NSURL *>*)audioUrls;
+/** 视频URL，初始化新对象将会重置以下所有参数 */
+@property (nonatomic, copy) NSURL *URL;
+@property (nonatomic, copy) AVAsset *asset;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFVideoPlayerDelegate> delegate;
+
+/** 音效 */
+@property (nonatomic, strong) NSArray <NSURL *> *audioUrls;
 /** 视频大小 */
 @property (nonatomic, readonly) CGSize size;
 /** 视频时长 */
@@ -57,8 +57,8 @@
 @property (nonatomic, readonly) double duration;
 /** 针对原音轨静音 */
 @property (nonatomic, assign) BOOL muteOriginalSound;
-/** 音效结束时间 */
-@property (nonatomic, assign) CGFloat endTime;
+/** 播放速率 (0.5~2.0) 值为0则禁止播放，默认1 */
+@property (nonatomic, assign) float rate;
 
 /** 视频控制 */
 - (void)play;
