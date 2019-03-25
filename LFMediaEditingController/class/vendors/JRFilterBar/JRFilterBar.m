@@ -49,10 +49,10 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 100.f;
         CGRect rect = self.bounds;
         rect.size.height -= self.safeAreaInsets.bottom;
         _backgroundView.frame = rect;
-        _collectionView.frame = _backgroundView.bounds;
-        _cellSize = CGSizeMake(JR_FilterBar_MAX_WIDTH, CGRectGetHeight(_backgroundView.frame));
-        [_collectionView.collectionViewLayout invalidateLayout];
     }
+    _collectionView.frame = _backgroundView.bounds;
+    _cellSize = CGSizeMake(JR_FilterBar_MAX_WIDTH, CGRectGetHeight(_backgroundView.frame));
+    [_collectionView.collectionViewLayout invalidateLayout];
 }
 
 #pragma mark - Private Methods
