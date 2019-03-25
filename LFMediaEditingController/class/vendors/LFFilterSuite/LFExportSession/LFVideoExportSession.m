@@ -316,6 +316,8 @@
     [self.exportSession cancelExport];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
 - (LFFilter *)_generateRenderingFilterForVideoSize:(CGSize)videoSize {
     
     LFFilter *watermarkFilter = [self _generateWaterFilterForVideoSize:videoSize];
@@ -352,6 +354,8 @@
     }
     return nil;
 }
+
+#pragma clang diagnostic pop
 
 - (UIImage *)_generateWaterImageForVideoSize:(CGSize)videoSize
 {

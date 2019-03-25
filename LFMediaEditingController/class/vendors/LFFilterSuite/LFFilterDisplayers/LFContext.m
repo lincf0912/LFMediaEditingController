@@ -36,7 +36,12 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     self = [super init];
     
     if (self) {
-        _CIContext = [CIContext contextWithCGContext:contextRef options:LFContextCreateCIContextOptions()];
+        if (@available(iOS 9.0, *)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+            _CIContext = [CIContext contextWithCGContext:contextRef options:LFContextCreateCIContextOptions()];
+#pragma clang diagnostic pop            
+        }
         _type = LFContextTypeCoreGraphics;
     }
     

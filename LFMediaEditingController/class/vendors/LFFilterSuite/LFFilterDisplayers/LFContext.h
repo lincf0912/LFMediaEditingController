@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, LFContextType) {
     /**
      Create a hardware accelerated LFContext with CoreGraphics
      */
-    LFContextTypeCoreGraphics,
+    LFContextTypeCoreGraphics NS_ENUM_AVAILABLE_IOS(9_0),
     
     /**
      Create a hardware accelerated LFContext with EAGL (OpenGL)

@@ -78,6 +78,7 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
 - (BOOL)lf_editToolbar:(LFEditToolbar *)editToolbar canRevokeAtIndex:(NSUInteger)index;
 /** 二级菜单滑动事件-绘画 */
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar drawColorDidChange:(UIColor *)color;
+@optional
 /** 二级菜单滑动事件-速率 */
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar rateDidChange:(float)value;
 @end

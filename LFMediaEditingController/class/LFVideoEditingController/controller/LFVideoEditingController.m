@@ -279,11 +279,15 @@
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_text];
             } else if (containOperation(LFVideoEditOperationType_audio)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_audio];
-            } else if (containOperation(LFVideoEditOperationType_filter)) {
-                if (@available(iOS 9.0, *)) {
-                    [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+            } else
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+                if (containOperation(LFVideoEditOperationType_filter)) {
+                    if (@available(iOS 9.0, *)) {
+                        [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+                    }
                 }
-            }
+#pragma clang diagnostic pop
             self.initSelectedOperationType = 0;
         }
     }

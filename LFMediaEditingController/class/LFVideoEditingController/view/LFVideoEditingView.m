@@ -304,8 +304,13 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     self.exportSession.timeRange = range;
     // 水印
     self.exportSession.overlayView = self.clippingView.overlayView;
-    // 滤镜
-    self.exportSession.filter = self.clippingView.filter;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+    if (@available(iOS 9.0, *)) {
+        // 滤镜
+        self.exportSession.filter = self.clippingView.filter;
+    }
+#pragma clang diagnostic pop
     // 速率
     self.exportSession.rate = self.rate;
     // 音频
