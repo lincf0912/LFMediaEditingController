@@ -200,11 +200,13 @@
     [super drawRect:rect];
     
     if ((_CIImage != nil || _sampleBufferHolder.sampleBuffer != nil) && [self loadContextIfNeeded]) {
-        if (self.context.type == LFContextTypeCoreGraphics) {
-            CIImage *image = [self renderedCIImageInRect:rect];
-            
-            if (image != nil) {
-                [_context.CIContext drawImage:image inRect:rect fromRect:image.extent];
+        if (@available(iOS 9.0, *)) {
+            if (self.context.type == LFContextTypeCoreGraphics) {
+                CIImage *image = [self renderedCIImageInRect:rect];
+                
+                if (image != nil) {
+                    [_context.CIContext drawImage:image inRect:rect fromRect:image.extent];
+                }
             }
         }
     }

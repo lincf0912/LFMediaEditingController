@@ -40,9 +40,9 @@ static NSDictionary *LFContextCreateCIContextOptions() {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
             _CIContext = [CIContext contextWithCGContext:contextRef options:LFContextCreateCIContextOptions()];
-#pragma clang diagnostic pop            
+            _type = LFContextTypeCoreGraphics;
+#pragma clang diagnostic pop
         }
-        _type = LFContextTypeCoreGraphics;
     }
     
     return self;
@@ -64,8 +64,12 @@ static NSDictionary *LFContextCreateCIContextOptions() {
 + (LFContextType)suggestedContextType {
     if ([self supportsType:LFContextTypeEAGL]) {
         return LFContextTypeEAGL;
-    } else if ([self supportsType:LFContextTypeCoreGraphics]) {
-        return LFContextTypeCoreGraphics;
+    } else
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+        if ([self supportsType:LFContextTypeCoreGraphics]) {
+            return LFContextTypeCoreGraphics;
+#pragma clang diagnostic pop
     } else {
         return LFContextTypeDefault;
     }
