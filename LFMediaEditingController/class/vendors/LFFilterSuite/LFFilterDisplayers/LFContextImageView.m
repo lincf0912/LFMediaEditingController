@@ -201,6 +201,8 @@
     
     if ((_CIImage != nil || _sampleBufferHolder.sampleBuffer != nil) && [self loadContextIfNeeded]) {
         if (@available(iOS 9.0, *)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
             if (self.context.type == LFContextTypeCoreGraphics) {
                 CIImage *image = [self renderedCIImageInRect:rect];
                 
@@ -208,6 +210,7 @@
                     [_context.CIContext drawImage:image inRect:rect fromRect:image.extent];
                 }
             }
+#pragma clang diagnostic pop
         }
     }
 }
