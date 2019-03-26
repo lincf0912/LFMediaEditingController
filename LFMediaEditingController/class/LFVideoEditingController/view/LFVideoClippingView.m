@@ -368,12 +368,15 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 /** 错误回调 */
 - (void)LFVideoPlayerFailedToPrepare:(LFVideoPlayer *)player error:(NSError *)error
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[[UIAlertView alloc] initWithTitle:@"LFVideoPlayer_Error"
                                 message:error.localizedDescription
                                delegate:nil
                       cancelButtonTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_alertViewCancelTitle"]
                       otherButtonTitles:nil]
      show];
+#pragma clang diagnostic pop
 }
 
 /** 进度回调2-手动实现 */
