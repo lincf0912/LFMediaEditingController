@@ -258,10 +258,15 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     NSFileManager *fm = [NSFileManager new];
     NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"com.LFMediaEditing.video"];
     BOOL exist = [fm fileExistsAtPath:path];
-    if (!exist) {
-        if (![fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]) {
-            NSLog(@"createMediaFolder error: %@ \n",[error localizedDescription]);
+    
+    /** 删除原来剪辑的视频 */
+    if (exist) {
+        if (![fm removeItemAtPath:path error:&error]) {
+            NSLog(@"removeTrimPath error: %@ \n",[error localizedDescription]);
         }
+    }
+    if (![fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]) {
+        NSLog(@"createMediaFolder error: %@ \n",[error localizedDescription]);
     }
     
     NSString *name = nil;
@@ -279,18 +284,12 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         NSString * result = (NSString *)CFBridgingRelease(CFStringCreateCopy( NULL, uuidString));
         CFRelease(puuid);
         CFRelease(uuidString);
-        name = [result stringByAppendingPathExtension:@"mp4"];
+        name = result;
     }
     
-    NSString *trimPath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_Edit.mp4", [name stringByDeletingPathExtension]]];
+    
+    NSString *trimPath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_Edit%d.mp4", [name stringByDeletingPathExtension], (int)[[NSDate date] timeIntervalSince1970]]];
     NSURL *trimURL = [NSURL fileURLWithPath:trimPath];
-    /** 删除原来剪辑的视频 */
-    exist = [fm fileExistsAtPath:trimPath];
-    if (exist) {
-        if (![fm removeItemAtPath:trimPath error:&error]) {
-            NSLog(@"removeTrimPath error: %@ \n",[error localizedDescription]);
-        }
-    }
     
     /** 剪辑 */
     CMTime start = CMTimeMakeWithSeconds(self.clippingView.startTime, self.asset.duration.timescale);
