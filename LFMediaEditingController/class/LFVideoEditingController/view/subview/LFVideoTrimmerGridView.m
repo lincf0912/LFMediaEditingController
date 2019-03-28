@@ -301,17 +301,26 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
             CGFloat diff = self.controlMinWidth - rect.size.width;
             rect.origin.x -= diff;
             rect.size.width += diff;
+            /** 最小值大于自身宽度 */
+            if (rect.origin.x < 0) {
+                rect.size.width += rect.origin.x;
+                rect.origin.x = 0;
+            }
         }
     } else if (resizeControlView == self.rightCornerView) {
         /** 限制宽度 超出 最大限度 */
-        if (rect.size.width > self.controlMaxWidth || rect.origin.x+rect.size.width > self.controlMaxWidth) {
-            CGFloat diff = rect.size.width > self.controlMaxWidth ? (self.controlMaxWidth - rect.size.width) : (self.controlMaxWidth-(rect.origin.x+rect.size.width));
+        if (rect.size.width > self.controlMaxWidth || rect.origin.x+rect.size.width > self.frame.size.width) {
+            CGFloat diff = rect.size.width > self.controlMaxWidth ? (self.controlMaxWidth - rect.size.width) : (self.frame.size.width-(rect.origin.x+rect.size.width));
             rect.size.width += diff;
         } else
         /** 限制宽度 超出 最小限度 */
         if (rect.size.width < self.controlMinWidth) {
             CGFloat diff = self.controlMinWidth - rect.size.width;
             rect.size.width += diff;
+            /** 最小值大于自身宽度 */
+            if (rect.origin.x+rect.size.width > self.frame.size.width) {
+                rect.size.width = self.frame.size.width - rect.origin.x;
+            }
         }
     }
     

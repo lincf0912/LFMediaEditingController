@@ -181,6 +181,13 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
 /** 重设控制区域 */
 - (void)setGridRange:(NSRange)gridRange animated:(BOOL)animated
 {
+//    if (gridRange.length < self.gridView.controlMinWidth) {
+//        gridRange.length = self.gridView.controlMinWidth;
+//    }
+//    if (gridRange.length > self.gridView.controlMaxWidth) {
+//        gridRange.length = self.gridView.controlMaxWidth;
+//    }
+    
     [self.gridView setGridRect:CGRectMake(gridRange.location, 0, gridRange.length, self.gridView.frame.size.height) animated:animated];
     [self calcTime];
 }
@@ -264,6 +271,9 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
 
         double startTime = MIN(lfme_videoDuration(self.gridView.gridRect.origin.x/self.width*self.totalDuration), self.totalDuration);
         double endTime = MIN(lfme_videoDuration((self.gridView.gridRect.origin.x+self.gridView.gridRect.size.width)/self.width*self.totalDuration), self.totalDuration);
+        
+        _startTime = startTime;
+        _endTime = endTime;
         
         
         self.startTimeLabel.text = [LFVideoTrimmerView getMMSSWithSecond:startTime];

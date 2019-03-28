@@ -22,6 +22,11 @@ OBJC_EXTERN NSTimeInterval lfme_videoDuration(NSTimeInterval duration);
 /** 最大尺寸 */
 @property (nonatomic, assign) CGFloat controlMaxWidth;
 
+/** 起始时间 */
+@property (nonatomic, readonly) double startTime;
+/** 结束时间 */
+@property (nonatomic, readonly) double endTime;
+
 @property (nonatomic, getter=isEnabledLeftCorner) BOOL enabledLeftCorner;
 @property (nonatomic, getter=isEnabledRightCorner) BOOL enabledRightCorner;
 
