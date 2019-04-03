@@ -13,11 +13,11 @@
 @interface LFVideoExportSession : NSObject
 
 /** 初始化 */
-- (id)initWithAsset:(AVAsset *)asset;
-- (id)initWithURL:(NSURL *)url;
+- (instancetype _Nonnull )initWithAsset:(AVAsset *_Nonnull)asset;
+- (instancetype _Nonnull )initWithURL:(NSURL *_Nonnull)url;
 
 /** 输出路径 */
-@property (nonatomic, copy) NSURL *outputURL;
+@property (nonatomic, copy) NSURL * _Nonnull outputURL;
 /** 视频剪辑 */
 @property (nonatomic, assign) CMTimeRange timeRange;
 /** 是否需要原音频 default is YES */
@@ -32,8 +32,8 @@
 @property (nonatomic, assign) float rate;
 
 /** 处理视频 */
-- (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler;
-- (void)exportAsynchronouslyWithCompletionHandler:(void (^)(NSError *error))handler progress:(void (^)(float progress))progress;
+- (void)exportAsynchronouslyWithCompletionHandler:(void (^_Nullable)(NSError * _Nullable error))handler;
+- (void)exportAsynchronouslyWithCompletionHandler:(void (^_Nullable)(NSError * _Nullable error))handler progress:(void (^_Nullable)(float progress))progress;
 - (void)cancelExport;
 
 @end

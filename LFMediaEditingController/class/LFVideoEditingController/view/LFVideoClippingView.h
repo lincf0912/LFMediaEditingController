@@ -31,15 +31,15 @@
 /** 是否存在水印 */
 @property (nonatomic, readonly) BOOL hasWatermark;
 /** 水印层 */
-@property (nonatomic, weak, readonly) UIView *overlayView;
+@property (nonatomic, weak, readonly) UIView * _Nullable overlayView;
 /** 滤镜 */
 @property (nonatomic, readonly, nullable) LFFilter *filter;
 
 /** 数据 */
-- (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image;
+- (void)setVideoAsset:(AVAsset *_Nonnull)asset placeholderImage:(UIImage *_Nonnull)image;
 
 /** 贴图是否需要移到屏幕中心 */
-@property (nonatomic, copy) BOOL(^moveCenter)(CGRect rect);
+@property (nonatomic, copy) BOOL(^ _Nullable moveCenter)(CGRect rect);
 
 /** 剪切范围 */
 @property (nonatomic, assign) CGRect cropRect;
@@ -65,7 +65,7 @@
 /** 重置视频 */
 - (void)resetVideoDisplay;
 /** 增加音效 */
-- (void)addAudioMix:(NSArray <NSURL *>*)audioMix;
+- (void)addAudioMix:(NSArray <NSURL *>*_Nullable)audioMix;
 
 /** 移动到某帧 */
 - (void)beginScrubbing;
@@ -77,10 +77,10 @@
 @protocol LFVideoClippingViewDelegate <NSObject>
 
 /** 视频准备完毕，可以获取相关属性与操作 */
-- (void)lf_videLClippingViewReadyToPlay:(LFVideoClippingView *)clippingView;
+- (void)lf_videLClippingViewReadyToPlay:(LFVideoClippingView *_Nonnull)clippingView;
 /** 进度回调 */
-- (void)lf_videoClippingView:(LFVideoClippingView *)clippingView duration:(double)duration;
+- (void)lf_videoClippingView:(LFVideoClippingView *_Nonnull)clippingView duration:(double)duration;
 /** 进度长度 */
-- (CGFloat)lf_videoClippingViewProgressWidth:(LFVideoClippingView *)clippingView;
+- (CGFloat)lf_videoClippingViewProgressWidth:(LFVideoClippingView *_Nonnull)clippingView;
 
 @end
