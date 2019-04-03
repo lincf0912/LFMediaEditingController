@@ -235,14 +235,11 @@
             toolbarType |= LFEditToolbarType_filter;
         }
     }
+    if (self.operationType&LFVideoEditOperationType_rate) {
+        toolbarType |= LFEditToolbarType_rate;
+    }
     if (self.operationType&LFVideoEditOperationType_clip) {
         toolbarType |= LFEditToolbarType_clip;
-    }
-    
-    if (isiPad) {
-        if (self.operationType&LFVideoEditOperationType_rate) {
-            toolbarType |= LFEditToolbarType_rate;
-        }
     }
     
     _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
@@ -288,6 +285,9 @@
                     }
                 }
 #pragma clang diagnostic pop
+                else if (containOperation(LFVideoEditOperationType_rate)) {
+                    [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_rate];
+                }
             self.initSelectedOperationType = 0;
         }
     }

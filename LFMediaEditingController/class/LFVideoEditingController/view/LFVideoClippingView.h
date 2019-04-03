@@ -17,7 +17,7 @@
 
 @interface LFVideoClippingView : LFScrollView <LFEditingProtocol>
 
-@property (nonatomic, weak) id<LFVideoClippingViewDelegate> clipDelegate;
+@property (nonatomic, weak) id<LFVideoClippingViewDelegate> _Nullable clipDelegate;
 
 
 /** 开始播放时间 */

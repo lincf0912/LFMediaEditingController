@@ -156,14 +156,14 @@
         [_selectIndexs addObject:@(LFEditToolbarType_audio)];
         buttonCount ++;
     }
-    if (self.type&LFEditToolbarType_clip) {
-        [_imageIndexs addObject:@6];
-        [_selectIndexs addObject:@(LFEditToolbarType_clip)];
-        buttonCount ++;
-    }
     if (self.type&LFEditToolbarType_rate) {
         [_imageIndexs addObject:@8];
         [_selectIndexs addObject:@(LFEditToolbarType_rate)];
+        buttonCount ++;
+    }
+    if (self.type&LFEditToolbarType_clip) {
+        [_imageIndexs addObject:@6];
+        [_selectIndexs addObject:@(LFEditToolbarType_clip)];
         buttonCount ++;
     }
     
