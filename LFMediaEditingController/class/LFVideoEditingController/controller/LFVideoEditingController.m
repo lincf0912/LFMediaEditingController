@@ -588,16 +588,24 @@
 /** 取消 */
 - (void)lf_videoClipToolbarDidCancel:(LFVideoClipToolbar *)clipToolbar
 {
-    [_EditingView cancelClipping:YES];
-    [self changeClipMenu:NO];
-    [self configDefaultOperation];
+    if (self.initSelectedOperationType == 0 && self.operationType == LFVideoEditOperationType_clip && self.defaultOperationType == LFVideoEditOperationType_clip) { /** 证明initSelectedOperationType已消耗完毕，defaultOperationType是有值的。只有LFVideoEditOperationType_clip的情况，无需返回，直接完成整个编辑 */
+        [self cancelButtonClick];
+    } else {
+        [_EditingView cancelClipping:YES];
+        [self changeClipMenu:NO];
+        [self configDefaultOperation];
+    }
 }
 /** 完成 */
 - (void)lf_videoClipToolbarDidFinish:(LFVideoClipToolbar *)clipToolbar
 {
-    [_EditingView setIsClipping:NO animated:YES];
-    [self changeClipMenu:NO];
-    [self configDefaultOperation];
+    if (self.initSelectedOperationType == 0 && self.operationType == LFVideoEditOperationType_clip && self.defaultOperationType == LFVideoEditOperationType_clip) { /** 证明initSelectedOperationType已消耗完毕，defaultOperationType是有值的。只有LFVideoEditOperationType_clip的情况，无需返回，直接完成整个编辑 */
+        [self finishButtonClick];
+    } else {
+        [_EditingView setIsClipping:NO animated:YES];
+        [self changeClipMenu:NO];
+        [self configDefaultOperation];
+    }
 }
 
 #pragma mark - LFPhotoEditDelegate
