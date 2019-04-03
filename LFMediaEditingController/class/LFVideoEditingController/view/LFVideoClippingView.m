@@ -351,7 +351,9 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 /** 可以播放 */
 - (void)LFVideoPlayerReadyToPlay:(LFVideoPlayer *)player duration:(double)duration
 {
-    _endTime = duration;
+    if (_endTime == 0) { /** 读取配置优于视频初始化的情况 */
+        _endTime = duration;
+    }
     _totalDuration = duration;
     self.videoPlayer.muteOriginalSound = self.muteOriginal;
     [self playVideo];
