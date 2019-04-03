@@ -493,10 +493,10 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     clipRect.size.width = ((int)(clipRect.size.width+0.5)*1.f);
     clipRect.size.height = ((int)(clipRect.size.height+0.5)*1.f);
     
+    /** 滤镜图片 */
+    UIImage *showImage = [self getFilterImage];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        /** 滤镜图片 */
-        UIImage *showImage = [self getFilterImage];
         
         /** 创建方法 */
         UIImage *(^ClipEditImage)(UIImage *) = ^UIImage * (UIImage *image) {
