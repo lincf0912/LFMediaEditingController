@@ -477,20 +477,29 @@
 /** 取消 */
 - (void)lf_clipToolbarDidCancel:(LFClipToolbar *)clipToolbar
 {
-    [_EditingView cancelClipping:YES];
-    [self changeClipMenu:NO];
-    _edit_clipping_toolBar.selectAspectRatio = NO;
-    [_EditingView setAspectRatio:nil];
-    [self configDefaultOperation];
+    if (self.initSelectedOperationType == 0 && self.operationType == LFPhotoEditOperationType_crop && self.defaultOperationType == LFPhotoEditOperationType_crop) { /** 证明initSelectedOperationType已消耗完毕，defaultOperationType是有值的。只有LFPhotoEditOperationType_crop的情况，无需返回，直接完成整个编辑 */
+        [self cancelButtonClick];
+    } else {
+        [_EditingView cancelClipping:YES];
+        [self changeClipMenu:NO];
+        _edit_clipping_toolBar.selectAspectRatio = NO;
+        [_EditingView setAspectRatio:nil];
+        [self configDefaultOperation];
+    }
 }
 /** 完成 */
 - (void)lf_clipToolbarDidFinish:(LFClipToolbar *)clipToolbar
 {
-    [_EditingView setIsClipping:NO animated:YES];
-    [self changeClipMenu:NO];
-    _edit_clipping_toolBar.selectAspectRatio = NO;
-    [_EditingView setAspectRatio:nil];
-    [self configDefaultOperation];
+    if (self.initSelectedOperationType == 0 && self.operationType == LFPhotoEditOperationType_crop && self.defaultOperationType == LFPhotoEditOperationType_crop) { /** 证明initSelectedOperationType已消耗完毕，defaultOperationType是有值的。只有LFPhotoEditOperationType_crop的情况，无需返回，直接完成整个编辑 */
+        [_EditingView setIsClipping:NO animated:NO];
+        [self finishButtonClick];
+    } else {
+        [_EditingView setIsClipping:NO animated:YES];
+        [self changeClipMenu:NO];
+        _edit_clipping_toolBar.selectAspectRatio = NO;
+        [_EditingView setAspectRatio:nil];
+        [self configDefaultOperation];
+    }
 }
 /** 重置 */
 - (void)lf_clipToolbarDidReset:(LFClipToolbar *)clipToolbar
