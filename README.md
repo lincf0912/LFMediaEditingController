@@ -1,7 +1,7 @@
 # LFMediaEditingController
 
 * 图片编辑 (详细使用见LFPhotoEditingController.h 的初始化方法)
-`绘画、贴图、文本、模糊、滤镜、修剪`
+`绘画、贴图、文本、模糊、滤镜（iOS9）、修剪`
 
 * 视频编辑 (详细使用见LFVideoEditingController.h 的初始化方法)
 `绘画、贴图、文本、音频、剪辑、滤镜（iOS9）、速率（慢动作）`
