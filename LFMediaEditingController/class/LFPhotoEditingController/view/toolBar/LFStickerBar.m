@@ -176,7 +176,10 @@ CGFloat const lf_stickerMargin = 10;
         NSString *path = [NSBundle LFME_stickersPath];
         self.files = [fileManager contentsOfDirectoryAtPath:path error:nil];
     }
-    
+    // sort
+    self.files = [self.files sortedArrayUsingComparator:^NSComparisonResult(NSString *  _Nonnull obj1, NSString *  _Nonnull obj2) {
+        return [obj1 compare:obj2] == NSOrderedDescending;
+    }];
     [self setupCollectionView];
 }
 
