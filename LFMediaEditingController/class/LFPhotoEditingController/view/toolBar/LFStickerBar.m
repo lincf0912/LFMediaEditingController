@@ -19,6 +19,7 @@ CGFloat const lf_stickerMargin = 10;
 #pragma mark - LFStickerCollectionViewCell
 @interface LFStickerCollectionViewCell : UICollectionViewCell
 
+@property (nonatomic, strong) NSString *lf_tagStr;
 @property (nonatomic, weak) UIImageView *lf_imageView;
 
 + (NSString *)identifier;
@@ -74,6 +75,7 @@ CGFloat const lf_stickerMargin = 10;
 {
     [super prepareForReuse];
     self.lf_imageView.image = nil;
+    self.lf_tagStr = nil;
 }
 
 + (NSString *)identifier
@@ -89,6 +91,8 @@ CGFloat const lf_stickerMargin = 10;
 @property (nonatomic, strong) NSArray<NSString *> *files;
 
 @property (nonatomic, weak) LFEditCollectionView *lf_collectionViewSticker;
+
+@property (strong, nonatomic) dispatch_queue_t concurrentQueue;
 
 /* 外置资源 */
 @property (nonatomic, assign) BOOL external;
@@ -140,6 +144,7 @@ CGFloat const lf_stickerMargin = 10;
 
 - (void)customInit
 {
+    _concurrentQueue = dispatch_queue_create("com.LFStickerBar.concurrentQueue", DISPATCH_QUEUE_CONCURRENT);
     if (iOS8Later) {
         // 定义毛玻璃效果
         self.backgroundColor = [UIColor clearColor];
@@ -192,24 +197,29 @@ CGFloat const lf_stickerMargin = 10;
     }
     
     __weak typeof(self) weakSelf = self;
+    __weak typeof(lf_collectionViewSticker) weakCollectionViewSticker = lf_collectionViewSticker;
     [lf_collectionViewSticker callbackCellIdentifier:^NSString * _Nonnull(NSIndexPath * _Nonnull indexPath) {
         return [LFStickerCollectionViewCell identifier];
     } configureCell:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item, UICollectionViewCell * _Nonnull cell) {
-        UIImage * backImage = nil;
-        if (weakSelf.external) {
-            backImage = [UIImage imageWithContentsOfFile:[weakSelf.resourcePath stringByAppendingPathComponent:item]];
-        } else {
-            backImage = bundleStickerImageNamed(item);
-        }
-        ((LFStickerCollectionViewCell *)cell).lf_imageView.image = backImage;
-    } didSelectItemAtIndexPath:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item) {
-        if ([weakSelf.delegate respondsToSelector:@selector(lf_stickerBar:didSelectImage:)]) {
+        ((LFStickerCollectionViewCell *)cell).lf_imageView.image = nil;
+        ((LFStickerCollectionViewCell *)cell).lf_tagStr = item;
+        dispatch_async(weakSelf.concurrentQueue, ^{
             UIImage * backImage = nil;
             if (weakSelf.external) {
                 backImage = [UIImage imageWithContentsOfFile:[weakSelf.resourcePath stringByAppendingPathComponent:item]];
             } else {
                 backImage = bundleStickerImageNamed(item);
             }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([((LFStickerCollectionViewCell *)cell).lf_tagStr isEqualToString: item]) {
+                    ((LFStickerCollectionViewCell *)cell).lf_imageView.image = backImage;
+                }
+            });
+        });
+    } didSelectItemAtIndexPath:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item) {
+        if ([weakSelf.delegate respondsToSelector:@selector(lf_stickerBar:didSelectImage:)]) {
+            LFStickerCollectionViewCell *cell = (LFStickerCollectionViewCell *)[weakCollectionViewSticker cellForItemAtIndexPath:indexPath];
+            UIImage * backImage = cell.lf_imageView.image;
             [weakSelf.delegate lf_stickerBar:weakSelf didSelectImage:backImage];
         }
     }];

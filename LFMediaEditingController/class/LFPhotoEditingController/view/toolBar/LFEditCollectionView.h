@@ -35,6 +35,8 @@ typedef void (^LFEditCollectionViewDidSelectItemAtIndexPathBlock)(NSIndexPath * 
 
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
 
+- (nullable UICollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+
 #pragma mark - UICollectionViewFlowLayout
 @property (nonatomic) CGFloat minimumLineSpacing;
 @property (nonatomic) CGFloat minimumInteritemSpacing;

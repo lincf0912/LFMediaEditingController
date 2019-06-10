@@ -157,10 +157,11 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     /** 屏幕中心 */
     movingView.center = [self convertPoint:[UIApplication sharedApplication].keyWindow.center fromView:(UIView *)[UIApplication sharedApplication].keyWindow];
     
-    /** 最小缩放率 */
-    movingView.minScale = self.minScale;
+    /** 最小缩放率 额外调整最小缩放率的比例，比例以屏幕1/2为标准 */
+    CGFloat diffScale = [UIScreen mainScreen].bounds.size.width * 0.5 / view.frame.size.width;
+    movingView.minScale = self.minScale * diffScale;
     /** 最大缩放率 额外调整最大缩放率的比例，比例以屏幕为标准。 */
-    CGFloat diffScale = [UIScreen mainScreen].bounds.size.width / view.frame.size.width;
+    diffScale = [UIScreen mainScreen].bounds.size.width / view.frame.size.width;
     movingView.maxScale = self.maxScale * diffScale;
     /** 屏幕缩放率 */
     movingView.screenScale = self.screenScale;

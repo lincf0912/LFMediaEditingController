@@ -225,6 +225,11 @@
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
 }
 
+- (nullable UICollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self.collectionView cellForItemAtIndexPath:indexPath];
+}
+
 #pragma mark - UICollectionViewFlowLayout setter/getter
 - (void)setCollectionViewLayout:(UICollectionViewLayout *)collectionViewLayout
 {

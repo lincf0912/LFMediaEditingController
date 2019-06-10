@@ -311,7 +311,7 @@ static CGRect CGRectMultiply(CGRect rect, CGFloat contentScale) {
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     @autoreleasepool {
-        rect = CGRectMultiply(rect, self.contentScaleFactor);
+        rect = CGRectMultiply(rect, view.contentScaleFactor);
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         
