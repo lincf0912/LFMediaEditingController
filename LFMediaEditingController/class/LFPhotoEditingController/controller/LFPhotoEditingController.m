@@ -624,9 +624,12 @@
 {
     if (_filterSmallImage == nil) {
         CGSize size = CGSizeZero;
-        size.width = JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale;
-        size.height = (int)(self.editImage.size.height*size.width/self.editImage.size.width)*1.f;
-        self.filterSmallImage = [self.editImage LFME_scaleToSize:size];
+        CGSize imageSize = CGSizeMake(CGImageGetWidth(self.editImage.CGImage), CGImageGetHeight(self.editImage.CGImage));
+        size.width = MIN(JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale, imageSize.width);
+        size.height = MIN((int)(imageSize.height*size.width/imageSize.width)*1.f, size.width);
+        CGImageRef newImageRef = CGImageCreateWithImageInRect([self.editImage CGImage], CGRectMake((imageSize.width-size.width)/2, (imageSize.height-size.height)/2, size.width, size.height));//按照给定的矩形区域进行剪裁
+        self.filterSmallImage = [UIImage imageWithCGImage:newImageRef];
+        CGImageRelease(newImageRef);
     }
     return lf_filterImageWithType(self.filterSmallImage, type);
 }
