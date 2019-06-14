@@ -84,7 +84,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 
 - (void)customInit
 {
-    self.backgroundColor = [UIColor blackColor];
+    self.backgroundColor = [UIColor clearColor];
     self.delegate = self;
     self.clipsToBounds = NO;
     /** 缩放 */
@@ -234,8 +234,11 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 {
     if (CGSizeEqualToSize(CGSizeZero, _clippingMinSize) || (clippingMinSize.width < CGRectGetWidth(_clippingMaxRect) && clippingMinSize.height < CGRectGetHeight(_clippingMaxRect))) {
         
-        CGSize newClippingMinSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]).size;
+        CGSize normalClippingMinSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]).size;
+        /** 需要考虑到旋转后到尺寸可能会更加小，取最小值 */
+        CGSize rotateClippingMinSize = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(self.clippingView.size.height, self.clippingView.size.width), [self refer_clippingRect]).size;
         
+        CGSize newClippingMinSize = CGSizeMake(MIN(normalClippingMinSize.width, rotateClippingMinSize.width), MIN(normalClippingMinSize.height, rotateClippingMinSize.height));
         {
             if (clippingMinSize.width > newClippingMinSize.width) {
                 clippingMinSize.width = newClippingMinSize.width;
@@ -584,7 +587,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
         }
         
         /** 图片像素 */
-        [self updateImagePixelText];
+        [weakSelf updateImagePixelText];
     };
     
     return block;
