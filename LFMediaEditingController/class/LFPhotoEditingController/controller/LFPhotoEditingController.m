@@ -19,6 +19,8 @@
 #import "LFTextBar.h"
 #import "LFClipToolbar.h"
 #import "JRFilterBar.h"
+#import "LFSafeAreaMaskView.h"
+
 #import "FilterSuiteUtils.h"
 
 
@@ -32,6 +34,8 @@
     LFEditToolbar *_edit_toolBar;
     /** 剪切菜单 */
     LFClipToolbar *_edit_clipping_toolBar;
+    /** 安全区域涂层 */
+    LFSafeAreaMaskView *_edit_clipping_safeAreaMaskView;
     
     /** 贴图菜单 */
     LFStickerBar *_edit_sticker_toolBar;
@@ -462,13 +466,22 @@
 - (UIView *)edit_clipping_toolBar
 {
     if (_edit_clipping_toolBar == nil) {
-        CGFloat h = 44.f;
+        UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
         if (@available(iOS 11.0, *)) {
-            h += self.navigationController.view.safeAreaInsets.bottom;
+            safeAreaInsets = self.navigationController.view.safeAreaInsets;
         }
+        CGFloat h = 44.f + safeAreaInsets.bottom;
         _edit_clipping_toolBar = [[LFClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
         _edit_clipping_toolBar.alpha = 0.f;
         _edit_clipping_toolBar.delegate = self;
+        
+        /** 判断是否需要创建安全区域涂层 */
+        if (!UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, safeAreaInsets)) {
+            _edit_clipping_safeAreaMaskView = [[LFSafeAreaMaskView alloc] initWithFrame:self.view.bounds];
+            _edit_clipping_safeAreaMaskView.maskRect = _EditingView.frame;
+            _edit_clipping_safeAreaMaskView.userInteractionEnabled = NO;
+            [self.view insertSubview:_edit_clipping_safeAreaMaskView belowSubview:_EditingView];
+        }
     }
     return _edit_clipping_toolBar;
 }
@@ -770,6 +783,7 @@
     [UIView animateWithDuration:0.25f animations:^{
         self->_edit_clipping_toolBar.alpha = 0.f;
     }];
+    [_edit_clipping_safeAreaMaskView setShowMaskLayer:NO];
 }
 /** 停止编辑目标 */
 - (void)lf_EditingViewDidEndEditing:(LFEditingView *)EditingView
@@ -777,6 +791,7 @@
     [UIView animateWithDuration:0.25f animations:^{
         self->_edit_clipping_toolBar.alpha = 1.f;
     }];
+    [_edit_clipping_safeAreaMaskView setShowMaskLayer:YES];
     _edit_clipping_toolBar.enableReset = EditingView.canReset;
 }
 
@@ -825,6 +840,7 @@
         } else {
             _edit_clipping_toolBar.alpha = 1.f;
         }
+        [_edit_clipping_safeAreaMaskView setShowMaskLayer:YES];
         singleTapRecognizer.enabled = NO;
         [self singlePressedWithAnimated:animated];
     } else {
@@ -834,6 +850,7 @@
         [_EditingView photoEditEnable:YES];
         
         singleTapRecognizer.enabled = YES;
+        [_edit_clipping_safeAreaMaskView setShowMaskLayer:NO];
         if (animated) {
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_clipping_toolBar.alpha = 0.f;

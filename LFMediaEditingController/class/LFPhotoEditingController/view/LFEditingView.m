@@ -600,21 +600,25 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 }
 - (void)lf_clippingViewDidEndZooming:(LFClippingView *)clippingView
 {
-    __weak typeof(self) weakSelf = self;
-    self.maskViewBlock = lf_dispatch_block_t(0.25f, ^{
-        if (!weakSelf.gridView.isDragging) {
-            weakSelf.gridView.showMaskLayer = YES;
-        }
-    });
-    
-    [self updateImagePixelText];
-    
     if (self.editedOperation & LFEditingViewOperationZooming) {
         self.editedOperation ^= LFEditingViewOperationZooming;
     }
-    if (self.editedOperation == LFEditingViewOperationNone && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
-        [self.clippingDelegate lf_EditingViewDidEndEditing:self];
-    }
+    __weak typeof(self) weakSelf = self;
+    self.maskViewBlock = lf_dispatch_block_t(0.25f, ^{
+        [weakSelf updateImagePixelText];
+        
+        if (weakSelf.editedOperation == LFEditingViewOperationNone) {
+            if ([weakSelf.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
+                [weakSelf.clippingDelegate lf_EditingViewDidEndEditing:weakSelf];
+            }
+            
+            if (!weakSelf.gridView.isDragging) {
+                weakSelf.gridView.showMaskLayer = YES;
+            }
+        }
+        
+    });
+    
 }
 
 - (void)lf_clippingViewWillBeginDragging:(LFClippingView *)clippingView
@@ -636,18 +640,20 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
             self.editedOperation ^= LFEditingViewOperationDragging;
         }
     } else {
-        __weak typeof(self) weakSelf = self;
-        self.maskViewBlock = lf_dispatch_block_t(0.25f, ^{
-            if (!weakSelf.gridView.isDragging) {
-                weakSelf.gridView.showMaskLayer = YES;
-            }
-        });
         if (self.editedOperation & LFEditingViewOperationDragging) {
             self.editedOperation ^= LFEditingViewOperationDragging;
         }
-        if (self.editedOperation == LFEditingViewOperationNone && [self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
-            [self.clippingDelegate lf_EditingViewDidEndEditing:self];
-        }
+        __weak typeof(self) weakSelf = self;
+        self.maskViewBlock = lf_dispatch_block_t(0.25f, ^{
+            if (weakSelf.editedOperation == LFEditingViewOperationNone) {
+                if ([weakSelf.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
+                    [weakSelf.clippingDelegate lf_EditingViewDidEndEditing:weakSelf];
+                }
+                if (!weakSelf.gridView.isDragging) {
+                    weakSelf.gridView.showMaskLayer = YES;
+                }                
+            }
+        });
     }
 }
 
