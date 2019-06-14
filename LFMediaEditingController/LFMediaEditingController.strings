@@ -16,3 +16,12 @@
 /* -------- LFAudioItem  -------*/
 "_LFME_defaultAudioItem_name" = "Default AudioTrack";
 "_LFME_MediaPicker_prompt" = "Please select the audio";
+
+/* -------- LFFilterName  -------*/
+"_LFME_filterName_Original" = "原图";
+"_LFME_filterName_Curve" = "色调曲线";
+"_LFME_filterName_Chrome" = "镀铬";
+"_LFME_filterName_Fade" = "褪色";
+"_LFME_filterName_Instant" = "瞬发";
+"_LFME_filterName_Mono" = "黑白";
+"_LFME_filterName_Noir" = "暗黑";

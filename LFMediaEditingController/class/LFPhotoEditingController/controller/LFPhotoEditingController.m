@@ -636,7 +636,12 @@
 
 - (NSString *)jr_filterBarNameForEffectType:(NSInteger)type
 {
-    return lf_descWithType(type);
+    NSString *defaultName = lf_descWithType(type);
+    if (defaultName) {
+        NSString *languageName = [@"_LFME_filterName_" stringByAppendingString:defaultName];
+        return [NSBundle LFME_localizedStringForKey:languageName];
+    }
+    return @"";
 }
 
 #pragma mark - 贴图菜单（懒加载）
