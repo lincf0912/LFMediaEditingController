@@ -527,9 +527,10 @@
         }]];
         
         //Add each item to the alert controller
-        for (NSInteger i=0; i<items.count; i++) {
-            NSString *item = items[i];
-            UIAlertAction *action = [UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *languageName = nil;
+        for (NSString *item in items) {
+            languageName = [@"_LFME_ratio_" stringByAppendingString:item];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:[NSBundle LFME_localizedStringForKey:languageName value:item] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 self->_edit_clipping_toolBar.selectAspectRatio = YES;
                 [self->_EditingView setAspectRatio:item];
             }];
@@ -638,7 +639,7 @@
 {
     NSString *defaultName = lf_descWithType(type);
     if (defaultName) {
-        NSString *languageName = [@"_LFME_filterName_" stringByAppendingString:defaultName];
+        NSString *languageName = [@"_LFME_filter_" stringByAppendingString:defaultName];
         return [NSBundle LFME_localizedStringForKey:languageName];
     }
     return @"";

@@ -18,19 +18,21 @@
 "_LFME_MediaPicker_prompt" = "请选择需要的歌曲";
 "_LFME_AudioTackTitle_prompt" = "自定义音乐";
 
+/* -------- LFRatioMenu  -------*/
+"_LFME_ratio_Original" = "Original";
 
-/* -------- LFFilterName  -------*/
-"_LFME_filterName_Original" = "Original";
-"_LFME_filterName_Curve" = "Curve";
-"_LFME_filterName_Chrome" = "Chrome";
-"_LFME_filterName_Fade" = "Fade";
-"_LFME_filterName_Instant" = "Instant";
-"_LFME_filterName_Mono" = "Mono";
-"_LFME_filterName_Noir" = "Noir";
-"_LFME_filterName_Process" = "Process";
-"_LFME_filterName_Tonal" = "Tonal";
-"_LFME_filterName_Transfer" = "Transfer";
-"_LFME_filterName_Linear" = "Linear";
-"_LFME_filterName_Invert" = "Invert";
-"_LFME_filterName_Monochrome" = "Monochrome";
+/* -------- LFFilterMenu  -------*/
+"_LFME_filter_Original" = "Original";
+"_LFME_filter_Curve" = "Curve";
+"_LFME_filter_Chrome" = "Chrome";
+"_LFME_filter_Fade" = "Fade";
+"_LFME_filter_Instant" = "Instant";
+"_LFME_filter_Mono" = "Mono";
+"_LFME_filter_Noir" = "Noir";
+"_LFME_filter_Process" = "Process";
+"_LFME_filter_Tonal" = "Tonal";
+"_LFME_filter_Transfer" = "Transfer";
+"_LFME_filter_Linear" = "Linear";
+"_LFME_filter_Invert" = "Invert";
+"_LFME_filter_Monochrome" = "Monochrome";
 

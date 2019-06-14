@@ -944,7 +944,7 @@
 {
     NSString *defaultName = lf_descWithType(type);
     if (defaultName) {
-        NSString *languageName = [@"_LFME_filterName_" stringByAppendingString:defaultName];
+        NSString *languageName = [@"_LFME_filter_" stringByAppendingString:defaultName];
         return [NSBundle LFME_localizedStringForKey:languageName];
     }
     return @"";
