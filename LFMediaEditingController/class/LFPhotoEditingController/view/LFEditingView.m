@@ -86,7 +86,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 {
     self.backgroundColor = [UIColor clearColor];
     self.delegate = self;
-    self.clipsToBounds = NO;
+    self.clipsToBounds = YES;
     /** 缩放 */
     self.maximumZoomScale = kMaxZoomScale;
     self.minimumZoomScale = 1.0;
@@ -608,11 +608,10 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
         [weakSelf updateImagePixelText];
         
         if (weakSelf.editedOperation == LFEditingViewOperationNone) {
-            if ([weakSelf.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
-                [weakSelf.clippingDelegate lf_EditingViewDidEndEditing:weakSelf];
-            }
-            
             if (!weakSelf.gridView.isDragging) {
+                if ([weakSelf.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
+                    [weakSelf.clippingDelegate lf_EditingViewDidEndEditing:weakSelf];
+                }
                 weakSelf.gridView.showMaskLayer = YES;
             }
         }
@@ -646,12 +645,12 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
         __weak typeof(self) weakSelf = self;
         self.maskViewBlock = lf_dispatch_block_t(0.25f, ^{
             if (weakSelf.editedOperation == LFEditingViewOperationNone) {
-                if ([weakSelf.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
-                    [weakSelf.clippingDelegate lf_EditingViewDidEndEditing:weakSelf];
-                }
                 if (!weakSelf.gridView.isDragging) {
+                    if ([weakSelf.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidEndEditing:)]) {
+                        [weakSelf.clippingDelegate lf_EditingViewDidEndEditing:weakSelf];
+                    }
                     weakSelf.gridView.showMaskLayer = YES;
-                }                
+                }
             }
         });
     }
