@@ -53,6 +53,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (LFFilter *__nonnull)filterWithCIImage:(CIImage *__nonnull)image;
 
+/**
+ Creates and returns a filter with a block using a custom way to changed CIImage
+ */
++ (LFFilter *)filterWithBlock:(LFFilterHandle)block;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

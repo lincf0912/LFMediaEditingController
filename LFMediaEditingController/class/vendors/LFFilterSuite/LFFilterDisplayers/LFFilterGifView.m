@@ -29,36 +29,9 @@
 
 @implementation LFFilterGifView
 
-- (id)init {
-    self = [super init];
-    
-    if (self) {
-        [self customInit];
-    }
-    
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame
+- (void)commonInit
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self customInit];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
-        [self customInit];
-    }
-    return self;
-}
-
-- (void)customInit
-{
+    [super commonInit];
     _autoPlay = YES;
     _duration = 0.1f;
 }

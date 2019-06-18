@@ -8,10 +8,23 @@
 
 #import "LFContextImageView.h"
 #import "LFSampleBufferHolder.h"
+#import "LFLView.h"
 
-@interface LFContextImageView () <GLKViewDelegate>
+#if TARGET_IPHONE_SIMULATOR
+@interface LFContextImageView()<GLKViewDelegate>
 
-@property (nonatomic, strong) GLKView *GLKView;
+#else
+@import MetalKit;
+
+@interface LFContextImageView()<GLKViewDelegate, MTKViewDelegate>
+
+@property (nonatomic, weak) MTKView *MTKView;
+@property (nonatomic, strong) id<MTLCommandQueue> MTLCommandQueue;
+
+#endif
+
+@property (nonatomic, weak) GLKView *GLKView;
+@property (nonatomic, weak) LFLView *LFLView;
 
 @property (nonatomic, strong) LFSampleBufferHolder *sampleBufferHolder;
 
@@ -19,11 +32,21 @@
 
 @implementation LFContextImageView
 
+- (id)init {
+    self = [super init];
+    
+    if (self) {
+        [self commonInit];
+    }
+    
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
-        [self _imageViewCommonInit];
+        [self commonInit];
     }
     
     return self;
@@ -33,15 +56,17 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        [self _imageViewCommonInit];
+        [self commonInit];
     }
     
     return self;
 }
 
-- (void)_imageViewCommonInit {
+- (void)commonInit {
+    self.backgroundColor = [UIColor clearColor];
     _scaleAndResizeCIImageAutomatically = YES;
     self.preferredCIImageTransform = CGAffineTransformIdentity;
+    _sampleBufferHolder = [LFSampleBufferHolder new];
 }
 
 - (BOOL)loadContextIfNeeded {
@@ -63,6 +88,9 @@
                 options = @{LFContextOptionsCGContextKey: (__bridge id)contextRef};
             }
                 break;
+            case LFContextTypeCPU:
+                [NSException raise:@"UnsupportedContextType" format:@"LFContextImageView does not support CPU context type."];
+                break;
             default:
                 break;
         }
@@ -73,10 +101,28 @@
     return YES;
 }
 
+- (void)setContentView:(UIView *)contentView
+{
+    _contentView = contentView;
+    if (_GLKView) {
+        [_contentView insertSubview:_GLKView atIndex:0];
+    }
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    _GLKView.frame = self.bounds;
+    CGRect viewRect = self.bounds;
+    if (self.contentView) {
+        viewRect = self.contentView.bounds;
+    }
+    _GLKView.frame = viewRect;
+    _LFLView.frame = self.bounds;
+#if !(TARGET_IPHONE_SIMULATOR)
+    _MTKView.frame = self.bounds;
+#endif
 }
 
 - (void)unloadContext {
@@ -84,6 +130,18 @@
         [_GLKView removeFromSuperview];
         _GLKView = nil;
     }
+    if (_LFLView != nil) {
+        [_LFLView removeFromSuperview];
+        _LFLView = nil;
+    }
+#if !(TARGET_IPHONE_SIMULATOR)
+    if (_MTKView != nil) {
+        _MTLCommandQueue = nil;
+        [_MTKView removeFromSuperview];
+        [_MTKView releaseDrawables];
+        _MTKView = nil;
+    }
+#endif
     _context = nil;
 }
 
@@ -95,13 +153,44 @@
             case LFContextTypeCoreGraphics:
                 break;
             case LFContextTypeEAGL:
-                _GLKView = [[GLKView alloc] initWithFrame:self.bounds context:context.EAGLContext];
-                _GLKView.contentScaleFactor = self.contentScaleFactor;
-                _GLKView.delegate = self;
-                [self insertSubview:_GLKView atIndex:0];
+            {
+                GLKView *glkView = [[GLKView alloc] initWithFrame:self.bounds context:context.EAGLContext];
+                glkView.contentScaleFactor = self.contentScaleFactor;
+                glkView.delegate = self;
+                if (self.contentView) {
+                    [_contentView insertSubview:glkView atIndex:0];
+                } else {
+                    [self insertSubview:glkView atIndex:0];
+                }
+                _GLKView = glkView;
+            }
                 break;
+            case LFContextTypeLargeImage:
+            {
+                LFLView *lflView = [[LFLView alloc] initWithFrame:self.bounds];
+                lflView.contentScaleFactor = self.contentScaleFactor;
+                [self insertSubview:lflView atIndex:0];
+                _LFLView = lflView;
+            }
+                break;
+#if !(TARGET_IPHONE_SIMULATOR)
+            case LFContextTypeMetal:
+            {
+                _MTLCommandQueue = [context.MTLDevice newCommandQueue];
+                MTKView *mtkView = [[MTKView alloc] initWithFrame:self.bounds device:context.MTLDevice];
+                mtkView.clearColor = MTLClearColorMake(0, 0, 0, 0);
+                mtkView.contentScaleFactor = self.contentScaleFactor;
+                mtkView.delegate = self;
+                mtkView.opaque = NO;
+                mtkView.enableSetNeedsDisplay = YES;
+                mtkView.framebufferOnly = NO;
+                [self insertSubview:_MTKView atIndex:0];
+                _MTKView = mtkView;
+            }
+                break;
+#endif
             default:
-                [NSException raise:@"InvalidContext" format:@"Unsupported context type: %d. SCImageView only supports CoreGraphics, EAGL and Metal", (int)context.type];
+                [NSException raise:@"InvalidContext" format:@"Unsupported context type: %d. %@ only supports CoreGraphics, EAGL and Metal", (int)context.type, NSStringFromClass(self.class)];
                 break;
         }
     }
@@ -113,6 +202,10 @@
     [super setNeedsDisplay];
     
     [_GLKView setNeedsDisplay];
+    _LFLView.image = [self renderedUIImage];
+#if !(TARGET_IPHONE_SIMULATOR)
+    [_MTKView setNeedsDisplay];
+#endif
 }
 
 - (UIImage *)renderedUIImageInRect:(CGRect)rect {
@@ -157,7 +250,7 @@
     if (image != nil) {
         image = [image imageByApplyingTransform:self.preferredCIImageTransform];
         
-        if (self.context.type != LFContextTypeEAGL) {
+        if (self.context.type != LFContextTypeEAGL && self.contextType != LFContextTypeLargeImage) {
             image = [image imageByApplyingOrientation:4];
         }
         
@@ -298,7 +391,7 @@
     }
 }
 
-static CGRect CGRectMultiply(CGRect rect, CGFloat contentScale) {
+static CGRect LF_CGRectMultiply(CGRect rect, CGFloat contentScale) {
     rect.origin.x *= contentScale;
     rect.origin.y *= contentScale;
     rect.size.width *= contentScale;
@@ -311,16 +404,90 @@ static CGRect CGRectMultiply(CGRect rect, CGFloat contentScale) {
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     @autoreleasepool {
-        rect = CGRectMultiply(rect, view.contentScaleFactor);
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
+        
+        if (self.contentView) {
+            CGRect targetRect = [self convertRect:self.bounds toView:view];
+            targetRect = LF_CGRectMultiply(targetRect, view.contentScaleFactor);
+            
+            /** OpenGL坐标变换 */
+            rect = LF_CGRectMultiply(rect, view.contentScaleFactor);
+            // 转换坐标
+            CGFloat tranformX = targetRect.origin.x;
+//            CGFloat tranformX = rect.size.width > targetRect.size.width ? (rect.size.width - targetRect.size.width) / 2 : targetRect.origin.x;
+            CGFloat tranformY = rect.size.height - targetRect.size.height - targetRect.origin.y; // 反转y轴的滑动方向
+            CGRect inRect = (CGRect){tranformX, tranformY, targetRect.size};
+            
+            CIImage *image = [self renderedCIImageInRect:inRect];
+            
+            // 优化：剪裁适合的尺寸，没有必要绘制超出rect范围的部分
+            if (inRect.size.width > rect.size.width || inRect.size.height > rect.size.height) {
+                CGFloat corpX = inRect.origin.x < 0 ? -inRect.origin.x : 0;
+                CGFloat corpY = inRect.origin.y < 0 ? -inRect.origin.y : 0;
+                
+                CGFloat corpWidth = 0;
+                if (corpX > 0) {
+                    corpWidth = MIN(inRect.size.width+inRect.origin.x, rect.size.width);
+                } else {
+                    corpWidth = MIN(inRect.size.width, rect.size.width);
+                }
+                CGFloat corpHeight = 0;
+                if (corpY > 0) {
+                    corpHeight = MIN(inRect.size.height+inRect.origin.y, rect.size.height);
+                } else {
+                    corpHeight = MIN(inRect.size.height, rect.size.height);
+                }
+                
+                inRect.origin.x += corpX;
+                inRect.origin.y += corpY;
+                inRect.size.width = corpWidth;
+                inRect.size.height = corpHeight;
+                
+                image = [image imageByCroppingToRect:CGRectMake(corpX, corpY, corpWidth, corpHeight)];
+            }
+            
+            if (image != nil) {
+                [_context.CIContext drawImage:image inRect:inRect fromRect:image.extent];
+            }
+            
+        } else {
+            rect = LF_CGRectMultiply(rect, view.contentScaleFactor);
+            
+            CIImage *image = [self renderedCIImageInRect:rect];
+            
+            if (image != nil) {
+                [_context.CIContext drawImage:image inRect:rect fromRect:image.extent];
+            }
+        }
+    }
+}
+
+#if !(TARGET_IPHONE_SIMULATOR)
+#pragma mark -- MTKViewDelegate
+
+- (void)drawInMTKView:(nonnull MTKView *)view {
+    @autoreleasepool {
+        CGRect rect = LF_CGRectMultiply(view.bounds, self.contentScaleFactor);
         
         CIImage *image = [self renderedCIImageInRect:rect];
         
         if (image != nil) {
-            [_context.CIContext drawImage:image inRect:rect fromRect:image.extent];
+            id<MTLCommandBuffer> commandBuffer = [_MTLCommandQueue commandBuffer];
+            id<MTLTexture> texture = view.currentDrawable.texture;
+            CGColorSpaceRef deviceRGB = CGColorSpaceCreateDeviceRGB();
+            [_context.CIContext render:image toMTLTexture:texture commandBuffer:commandBuffer bounds:image.extent colorSpace:deviceRGB];
+            [commandBuffer presentDrawable:view.currentDrawable];
+            [commandBuffer commit];
+            
+            CGColorSpaceRelease(deviceRGB);
         }
     }
 }
+
+- (void)mtkView:(MTKView *)view drawableSizeWillChange:(CGSize)size {
+    
+}
+#endif
 
 @end

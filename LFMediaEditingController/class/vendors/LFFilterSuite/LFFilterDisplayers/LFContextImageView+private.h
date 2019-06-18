@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LFContextImageView ()
 
+- (void)commonInit;
 - (UIImage *)renderedUIImageInCIImage:(CIImage * __nullable)image;
 
 @end

@@ -480,6 +480,12 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     }
 }
 
+/** 显示视图 */
+- (UIView *)displayView
+{
+    return self.playerView;
+}
+
 #pragma mark - 数据
 - (NSDictionary *)photoEditData
 {

@@ -7,6 +7,7 @@
 //
 
 #import "LFFilterVideoView.h"
+#import "LFContextImageView+private.h"
 #import "LFWeakSelectorTarget.h"
 
 static char* LFStatusChanged = "StatusContext";
@@ -23,36 +24,9 @@ static char* LFItemChanged = "CurrentItemContext";
 
 @implementation LFFilterVideoView
 
-- (id)init {
-    self = [super init];
-    
-    if (self) {
-        [self customInit];
-    }
-    
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame
+- (void)commonInit
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self customInit];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
-        [self customInit];
-    }
-    return self;
-}
-
-- (void)customInit
-{
+    [super commonInit];
     _shouldSuppressPlayerRendering = YES;
 }
 

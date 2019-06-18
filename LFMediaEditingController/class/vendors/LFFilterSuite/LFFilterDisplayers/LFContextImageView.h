@@ -25,6 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) LFContextType contextType;
 
 /**
+ The context type is LFContextTypeEAGL. And the large image that needs to be zoom. GLKView will be added to the first position of the contentView. Otherwise, the large image will become blurred after zoom in.
+ */
+@property (weak, nonatomic) UIView *contentView;
+
+/**
  The LFContext that hold the underlying CIContext for rendering the CIImage's
  Will be automatically loaded when setting the first CIImage or when rendering
  for the first if using a CoreGraphics context type.
@@ -32,11 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
  Supported contexts are CoreGraphics, EAGL
  */
 @property (strong, nonatomic) LFContext *__nullable context;
-
-/**
- Will be non null if the type is LFContextTypeEAGL
- */
-@property (readonly, nonatomic) EAGLContext *__nullable EAGLContext;
 
 /**
  The CIImage to render.

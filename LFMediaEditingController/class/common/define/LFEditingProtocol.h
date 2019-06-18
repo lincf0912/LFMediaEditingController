@@ -18,6 +18,9 @@
 /** 禁用其他功能 */
 - (void)photoEditEnable:(BOOL)enable;
 
+/** 显示视图 */
+@property (nonatomic, weak, readonly) UIView *displayView;
+
 /** =====================数据===================== */
 
 /** 数据 */

@@ -53,7 +53,6 @@
 		6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */; };
 		6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D441EEA2C290077D207 /* LFBaseEditingController.m */; };
 		6F384D471EEA54550077D207 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F384D461EEA54550077D207 /* 2.png */; };
-		6F61BC1B1F2987DA005A1E63 /* LFVideoExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F61BC1A1F2987DA005A1E63 /* LFVideoExportSession.m */; };
 		6F61BC1D1F298BF8005A1E63 /* 2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6F61BC1C1F298BEE005A1E63 /* 2.mp4 */; };
 		6F61BC1F1F29B880005A1E63 /* 3.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 6F61BC1E1F29B880005A1E63 /* 3.m4v */; };
 		6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D361F27345600C1BCFD /* LFScrollView.m */; };
@@ -63,6 +62,7 @@
 		6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D461F2735D800C1BCFD /* UIView+LFMEFrame.m */; };
 		6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */; };
 		C703CD6222B3991100561AAC /* LFSafeAreaMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = C703CD6122B3991100561AAC /* LFSafeAreaMaskView.m */; };
+		C703CD9122B7973400561AAC /* LFLView.m in Sources */ = {isa = PBXBuildFile; fileRef = C703CD8F22B7973400561AAC /* LFLView.m */; };
 		C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */ = {isa = PBXBuildFile; fileRef = C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */; };
 		C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */ = {isa = PBXBuildFile; fileRef = C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */; };
 		C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C70FDAB020E46CF50053A02C /* longImage.jpg */; };
@@ -71,25 +71,27 @@
 		C73F4CB12230C99C00ED40B7 /* JRFilterBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CAB2230C99C00ED40B7 /* JRFilterBarCell.m */; };
 		C73F4CB22230C99C00ED40B7 /* JRFilterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CAF2230C99C00ED40B7 /* JRFilterModel.m */; };
 		C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CB02230C99C00ED40B7 /* JRFilterBar.m */; };
-		C73F4CB72230F86B00ED40B7 /* LFFilter+UIImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CB62230F86B00ED40B7 /* LFFilter+UIImage.m */; };
 		C73F4CBA2230FE1800ED40B7 /* LFDataFilterVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CB92230FE1800ED40B7 /* LFDataFilterVideoView.m */; };
 		C73F4CBE223110EB00ED40B7 /* AVAsset+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */; };
 		C73F4CC72232540400ED40B7 /* 4.MOV in Resources */ = {isa = PBXBuildFile; fileRef = C73F4CC62232540300ED40B7 /* 4.MOV */; };
-		C73F4CEC2235F61A00ED40B7 /* LFFilterGifView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CEB2235F61A00ED40B7 /* LFFilterGifView.m */; };
 		C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */; };
 		C73F4D7B2237B95900ED40B7 /* 5.gif in Resources */ = {isa = PBXBuildFile; fileRef = C73F4D7A2237B95900ED40B7 /* 5.gif */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
-		C79A00C3222CBEC30091EB4C /* LFFilterVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A00C2222CBEC30091EB4C /* LFFilterVideoView.m */; };
-		C79A00C7222CC36E0091EB4C /* LFWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A00C6222CC36E0091EB4C /* LFWeakSelectorTarget.m */; };
 		C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A0113222F9BED0091EB4C /* FilterSuiteUtils.m */; };
-		C7B4492B222904AA00FA460D /* LFContextImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B4492A222904AA00FA460D /* LFContextImageView.m */; };
-		C7B44930222915E000FA460D /* LFContext.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B4492F222915E000FA460D /* LFContext.m */; };
-		C7B4493422291A7D00FA460D /* LFSampleBufferHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B4493322291A7D00FA460D /* LFSampleBufferHolder.m */; };
-		C7B4493722291B8800FA460D /* LFFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B4493622291B8800FA460D /* LFFilter.m */; };
-		C7B4493A22291DDD00FA460D /* LFMutableFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B4493922291DDD00FA460D /* LFMutableFilter.m */; };
-		C7B4493D22291E7500FA460D /* LFFilter+save.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B4493C22291E7500FA460D /* LFFilter+save.m */; };
-		C7B4494222292E6500FA460D /* LFFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B4494122292E6500FA460D /* LFFilterImageView.m */; };
+		C7C5807422AFA812003BD4F7 /* LFMutableFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5805422AFA812003BD4F7 /* LFMutableFilter.m */; };
+		C7C5807522AFA812003BD4F7 /* LFFilter+UIImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5805A22AFA812003BD4F7 /* LFFilter+UIImage.m */; };
+		C7C5807622AFA812003BD4F7 /* LFFilter+save.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5805B22AFA812003BD4F7 /* LFFilter+save.m */; };
+		C7C5807722AFA812003BD4F7 /* LFFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5805D22AFA812003BD4F7 /* LFFilter.m */; };
+		C7C5807822AFA812003BD4F7 /* LFFilterVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806222AFA812003BD4F7 /* LFFilterVideoView.m */; };
+		C7C5807922AFA812003BD4F7 /* LFFilterGifView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806422AFA812003BD4F7 /* LFFilterGifView.m */; };
+		C7C5807A22AFA812003BD4F7 /* LFContext.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806522AFA812003BD4F7 /* LFContext.m */; };
+		C7C5807B22AFA812003BD4F7 /* LFFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806622AFA812003BD4F7 /* LFFilterImageView.m */; };
+		C7C5807C22AFA812003BD4F7 /* LFContextImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806722AFA812003BD4F7 /* LFContextImageView.m */; };
+		C7C5807D22AFA812003BD4F7 /* LFWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806B22AFA812003BD4F7 /* LFWeakSelectorTarget.m */; };
+		C7C5807E22AFA812003BD4F7 /* LFSampleBufferHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806C22AFA812003BD4F7 /* LFSampleBufferHolder.m */; };
+		C7C5807F22AFA812003BD4F7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C7C5807022AFA812003BD4F7 /* README.md */; };
+		C7C5808022AFA812003BD4F7 /* LFVideoExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5807322AFA812003BD4F7 /* LFVideoExportSession.m */; };
 		C7E2F85721D3655B000A9CAE /* LFMECancelBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */; };
 		C7E750F121182F6700022FCF /* LFFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F021182F6700022FCF /* LFFilterView.m */; };
 		C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F321183A5300022FCF /* LFImageUtil.m */; };
@@ -186,8 +188,6 @@
 		6F384D431EEA2C290077D207 /* LFBaseEditingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFBaseEditingController.h; sourceTree = "<group>"; };
 		6F384D441EEA2C290077D207 /* LFBaseEditingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFBaseEditingController.m; sourceTree = "<group>"; };
 		6F384D461EEA54550077D207 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
-		6F61BC191F2987DA005A1E63 /* LFVideoExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoExportSession.h; sourceTree = "<group>"; };
-		6F61BC1A1F2987DA005A1E63 /* LFVideoExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoExportSession.m; sourceTree = "<group>"; };
 		6F61BC1C1F298BEE005A1E63 /* 2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2.mp4; sourceTree = "<group>"; };
 		6F61BC1E1F29B880005A1E63 /* 3.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3.m4v; sourceTree = "<group>"; };
 		6FAB0D351F27345600C1BCFD /* LFScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFScrollView.h; sourceTree = "<group>"; };
@@ -206,6 +206,8 @@
 		6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+LFMEOrientation.m"; sourceTree = "<group>"; };
 		C703CD6022B3991100561AAC /* LFSafeAreaMaskView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFSafeAreaMaskView.h; sourceTree = "<group>"; };
 		C703CD6122B3991100561AAC /* LFSafeAreaMaskView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFSafeAreaMaskView.m; sourceTree = "<group>"; };
+		C703CD8F22B7973400561AAC /* LFLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFLView.m; sourceTree = "<group>"; };
+		C703CD9022B7973400561AAC /* LFLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFLView.h; sourceTree = "<group>"; };
 		C70BAD39205A50DC005B7894 /* NSBundle+LFMediaEditing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LFMediaEditing.h"; sourceTree = "<group>"; };
 		C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LFMediaEditing.m"; sourceTree = "<group>"; };
 		C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = LFMediaEditingController.strings; sourceTree = "<group>"; };
@@ -213,22 +215,17 @@
 		C7269FBA20996DAE00A88CA7 /* 4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 4.gif; sourceTree = "<group>"; };
 		C7269FBC20999FC900A88CA7 /* UIImage+LF_Format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+LF_Format.h"; sourceTree = "<group>"; };
 		C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+LF_Format.m"; sourceTree = "<group>"; };
-		C72E1BA12238953B005D350C /* LFContextImageView+private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LFContextImageView+private.h"; sourceTree = "<group>"; };
 		C73F4CA92230C99C00ED40B7 /* JRFilterBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRFilterBar.h; sourceTree = "<group>"; };
 		C73F4CAB2230C99C00ED40B7 /* JRFilterBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRFilterBarCell.m; sourceTree = "<group>"; };
 		C73F4CAC2230C99C00ED40B7 /* JRFilterBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRFilterBarCell.h; sourceTree = "<group>"; };
 		C73F4CAE2230C99C00ED40B7 /* JRFilterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRFilterModel.h; sourceTree = "<group>"; };
 		C73F4CAF2230C99C00ED40B7 /* JRFilterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRFilterModel.m; sourceTree = "<group>"; };
 		C73F4CB02230C99C00ED40B7 /* JRFilterBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRFilterBar.m; sourceTree = "<group>"; };
-		C73F4CB52230F86B00ED40B7 /* LFFilter+UIImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LFFilter+UIImage.h"; sourceTree = "<group>"; };
-		C73F4CB62230F86B00ED40B7 /* LFFilter+UIImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "LFFilter+UIImage.m"; sourceTree = "<group>"; };
 		C73F4CB82230FE1800ED40B7 /* LFDataFilterVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFDataFilterVideoView.h; sourceTree = "<group>"; };
 		C73F4CB92230FE1800ED40B7 /* LFDataFilterVideoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterVideoView.m; sourceTree = "<group>"; };
 		C73F4CBC223110EB00ED40B7 /* AVAsset+LFMECommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVAsset+LFMECommon.h"; sourceTree = "<group>"; };
 		C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+LFMECommon.m"; sourceTree = "<group>"; };
 		C73F4CC62232540300ED40B7 /* 4.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 4.MOV; sourceTree = "<group>"; };
-		C73F4CEA2235F61A00ED40B7 /* LFFilterGifView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterGifView.h; sourceTree = "<group>"; };
-		C73F4CEB2235F61A00ED40B7 /* LFFilterGifView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFilterGifView.m; sourceTree = "<group>"; };
 		C73F4D772237820900ED40B7 /* LFDataFilterImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFDataFilterImageView.h; sourceTree = "<group>"; };
 		C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterImageView.m; sourceTree = "<group>"; };
 		C73F4D7A2237B95900ED40B7 /* 5.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 5.gif; sourceTree = "<group>"; };
@@ -236,29 +233,37 @@
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
 		C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFEditCollectionView.m; sourceTree = "<group>"; };
-		C79A00C1222CBEC30091EB4C /* LFFilterVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterVideoView.h; sourceTree = "<group>"; };
-		C79A00C2222CBEC30091EB4C /* LFFilterVideoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFilterVideoView.m; sourceTree = "<group>"; };
-		C79A00C5222CC36E0091EB4C /* LFWeakSelectorTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFWeakSelectorTarget.h; sourceTree = "<group>"; };
-		C79A00C6222CC36E0091EB4C /* LFWeakSelectorTarget.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFWeakSelectorTarget.m; sourceTree = "<group>"; };
-		C79A010F222F95320091EB4C /* LFFilterSuiteHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterSuiteHeader.h; sourceTree = "<group>"; };
 		C79A0112222F9BED0091EB4C /* FilterSuiteUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterSuiteUtils.h; sourceTree = "<group>"; };
 		C79A0113222F9BED0091EB4C /* FilterSuiteUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterSuiteUtils.m; sourceTree = "<group>"; };
-		C7B44929222904AA00FA460D /* LFContextImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFContextImageView.h; sourceTree = "<group>"; };
-		C7B4492A222904AA00FA460D /* LFContextImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFContextImageView.m; sourceTree = "<group>"; };
-		C7B4492E222915E000FA460D /* LFContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFContext.h; sourceTree = "<group>"; };
-		C7B4492F222915E000FA460D /* LFContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFContext.m; sourceTree = "<group>"; };
-		C7B4493222291A7D00FA460D /* LFSampleBufferHolder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFSampleBufferHolder.h; sourceTree = "<group>"; };
-		C7B4493322291A7D00FA460D /* LFSampleBufferHolder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFSampleBufferHolder.m; sourceTree = "<group>"; };
-		C7B4493522291B8800FA460D /* LFFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilter.h; sourceTree = "<group>"; };
-		C7B4493622291B8800FA460D /* LFFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFilter.m; sourceTree = "<group>"; };
-		C7B4493822291DDD00FA460D /* LFMutableFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFMutableFilter.h; sourceTree = "<group>"; };
-		C7B4493922291DDD00FA460D /* LFMutableFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFMutableFilter.m; sourceTree = "<group>"; };
-		C7B4493B22291E7500FA460D /* LFFilter+save.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LFFilter+save.h"; sourceTree = "<group>"; };
-		C7B4493C22291E7500FA460D /* LFFilter+save.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "LFFilter+save.m"; sourceTree = "<group>"; };
-		C7B4493E222927DE00FA460D /* LFFilter+Initialize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LFFilter+Initialize.h"; sourceTree = "<group>"; };
-		C7B4493F222929D700FA460D /* LFMutableFilter+Initialize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LFMutableFilter+Initialize.h"; sourceTree = "<group>"; };
-		C7B4494022292E6500FA460D /* LFFilterImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterImageView.h; sourceTree = "<group>"; };
-		C7B4494122292E6500FA460D /* LFFilterImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFilterImageView.m; sourceTree = "<group>"; };
+		C7C5805422AFA812003BD4F7 /* LFMutableFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMutableFilter.m; sourceTree = "<group>"; };
+		C7C5805522AFA812003BD4F7 /* LFFilter+UIImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LFFilter+UIImage.h"; sourceTree = "<group>"; };
+		C7C5805622AFA812003BD4F7 /* LFFilter+save.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LFFilter+save.h"; sourceTree = "<group>"; };
+		C7C5805722AFA812003BD4F7 /* LFFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFFilter.h; sourceTree = "<group>"; };
+		C7C5805822AFA812003BD4F7 /* LFFilter+Initialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LFFilter+Initialize.h"; sourceTree = "<group>"; };
+		C7C5805922AFA812003BD4F7 /* LFMutableFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMutableFilter.h; sourceTree = "<group>"; };
+		C7C5805A22AFA812003BD4F7 /* LFFilter+UIImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "LFFilter+UIImage.m"; sourceTree = "<group>"; };
+		C7C5805B22AFA812003BD4F7 /* LFFilter+save.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "LFFilter+save.m"; sourceTree = "<group>"; };
+		C7C5805C22AFA812003BD4F7 /* LFMutableFilter+Initialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LFMutableFilter+Initialize.h"; sourceTree = "<group>"; };
+		C7C5805D22AFA812003BD4F7 /* LFFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFFilter.m; sourceTree = "<group>"; };
+		C7C5805F22AFA812003BD4F7 /* LFFilterGifView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFFilterGifView.h; sourceTree = "<group>"; };
+		C7C5806022AFA812003BD4F7 /* LFFilterImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFFilterImageView.h; sourceTree = "<group>"; };
+		C7C5806122AFA812003BD4F7 /* LFContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFContext.h; sourceTree = "<group>"; };
+		C7C5806222AFA812003BD4F7 /* LFFilterVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFFilterVideoView.m; sourceTree = "<group>"; };
+		C7C5806322AFA812003BD4F7 /* LFContextImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFContextImageView.h; sourceTree = "<group>"; };
+		C7C5806422AFA812003BD4F7 /* LFFilterGifView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFFilterGifView.m; sourceTree = "<group>"; };
+		C7C5806522AFA812003BD4F7 /* LFContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFContext.m; sourceTree = "<group>"; };
+		C7C5806622AFA812003BD4F7 /* LFFilterImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFFilterImageView.m; sourceTree = "<group>"; };
+		C7C5806722AFA812003BD4F7 /* LFContextImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFContextImageView.m; sourceTree = "<group>"; };
+		C7C5806822AFA812003BD4F7 /* LFFilterVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFFilterVideoView.h; sourceTree = "<group>"; };
+		C7C5806922AFA812003BD4F7 /* LFContextImageView+private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LFContextImageView+private.h"; sourceTree = "<group>"; };
+		C7C5806B22AFA812003BD4F7 /* LFWeakSelectorTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFWeakSelectorTarget.m; sourceTree = "<group>"; };
+		C7C5806C22AFA812003BD4F7 /* LFSampleBufferHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFSampleBufferHolder.m; sourceTree = "<group>"; };
+		C7C5806D22AFA812003BD4F7 /* LFWeakSelectorTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFWeakSelectorTarget.h; sourceTree = "<group>"; };
+		C7C5806E22AFA812003BD4F7 /* LFSampleBufferHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFSampleBufferHolder.h; sourceTree = "<group>"; };
+		C7C5806F22AFA812003BD4F7 /* LFFilterSuiteHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFFilterSuiteHeader.h; sourceTree = "<group>"; };
+		C7C5807022AFA812003BD4F7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C7C5807222AFA812003BD4F7 /* LFVideoExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoExportSession.h; sourceTree = "<group>"; };
+		C7C5807322AFA812003BD4F7 /* LFVideoExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoExportSession.m; sourceTree = "<group>"; };
 		C7E2F85521D3655B000A9CAE /* LFMECancelBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMECancelBlock.h; sourceTree = "<group>"; };
 		C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMECancelBlock.m; sourceTree = "<group>"; };
 		C7E750EF21182F6700022FCF /* LFFilterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterView.h; sourceTree = "<group>"; };
@@ -504,7 +509,7 @@
 		6F14E6391EE6439E0049AE56 /* vendors */ = {
 			isa = PBXGroup;
 			children = (
-				C7B449272229041300FA460D /* LFFilterSuite */,
+				C7C5805222AFA812003BD4F7 /* LFFilterSuite */,
 				C73F4CA82230C99C00ED40B7 /* JRFilterBar */,
 				C7E750F221183A5300022FCF /* ColorMatrix */,
 				6F14E63A1EE6439E0049AE56 /* JRPickColorView */,
@@ -682,13 +687,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C73F4CC0223114D000ED40B7 /* LFExportSession */ = {
+		C7552F2E22B8C09C00845EAC /* LFLView */ = {
 			isa = PBXGroup;
 			children = (
-				6F61BC191F2987DA005A1E63 /* LFVideoExportSession.h */,
-				6F61BC1A1F2987DA005A1E63 /* LFVideoExportSession.m */,
+				C703CD9022B7973400561AAC /* LFLView.h */,
+				C703CD8F22B7973400561AAC /* LFLView.m */,
 			);
-			path = LFExportSession;
+			path = LFLView;
 			sourceTree = "<group>";
 		};
 		C79A0111222F9BB60091EB4C /* FilterSuiteUtils */ = {
@@ -700,62 +705,73 @@
 			path = FilterSuiteUtils;
 			sourceTree = "<group>";
 		};
-		C7B449262229005B00FA460D /* LFFilterDisplayers */ = {
+		C7C5805222AFA812003BD4F7 /* LFFilterSuite */ = {
 			isa = PBXGroup;
 			children = (
-				C7B4492E222915E000FA460D /* LFContext.h */,
-				C7B4492F222915E000FA460D /* LFContext.m */,
-				C7B44929222904AA00FA460D /* LFContextImageView.h */,
-				C7B4492A222904AA00FA460D /* LFContextImageView.m */,
-				C72E1BA12238953B005D350C /* LFContextImageView+private.h */,
-				C7B4494022292E6500FA460D /* LFFilterImageView.h */,
-				C7B4494122292E6500FA460D /* LFFilterImageView.m */,
-				C73F4CEA2235F61A00ED40B7 /* LFFilterGifView.h */,
-				C73F4CEB2235F61A00ED40B7 /* LFFilterGifView.m */,
-				C79A00C1222CBEC30091EB4C /* LFFilterVideoView.h */,
-				C79A00C2222CBEC30091EB4C /* LFFilterVideoView.m */,
-			);
-			path = LFFilterDisplayers;
-			sourceTree = "<group>";
-		};
-		C7B449272229041300FA460D /* LFFilterSuite */ = {
-			isa = PBXGroup;
-			children = (
-				C79A010F222F95320091EB4C /* LFFilterSuiteHeader.h */,
-				C7B4493122291A5E00FA460D /* LFFilterUtils */,
-				C7B449282229043100FA460D /* LFFilter */,
-				C7B449262229005B00FA460D /* LFFilterDisplayers */,
-				C73F4CC0223114D000ED40B7 /* LFExportSession */,
+				C7C5805322AFA812003BD4F7 /* LFFilter */,
+				C7C5805E22AFA812003BD4F7 /* LFFilterDisplayers */,
+				C7C5806A22AFA812003BD4F7 /* LFFilterUtils */,
+				C7C5806F22AFA812003BD4F7 /* LFFilterSuiteHeader.h */,
+				C7C5807022AFA812003BD4F7 /* README.md */,
+				C7C5807122AFA812003BD4F7 /* LFExportSession */,
 			);
 			path = LFFilterSuite;
 			sourceTree = "<group>";
 		};
-		C7B449282229043100FA460D /* LFFilter */ = {
+		C7C5805322AFA812003BD4F7 /* LFFilter */ = {
 			isa = PBXGroup;
 			children = (
-				C7B4493522291B8800FA460D /* LFFilter.h */,
-				C7B4493622291B8800FA460D /* LFFilter.m */,
-				C7B4493E222927DE00FA460D /* LFFilter+Initialize.h */,
-				C7B4493822291DDD00FA460D /* LFMutableFilter.h */,
-				C7B4493922291DDD00FA460D /* LFMutableFilter.m */,
-				C7B4493F222929D700FA460D /* LFMutableFilter+Initialize.h */,
-				C7B4493B22291E7500FA460D /* LFFilter+save.h */,
-				C7B4493C22291E7500FA460D /* LFFilter+save.m */,
-				C73F4CB52230F86B00ED40B7 /* LFFilter+UIImage.h */,
-				C73F4CB62230F86B00ED40B7 /* LFFilter+UIImage.m */,
+				C7C5805422AFA812003BD4F7 /* LFMutableFilter.m */,
+				C7C5805522AFA812003BD4F7 /* LFFilter+UIImage.h */,
+				C7C5805622AFA812003BD4F7 /* LFFilter+save.h */,
+				C7C5805722AFA812003BD4F7 /* LFFilter.h */,
+				C7C5805822AFA812003BD4F7 /* LFFilter+Initialize.h */,
+				C7C5805922AFA812003BD4F7 /* LFMutableFilter.h */,
+				C7C5805A22AFA812003BD4F7 /* LFFilter+UIImage.m */,
+				C7C5805B22AFA812003BD4F7 /* LFFilter+save.m */,
+				C7C5805C22AFA812003BD4F7 /* LFMutableFilter+Initialize.h */,
+				C7C5805D22AFA812003BD4F7 /* LFFilter.m */,
 			);
 			path = LFFilter;
 			sourceTree = "<group>";
 		};
-		C7B4493122291A5E00FA460D /* LFFilterUtils */ = {
+		C7C5805E22AFA812003BD4F7 /* LFFilterDisplayers */ = {
 			isa = PBXGroup;
 			children = (
-				C7B4493222291A7D00FA460D /* LFSampleBufferHolder.h */,
-				C7B4493322291A7D00FA460D /* LFSampleBufferHolder.m */,
-				C79A00C5222CC36E0091EB4C /* LFWeakSelectorTarget.h */,
-				C79A00C6222CC36E0091EB4C /* LFWeakSelectorTarget.m */,
+				C7C5805F22AFA812003BD4F7 /* LFFilterGifView.h */,
+				C7C5806022AFA812003BD4F7 /* LFFilterImageView.h */,
+				C7C5806122AFA812003BD4F7 /* LFContext.h */,
+				C7C5806222AFA812003BD4F7 /* LFFilterVideoView.m */,
+				C7C5806322AFA812003BD4F7 /* LFContextImageView.h */,
+				C7C5806422AFA812003BD4F7 /* LFFilterGifView.m */,
+				C7C5806522AFA812003BD4F7 /* LFContext.m */,
+				C7C5806622AFA812003BD4F7 /* LFFilterImageView.m */,
+				C7C5806722AFA812003BD4F7 /* LFContextImageView.m */,
+				C7C5806822AFA812003BD4F7 /* LFFilterVideoView.h */,
+				C7C5806922AFA812003BD4F7 /* LFContextImageView+private.h */,
+			);
+			path = LFFilterDisplayers;
+			sourceTree = "<group>";
+		};
+		C7C5806A22AFA812003BD4F7 /* LFFilterUtils */ = {
+			isa = PBXGroup;
+			children = (
+				C7552F2E22B8C09C00845EAC /* LFLView */,
+				C7C5806B22AFA812003BD4F7 /* LFWeakSelectorTarget.m */,
+				C7C5806C22AFA812003BD4F7 /* LFSampleBufferHolder.m */,
+				C7C5806D22AFA812003BD4F7 /* LFWeakSelectorTarget.h */,
+				C7C5806E22AFA812003BD4F7 /* LFSampleBufferHolder.h */,
 			);
 			path = LFFilterUtils;
+			sourceTree = "<group>";
+		};
+		C7C5807122AFA812003BD4F7 /* LFExportSession */ = {
+			isa = PBXGroup;
+			children = (
+				C7C5807222AFA812003BD4F7 /* LFVideoExportSession.h */,
+				C7C5807322AFA812003BD4F7 /* LFVideoExportSession.m */,
+			);
+			path = LFExportSession;
 			sourceTree = "<group>";
 		};
 		C7E2F85321D3655B000A9CAE /* utils */ = {
@@ -868,6 +884,7 @@
 				6F359B4A1F21A326009F2035 /* LFMediaEditingController.bundle in Resources */,
 				C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */,
 				C7269FBB20996DAE00A88CA7 /* 4.gif in Resources */,
+				C7C5807F22AFA812003BD4F7 /* README.md in Resources */,
 				6F61BC1D1F298BF8005A1E63 /* 2.mp4 in Resources */,
 				6F14E5DE1EE6438A0049AE56 /* Main.storyboard in Resources */,
 			);
@@ -880,13 +897,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7C5807822AFA812003BD4F7 /* LFFilterVideoView.m in Sources */,
 				6F359B321F1D95E2009F2035 /* LFVideoPlayer.m in Sources */,
-				C7B4493D22291E7500FA460D /* LFFilter+save.m in Sources */,
+				C7C5807C22AFA812003BD4F7 /* LFContextImageView.m in Sources */,
 				C7E2F85721D3655B000A9CAE /* LFMECancelBlock.m in Sources */,
 				6F14E6471EE6439E0049AE56 /* LFEditingView.m in Sources */,
-				C7B44930222915E000FA460D /* LFContext.m in Sources */,
 				6F14E65B1EE6439E0049AE56 /* JRPickColorView.m in Sources */,
-				C7B4493722291B8800FA460D /* LFFilter.m in Sources */,
 				6F14E6591EE6439E0049AE56 /* LFStickerBar.m in Sources */,
 				6F14E64C1EE6439E0049AE56 /* LFGridMaskLayer.m in Sources */,
 				6F307D311F3C5DF800A48B49 /* LFAudioTrackBar.m in Sources */,
@@ -895,35 +911,39 @@
 				6FAB0D491F2735D800C1BCFD /* UIView+LFMECommon.m in Sources */,
 				6F359B411F1E0A2B009F2035 /* LFVideoTrimmerGridView.m in Sources */,
 				C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */,
+				C7C5807422AFA812003BD4F7 /* LFMutableFilter.m in Sources */,
 				6F359B441F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m in Sources */,
 				6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */,
 				6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */,
 				6F359B371F1DDE6D009F2035 /* LFVideoClipToolbar.m in Sources */,
 				C73F4CBA2230FE1800ED40B7 /* LFDataFilterVideoView.m in Sources */,
-				C73F4CB72230F86B00ED40B7 /* LFFilter+UIImage.m in Sources */,
 				C7ED893C20ABBC7100D37465 /* LFMEGIFImageSerialization.m in Sources */,
-				C79A00C3222CBEC30091EB4C /* LFFilterVideoView.m in Sources */,
 				6F384D3F1EE7D9E70077D207 /* LFSplashView.m in Sources */,
 				6F14E65E1EE643AB0049AE56 /* PhotoViewController.m in Sources */,
 				6F359B211F1C8F24009F2035 /* LFVideoEdit.m in Sources */,
-				C7B4494222292E6500FA460D /* LFFilterImageView.m in Sources */,
 				C73F4CB12230C99C00ED40B7 /* JRFilterBarCell.m in Sources */,
 				C7E750F121182F6700022FCF /* LFFilterView.m in Sources */,
+				C7C5807722AFA812003BD4F7 /* LFFilter.m in Sources */,
 				C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */,
 				C73F4CBE223110EB00ED40B7 /* AVAsset+LFMECommon.m in Sources */,
+				C7C5807522AFA812003BD4F7 /* LFFilter+UIImage.m in Sources */,
+				C703CD6222B3991100561AAC /* LFSafeAreaMaskView.m in Sources */,
+				C7C5807A22AFA812003BD4F7 /* LFContext.m in Sources */,
 				6F14E6421EE6439E0049AE56 /* LFPhotoEditingController.m in Sources */,
+				C7C5807D22AFA812003BD4F7 /* LFWeakSelectorTarget.m in Sources */,
 				6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */,
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
 				6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */,
 				6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */,
+				C7C5807E22AFA812003BD4F7 /* LFSampleBufferHolder.m in Sources */,
 				C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */,
 				6F359B3B1F1DE99F009F2035 /* LFVideoTrimmerView.m in Sources */,
 				6F14E6561EE6439E0049AE56 /* LFClipToolbar.m in Sources */,
 				6F14E6491EE6439E0049AE56 /* LFZoomingView.m in Sources */,
 				C7E750F92119294F00022FCF /* LFColorMatrixType.m in Sources */,
-				C7B4492B222904AA00FA460D /* LFContextImageView.m in Sources */,
 				6F14E5D51EE6438A0049AE56 /* main.m in Sources */,
 				6F14E64A1EE6439E0049AE56 /* LFText.m in Sources */,
+				C7C5807B22AFA812003BD4F7 /* LFFilterImageView.m in Sources */,
 				6F359B281F1CB662009F2035 /* LFVideoEditingView.m in Sources */,
 				C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */,
 				C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */,
@@ -931,17 +951,14 @@
 				6F359B131F1C678D009F2035 /* VideoViewController.m in Sources */,
 				6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */,
 				6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */,
-				C7B4493422291A7D00FA460D /* LFSampleBufferHolder.m in Sources */,
 				C73F4CB22230C99C00ED40B7 /* JRFilterModel.m in Sources */,
-				6F61BC1B1F2987DA005A1E63 /* LFVideoExportSession.m in Sources */,
-				C7B4493A22291DDD00FA460D /* LFMutableFilter.m in Sources */,
-				C73F4CEC2235F61A00ED40B7 /* LFFilterGifView.m in Sources */,
 				6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */,
+				C703CD9122B7973400561AAC /* LFLView.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
 				6F14E6521EE6439E0049AE56 /* LFStickerLabel.m in Sources */,
+				C7C5807922AFA812003BD4F7 /* LFFilterGifView.m in Sources */,
 				6F359B101F1C676A009F2035 /* LFVideoEditingController.m in Sources */,
 				C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */,
-				C79A00C7222CC36E0091EB4C /* LFWeakSelectorTarget.m in Sources */,
 				6F359B2E1F1D9567009F2035 /* LFVideoPlayerLayerView.m in Sources */,
 				6F14E6511EE6439E0049AE56 /* LFMovingView.m in Sources */,
 				6F14E6451EE6439E0049AE56 /* LFPhotoEdit.m in Sources */,
@@ -949,7 +966,9 @@
 				6F14E64E1EE6439E0049AE56 /* LFResizeControl.m in Sources */,
 				C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */,
 				6F14E64D1EE6439E0049AE56 /* LFGridView.m in Sources */,
+				C7C5808022AFA812003BD4F7 /* LFVideoExportSession.m in Sources */,
 				6F14E6531EE6439E0049AE56 /* LFDrawView.m in Sources */,
+				C7C5807622AFA812003BD4F7 /* LFFilter+save.m in Sources */,
 				6FAB0D481F2735D800C1BCFD /* UIImage+LFMECommon.m in Sources */,
 				6F14E64B1EE6439E0049AE56 /* LFGridLayer.m in Sources */,
 				6F14E6581EE6439E0049AE56 /* LFEditToolbar.m in Sources */,

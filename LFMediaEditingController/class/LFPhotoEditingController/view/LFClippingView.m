@@ -436,6 +436,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 }
 
 #pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.displayView setNeedsDisplay];
+}
+
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginDragging:)]) {
@@ -480,6 +485,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
         /** 代码调整zoom，会导致居中计算错误，必须2指控制UI自动缩放时才调用 */
         [self refreshImageZoomViewCenter];
     }
+    [self.displayView setNeedsDisplay];
     if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidZoom:)]) {
         [self.clippingDelegate lf_clippingViewDidZoom:self];
     }
@@ -634,6 +640,12 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 - (void)photoEditEnable:(BOOL)enable
 {
     [self.zoomingView photoEditEnable:enable];
+}
+
+/** 显示视图 */
+- (UIView *)displayView
+{
+    return self.zoomingView.displayView;
 }
 
 #pragma mark - 数据

@@ -3,6 +3,20 @@
 * 代码来源于[SCRecorder](https://github.com/rFlex/SCRecorder)项目，向该项目的开发人员致敬并感谢。  
 * 本套件降低了使用的复杂性。
 * 重命名类名，避免冲突。
+* 新增了对大图片的支持。
+
+## 大图片的使用
+LFContextTypeAuto 在预览大图的时候展示图片会模糊不清，特别是长图片。
+1、哪些图片会模糊不清？
+> 缩放屏幕比例后的尺寸太小的图片，例如：原图片尺寸为：288 × 7960，缩放屏幕比例后的尺寸为（ipx为例）：29x812。因为展示的实际像素只有29x812，被UIScrollView放大后。但展示的视图仍然是使用29x812像素来绘制288 × 7960的图片，所以会模糊不清。
+
+2、怎样可以还原大图片的清晰度？
+> ·可以将contextType设置为LFContextTypeLargeImage，它是专门预览大图的。它对大图片的内存使用也是极佳的。但是小图片建议不要使用。
+> ·可以将contextType设置为LFContextTypeEAGL，并且将contentView指向UIScrollView的superView。在UIScrollView的代理方法中`- (void)scrollViewDidScroll:(UIScrollView *)scrollView` 与 `- (void)scrollViewDidZoom:(UIScrollView *)scrollView` 加入`[self.LFContextImageView setNeedsDisplay];`。 它的工作原理是使用contentView的像素实时绘制图片的可视范围像素来达到原图的清晰图。但它是有缺陷的。总的来说OpenGLES，或者即将取代它的Metal，它们都与UIScrollView兼容性很差。
+> >缺陷1：如果UIScrollView旋转了视图，那么self.LFContextImageView也要跟随旋转，注意，仅是旋转部分的transform。
+> >缺陷2：当UIScrollView缩小超出最小范围后，回弹动画不跟随。放大同样。
+
+
 
 ## 套件使用
 1. `#import "LFFilterSuiteHeader.h"`
@@ -65,6 +79,15 @@
 	LFFilter *filter = [LFFilter filterWithCIFilter:filter];
 	view.filter = filter;
 	````
+	
+	````
+	LFFilter *filter = [LFFilter filterWithBlock:^CIImage * _Nullable(CIImage * _Nonnull image) {
+        // do something ...
+        return CIImage;
+    }];
+	view.filter = filter;
+	````
+	
 5. 导出视频
 
 	````

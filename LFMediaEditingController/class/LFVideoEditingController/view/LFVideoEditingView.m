@@ -426,6 +426,12 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     [self.clippingView photoEditEnable:enable];
 }
 
+/** 显示视图 */
+- (UIView *)displayView
+{
+    return self.clippingView.displayView;
+}
+
 #pragma mark - 数据
 - (NSDictionary *)photoEditData
 {

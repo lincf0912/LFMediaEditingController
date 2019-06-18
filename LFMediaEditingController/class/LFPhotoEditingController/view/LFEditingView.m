@@ -693,6 +693,12 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 }
 
 #pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.displayView setNeedsDisplay];
+}
+
+
 - (nullable UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.clipZoomView;
 }
@@ -701,6 +707,8 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     self.contentInset = UIEdgeInsetsZero;
     self.scrollIndicatorInsets = UIEdgeInsetsZero;
     [self refreshImageZoomViewCenter];
+    
+    [self.displayView setNeedsDisplay];
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
@@ -837,6 +845,12 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 - (void)photoEditEnable:(BOOL)enable
 {
     [self.clippingView photoEditEnable:enable];
+}
+
+/** 显示视图 */
+- (UIView *)displayView
+{
+    return self.clippingView.displayView;
 }
 
 #pragma mark - 数据

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreImage/CoreImage.h>
+#import <Metal/Metal.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +18,13 @@ typedef NS_ENUM(NSInteger, LFContextType) {
      Automatically choose an appropriate LFContext context
      */
     LFContextTypeAuto,
+    
+    /**
+     Create a hardware accelerated LFContext with Metal
+     Metal is available on iOS 8 and A7 chips. Or higher.
+     On iOS 9.0, Metal does not behave nicely with gaussian blur filters
+     */
+    LFContextTypeMetal NS_ENUM_AVAILABLE_IOS(9_0),
     
     /**
      Create a hardware accelerated LFContext with CoreGraphics
@@ -29,14 +37,25 @@ typedef NS_ENUM(NSInteger, LFContextType) {
     LFContextTypeEAGL,
     
     /**
+     Create a hardware accelerated LFContext with EAGL (OpenGL)
+     */
+    LFContextTypeLargeImage,
+    
+    /**
      Creates a standard LFContext hardware accelerated.
      */
     LFContextTypeDefault,
+    
+    /**
+     Create a software rendered LFContext (no hardware acceleration)
+     */
+    LFContextTypeCPU,
 };
 
 
 extern NSString *__nonnull const LFContextOptionsCGContextKey;
 extern NSString *__nonnull const LFContextOptionsEAGLContextKey;
+extern NSString *__nonnull const LFContextOptionsMTLDeviceKey;
 
 @interface LFContext : NSObject
 
@@ -54,6 +73,11 @@ extern NSString *__nonnull const LFContextOptionsEAGLContextKey;
  Will be non null if the type is LFContextTypeEAGL
  */
 @property (readonly, nonatomic) EAGLContext *__nullable EAGLContext;
+
+/**
+ Will be non null if the type is LFContextTypeMetal
+ */
+@property (readonly, nonatomic) id<MTLDevice> __nullable MTLDevice NS_ENUM_AVAILABLE_IOS(9_0);
 
 /**
  Will be non null if the type is LFContextTypeCoreGraphics

@@ -12,6 +12,8 @@
 
 @property (strong, nonatomic) CIImage *overlayImage;
 
+@property (copy, nonatomic) LFFilterHandle filterHandle;
+
 @end
 
 @implementation LFFilter
@@ -136,6 +138,10 @@
         image = [overlayImage imageByCompositingOverImage:image];
     }
     
+    if (self.filterHandle) {
+        image = self.filterHandle(image);
+    }
+    
     CIFilter *ciFilter = _CIFilter;
     
     if (ciFilter == nil) {
@@ -226,6 +232,13 @@
 + (LFFilter *)filterWithCIImage:(CIImage *)image {
     LFFilter *filter = [[self class] emptyFilter];
     filter.overlayImage = image;
+    
+    return filter;
+}
+
++ (LFFilter *)filterWithBlock:(LFFilterHandle)block {
+    LFFilter *filter = [[self class] emptyFilter];
+    filter.filterHandle = [block copy];
     
     return filter;
 }
