@@ -71,10 +71,19 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     self = [super init];
     
     if (self) {
-        _EAGLContext = context;
-        
-        _CIContext = [CIContext contextWithEAGLContext:_EAGLContext options:LFContextCreateCIContextOptions()];
+        _CIContext = [CIContext contextWithEAGLContext:context options:LFContextCreateCIContextOptions()];
         _type = LFContextTypeLargeImage;
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithUIKitContext:(EAGLContext *)context {
+    self = [super init];
+    
+    if (self) {
+        _CIContext = [CIContext contextWithEAGLContext:context options:LFContextCreateCIContextOptions()];
+        _type = LFContextTypeUIKit;
     }
     
     return self;
@@ -130,6 +139,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
             return [CIContextClass respondsToSelector:@selector(contextWithCGContext:options:)];
         case LFContextTypeEAGL:
         case LFContextTypeLargeImage:
+        case LFContextTypeUIKit:
             return [CIContextClass respondsToSelector:@selector(contextWithEAGLContext:options:)];
         case LFContextTypeAuto:
         case LFContextTypeDefault:
@@ -171,6 +181,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
             return [[self alloc] initWithSoftwareRenderer:NO];
         case LFContextTypeEAGL:
         case LFContextTypeLargeImage:
+        case LFContextTypeUIKit:
         {
             EAGLContext *context = options[LFContextOptionsEAGLContextKey];
             
@@ -188,6 +199,8 @@ static NSDictionary *LFContextCreateCIContextOptions() {
                 return [[self alloc] initWithEAGLContext:context];
             } else if (type == LFContextTypeLargeImage) {
                 return [[self alloc] initWithLargeImageContext:context];
+            } else if (type == LFContextTypeUIKit) {
+                return [[self alloc] initWithUIKitContext:context];
             }
         }
         default:

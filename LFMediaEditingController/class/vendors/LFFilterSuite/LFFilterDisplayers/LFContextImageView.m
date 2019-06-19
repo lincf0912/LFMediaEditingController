@@ -25,6 +25,7 @@
 
 @property (nonatomic, weak) GLKView *GLKView;
 @property (nonatomic, weak) LFLView *LFLView;
+@property (nonatomic, weak) UIView *UIView;
 
 @property (nonatomic, strong) LFSampleBufferHolder *sampleBufferHolder;
 
@@ -120,6 +121,7 @@
     }
     _GLKView.frame = viewRect;
     _LFLView.frame = self.bounds;
+    _UIView.frame = self.bounds;
 #if !(TARGET_IPHONE_SIMULATOR)
     _MTKView.frame = self.bounds;
 #endif
@@ -133,6 +135,10 @@
     if (_LFLView != nil) {
         [_LFLView removeFromSuperview];
         _LFLView = nil;
+    }
+    if (_UIView != nil) {
+        [_UIView removeFromSuperview];
+        _UIView = nil;
     }
 #if !(TARGET_IPHONE_SIMULATOR)
     if (_MTKView != nil) {
@@ -154,38 +160,46 @@
                 break;
             case LFContextTypeEAGL:
             {
-                GLKView *glkView = [[GLKView alloc] initWithFrame:self.bounds context:context.EAGLContext];
-                glkView.contentScaleFactor = self.contentScaleFactor;
-                glkView.delegate = self;
+                GLKView *view = [[GLKView alloc] initWithFrame:self.bounds context:context.EAGLContext];
+                view.contentScaleFactor = self.contentScaleFactor;
+                view.delegate = self;
                 if (self.contentView) {
-                    [_contentView insertSubview:glkView atIndex:0];
+                    [_contentView insertSubview:view atIndex:0];
                 } else {
-                    [self insertSubview:glkView atIndex:0];
+                    [self insertSubview:view atIndex:0];
                 }
-                _GLKView = glkView;
+                _GLKView = view;
             }
                 break;
             case LFContextTypeLargeImage:
             {
-                LFLView *lflView = [[LFLView alloc] initWithFrame:self.bounds];
-                lflView.contentScaleFactor = self.contentScaleFactor;
-                [self insertSubview:lflView atIndex:0];
-                _LFLView = lflView;
+                LFLView *view = [[LFLView alloc] initWithFrame:self.bounds];
+                view.contentScaleFactor = self.contentScaleFactor;
+                [self insertSubview:view atIndex:0];
+                _LFLView = view;
+            }
+                break;
+            case LFContextTypeUIKit:
+            {
+                UIView *view = [[UIView alloc] initWithFrame:self.bounds];
+                view.contentScaleFactor = self.contentScaleFactor;
+                [self insertSubview:view atIndex:0];
+                _UIView = view;
             }
                 break;
 #if !(TARGET_IPHONE_SIMULATOR)
             case LFContextTypeMetal:
             {
                 _MTLCommandQueue = [context.MTLDevice newCommandQueue];
-                MTKView *mtkView = [[MTKView alloc] initWithFrame:self.bounds device:context.MTLDevice];
-                mtkView.clearColor = MTLClearColorMake(0, 0, 0, 0);
-                mtkView.contentScaleFactor = self.contentScaleFactor;
-                mtkView.delegate = self;
-                mtkView.opaque = NO;
-                mtkView.enableSetNeedsDisplay = YES;
-                mtkView.framebufferOnly = NO;
-                [self insertSubview:_MTKView atIndex:0];
-                _MTKView = mtkView;
+                MTKView *view = [[MTKView alloc] initWithFrame:self.bounds device:context.MTLDevice];
+                view.clearColor = MTLClearColorMake(0, 0, 0, 0);
+                view.contentScaleFactor = self.contentScaleFactor;
+                view.delegate = self;
+                view.opaque = NO;
+                view.enableSetNeedsDisplay = YES;
+                view.framebufferOnly = NO;
+                [self insertSubview:view atIndex:0];
+                _MTKView = view;
             }
                 break;
 #endif
@@ -203,6 +217,7 @@
     
     [_GLKView setNeedsDisplay];
     _LFLView.image = [self renderedUIImage];
+    _UIView.layer.contents = (__bridge id _Nullable)([self renderedUIImage].CGImage);
 #if !(TARGET_IPHONE_SIMULATOR)
     [_MTKView setNeedsDisplay];
 #endif
@@ -250,8 +265,15 @@
     if (image != nil) {
         image = [image imageByApplyingTransform:self.preferredCIImageTransform];
         
-        if (self.context.type != LFContextTypeEAGL && self.contextType != LFContextTypeLargeImage) {
-            image = [image imageByApplyingOrientation:4];
+        switch (self.contextType) {
+            case LFContextTypeMetal:
+            case LFContextTypeCoreGraphics:
+            case LFContextTypeDefault:
+            case LFContextTypeCPU:
+                image = [image imageByApplyingOrientation:4];
+                break;
+            default:
+                break;
         }
         
         if (self.scaleAndResizeCIImageAutomatically) {
