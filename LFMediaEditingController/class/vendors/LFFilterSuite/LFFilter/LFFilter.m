@@ -159,6 +159,9 @@
     if (filter != nil) {
         filter->_name = [_name copy];
         filter->_CIFilter = [_CIFilter copy];
+        filter->_enabled = _enabled;
+        filter->_filterHandle = [_filterHandle copy];
+        filter->_overlayImage = _overlayImage;
     }
     
     return filter;
@@ -199,7 +202,7 @@
         obj = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     } @catch (NSException *exception) {
         if (error != nil) {
-            *error = [NSError errorWithDomain:@"LFFilterGroup" code:200 userInfo:@{
+            *error = [NSError errorWithDomain:@"LFFilterUnarchiver" code:200 userInfo:@{
                                                                                    NSLocalizedDescriptionKey : exception.reason
                                                                                    }];
             return nil;
