@@ -53,6 +53,8 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 100.f;
     _collectionView.frame = _backgroundView.bounds;
     _cellSize = CGSizeMake(JR_FilterBar_MAX_WIDTH, CGRectGetHeight(_backgroundView.frame));
     [_collectionView.collectionViewLayout invalidateLayout];
+    
+    [self _scrollView_jrAnimated:NO];
 }
 
 #pragma mark - Private Methods
@@ -76,7 +78,6 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 100.f;
     [_backgroundView addSubview:collectionView];
     [collectionView registerClass:[JRFilterBarCell class] forCellWithReuseIdentifier: [JRFilterBarCell identifier]];
     _collectionView = collectionView;
-    [self _scrollView_jr];
 }
 
 #pragma mark 创建数据源
@@ -95,17 +96,20 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 100.f;
 }
 
 #pragma mark 滚动
-- (void)_scrollView_jr {
+- (void)_scrollView_jrAnimated:(BOOL)animated {
     if (self.selectModel) {
         NSInteger index = [self.list indexOfObject:self.selectModel];
         NSIndexPath *selectIndexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        [_collectionView scrollToItemAtIndexPath:selectIndexPath atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:YES];
+        [_collectionView scrollToItemAtIndexPath:selectIndexPath atScrollPosition:(UICollectionViewScrollPositionCenteredHorizontally) animated:animated];
     }
 }
 
 #pragma mark - UICollectionViewDataSource
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     JRFilterModel *item = [_list objectAtIndex:indexPath.row];
+    if (item == _selectModel) {
+        return;
+    }
     if (_selectModel) {
         NSInteger index = [_list indexOfObject:_selectModel];
         _selectModel = nil;
@@ -114,7 +118,7 @@ CGFloat const JR_FilterBar_MAX_WIDTH = 100.f;
     }
     _selectModel = item;
     [_collectionView reloadItemsAtIndexPaths:@[indexPath]];
-    [self _scrollView_jr];
+    [self _scrollView_jrAnimated:YES];
     if ([self.delegate respondsToSelector:@selector(jr_filterBar:didSelectImage:effectType:)]) {
         [self.delegate jr_filterBar:self didSelectImage:item.image effectType:item.effectType];
     }
