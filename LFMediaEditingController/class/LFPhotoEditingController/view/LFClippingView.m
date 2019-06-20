@@ -416,7 +416,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
         
         _angle = newAngle;
 
-        [UIView animateWithDuration:0.45f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:0.8f options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:0.8f options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             
             [self transformRotate:self.angle];
             
@@ -543,8 +543,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     }
     
     /** 重置变形 */
-    self.transform = CGAffineTransformIdentity;
-    CGRect oldRect = self.frame;
+//    self.transform = CGAffineTransformIdentity;
+    /** 不用重置变形，使用center与bounds来计算原来的frame */
+    CGPoint center = self.center;
+    CGRect bounds = self.bounds;
+    CGRect oldRect = CGRectMake(center.x-0.5*bounds.size.width, center.y-0.5*bounds.size.height, bounds.size.width, bounds.size.height);
     CGFloat width = CGRectGetWidth(oldRect);
     CGFloat height = CGRectGetHeight(oldRect);
     if (angle%180 != 0) { /** 旋转基数时需要互换宽高 */
