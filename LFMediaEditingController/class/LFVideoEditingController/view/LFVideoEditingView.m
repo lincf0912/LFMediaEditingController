@@ -370,7 +370,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 /** 进度回调 */
 - (void)lf_videoClippingView:(LFVideoClippingView *)clippingView duration:(double)duration
 {
-    self.trimmerView.progress = duration/clippingView.totalDuration;
+    if (duration == 0) {
+        self.trimmerView.progress = clippingView.startTime/clippingView.totalDuration;
+    } else {
+        self.trimmerView.progress = duration/clippingView.totalDuration;
+    }
 }
 
 /** 进度长度 */
@@ -386,7 +390,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     [self lf_videoTrimmerViewDidResizing:trimmerView gridRange:gridRange];
     [self.clippingView beginScrubbing];
     [trimmerView setHiddenProgress:YES];
-    trimmerView.progress = 0;
+    trimmerView.progress = self.clippingView.startTime/self.clippingView.totalDuration;
 }
 - (void)lf_videoTrimmerViewDidResizing:(LFVideoTrimmerView *)trimmerView gridRange:(NSRange)gridRange
 {
@@ -404,6 +408,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 }
 - (void)lf_videoTrimmerViewDidEndResizing:(LFVideoTrimmerView *)trimmerView gridRange:(NSRange)gridRange
 {
+    trimmerView.progress = self.clippingView.startTime/self.clippingView.totalDuration;
     [self.clippingView endScrubbing];
     [self.clippingView playVideo];
     [trimmerView setHiddenProgress:NO];
