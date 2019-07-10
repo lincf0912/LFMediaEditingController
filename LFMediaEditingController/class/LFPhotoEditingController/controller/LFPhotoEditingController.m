@@ -640,10 +640,13 @@
         CGSize size = CGSizeZero;
         CGSize imageSize = CGSizeMake(CGImageGetWidth(self.editImage.CGImage), CGImageGetHeight(self.editImage.CGImage));
         size.width = MIN(JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale, imageSize.width);
-        size.height = MIN((int)(imageSize.height*size.width/imageSize.width)*1.f, size.width);
-        CGImageRef newImageRef = CGImageCreateWithImageInRect([self.editImage CGImage], CGRectMake((imageSize.width-size.width)/2, (imageSize.height-size.height)/2, size.width, size.height));//按照给定的矩形区域进行剪裁
-        self.filterSmallImage = [UIImage imageWithCGImage:newImageRef];
-        CGImageRelease(newImageRef);
+        size.height = ((int)(imageSize.height*size.width/imageSize.width))*1.f;
+        
+        UIGraphicsBeginImageContext(size);
+        [self.editImage drawInRect:(CGRect){CGPointZero, size}];
+        self.filterSmallImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
     }
     return lf_filterImageWithType(self.filterSmallImage, type);
 }

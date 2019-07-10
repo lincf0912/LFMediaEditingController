@@ -933,8 +933,8 @@
     if (_filterSmallImage == nil) {
         CGSize videoSize = [self.asset videoNaturalSize];
         CGSize size = CGSizeZero;
-        size.width = JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale;
-        size.height = (int)(videoSize.height*size.width/videoSize.width)*1.f;
+        size.width = MIN(JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale, videoSize.width);
+        size.height = ((int)(videoSize.height*size.width/videoSize.width))*1.f;
         self.filterSmallImage = [self.asset lf_firstImageWithSize:size error:nil];
     }
     return lf_filterImageWithType(self.filterSmallImage, type);
