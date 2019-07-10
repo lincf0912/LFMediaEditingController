@@ -116,8 +116,9 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     }
     
     /** 判断是否大图、长图之类的图片，暂时规定超出当前手机屏幕的n倍就是大图了 */
-    CGFloat scale = 1.5f;
-    if (image.images.count == 0 && (image.size.width > [UIScreen mainScreen].bounds.size.width * scale || image.size.height > [UIScreen mainScreen].bounds.size.height * scale)) {
+    CGFloat scale = 10.f;
+    BOOL isLongImage = MAX(image.size.height/image.size.width, image.size.width/image.size.height) > scale;
+    if (image.images.count == 0 && (isLongImage || (image.size.width > [UIScreen mainScreen].bounds.size.width * scale || image.size.height > [UIScreen mainScreen].bounds.size.height * scale))) {
         self.imageView.contextType = LFContextTypeLargeImage;
     } else {
         self.imageView.contextType = LFContextTypeAuto;
