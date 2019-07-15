@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'LFMediaEditingController'
-s.version      = '1.3.2'
+s.version      = '1.3.3'
 s.summary      = 'Media Editor (edit photo、edit video)'
 s.homepage     = 'https://github.com/lincf0912/LFMediaEditingController'
 s.license      = 'MIT'
@@ -21,6 +21,7 @@ ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
+ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
 end
 
 # LFVideoEditingController模块
@@ -32,6 +33,7 @@ ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
+ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
 end
 
 # JRPickColorView模块
@@ -56,6 +58,13 @@ end
 s.subspec 'LFFilterSuite' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/LFFilterSuite/*.{h,m}','LFMediaEditingController/class/vendors/LFFilterSuite/**/*.{h,m}'
 ss.public_header_files = 'LFMediaEditingController/class/vendors/LFFilterSuite/*.h','LFMediaEditingController/class/vendors/LFFilterSuite/**/*.h'
+end
+
+# LFMediaDisplayView模块
+s.subspec 'LFMediaDisplayView' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/*.{h,m}','LFMediaEditingController/class/vendors/LFMediaDisplayView/**/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/*.h'
+ss.resources = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/resource/*.bundle'
 end
 
 end
