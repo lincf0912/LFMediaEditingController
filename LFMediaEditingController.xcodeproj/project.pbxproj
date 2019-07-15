@@ -18,7 +18,6 @@
 		6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6071EE6439E0049AE56 /* LFClippingView.m */; };
 		6F14E6471EE6439E0049AE56 /* LFEditingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6091EE6439E0049AE56 /* LFEditingView.m */; };
 		6F14E6491EE6439E0049AE56 /* LFZoomingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E60D1EE6439E0049AE56 /* LFZoomingView.m */; };
-		6F14E64A1EE6439E0049AE56 /* LFText.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6101EE6439E0049AE56 /* LFText.m */; };
 		6F14E64B1EE6439E0049AE56 /* LFGridLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6141EE6439E0049AE56 /* LFGridLayer.m */; };
 		6F14E64C1EE6439E0049AE56 /* LFGridMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6161EE6439E0049AE56 /* LFGridMaskLayer.m */; };
 		6F14E64D1EE6439E0049AE56 /* LFGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6181EE6439E0049AE56 /* LFGridView.m */; };
@@ -92,6 +91,14 @@
 		C7C5807E22AFA812003BD4F7 /* LFSampleBufferHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806C22AFA812003BD4F7 /* LFSampleBufferHolder.m */; };
 		C7C5807F22AFA812003BD4F7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C7C5807022AFA812003BD4F7 /* README.md */; };
 		C7C5808022AFA812003BD4F7 /* LFVideoExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5807322AFA812003BD4F7 /* LFVideoExportSession.m */; };
+		C7D28F4722DC0ECB00AB83FE /* LFMEVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F3E22DC0ECB00AB83FE /* LFMEVideoView.m */; };
+		C7D28F4822DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F4122DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m */; };
+		C7D28F4922DC0ECB00AB83FE /* LFMediaDisplayView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C7D28F4522DC0ECB00AB83FE /* LFMediaDisplayView.bundle */; };
+		C7D28F4A22DC0ECB00AB83FE /* LFMEGifView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F4622DC0ECB00AB83FE /* LFMEGifView.m */; };
+		C7D28F4D22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F4C22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.m */; };
+		C7D28F5022DC118800AB83FE /* LFStickerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F4E22DC118800AB83FE /* LFStickerItem.m */; };
+		C7D28F5322DC11A200AB83FE /* LFStickerItem+View.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F5222DC11A200AB83FE /* LFStickerItem+View.m */; };
+		C7D28F5622DC13F800AB83FE /* LFText.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F5522DC13F700AB83FE /* LFText.m */; };
 		C7E2F85721D3655B000A9CAE /* LFMECancelBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */; };
 		C7E750F121182F6700022FCF /* LFFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F021182F6700022FCF /* LFFilterView.m */; };
 		C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F321183A5300022FCF /* LFImageUtil.m */; };
@@ -120,8 +127,6 @@
 		6F14E6091EE6439E0049AE56 /* LFEditingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFEditingView.m; sourceTree = "<group>"; };
 		6F14E60C1EE6439E0049AE56 /* LFZoomingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFZoomingView.h; sourceTree = "<group>"; };
 		6F14E60D1EE6439E0049AE56 /* LFZoomingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFZoomingView.m; sourceTree = "<group>"; };
-		6F14E60F1EE6439E0049AE56 /* LFText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFText.h; sourceTree = "<group>"; };
-		6F14E6101EE6439E0049AE56 /* LFText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFText.m; sourceTree = "<group>"; };
 		6F14E6131EE6439E0049AE56 /* LFGridLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFGridLayer.h; sourceTree = "<group>"; };
 		6F14E6141EE6439E0049AE56 /* LFGridLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFGridLayer.m; sourceTree = "<group>"; };
 		6F14E6151EE6439E0049AE56 /* LFGridMaskLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFGridMaskLayer.h; sourceTree = "<group>"; };
@@ -264,6 +269,21 @@
 		C7C5807022AFA812003BD4F7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C7C5807222AFA812003BD4F7 /* LFVideoExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoExportSession.h; sourceTree = "<group>"; };
 		C7C5807322AFA812003BD4F7 /* LFVideoExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoExportSession.m; sourceTree = "<group>"; };
+		C7D28F3E22DC0ECB00AB83FE /* LFMEVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMEVideoView.m; sourceTree = "<group>"; };
+		C7D28F4022DC0ECB00AB83FE /* LFMEWeakSelectorTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMEWeakSelectorTarget.h; sourceTree = "<group>"; };
+		C7D28F4122DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMEWeakSelectorTarget.m; sourceTree = "<group>"; };
+		C7D28F4222DC0ECB00AB83FE /* LFMEGifView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMEGifView.h; sourceTree = "<group>"; };
+		C7D28F4322DC0ECB00AB83FE /* LFMEVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMEVideoView.h; sourceTree = "<group>"; };
+		C7D28F4522DC0ECB00AB83FE /* LFMediaDisplayView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LFMediaDisplayView.bundle; sourceTree = "<group>"; };
+		C7D28F4622DC0ECB00AB83FE /* LFMEGifView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMEGifView.m; sourceTree = "<group>"; };
+		C7D28F4B22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LFMediaDisplayView.h"; sourceTree = "<group>"; };
+		C7D28F4C22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LFMediaDisplayView.m"; sourceTree = "<group>"; };
+		C7D28F4E22DC118800AB83FE /* LFStickerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStickerItem.m; sourceTree = "<group>"; };
+		C7D28F4F22DC118800AB83FE /* LFStickerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStickerItem.h; sourceTree = "<group>"; };
+		C7D28F5122DC11A200AB83FE /* LFStickerItem+View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LFStickerItem+View.h"; sourceTree = "<group>"; };
+		C7D28F5222DC11A200AB83FE /* LFStickerItem+View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "LFStickerItem+View.m"; sourceTree = "<group>"; };
+		C7D28F5422DC13F600AB83FE /* LFText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFText.h; sourceTree = "<group>"; };
+		C7D28F5522DC13F700AB83FE /* LFText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFText.m; sourceTree = "<group>"; };
 		C7E2F85521D3655B000A9CAE /* LFMECancelBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMECancelBlock.h; sourceTree = "<group>"; };
 		C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMECancelBlock.m; sourceTree = "<group>"; };
 		C7E750EF21182F6700022FCF /* LFFilterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterView.h; sourceTree = "<group>"; };
@@ -417,8 +437,12 @@
 		6F14E60E1EE6439E0049AE56 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				6F14E60F1EE6439E0049AE56 /* LFText.h */,
-				6F14E6101EE6439E0049AE56 /* LFText.m */,
+				C7D28F4F22DC118800AB83FE /* LFStickerItem.h */,
+				C7D28F4E22DC118800AB83FE /* LFStickerItem.m */,
+				C7D28F5122DC11A200AB83FE /* LFStickerItem+View.h */,
+				C7D28F5222DC11A200AB83FE /* LFStickerItem+View.m */,
+				C7D28F5422DC13F600AB83FE /* LFText.h */,
+				C7D28F5522DC13F700AB83FE /* LFText.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -509,6 +533,7 @@
 		6F14E6391EE6439E0049AE56 /* vendors */ = {
 			isa = PBXGroup;
 			children = (
+				C7D28F3D22DC0ECB00AB83FE /* LFMediaDisplayView */,
 				C7C5805222AFA812003BD4F7 /* LFFilterSuite */,
 				C73F4CA82230C99C00ED40B7 /* JRFilterBar */,
 				C7E750F221183A5300022FCF /* ColorMatrix */,
@@ -774,6 +799,38 @@
 			path = LFExportSession;
 			sourceTree = "<group>";
 		};
+		C7D28F3D22DC0ECB00AB83FE /* LFMediaDisplayView */ = {
+			isa = PBXGroup;
+			children = (
+				C7D28F3E22DC0ECB00AB83FE /* LFMEVideoView.m */,
+				C7D28F4222DC0ECB00AB83FE /* LFMEGifView.h */,
+				C7D28F4322DC0ECB00AB83FE /* LFMEVideoView.h */,
+				C7D28F4622DC0ECB00AB83FE /* LFMEGifView.m */,
+				C7D28F3F22DC0ECB00AB83FE /* util */,
+				C7D28F4422DC0ECB00AB83FE /* resource */,
+			);
+			path = LFMediaDisplayView;
+			sourceTree = "<group>";
+		};
+		C7D28F3F22DC0ECB00AB83FE /* util */ = {
+			isa = PBXGroup;
+			children = (
+				C7D28F4B22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.h */,
+				C7D28F4C22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.m */,
+				C7D28F4022DC0ECB00AB83FE /* LFMEWeakSelectorTarget.h */,
+				C7D28F4122DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		C7D28F4422DC0ECB00AB83FE /* resource */ = {
+			isa = PBXGroup;
+			children = (
+				C7D28F4522DC0ECB00AB83FE /* LFMediaDisplayView.bundle */,
+			);
+			path = resource;
+			sourceTree = "<group>";
+		};
 		C7E2F85321D3655B000A9CAE /* utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -876,6 +933,7 @@
 				6F384D471EEA54550077D207 /* 2.png in Resources */,
 				C73F4D7B2237B95900ED40B7 /* 5.gif in Resources */,
 				C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */,
+				C7D28F4922DC0ECB00AB83FE /* LFMediaDisplayView.bundle in Resources */,
 				6F14E5E31EE6438A0049AE56 /* LaunchScreen.storyboard in Resources */,
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				C73F4CC72232540400ED40B7 /* 4.MOV in Resources */,
@@ -910,6 +968,7 @@
 				C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */,
 				6FAB0D491F2735D800C1BCFD /* UIView+LFMECommon.m in Sources */,
 				6F359B411F1E0A2B009F2035 /* LFVideoTrimmerGridView.m in Sources */,
+				C7D28F4822DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m in Sources */,
 				C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */,
 				C7C5807422AFA812003BD4F7 /* LFMutableFilter.m in Sources */,
 				6F359B441F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m in Sources */,
@@ -932,6 +991,7 @@
 				6F14E6421EE6439E0049AE56 /* LFPhotoEditingController.m in Sources */,
 				C7C5807D22AFA812003BD4F7 /* LFWeakSelectorTarget.m in Sources */,
 				6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */,
+				C7D28F5622DC13F800AB83FE /* LFText.m in Sources */,
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
 				6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */,
 				6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */,
@@ -942,7 +1002,6 @@
 				6F14E6491EE6439E0049AE56 /* LFZoomingView.m in Sources */,
 				C7E750F92119294F00022FCF /* LFColorMatrixType.m in Sources */,
 				6F14E5D51EE6438A0049AE56 /* main.m in Sources */,
-				6F14E64A1EE6439E0049AE56 /* LFText.m in Sources */,
 				C7C5807B22AFA812003BD4F7 /* LFFilterImageView.m in Sources */,
 				6F359B281F1CB662009F2035 /* LFVideoEditingView.m in Sources */,
 				C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */,
@@ -955,13 +1014,17 @@
 				6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */,
 				C703CD9122B7973400561AAC /* LFLView.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
+				C7D28F4A22DC0ECB00AB83FE /* LFMEGifView.m in Sources */,
 				6F14E6521EE6439E0049AE56 /* LFStickerLabel.m in Sources */,
 				C7C5807922AFA812003BD4F7 /* LFFilterGifView.m in Sources */,
+				C7D28F4722DC0ECB00AB83FE /* LFMEVideoView.m in Sources */,
 				6F359B101F1C676A009F2035 /* LFVideoEditingController.m in Sources */,
 				C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */,
 				6F359B2E1F1D9567009F2035 /* LFVideoPlayerLayerView.m in Sources */,
 				6F14E6511EE6439E0049AE56 /* LFMovingView.m in Sources */,
 				6F14E6451EE6439E0049AE56 /* LFPhotoEdit.m in Sources */,
+				C7D28F5022DC118800AB83FE /* LFStickerItem.m in Sources */,
+				C7D28F4D22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.m in Sources */,
 				6FAB0D471F2735D800C1BCFD /* NSString+LFMECoreText.m in Sources */,
 				6F14E64E1EE6439E0049AE56 /* LFResizeControl.m in Sources */,
 				C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */,
@@ -969,6 +1032,7 @@
 				C7C5808022AFA812003BD4F7 /* LFVideoExportSession.m in Sources */,
 				6F14E6531EE6439E0049AE56 /* LFDrawView.m in Sources */,
 				C7C5807622AFA812003BD4F7 /* LFFilter+save.m in Sources */,
+				C7D28F5322DC11A200AB83FE /* LFStickerItem+View.m in Sources */,
 				6FAB0D481F2735D800C1BCFD /* UIImage+LFMECommon.m in Sources */,
 				6F14E64B1EE6439E0049AE56 /* LFGridLayer.m in Sources */,
 				6F14E6581EE6439E0049AE56 /* LFEditToolbar.m in Sources */,

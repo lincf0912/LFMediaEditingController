@@ -9,12 +9,9 @@
 #import "LFStickerView.h"
 #import "LFMovingView.h"
 #import "UIView+LFMEFrame.h"
-#import "LFText.h"
-#import "LFStickerLabel.h"
 
 NSString *const kLFStickerViewData_movingView = @"LFStickerViewData_movingView";
 
-NSString *const kLFStickerViewData_movingView_type = @"LFStickerViewData_movingView_type";
 NSString *const kLFStickerViewData_movingView_content = @"LFStickerViewData_movingView_content";
 
 NSString *const kLFStickerViewData_movingView_center = @"LFStickerViewData_movingView_center";
@@ -60,16 +57,16 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     return (view == self ? nil : view);
 }
 
-- (void)setTapEnded:(void (^)(BOOL))tapEnded
+- (void)setTapEnded:(void (^)(LFStickerItem *, BOOL))tapEnded
 {
     _tapEnded = tapEnded;
     for (LFMovingView *subView in self.subviews) {
         if ([subView isKindOfClass:[LFMovingView class]]) {
             if (tapEnded) {
                 __weak typeof(self) weakSelf = self;
-                [subView setTapEnded:^(LFMovingView *movingView, UIView *view, BOOL isActive) {
-                    weakSelf.selectMovingView = movingView;
-                    weakSelf.tapEnded(isActive);
+                [subView setTapEnded:^(LFMovingView *view) {
+                    weakSelf.selectMovingView = view;
+                    weakSelf.tapEnded(view.item, view.isActive);
                 }];
             } else {
                 [subView setTapEnded:nil];
@@ -107,61 +104,30 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 }
 
 /** 获取选中贴图的内容 */
-- (UIImage *)getSelectStickerImage
+- (LFStickerItem *)getSelectStickerItem
 {
-    if (self.selectMovingView.type == LFMovingViewType_imageView) {
-        return ((UIImageView *)self.selectMovingView.view).image;
-    }
-    return nil;
-}
-- (LFText *)getSelectStickerText
-{
-    if (self.selectMovingView.type == LFMovingViewType_label) {
-        return ((LFStickerLabel *)self.selectMovingView.view).lf_text;
-    }
-    return nil;
+    return self.selectMovingView.item;
 }
 
 /** 更改选中贴图内容 */
-- (void)changeSelectStickerImage:(UIImage *)image
+- (void)changeSelectStickerItem:(LFStickerItem *)item
 {
-    if (self.selectMovingView.type == LFMovingViewType_imageView) {
-        UIImageView *imageView = (UIImageView *)self.selectMovingView.view;
-        imageView.image = image;
-        [self.selectMovingView updateFrameWithViewSize:image.size];
-    }
-}
-- (void)changeSelectStickerText:(LFText *)text
-{
-    if (self.selectMovingView.type == LFMovingViewType_label) {
-        LFStickerLabel *label = (LFStickerLabel *)self.selectMovingView.view;
-        label.lf_text = text;
-        //阴影颜色
-        label.layer.shadowColor = ([text.textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
-        [label drawText];
-        [self.selectMovingView updateFrameWithViewSize:label.size];
-    }
+    self.selectMovingView.item = item;
 }
 
 /** 创建可移动视图 */
-- (LFMovingView *)createBaseMovingView:(UIView *)view active:(BOOL)active
+- (LFMovingView *)createBaseMovingView:(LFStickerItem *)item active:(BOOL)active
 {
-    LFMovingViewType type = LFMovingViewType_unknown;
-    if ([view isMemberOfClass:[UIImageView class]]) {
-        type = LFMovingViewType_imageView;
-    } else if ([view isMemberOfClass:[LFStickerLabel class]]) {
-        type = LFMovingViewType_label;
-    }
     
-    LFMovingView *movingView = [[LFMovingView alloc] initWithView:view type:type];
+    LFMovingView *movingView = [[LFMovingView alloc] initWithItem:item];
     /** 屏幕中心 */
-    movingView.center = [self convertPoint:[UIApplication sharedApplication].keyWindow.center fromView:(UIView *)[UIApplication sharedApplication].keyWindow];
+    movingView.center = [self convertPoint:self.center fromView:self.superview];
     
     /** 最小缩放率 额外调整最小缩放率的比例，比例以屏幕1/2为标准 */
-    CGFloat diffScale = [UIScreen mainScreen].bounds.size.width * 0.5 / view.frame.size.width;
+    CGFloat diffScale = self.frame.size.width * 0.5 / movingView.view.frame.size.width;
     movingView.minScale = self.minScale * diffScale;
     /** 最大缩放率 额外调整最大缩放率的比例，比例以屏幕为标准。 */
-    diffScale = [UIScreen mainScreen].bounds.size.width / view.frame.size.width;
+    diffScale = self.frame.size.width / movingView.view.frame.size.width;
     movingView.maxScale = self.maxScale * diffScale;
     /** 屏幕缩放率 */
     movingView.screenScale = self.screenScale;
@@ -175,11 +141,12 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     
     if (self.tapEnded) {
         __weak typeof(self) weakSelf = self;
-        [movingView setTapEnded:^(LFMovingView *movingView, UIView *view, BOOL isActive) {
-            weakSelf.selectMovingView = movingView;
-            weakSelf.tapEnded(isActive);
+        [movingView setTapEnded:^(LFMovingView * _Nonnull view) {
+            weakSelf.selectMovingView = view;
+            weakSelf.tapEnded(view.item, view.isActive);
         }];
     }
+    
     if (self.moveCenter) {
         __weak typeof(self) weakSelf = self;
         [movingView setMoveCenter:^BOOL (CGRect rect) {
@@ -190,56 +157,18 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     return movingView;
 }
 
-/** 创建图片 */
-- (void)createImage:(UIImage *)image
+- (void)createStickerItem:(LFStickerItem *)item
 {
-    LFMovingView *movingView = [self doCreateImage:image active:YES];
-    CGFloat ratio = MIN( (0.2 * [UIScreen mainScreen].bounds.size.width) / movingView.width, (0.5 * [UIScreen mainScreen].bounds.size.height) / movingView.height);
+    LFMovingView *movingView = [self createBaseMovingView:item active:YES];
+    
+    CGFloat ratio = MIN( (0.8 * self.frame.size.width) / movingView.frame.size.width, (0.8 * self.frame.size.height) / movingView.frame.size.height);
     CGFloat scale = ratio/self.screenScale;
+    
     [movingView setScale:scale];
+    
     self.selectMovingView = movingView;
 }
 
-- (LFMovingView *)doCreateImage:(UIImage *)image active:(BOOL)active
-{
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-    LFMovingView *movingView = [self createBaseMovingView:imageView active:active];
-    
-    return movingView;
-}
-
-/** 创建文字 */
-- (void)createText:(LFText *)text
-{
-    LFMovingView *movingView = [self doCreateText:text active:YES];
-    //    CGFloat ratio = MIN( (0.5 * self.width) / movingView.width, (0.5 * self.height) / movingView.height);
-    CGFloat scale = 0.8f/self.screenScale;
-    [movingView setScale:scale];
-    self.selectMovingView = movingView;
-}
-
-- (LFMovingView *)doCreateText:(LFText *)text active:(BOOL)active
-{
-    CGFloat margin = 5.f;
-    LFStickerLabel *label = [[LFStickerLabel alloc] initWithFrame:CGRectZero];
-    /** 设置内边距 */
-    label.textInsets = UIEdgeInsetsMake(margin, margin, margin, margin);
-    label.lf_text = text;
-    [label drawText];
-    //阴影透明度
-    label.layer.shadowOpacity = .8;
-    //阴影宽度
-    label.layer.shadowRadius = 3.0;
-    //阴影颜色
-    label.layer.shadowColor = ([text.textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor].CGColor : [UIColor blackColor].CGColor;
-    //映影偏移
-    label.layer.shadowOffset = CGSizeMake(1, 1);
-    
-    LFMovingView *movingView = [self createBaseMovingView:label active:active];
-    
-    return movingView;
-}
 
 - (void)setScreenScale:(CGFloat)screenScale
 {
@@ -260,23 +189,11 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     for (LFMovingView *view in self.subviews) {
         if ([view isKindOfClass:[LFMovingView class]]) {
 
-            if (view.type == LFMovingViewType_label) {
-                LFStickerLabel *label = (LFStickerLabel *)view.view;
-                [movingDatas addObject:@{kLFStickerViewData_movingView_type:@(view.type)
-                                         , kLFStickerViewData_movingView_content:label.lf_text
-                                         , kLFStickerViewData_movingView_scale:@(view.scale)
-                                         , kLFStickerViewData_movingView_rotation:@(view.rotation)
-                                         , kLFStickerViewData_movingView_center:[NSValue valueWithCGPoint:view.center]
-                                         }];
-            } else if (view.type == LFMovingViewType_imageView) {
-                UIImageView *imageView = (UIImageView *)view.view;
-                [movingDatas addObject:@{kLFStickerViewData_movingView_type:@(view.type)
-                                         , kLFStickerViewData_movingView_content:imageView.image
-                                         , kLFStickerViewData_movingView_scale:@(view.scale)
-                                         , kLFStickerViewData_movingView_rotation:@(view.rotation)
-                                         , kLFStickerViewData_movingView_center:[NSValue valueWithCGPoint:view.center]
-                                         }];
-            }
+            [movingDatas addObject:@{kLFStickerViewData_movingView_content:view.item
+                                     , kLFStickerViewData_movingView_scale:@(view.scale)
+                                     , kLFStickerViewData_movingView_rotation:@(view.rotation)
+                                     , kLFStickerViewData_movingView_center:[NSValue valueWithCGPoint:view.center]
+                                     }];
         }
     }
     if (movingDatas.count) {
@@ -291,20 +208,13 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     if (movingDatas.count) {
         for (NSDictionary *movingData in movingDatas) {
             
-            LFMovingViewType type = [movingData[kLFStickerViewData_movingView_type] integerValue];
-            id content = movingData[kLFStickerViewData_movingView_content];
+            
+            LFStickerItem *item = movingData[kLFStickerViewData_movingView_content];
             CGFloat scale = [movingData[kLFStickerViewData_movingView_scale] floatValue];
             CGFloat rotation = [movingData[kLFStickerViewData_movingView_rotation] floatValue];
             CGPoint center = [movingData[kLFStickerViewData_movingView_center] CGPointValue];
             
-            LFMovingView *view = nil;
-            if (type == LFMovingViewType_imageView) {
-                view = [self doCreateImage:content active:NO];
-            } else if (type == LFMovingViewType_label) {
-                view = [self doCreateText:content active:NO];
-            } else {
-                continue;
-            }
+            LFMovingView *view = [self createBaseMovingView:item active:NO];
             [view setScale:scale rotation:rotation];
             view.center = center;
         }

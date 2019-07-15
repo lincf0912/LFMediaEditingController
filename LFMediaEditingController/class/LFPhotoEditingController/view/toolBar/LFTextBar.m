@@ -9,7 +9,7 @@
 #import "LFTextBar.h"
 #import "UIView+LFMEFrame.h"
 #import "LFMediaEditingHeader.h"
-#import "LFText.h"
+#import "LFStickerItem.h"
 #import "JRPickColorView.h"
 
 /** 来限制最大输入只能100个字符 */

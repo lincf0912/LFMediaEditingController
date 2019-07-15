@@ -960,28 +960,20 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 {
     return self.clippingView.stickerMaxScale;
 }
-/** 获取选中贴图的内容 */
-- (LFText *)getSelectStickerText
+/** 创建贴图 */
+- (void)createSticker:(LFStickerItem *)item
 {
-    return [self.clippingView getSelectStickerText];
+    [self.clippingView createSticker:item];
+}
+/** 获取选中贴图的内容 */
+- (LFStickerItem *)getSelectSticker
+{
+    return [self.clippingView getSelectSticker];
 }
 /** 更改选中贴图内容 */
-- (void)changeSelectStickerText:(LFText *)text
+- (void)changeSelectSticker:(LFStickerItem *)item
 {
-    [self.clippingView changeSelectStickerText:text];
-}
-
-/** 创建贴图 */
-- (void)createStickerImage:(UIImage *)image
-{
-    [self.clippingView createStickerImage:image];
-}
-
-#pragma mark - 文字功能
-/** 创建文字 */
-- (void)createStickerText:(LFText *)text
-{
-    [self.clippingView createStickerText:text];
+    [self.clippingView changeSelectSticker:item];
 }
 
 #pragma mark - 模糊功能

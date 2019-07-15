@@ -518,7 +518,9 @@
 - (void)lf_stickerBar:(LFStickerBar *)lf_stickerBar didSelectImage:(UIImage *)image
 {
     if (image) {
-        [_EditingView createStickerImage:image];
+        LFStickerItem *item = [LFStickerItem new];
+        item.image = image;
+        [_EditingView createSticker:item];
     }
     [self singlePressed];
 }
@@ -528,11 +530,13 @@
 - (void)lf_textBarController:(LFTextBar *)textBar didFinishText:(LFText *)text
 {
     if (text) {
+        LFStickerItem *item = [LFStickerItem new];
+        item.text = text;
         /** 判断是否更改文字 */
         if (textBar.showText) {
-            [_EditingView changeSelectStickerText:text];
+            [_EditingView changeSelectSticker:item];
         } else {
-            [_EditingView createStickerText:text];
+            [_EditingView createSticker:item];
         }
     } else {
         if (textBar.showText) { /** 文本被清除，删除贴图 */
@@ -637,9 +641,9 @@
     _isHideNaviBar = NO;
     [self changedBarState];
     if (isActive) { /** 选中的情况下点击 */
-        LFText *text = [_EditingView getSelectStickerText];
-        if (text) {
-            [self showTextBarController:text];
+        LFStickerItem *item = [_EditingView getSelectSticker];
+        if (item.text) {
+            [self showTextBarController:item.text];
         }
     }
 }

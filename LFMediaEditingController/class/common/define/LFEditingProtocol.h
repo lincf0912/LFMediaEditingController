@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "LFPhotoEditDelegate.h"
+#import "LFStickerItem.h"
 
-@class LFText;
 @protocol LFEditingProtocol <NSObject>
 
 /** 代理 */
@@ -66,16 +66,12 @@
 @property (nonatomic, assign) CGFloat stickerMaxScale;
 
 /** 创建贴图 */
-- (void)createStickerImage:(UIImage *)image;
-
-/** =====================文字功能===================== */
-
+- (void)createSticker:(LFStickerItem *)item;
 /** 获取选中贴图的内容 */
-- (LFText *)getSelectStickerText;
+- (LFStickerItem *)getSelectSticker;
 /** 更改选中贴图内容 */
-- (void)changeSelectStickerText:(LFText *)text;
-/** 创建文字 */
-- (void)createStickerText:(LFText *)text;
+- (void)changeSelectSticker:(LFStickerItem *)item;
+
 
 /** =====================模糊功能===================== */
 

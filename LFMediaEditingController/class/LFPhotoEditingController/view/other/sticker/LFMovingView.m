@@ -8,8 +8,9 @@
 
 #import "LFMovingView.h"
 #import "LFMediaEditingHeader.h"
+#import "LFStickerItem+View.h"
 
-#define margin 22
+#define LFMovingView_margin 22
 
 @interface LFMovingView ()
 {
@@ -24,8 +25,6 @@
     CGFloat _initialArg;
     CGFloat _initialScale;
 }
-
-@property (nonatomic, weak) UIView *customView;
 
 @property (nonatomic, assign) BOOL isActive;
 
@@ -62,7 +61,7 @@
 
 - (void)autoDeactivated
 {
-    [self performSelector:@selector(setActiveEmoticonView:) withObject:nil afterDelay:4.f];
+    [self performSelector:@selector(setActiveEmoticonView:) withObject:nil afterDelay:self.deactivatedDelay];
 }
 
 - (void)setActiveEmoticonView:(LFMovingView *)view
@@ -70,42 +69,50 @@
     [LFMovingView setActiveEmoticonView:view];
 }
 
-- (UIView *)view
+- (instancetype)initWithItem:(LFStickerItem *)item
 {
-    return self.customView;
-}
-
-- (instancetype)initWithView:(UIView *)view type:(LFMovingViewType)type
-{
-    self = [super initWithFrame:CGRectMake(0, 0, view.frame.size.width+margin, view.frame.size.height+margin)];
+    UIView *view = item.displayView;
+    if (view == nil) {
+        return nil;
+    }
+    self = [super initWithFrame:CGRectMake(0, 0, view.frame.size.width+LFMovingView_margin, view.frame.size.height+LFMovingView_margin)];
     if(self){
-        _type = type;
-        _customView = view;
+        _deactivatedDelay = 4.f;
+        _view = view;
+        _item = item;
         _contentView = [[UIView alloc] initWithFrame:view.bounds];
         _contentView.layer.borderColor = [[UIColor colorWithWhite:1.f alpha:0.8] CGColor];
-        _contentView.layer.shadowColor = [UIColor blackColor].CGColor;
-        _contentView.layer.shadowOpacity = .5f;
-        _contentView.layer.shadowOffset = CGSizeMake(0, 0);
-        _contentView.layer.shadowRadius = 2;
+        {
+            // shadow
+            _contentView.layer.shadowColor = [UIColor clearColor].CGColor;
+            _contentView.layer.shadowOpacity = .5f;
+            _contentView.layer.shadowOffset = CGSizeMake(0, 0);
+            _contentView.layer.shadowRadius = 2.f;
+            
+            [self updateShadow];
+        }
+        
         _contentView.center = self.center;
         [_contentView addSubview:view];
+        view.userInteractionEnabled = self.isActive;
         view.frame = _contentView.bounds;
         [self addSubview:_contentView];
         
         _deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _deleteButton.frame = CGRectMake(0, 0, margin, margin);
+        _deleteButton.frame = CGRectMake(0, 0, LFMovingView_margin, LFMovingView_margin);
         _deleteButton.center = _contentView.frame.origin;
         [_deleteButton addTarget:self action:@selector(pushedDeleteBtn:) forControlEvents:UIControlEventTouchUpInside];
-        [_deleteButton setImage:bundleEditImageNamed(@"ZoomingViewDelete.png") forState:UIControlStateNormal];
+        
+        [_deleteButton setImage:[NSBundle LFME_imageNamed:@"ZoomingViewDelete.png"] forState:UIControlStateNormal];
         _deleteButton.layer.shadowColor = [UIColor blackColor].CGColor;
         _deleteButton.layer.shadowOpacity = .5f;
         _deleteButton.layer.shadowOffset = CGSizeMake(0, 0);
         _deleteButton.layer.shadowRadius = 3;
         [self addSubview:_deleteButton];
         
-        _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, margin, margin)];
+        _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, LFMovingView_margin, LFMovingView_margin)];
         _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
-        [_circleView setImage:bundleEditImageNamed(@"ZoomingViewCircle.png")];
+        [_circleView setImage:[NSBundle LFME_imageNamed:@"ZoomingViewCircle.png"]];
         _circleView.layer.shadowColor = [UIColor blackColor].CGColor;
         _circleView.layer.shadowOpacity = .5f;
         _circleView.layer.shadowOffset = CGSizeMake(0, 0);
@@ -124,6 +131,20 @@
     return self;
 }
 
+- (void)setItem:(LFStickerItem *)item
+{
+    _item = item;
+    [_view removeFromSuperview];
+    _view = item.displayView;
+    if (_view) {
+        [_contentView addSubview:_view];
+        _view.userInteractionEnabled = self.isActive;
+        [self updateFrameWithViewSize:_view.frame.size];
+    } else {
+        [self removeFromSuperview];
+    }
+}
+
 /** 更新坐标 */
 - (void)updateFrameWithViewSize:(CGSize)viewSize
 {
@@ -131,7 +152,7 @@
     CGPoint center = self.center;
     /** 更新自身大小 */
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(viewSize.width+margin, viewSize.height+margin);
+    frame.size = CGSizeMake(viewSize.width+LFMovingView_margin, viewSize.height+LFMovingView_margin);
     self.frame = frame;
     self.center = center;
     
@@ -145,11 +166,30 @@
     _contentView.center = center;
     _deleteButton.center = _contentView.frame.origin;
     _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
-    
+    [self updateShadow];
     /** 更新显示视图大小 */
-    _customView.frame = _contentView.bounds;
+    _view.frame = _contentView.bounds;
     
     [self setScale:_scale rotation:_arg];
+}
+
+- (void)updateShadow
+{
+    CGFloat shadowRadius = _contentView.layer.shadowRadius;
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    path.lineJoinStyle = kCGLineJoinRound;
+    
+    UIBezierPath *leftPath = [UIBezierPath bezierPathWithRect:CGRectMake(-shadowRadius/2, 0, shadowRadius, _contentView.bounds.size.height-shadowRadius)];
+    UIBezierPath *topPath = [UIBezierPath bezierPathWithRect:CGRectMake(shadowRadius/2, -shadowRadius/2, _contentView.bounds.size.width-shadowRadius, shadowRadius)];
+    UIBezierPath *rightPath = [UIBezierPath bezierPathWithRect:CGRectMake(_contentView.bounds.size.width-shadowRadius/2, shadowRadius, shadowRadius, _contentView.bounds.size.height-shadowRadius)];
+    UIBezierPath *bottomPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, _contentView.bounds.size.height-shadowRadius/2, _contentView.bounds.size.width-shadowRadius, shadowRadius)];
+    [path appendPath:topPath];
+    [path appendPath:leftPath];
+    [path appendPath:rightPath];
+    [path appendPath:bottomPath];
+    
+    _contentView.layer.shadowPath = path.CGPath;
 }
 
 - (void)initGestures
@@ -177,10 +217,14 @@
 - (void)setActive:(BOOL)active
 {
     _isActive = active;
-    _deleteButton.hidden = !active;
+    _deleteButton.hidden = self.item.isMain ? YES : !active;
     _circleView.hidden = !active;
     _contentView.layer.borderWidth = (active) ? 1/_scale/self.screenScale : 0;
     _contentView.layer.cornerRadius = (active) ? 3/_scale/self.screenScale : 0;
+    
+    _contentView.layer.shadowColor = (active) ? [UIColor blackColor].CGColor : [UIColor clearColor].CGColor;
+    
+    _view.userInteractionEnabled = active;
 }
 
 - (void)setScale:(CGFloat)scale
@@ -200,10 +244,10 @@
     _contentView.transform = CGAffineTransformMakeScale(_scale, _scale);
     
     CGRect rct = self.frame;
-    rct.origin.x += (rct.size.width - (_contentView.frame.size.width + margin)) / 2;
-    rct.origin.y += (rct.size.height - (_contentView.frame.size.height + margin)) / 2;
-    rct.size.width  = _contentView.frame.size.width + margin;
-    rct.size.height = _contentView.frame.size.height + margin;
+    rct.origin.x += (rct.size.width - (_contentView.frame.size.width + LFMovingView_margin)) / 2;
+    rct.origin.y += (rct.size.height - (_contentView.frame.size.height + LFMovingView_margin)) / 2;
+    rct.size.width  = _contentView.frame.size.width + LFMovingView_margin;
+    rct.size.height = _contentView.frame.size.height + LFMovingView_margin;
     self.frame = rct;
     
     _contentView.center = CGPointMake(rct.size.width/2, rct.size.height/2);
@@ -273,7 +317,7 @@
 
 - (void)viewDidTap:(UITapGestureRecognizer*)sender
 {
-    if (self.tapEnded) self.tapEnded(self, self.customView, _isActive);
+    if (self.tapEnded) self.tapEnded(self);
     [[self class] setActiveEmoticonView:self];
 }
 

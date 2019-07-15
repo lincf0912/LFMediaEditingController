@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LFStickerItem.h"
 
 @class LFText;
 @interface LFStickerView : UIView
@@ -20,17 +21,13 @@
 - (void)removeSelectStickerView;
 
 /** 获取选中贴图的内容 */
-- (UIImage *)getSelectStickerImage;
-- (LFText *)getSelectStickerText;
+- (LFStickerItem *)getSelectStickerItem;
 
 /** 更改选中贴图内容 */
-- (void)changeSelectStickerImage:(UIImage *)image;
-- (void)changeSelectStickerText:(LFText *)text;
+- (void)changeSelectStickerItem:(LFStickerItem *)item;
 
-/** 创建图片 */
-- (void)createImage:(UIImage *)image;
-/** 创建文字 */
-- (void)createText:(LFText *)text;
+/** create sticker */
+- (void)createStickerItem:(LFStickerItem *)item;
 
 /** 最小缩放率 默认0.2 */
 @property (nonatomic, assign) CGFloat minScale;
@@ -44,7 +41,7 @@
 @property (nonatomic, strong) NSDictionary *data;
 
 /** 点击回调视图 */
-@property (nonatomic, copy) void(^tapEnded)(BOOL isActive);
+@property (nonatomic, copy) void(^tapEnded)(LFStickerItem *item, BOOL isActive);
 @property (nonatomic, copy) BOOL(^moveCenter)(CGRect rect);
 
 @end

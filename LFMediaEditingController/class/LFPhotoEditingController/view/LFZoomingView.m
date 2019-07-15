@@ -169,7 +169,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
         };
         
         /** 贴图 */
-        _stickerView.tapEnded = ^(BOOL isActive){
+        _stickerView.tapEnded = ^(LFStickerItem *item, BOOL isActive) {
             if ([weakSelf.delegate respondsToSelector:@selector(lf_photoEditStickerDidSelectViewIsActive:)]) {
                 [weakSelf.delegate lf_photoEditStickerDidSelectViewIsActive:isActive];
             }
@@ -351,32 +351,20 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     return _stickerView.maxScale;
 }
-/** 获取选中贴图的内容 */
-- (LFText *)getSelectStickerText
+/** 创建贴图 */
+- (void)createSticker:(LFStickerItem *)item
 {
-    return [_stickerView getSelectStickerText];
+    [_stickerView createStickerItem:item];
+}
+/** 获取选中贴图的内容 */
+- (LFStickerItem *)getSelectSticker
+{
+    return [_stickerView getSelectStickerItem];
 }
 /** 更改选中贴图内容 */
-- (void)changeSelectStickerText:(LFText *)text
+- (void)changeSelectSticker:(LFStickerItem *)item
 {
-    [_stickerView changeSelectStickerText:text];
-}
-
-/** 创建贴图 */
-- (void)createStickerImage:(UIImage *)image
-{
-    if (image) {
-        [_stickerView createImage:image];
-    }
-}
-
-#pragma mark - 文字功能
-/** 创建文字 */
-- (void)createStickerText:(LFText *)text
-{
-    if (text) {
-        [_stickerView createText:text];
-    }
+    [_stickerView changeSelectStickerItem:item];
 }
 
 #pragma mark - 模糊功能

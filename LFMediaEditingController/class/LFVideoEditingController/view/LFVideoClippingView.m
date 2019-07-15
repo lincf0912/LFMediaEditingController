@@ -427,7 +427,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
         };
         
         /** 贴图 */
-        _stickerView.tapEnded = ^(BOOL isActive){
+        _stickerView.tapEnded = ^(LFStickerItem *item, BOOL isActive) {
             if ([weakSelf.editDelegate_self respondsToSelector:@selector(lf_photoEditStickerDidSelectViewIsActive:)]) {
                 [weakSelf.editDelegate_self lf_photoEditStickerDidSelectViewIsActive:isActive];
             }
@@ -619,32 +619,21 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 {
     return _stickerView.maxScale;
 }
-/** 获取选中贴图的内容 */
-- (LFText *)getSelectStickerText
-{
-    return [_stickerView getSelectStickerText];
-}
-/** 更改选中贴图内容 */
-- (void)changeSelectStickerText:(LFText *)text
-{
-    [_stickerView changeSelectStickerText:text];
-}
 
 /** 创建贴图 */
-- (void)createStickerImage:(UIImage *)image
+- (void)createSticker:(LFStickerItem *)item
 {
-    if (image) {
-        [_stickerView createImage:image];
-    }
+    [_stickerView createStickerItem:item];
 }
-
-#pragma mark - 文字功能
-/** 创建文字 */
-- (void)createStickerText:(LFText *)text
+/** 获取选中贴图的内容 */
+- (LFStickerItem *)getSelectSticker
 {
-    if (text) {
-        [_stickerView createText:text];
-    }
+    return [_stickerView getSelectStickerItem];
+}
+/** 更改选中贴图内容 */
+- (void)changeSelectSticker:(LFStickerItem *)item
+{
+    [_stickerView changeSelectStickerItem:item];
 }
 
 #pragma mark - 模糊功能

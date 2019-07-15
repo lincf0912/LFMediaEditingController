@@ -791,28 +791,20 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     return self.zoomingView.stickerMaxScale;
 }
-/** 获取选中贴图的内容 */
-- (LFText *)getSelectStickerText
+/** 创建贴图 */
+- (void)createSticker:(LFStickerItem *)item
 {
-    return [self.zoomingView getSelectStickerText];
+    [self.zoomingView createSticker:item];
+}
+/** 获取选中贴图的内容 */
+- (LFStickerItem *)getSelectSticker
+{
+    return [self.zoomingView getSelectSticker];
 }
 /** 更改选中贴图内容 */
-- (void)changeSelectStickerText:(LFText *)text
+- (void)changeSelectSticker:(LFStickerItem *)item
 {
-    [self.zoomingView changeSelectStickerText:text];
-}
-
-/** 创建贴图 */
-- (void)createStickerImage:(UIImage *)image
-{
-    [self.zoomingView createStickerImage:image];
-}
-
-#pragma mark - 文字功能
-/** 创建文字 */
-- (void)createStickerText:(LFText *)text
-{
-    [self.zoomingView createStickerText:text];
+    [self.zoomingView changeSelectSticker:item];
 }
 
 #pragma mark - 模糊功能
