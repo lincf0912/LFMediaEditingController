@@ -507,6 +507,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
             CGImageRef sourceImageRef = [image CGImage];
             CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, clipRect);
             UIImage *clipEditImage = [UIImage imageWithCGImage:newImageRef scale:image.scale orientation:image.imageOrientation];
+            CGImageRelease(newImageRef);
             if (rotate > 0) {
                 /** 调整图片方向 */
                 clipEditImage = [clipEditImage LFME_imageRotatedByRadians:rotate];
