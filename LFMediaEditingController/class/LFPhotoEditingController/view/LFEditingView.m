@@ -535,22 +535,24 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
             }
         };
         
-        if (showImage.images.count) {
-            NSMutableArray *images = [NSMutableArray arrayWithCapacity:showImage.images.count];
-            for (UIImage *image in showImage.images) {
-                UIImage *newImage = ClipEditImage(image);
-                if (newImage) {
-                    [images addObject:newImage];
-                } else {
-                    break;
+        @autoreleasepool { // 释放UIGraphicsBeginImageContextWithOptions内存使用
+            if (showImage.images.count) {
+                NSMutableArray *images = [NSMutableArray arrayWithCapacity:showImage.images.count];
+                for (UIImage *image in showImage.images) {
+                    UIImage *newImage = ClipEditImage(image);
+                    if (newImage) {
+                        [images addObject:newImage];
+                    } else {
+                        break;
+                    }
                 }
+                /** 若数量不一致，解析gif失败，生成静态图片 */
+                if (images.count == showImage.images.count) {
+                    editImage = [UIImage animatedImageWithImages:images duration:showImage.duration];
+                }
+            } else {
+                editImage = ClipEditImage(showImage);
             }
-            /** 若数量不一致，解析gif失败，生成静态图片 */
-            if (images.count == showImage.images.count) {
-                editImage = [UIImage animatedImageWithImages:images duration:showImage.duration];
-            }
-        } else {
-            editImage = ClipEditImage(showImage);
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
