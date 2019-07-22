@@ -216,8 +216,12 @@
     [super setNeedsDisplay];
     
     [_GLKView setNeedsDisplay];
-    _LFLView.image = [self renderedUIImage];
-    _UIView.layer.contents = (__bridge id _Nullable)([self renderedUIImage].CGImage);
+    if (_LFLView) {
+        _LFLView.image = [self renderedUIImage];
+    }
+    if (_UIView) {
+        _UIView.layer.contents = (__bridge id _Nullable)([self renderedUIImage].CGImage);
+    }
 #if !(TARGET_IPHONE_SIMULATOR)
     [_MTKView setNeedsDisplay];
 #endif
@@ -285,11 +289,13 @@
 }
 
 - (CIImage *)renderedCIImage {
-    return [self renderedCIImageInRect:self.CIImage.extent];
+    CGRect extent = CGRectApplyAffineTransform(self.CIImage.extent, self.preferredCIImageTransform);
+    return [self renderedCIImageInRect:extent];
 }
 
 - (UIImage *)renderedUIImage {
-    return [self renderedUIImageInRect:self.CIImage.extent];
+    CGRect extent = CGRectApplyAffineTransform(self.CIImage.extent, self.preferredCIImageTransform);
+    return [self renderedUIImageInRect:extent];
 }
 
 - (CIImage *)scaleAndResizeCIImage:(CIImage *)image forRect:(CGRect)rect {
