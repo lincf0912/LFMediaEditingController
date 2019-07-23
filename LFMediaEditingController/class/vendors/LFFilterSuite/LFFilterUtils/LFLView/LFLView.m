@@ -30,6 +30,7 @@
     if (self) {
         _queue = [[NSOperationQueue alloc] init];
         _queue.maxConcurrentOperationCount = 1;
+        _tileSize = CGSizeMake(256, 256);
     }
     return self;
 }
@@ -40,13 +41,16 @@
     [self.queue.operations.firstObject cancel];
     
     __weak typeof(self) weakSelf = self;
+    CGSize tileSize = self.tileSize;
+    NSMutableArray *images = [NSMutableArray array];
+    __block int rows = 0;
+    __block int columns = 0;
+    __block CGRect imageBounds = CGRectZero;
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-        NSMutableArray *images = [NSMutableArray array];
         CGImageRef imageToC = image.CGImage;
-        CGSize tileSize = CGSizeMake(256, 256);
-        CGRect imageBounds = CGRectMake(0, 0, CGImageGetWidth(imageToC), CGImageGetHeight(imageToC));
-        int rows = ceil(imageBounds.size.height/tileSize.height);
-        int columns = ceil(imageBounds.size.width/tileSize.width);
+        imageBounds = CGRectMake(0, 0, CGImageGetWidth(imageToC), CGImageGetHeight(imageToC));
+        rows = ceil(imageBounds.size.height/tileSize.height);
+        columns = ceil(imageBounds.size.width/tileSize.width);
         for (int row = 0; row < rows; row++)
         {
             for (int column = 0; column < columns; column++)
@@ -59,15 +63,14 @@
                 
             }
         }
-        weakSelf.images = images;
-        weakSelf.rows = rows;
-        weakSelf.columns = columns;
-        weakSelf.tileSize = tileSize;
-        weakSelf.imageBounds = imageBounds;
     }];
     
     [operation setCompletionBlock:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.images = images;
+            weakSelf.rows = rows;
+            weakSelf.columns = columns;
+            weakSelf.imageBounds = imageBounds;
             if (completionBlock) {
                 completionBlock();
             }
@@ -88,14 +91,27 @@
     CGFloat contentsScale = ((CATiledLayer*)layer).contentsScale;
     CGFloat pieTileWidth = self.tileSize.width / contentsScale;
     CGFloat pieTileHeight = self.tileSize.height / contentsScale;
-    int row = round(bounds.origin.y/pieTileWidth);
-    int column = round(bounds.origin.x/pieTileHeight);
+    int row = round(bounds.origin.y/pieTileHeight);
+    int column = round(bounds.origin.x/pieTileWidth);
     NSInteger index = row * self.columns + column;
     if (index >=0  && index < self.images.count && row < self.rows && column < self.columns) {
         UIGraphicsPushContext(ctx);
         [self.images[index] drawInRect:bounds];
         UIGraphicsPopContext();
     }
+}
+
+@end
+
+@interface LFLTiledLayer : CATiledLayer
+
+@end
+
+@implementation LFLTiledLayer
+
++ (CFTimeInterval)fadeDuration
+{
+    return 0.f;
 }
 
 @end
@@ -110,7 +126,7 @@
 
 + (Class)layerClass
 {
-    return [CATiledLayer class];
+    return [LFLTiledLayer class];
 }
 
 - (instancetype)init
@@ -140,25 +156,42 @@
     return self;
 }
 
+- (void)setTileSize:(CGSize)tileSize
+{
+    _context.tileSize = tileSize;
+    [self configurationImage];
+}
+
+- (CGSize)tileSize
+{
+    return _context.tileSize;
+}
+
 - (void)setImage:(UIImage *)image
 {
     _image = image;
+    [self configurationImage];
     
-    __weak typeof(self) weakSelf = self;
-    [_context configurationcontextWithImage:image completionBlock:^{
-        
-        [weakSelf.layer setContentsScale:1.0f];
-        weakSelf.layer.delegate = self.context;
-        [(CATiledLayer *)weakSelf.layer setTileSize:weakSelf.context.tileSize];
-        
-        CGRect frame = self.frame;
-        CGFloat normalSizeScale = MIN(1, MIN(weakSelf.frame.size.width/weakSelf.context.imageBounds.size.width, self.frame.size.height/weakSelf.context.imageBounds.size.height));
-        weakSelf.transform = CGAffineTransformMakeScale(normalSizeScale, normalSizeScale);
-        weakSelf.frame = frame;
-        
-        [weakSelf.layer setNeedsDisplay];
-    }];
-    
+}
+
+- (void)configurationImage
+{
+    if (self.image) {
+        __weak typeof(self) weakSelf = self;
+        self.layer.delegate = nil;
+        [_context configurationcontextWithImage:self.image completionBlock:^{
+            
+            [weakSelf.layer setContentsScale:1.0f];
+            [(CATiledLayer *)weakSelf.layer setTileSize:weakSelf.context.tileSize];
+            
+            CGFloat normalSizeScale = MIN(1, MIN(weakSelf.frame.size.width/weakSelf.context.imageBounds.size.width,weakSelf.frame.size.height/weakSelf.context.imageBounds.size.height));
+            weakSelf.bounds = weakSelf.context.imageBounds;
+            weakSelf.transform = CGAffineTransformMakeScale(normalSizeScale, normalSizeScale);
+            
+            weakSelf.layer.delegate = weakSelf.context;
+            [weakSelf.layer setNeedsDisplay];
+        }];
+    }
 }
 
 @end

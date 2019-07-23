@@ -173,8 +173,13 @@
                 break;
             case LFContextTypeLargeImage:
             {
+                CGFloat normalSizeScale = MIN(1, MIN(self.bounds.size.width/self.CIImage.extent.size.width,self.bounds.size.height/self.CIImage.extent.size.height));
                 LFLView *view = [[LFLView alloc] initWithFrame:self.bounds];
+                view.bounds = self.CIImage.extent;
+                view.transform = CGAffineTransformMakeScale(normalSizeScale, normalSizeScale);
                 view.contentScaleFactor = self.contentScaleFactor;
+                //按照屏幕大小截取图片
+                view.tileSize = CGSizeMake(self.CIImage.extent.size.width, self.bounds.size.height);
                 [self insertSubview:view atIndex:0];
                 _LFLView = view;
             }

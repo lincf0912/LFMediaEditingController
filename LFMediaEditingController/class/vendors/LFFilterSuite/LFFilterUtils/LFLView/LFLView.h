@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithImage:(nullable UIImage *)image;
 
+@property (nonatomic, assign) CGSize tileSize;
+
 @property (nullable, nonatomic, strong) UIImage *image; // default is nil
 
 @end
