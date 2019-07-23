@@ -169,7 +169,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
         CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
         _imageSize = CGSizeApplyAffineTransform(image.size, transform);
         
-        CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.frame);
+        CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.bounds);
         self.gridView.controlSize = cropRect.size;
         self.gridView.gridRect = cropRect;
         self.imagePixel.center = CGPointMake(CGRectGetMidX(cropRect), CGRectGetMidY(cropRect));
@@ -820,6 +820,10 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
         /** 屏幕大小的缩放比例 */
         CGFloat zoomScale = (self.frame.size.width / self.clippingView.frame.size.width);
         [self setZoomScale:zoomScale];
+        /** 保持顶部不动的放大效果 */
+        CGPoint contentOffset = self.contentOffset;
+        contentOffset.y = 0;
+        [self setContentOffset:contentOffset];
         /** 重置contentSize */
         [self resetContentSize];
         /** 滚到顶部 */
