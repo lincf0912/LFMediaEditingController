@@ -249,8 +249,9 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 - (BOOL)canReset
 {
-    CGRect trueFrame = CGRectMake((CGRectGetWidth(self.superview.frame)-CGRectGetWidth(self.zoomingView.frame))/2-self.offsetSuperCenter.x/2
-                                  , (CGRectGetHeight(self.superview.frame)-CGRectGetHeight(self.zoomingView.frame))/2-self.offsetSuperCenter.y/2
+    CGRect superViewRect = self.superview.bounds;
+    CGRect trueFrame = CGRectMake((CGRectGetWidth(superViewRect)-CGRectGetWidth(self.zoomingView.frame))/2-self.offsetSuperCenter.x/2
+                                  , (CGRectGetHeight(superViewRect)-CGRectGetHeight(self.zoomingView.frame))/2-self.offsetSuperCenter.y/2
                                   , CGRectGetWidth(self.zoomingView.frame)
                                   , CGRectGetHeight(self.zoomingView.frame));
     
