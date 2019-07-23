@@ -62,6 +62,9 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 /** 默认最大化缩放 */
 @property (nonatomic, assign) CGFloat defaultMaximumZoomScale;
 
+/** 真实的图片尺寸 */
+@property (nonatomic, assign) CGSize imageSize;
+
 @end
 
 @implementation LFEditingView
@@ -70,7 +73,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 
 - (NSArray <NSString *>*)aspectRatioDescs
 {
-    return [self.gridView aspectRatioDescs:(self.image.size.width > self.image.size.height)];
+    return [self.gridView aspectRatioDescs:(self.imageSize.width > self.imageSize.height)];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -163,7 +166,10 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
 {
     _image = image;
     if (image) {
-        CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(image.size, self.frame);
+        CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
+        _imageSize = CGSizeApplyAffineTransform(image.size, transform);
+        
+        CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.frame);
         self.gridView.controlSize = cropRect.size;
         self.gridView.gridRect = cropRect;
         self.imagePixel.center = CGPointMake(CGRectGetMidX(cropRect), CGRectGetMidY(cropRect));
@@ -482,7 +488,7 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     __block UIImage *editImage = self.image;
     CGRect clipViewRect = self.clippingView.normalRect;
     /** UIScrollView的缩放率 * 剪裁尺寸变化比例 / 图片屏幕缩放率 */
-    CGFloat clipScale = scale * (clipViewRect.size.width/(editImage.size.width*editImage.scale));
+    CGFloat clipScale = scale * (clipViewRect.size.width/(self.imageSize.width*editImage.scale));
     /** 计算被剪裁的原尺寸图片位置 */
     CGRect clipRect;
     if (fabs(trans.b) == 1.f) {
@@ -827,8 +833,8 @@ typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     CGFloat scale = self.clippingView.zoomScale/self.clippingView.first_minimumZoomScale;
     CGSize realSize = CGSizeMake(CGRectGetWidth(self.gridView.gridRect)/scale, CGRectGetHeight(self.gridView.gridRect)/scale);
     CGFloat screenScale = [UIScreen mainScreen].scale;
-    int pixelW = (int)((self.image.size.width*screenScale)/self.referenceSize.width*realSize.width+0.5);
-    int pixelH = (int)((self.image.size.height*screenScale)/self.referenceSize.height*realSize.height+0.5);
+    int pixelW = (int)((self.imageSize.width*screenScale)/self.referenceSize.width*realSize.width+0.5);
+    int pixelH = (int)((self.imageSize.height*screenScale)/self.referenceSize.height*realSize.height+0.5);
     self.imagePixel.text = [NSString stringWithFormat:@"%dx%d", pixelW, pixelH];
     self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
 }

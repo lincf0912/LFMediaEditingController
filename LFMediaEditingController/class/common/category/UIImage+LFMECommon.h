@@ -13,6 +13,9 @@
 /** 修正图片方向 */
 - (UIImage *)LFME_fixOrientation;
 
+/** 图片正方向的修正参数 */
++ (CGAffineTransform)LFME_exchangeOrientation:(UIImageOrientation)imageOrientation size:(CGSize)size;
+
 /** 计算图片的缩放大小 */
 + (CGSize)LFME_scaleImageSizeBySize:(CGSize)imageSize targetSize:(CGSize)size isBoth:(BOOL)isBoth;
 

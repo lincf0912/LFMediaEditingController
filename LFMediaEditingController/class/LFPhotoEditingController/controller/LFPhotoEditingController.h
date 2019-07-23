@@ -29,7 +29,7 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationType) {
 @protocol LFPhotoEditingControllerDelegate;
 
 @interface LFPhotoEditingController : LFBaseEditingController
-/** 设置编辑图片->重新初始化（图片方向必须为正方向） */
+/** 设置编辑图片->重新初始化 */
 @property (nonatomic, strong) UIImage *editImage;
 /** 设置编辑对象->重新编辑 */
 @property (nonatomic, strong) LFPhotoEdit *photoEdit;

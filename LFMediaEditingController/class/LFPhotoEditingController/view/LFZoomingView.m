@@ -28,6 +28,8 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 
 /** 原始坐标 */
 @property (nonatomic, assign) CGRect originalRect;
+/** 真实的图片尺寸 */
+@property (nonatomic, assign) CGSize imageSize;
 
 @property (nonatomic, weak) LFDataFilterImageView *imageView;
 
@@ -78,8 +80,8 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     __weak typeof(self) weakSelf = self;
     splashView.splashColor = ^UIColor *(CGPoint point) {
 //        return [weakSelf.imageView LFME_colorOfPoint:point];
-        point.x = point.x/weakSelf.frame.size.width*weakSelf.image.size.width;
-        point.y = point.y/weakSelf.frame.size.height*weakSelf.image.size.height;
+        point.x = point.x/weakSelf.frame.size.width*weakSelf.imageSize.width;
+        point.y = point.y/weakSelf.frame.size.height*weakSelf.imageSize.height;
         return [weakSelf.image colorAtPixel:point];
     };
     /** 默认不能涂抹 */
@@ -105,8 +107,10 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 - (void)setImage:(UIImage *)image
 {
     _image = image;
-    if (image) {        
-        CGRect imageViewRect = AVMakeRectWithAspectRatioInsideRect(image.size, self.originalRect);
+    if (image) {
+        CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
+        _imageSize = CGSizeApplyAffineTransform(image.size, transform);
+        CGRect imageViewRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.originalRect);
         self.size = imageViewRect.size;
         
         /** 子控件更新 */
@@ -117,8 +121,8 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     
     /** 判断是否大图、长图之类的图片，暂时规定超出当前手机屏幕的n倍就是大图了 */
     CGFloat scale = 10.f;
-    BOOL isLongImage = MAX(image.size.height/image.size.width, image.size.width/image.size.height) > scale;
-    if (image.images.count == 0 && (isLongImage || (image.size.width > [UIScreen mainScreen].bounds.size.width * scale || image.size.height > [UIScreen mainScreen].bounds.size.height * scale))) {
+    BOOL isLongImage = MAX(self.imageSize.height/self.imageSize.width, self.imageSize.width/self.imageSize.height) > scale;
+    if (image.images.count == 0 && (isLongImage || (self.imageSize.width > [UIScreen mainScreen].bounds.size.width * scale || self.imageSize.height > [UIScreen mainScreen].bounds.size.height * scale))) {
         self.imageView.contextType = LFContextTypeLargeImage;
     } else {
         self.imageView.contextType = LFContextTypeAuto;
