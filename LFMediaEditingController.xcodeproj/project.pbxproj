@@ -24,7 +24,6 @@
 		6F14E64E1EE6439E0049AE56 /* LFResizeControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E61A1EE6439E0049AE56 /* LFResizeControl.m */; };
 		6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6211EE6439E0049AE56 /* LFMaskLayer.m */; };
 		6F14E6511EE6439E0049AE56 /* LFMovingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6241EE6439E0049AE56 /* LFMovingView.m */; };
-		6F14E6521EE6439E0049AE56 /* LFStickerLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6261EE6439E0049AE56 /* LFStickerLabel.m */; };
 		6F14E6531EE6439E0049AE56 /* LFDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6291EE6439E0049AE56 /* LFDrawView.m */; };
 		6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E62D1EE6439E0049AE56 /* LFStickerView.m */; };
 		6F14E6561EE6439E0049AE56 /* LFClipToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E6301EE6439E0049AE56 /* LFClipToolbar.m */; };
@@ -139,8 +138,6 @@
 		6F14E6211EE6439E0049AE56 /* LFMaskLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMaskLayer.m; sourceTree = "<group>"; };
 		6F14E6231EE6439E0049AE56 /* LFMovingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMovingView.h; sourceTree = "<group>"; };
 		6F14E6241EE6439E0049AE56 /* LFMovingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMovingView.m; sourceTree = "<group>"; };
-		6F14E6251EE6439E0049AE56 /* LFStickerLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStickerLabel.h; sourceTree = "<group>"; };
-		6F14E6261EE6439E0049AE56 /* LFStickerLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStickerLabel.m; sourceTree = "<group>"; };
 		6F14E6281EE6439E0049AE56 /* LFDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFDrawView.h; sourceTree = "<group>"; };
 		6F14E6291EE6439E0049AE56 /* LFDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFDrawView.m; sourceTree = "<group>"; };
 		6F14E62C1EE6439E0049AE56 /* LFStickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStickerView.h; sourceTree = "<group>"; };
@@ -488,8 +485,6 @@
 			children = (
 				6F14E6231EE6439E0049AE56 /* LFMovingView.h */,
 				6F14E6241EE6439E0049AE56 /* LFMovingView.m */,
-				6F14E6251EE6439E0049AE56 /* LFStickerLabel.h */,
-				6F14E6261EE6439E0049AE56 /* LFStickerLabel.m */,
 			);
 			path = sticker;
 			sourceTree = "<group>";
@@ -1015,7 +1010,6 @@
 				C703CD9122B7973400561AAC /* LFLView.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
 				C7D28F4A22DC0ECB00AB83FE /* LFMEGifView.m in Sources */,
-				6F14E6521EE6439E0049AE56 /* LFStickerLabel.m in Sources */,
 				C7C5807922AFA812003BD4F7 /* LFFilterGifView.m in Sources */,
 				C7D28F4722DC0ECB00AB83FE /* LFMEVideoView.m in Sources */,
 				6F359B101F1C676A009F2035 /* LFVideoEditingController.m in Sources */,
