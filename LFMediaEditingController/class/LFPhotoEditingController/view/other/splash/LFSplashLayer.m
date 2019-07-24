@@ -63,52 +63,55 @@ CGFloat angleBetweenLines(CGPoint line1Start, CGPoint line1End, CGPoint line2Sta
 
 - (void)drawInContext:(CGContextRef)context
 {
-    UIGraphicsPushContext( context );
-    
-    [[UIColor clearColor] setFill];
-    UIRectFill(self.bounds);
-    
-    CGContextSetLineCap(context, kCGLineCapRound);
-    CGContextSetLineJoin(context, kCGLineJoinRound);
-    
-    for (NSInteger i=0; i<self.lineArray.count; i++) {
-        LFSplashBlur *blur = self.lineArray[i];
-        CGRect rect = blur.rect;
+    @autoreleasepool {
         
+        UIGraphicsPushContext( context );
         
-        if ([blur isMemberOfClass:[LFSplashImageBlur class]]) {
+        [[UIColor clearColor] setFill];
+        UIRectFill(self.bounds);
+        
+        CGContextSetLineCap(context, kCGLineCapSquare);
+        CGContextSetLineJoin(context, kCGLineJoinMiter);
+        
+        for (NSInteger i=0; i<self.lineArray.count; i++) {
+            LFSplashBlur *blur = self.lineArray[i];
+            CGRect rect = blur.rect;
             
-            UIImage *image = bundleEditImageNamed(((LFSplashImageBlur *)blur).imageName);
-            if (image) {
-                /** 创建颜色图片 */
-                CGColorSpaceRef colorRef = CGColorSpaceCreateDeviceRGB();
-                CGContextRef contextRef = CGBitmapContextCreate(nil, image.size.width, image.size.height, 8, image.size.width*4, colorRef, kCGImageAlphaPremultipliedFirst);
+            
+            if ([blur isMemberOfClass:[LFSplashImageBlur class]]) {
                 
-                CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
-                CGContextClipToMask(contextRef, imageRect, image.CGImage);
-                CGContextSetFillColorWithColor(contextRef, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
-                CGContextFillRect(contextRef,imageRect);
+                UIImage *image = bundleEditImageNamed(((LFSplashImageBlur *)blur).imageName);
+                if (image) {
+                    /** 创建颜色图片 */
+                    CGColorSpaceRef colorRef = CGColorSpaceCreateDeviceRGB();
+                    CGContextRef contextRef = CGBitmapContextCreate(nil, image.size.width, image.size.height, 8, image.size.width*4, colorRef, kCGImageAlphaPremultipliedFirst);
+                    
+                    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+                    CGContextClipToMask(contextRef, imageRect, image.CGImage);
+                    CGContextSetFillColorWithColor(contextRef, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
+                    CGContextFillRect(contextRef,imageRect);
+                    
+                    /** 生成图片 */
+                    CGImageRef imageRef = CGBitmapContextCreateImage(contextRef);
+                    
+                    CGContextDrawImage(context, rect, imageRef);
+                    
+                    CGImageRelease(imageRef);
+                    CGContextRelease(contextRef);
+                    CGColorSpaceRelease(colorRef);
+                }
                 
-                /** 生成图片 */
-                CGImageRef imageRef = CGBitmapContextCreateImage(contextRef);
-                
-                CGContextDrawImage(context, rect, imageRef);
-                
-                CGImageRelease(imageRef);
-                CGContextRelease(contextRef);
-                CGColorSpaceRelease(colorRef);
+            } else {
+                // 设置描边颜色
+                //            CGContextSetStrokeColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
+                // 模糊矩形可以用到，用于填充矩形
+                CGContextSetFillColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
+                // 模糊矩形  填充 画完一个小正方形
+                CGContextFillRect(context, rect);
             }
-            
-        } else {
-            // 设置描边颜色
-//            CGContextSetStrokeColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
-            // 模糊矩形可以用到，用于填充矩形
-            CGContextSetFillColorWithColor(context, (blur.color ? blur.color.CGColor : [UIColor clearColor].CGColor));
-            // 模糊矩形  填充 画完一个小正方形
-            CGContextFillRect(context, rect);
         }
+        
+        UIGraphicsPopContext();
     }
-    
-    UIGraphicsPopContext();
 }
 @end

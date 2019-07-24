@@ -80,8 +80,8 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     __weak typeof(self) weakSelf = self;
     splashView.splashColor = ^UIColor *(CGPoint point) {
 //        return [weakSelf.imageView LFME_colorOfPoint:point];
-        point.x = point.x/weakSelf.frame.size.width*weakSelf.imageSize.width;
-        point.y = point.y/weakSelf.frame.size.height*weakSelf.imageSize.height;
+        point.x = point.x/weakSelf.bounds.size.width*weakSelf.imageSize.width;
+        point.y = point.y/weakSelf.bounds.size.height*weakSelf.imageSize.height;
         return [weakSelf.image colorAtPixel:point];
     };
     /** 默认不能涂抹 */
