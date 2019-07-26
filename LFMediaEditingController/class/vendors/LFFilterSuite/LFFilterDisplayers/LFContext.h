@@ -42,19 +42,9 @@ typedef NS_ENUM(NSInteger, LFContextType) {
     LFContextTypeLargeImage,
     
     /**
-     Create a hardware accelerated LFContext with EAGL (OpenGL)
-     */
-    LFContextTypeUIKit,
-    
-    /**
      Creates a standard LFContext hardware accelerated.
      */
     LFContextTypeDefault,
-    
-    /**
-     Create a software rendered LFContext (no hardware acceleration)
-     */
-    LFContextTypeCPU,
 };
 
 

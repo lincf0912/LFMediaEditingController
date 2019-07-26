@@ -89,9 +89,6 @@
                 options = @{LFContextOptionsCGContextKey: (__bridge id)contextRef};
             }
                 break;
-            case LFContextTypeCPU:
-                [NSException raise:@"UnsupportedContextType" format:@"LFContextImageView does not support CPU context type."];
-                break;
             default:
                 break;
         }
@@ -184,7 +181,7 @@
                 _LFLView = view;
             }
                 break;
-            case LFContextTypeUIKit:
+            case LFContextTypeDefault:
             {
                 UIView *view = [[UIView alloc] initWithFrame:self.bounds];
                 view.contentScaleFactor = self.contentScaleFactor;
@@ -275,10 +272,7 @@
         image = [image imageByApplyingTransform:self.preferredCIImageTransform];
         
         switch (self.contextType) {
-            case LFContextTypeMetal:
             case LFContextTypeCoreGraphics:
-            case LFContextTypeDefault:
-            case LFContextTypeCPU:
                 image = [image imageByApplyingOrientation:4];
                 break;
             default:

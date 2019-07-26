@@ -27,11 +27,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
         NSMutableDictionary *options = LFContextCreateCIContextOptions().mutableCopy;
         options[kCIContextUseSoftwareRenderer] = @(softwareRenderer);
         _CIContext = [CIContext contextWithOptions:options];
-        if (softwareRenderer) {
-            _type = LFContextTypeCPU;
-        } else {
-            _type = LFContextTypeDefault;
-        }
+        _type = LFContextTypeDefault;
     }
     
     return self;
@@ -67,23 +63,11 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     return self;
 }
 
-- (instancetype)initWithLargeImageContext:(EAGLContext *)context {
-    self = [super init];
+- (instancetype)initWithLargeImage {
+    self = [self initWithSoftwareRenderer:NO];
     
     if (self) {
-        _CIContext = [CIContext contextWithEAGLContext:context options:LFContextCreateCIContextOptions()];
         _type = LFContextTypeLargeImage;
-    }
-    
-    return self;
-}
-
-- (instancetype)initWithUIKitContext:(EAGLContext *)context {
-    self = [super init];
-    
-    if (self) {
-        _CIContext = [CIContext contextWithEAGLContext:context options:LFContextCreateCIContextOptions()];
-        _type = LFContextTypeUIKit;
     }
     
     return self;
@@ -138,12 +122,10 @@ static NSDictionary *LFContextCreateCIContextOptions() {
         case LFContextTypeCoreGraphics:
             return [CIContextClass respondsToSelector:@selector(contextWithCGContext:options:)];
         case LFContextTypeEAGL:
-        case LFContextTypeLargeImage:
-        case LFContextTypeUIKit:
             return [CIContextClass respondsToSelector:@selector(contextWithEAGLContext:options:)];
         case LFContextTypeAuto:
         case LFContextTypeDefault:
-        case LFContextTypeCPU:
+        case LFContextTypeLargeImage:
             return YES;
     }
     return NO;
@@ -175,13 +157,11 @@ static NSDictionary *LFContextCreateCIContextOptions() {
             
             return [[self alloc] initWithCGContextRef:context];
         }
-        case LFContextTypeCPU:
-            return [[self alloc] initWithSoftwareRenderer:YES];
         case LFContextTypeDefault:
             return [[self alloc] initWithSoftwareRenderer:NO];
-        case LFContextTypeEAGL:
         case LFContextTypeLargeImage:
-        case LFContextTypeUIKit:
+            return [[self alloc] initWithLargeImage];
+        case LFContextTypeEAGL:
         {
             EAGLContext *context = options[LFContextOptionsEAGLContextKey];
             
@@ -194,14 +174,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
                 
                 context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:shareGroup];
             }
-            
-            if (type == LFContextTypeEAGL) {
-                return [[self alloc] initWithEAGLContext:context];
-            } else if (type == LFContextTypeLargeImage) {
-                return [[self alloc] initWithLargeImageContext:context];
-            } else if (type == LFContextTypeUIKit) {
-                return [[self alloc] initWithUIKitContext:context];
-            }
+            return [[self alloc] initWithEAGLContext:context];
         }
         default:
             [NSException raise:@"InvalidContextType" format:@"Invalid context type %d", (int)type];
