@@ -96,6 +96,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 {
     self.backgroundColor = [UIColor blackColor];
     _minClippingDuration = 1.f;
+    _maxClippingDuration = 0.f;
     _editToolbarDefaultHeight = 44.f;
     
     LFVideoClippingView *clippingView = [[LFVideoClippingView alloc] initWithFrame:self.bounds];
@@ -235,7 +236,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
             [audioMixUrls addObject:item.url];
         }
     }
-    [self.clippingView addAudioMix:audioMixUrls];
+    [self.clippingView setAudioMix:audioMixUrls];
     [self.clippingView muteOriginalVideo:isMuteOriginal];
 }
 
@@ -248,6 +249,32 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     }
     
     return view;
+}
+
+- (float)rate
+{
+    return self.clippingView.rate;
+}
+
+- (void)setRate:(float)rate
+{
+    self.clippingView.rate = rate;
+}
+
+/** 播放 */
+- (void)playVideo
+{
+    [self.clippingView playVideo];
+}
+/** 暂停 */
+- (void)pauseVideo
+{
+    [self.clippingView pauseVideo];
+}
+/** 重置视频 */
+- (void)resetVideoDisplay
+{
+    [self.clippingView resetVideoDisplay];
 }
 
 /** 导出视频 */
@@ -295,7 +322,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     CMTime start = CMTimeMakeWithSeconds(self.clippingView.startTime, self.asset.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.clippingView.endTime - self.clippingView.startTime, self.asset.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
-        
+    
     self.exportSession = [[LFVideoExportSession alloc] initWithAsset:self.asset];
     // 输出路径
     self.exportSession.outputURL = trimURL;
@@ -329,43 +356,26 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     } progress:progress];
 }
 
-- (float)rate
-{
-    return self.clippingView.rate;
-}
-
-- (void)setRate:(float)rate
-{
-    self.clippingView.rate = rate;
-}
-
-/** 播放 */
-- (void)playVideo
-{
-    [self.clippingView playVideo];
-}
-/** 暂停 */
-- (void)pauseVideo
-{
-    [self.clippingView pauseVideo];
-}
-/** 重置视频 */
-- (void)resetVideoDisplay
-{
-    [self.clippingView resetVideoDisplay];
-}
-
 #pragma mark - LFVideoClippingViewDelegate
 /** 视频准备完毕，可以获取相关属性与操作 */
 - (void)lf_videLClippingViewReadyToPlay:(LFVideoClippingView *)clippingView
 {
+    self.trimmerView.controlMinWidth = self.trimmerView.width * (self.minClippingDuration / clippingView.totalDuration);
+    if (self.maxClippingDuration > 0) {
+        self.trimmerView.controlMaxWidth = self.trimmerView.width * (self.maxClippingDuration / clippingView.totalDuration);
+        /** 处理剪辑时间超出范围的情况 */
+        double differ = self.clippingView.endTime - self.clippingView.startTime - self.maxClippingDuration;
+        if (differ > 0) {
+            self.clippingView.endTime = MAX(self.clippingView.endTime - differ, self.clippingView.startTime);
+            
+        }
+    }
     if (self.isClipping) {
         [self.clippingView save];
         CGFloat x = self.clippingView.startTime/self.clippingView.totalDuration*self.trimmerView.width;
         CGFloat width = self.clippingView.endTime/self.clippingView.totalDuration*self.trimmerView.width-x;
-        [self.trimmerView setGridRange:NSMakeRange(x, width) animated:NO];        
+        [self.trimmerView setGridRange:NSMakeRange(x, width) animated:NO];
     }
-    self.trimmerView.controlMinWidth = self.trimmerView.width * (self.minClippingDuration / clippingView.totalDuration);
 }
 /** 进度回调 */
 - (void)lf_videoClippingView:(LFVideoClippingView *)clippingView duration:(double)duration

@@ -136,7 +136,7 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
     if (controlMinWidth > self.gridView.controlMaxWidth) {
         controlMinWidth = self.gridView.controlMaxWidth;
     }
-    self.gridView.controlMinWidth = controlMinWidth;
+    self.gridView.controlMinWidth = MAX(controlMinWidth,1);
 }
 
 - (CGFloat)controlMinWidth
@@ -149,7 +149,7 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
     if (controlMaxWidth < self.gridView.controlMinWidth) {
         controlMaxWidth = self.gridView.controlMinWidth;
     }
-    self.gridView.controlMaxWidth = controlMaxWidth;
+    self.gridView.controlMaxWidth = MIN(controlMaxWidth,self.gridView.bounds.size.width);
 }
 
 - (CGFloat)controlMaxWidth

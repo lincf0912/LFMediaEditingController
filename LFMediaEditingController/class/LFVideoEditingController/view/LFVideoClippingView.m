@@ -265,7 +265,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 }
 
 /** 增加音效 */
-- (void)addAudioMix:(NSArray <NSURL *>*)audioMix
+- (void)setAudioMix:(NSArray <NSURL *>*)audioMix
 {
     _audioUrls = audioMix;
     [self.videoPlayer setAudioUrls:self.audioUrls];

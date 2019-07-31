@@ -58,7 +58,7 @@
 
 - (void)customInit
 {
-    if (iOS8Later) {
+    if (@available(iOS 8.0, *)) {
         // 定义毛玻璃效果
         self.backgroundColor = [UIColor clearColor];
         UIBlurEffect * blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];

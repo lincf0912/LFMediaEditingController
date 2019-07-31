@@ -145,7 +145,7 @@ CGFloat const lf_stickerMargin = 10;
 - (void)customInit
 {
     _concurrentQueue = dispatch_queue_create("com.LFStickerBar.concurrentQueue", DISPATCH_QUEUE_CONCURRENT);
-    if (iOS8Later) {
+    if (@available(iOS 8.0, *)) {
         // 定义毛玻璃效果
         self.backgroundColor = [UIColor clearColor];
         UIBlurEffect * blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];

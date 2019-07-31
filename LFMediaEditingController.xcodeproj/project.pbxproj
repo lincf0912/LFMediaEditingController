@@ -98,6 +98,7 @@
 		C7D28F5022DC118800AB83FE /* LFStickerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F4E22DC118800AB83FE /* LFStickerItem.m */; };
 		C7D28F5322DC11A200AB83FE /* LFStickerItem+View.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F5222DC11A200AB83FE /* LFStickerItem+View.m */; };
 		C7D28F5622DC13F800AB83FE /* LFText.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F5522DC13F700AB83FE /* LFText.m */; };
+		C7D76C1922F163C300D632D3 /* LFMediaEditingHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D76C1822F163C300D632D3 /* LFMediaEditingHeader.m */; };
 		C7E2F85721D3655B000A9CAE /* LFMECancelBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */; };
 		C7E750F121182F6700022FCF /* LFFilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F021182F6700022FCF /* LFFilterView.m */; };
 		C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E750F321183A5300022FCF /* LFImageUtil.m */; };
@@ -281,6 +282,8 @@
 		C7D28F5222DC11A200AB83FE /* LFStickerItem+View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "LFStickerItem+View.m"; sourceTree = "<group>"; };
 		C7D28F5422DC13F600AB83FE /* LFText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFText.h; sourceTree = "<group>"; };
 		C7D28F5522DC13F700AB83FE /* LFText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFText.m; sourceTree = "<group>"; };
+		C7D76C1722EFE15D00D632D3 /* LFGridView+private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LFGridView+private.h"; sourceTree = "<group>"; };
+		C7D76C1822F163C300D632D3 /* LFMediaEditingHeader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFMediaEditingHeader.m; sourceTree = "<group>"; };
 		C7E2F85521D3655B000A9CAE /* LFMECancelBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMECancelBlock.h; sourceTree = "<group>"; };
 		C7E2F85621D3655B000A9CAE /* LFMECancelBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMECancelBlock.m; sourceTree = "<group>"; };
 		C7E750EF21182F6700022FCF /* LFFilterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterView.h; sourceTree = "<group>"; };
@@ -463,6 +466,7 @@
 				6F14E6161EE6439E0049AE56 /* LFGridMaskLayer.m */,
 				6F14E6171EE6439E0049AE56 /* LFGridView.h */,
 				6F14E6181EE6439E0049AE56 /* LFGridView.m */,
+				C7D76C1722EFE15D00D632D3 /* LFGridView+private.h */,
 				6F14E6191EE6439E0049AE56 /* LFResizeControl.h */,
 				6F14E61A1EE6439E0049AE56 /* LFResizeControl.m */,
 			);
@@ -571,6 +575,7 @@
 			isa = PBXGroup;
 			children = (
 				6F359B191F1C8AA3009F2035 /* LFMediaEditingHeader.h */,
+				C7D76C1822F163C300D632D3 /* LFMediaEditingHeader.m */,
 				6F359B1B1F1C8AA3009F2035 /* LFMediaEditingType.h */,
 				6FAB0D3C1F27357A00C1BCFD /* LFEditingProtocol.h */,
 				6FAB0D3D1F27357A00C1BCFD /* LFPhotoEditDelegate.h */,
@@ -1009,6 +1014,7 @@
 				6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */,
 				C703CD9122B7973400561AAC /* LFLView.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
+				C7D76C1922F163C300D632D3 /* LFMediaEditingHeader.m in Sources */,
 				C7D28F4A22DC0ECB00AB83FE /* LFMEGifView.m in Sources */,
 				C7C5807922AFA812003BD4F7 /* LFFilterGifView.m in Sources */,
 				C7D28F4722DC0ECB00AB83FE /* LFMEVideoView.m in Sources */,

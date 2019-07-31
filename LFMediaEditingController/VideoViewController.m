@@ -86,6 +86,18 @@
     lfVideoEditVC.delegate = self;
 //    lfVideoEditVC.operationType = LFVideoEditOperationType_draw | LFVideoEditOperationType_clip;
 //    lfVideoEditVC.minClippingDuration = 3;
+//    lfVideoEditVC.defaultOperationType = LFVideoEditOperationType_clip;
+//    lfVideoEditVC.operationAttrs = @{
+//                                     LFVideoEditDrawColorAttributeName:@(LFVideoEditOperationSubTypeDrawVioletRedColor),
+////                                     LFVideoEditStickerAttributeName:@"描述（贴图路径）",
+//                                     LFVideoEditTextColorAttributeName:@(LFVideoEditOperationSubTypeTextAzureColor),
+//                                     LFVideoEditFilterAttributeName:@(LFVideoEditOperationSubTypeProcessFilter),
+//                                     LFVideoEditAudioMuteAttributeName:@(true),
+////                                     LFVideoEditAudioUrlsAttributeName:@"描述（音频路径）",
+//                                     LFVideoEditRateAttributeName:@(0.5),
+//                                     LFVideoEditClipMinDurationAttributeName:@(2),
+//                                     LFVideoEditClipMaxDurationAttributeName:@(5)
+//                                     };
     if (self.videoEdit) {
         lfVideoEditVC.videoEdit = self.videoEdit;
     } else {

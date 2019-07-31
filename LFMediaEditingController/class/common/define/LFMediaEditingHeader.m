@@ -6,4 +6,7 @@
 //  Copyright © 2019 LamTsanFeng. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "LFMediaEditingHeader.h"
+
+double const LFMediaEditMinRate = 0.5f;
+double const LFMediaEditMaxRate = 2.f;

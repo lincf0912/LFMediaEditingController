@@ -23,6 +23,27 @@
 #import "FilterSuiteUtils.h"
 #import "AVAsset+LFMECommon.h"
 
+/************************ Attributes ************************/
+/** NSNumber containing LFVideoEditOperationSubType, default 0 */
+LFVideoEditOperationStringKey const LFVideoEditDrawColorAttributeName = @"LFVideoEditDrawColorAttributeName";
+/** NSString containing string path, default nil. sticker resource path. */
+LFVideoEditOperationStringKey const LFVideoEditStickerAttributeName = @"LFVideoEditStickerAttributeName";
+/** NSNumber containing LFVideoEditOperationSubType, default 0 */
+LFVideoEditOperationStringKey const LFVideoEditTextColorAttributeName = @"LFVideoEditTextColorAttributeName";
+/** NSNumber containing BOOL, default false: default audioTrack ,true: mute. */
+LFVideoEditOperationStringKey const LFVideoEditAudioMuteAttributeName = @"LFVideoEditAudioMuteAttributeName";
+/** NSArray  containing NSURL(fileURLWithPath:), default nil. audio resource paths. */
+LFVideoEditOperationStringKey const LFVideoEditAudioUrlsAttributeName = @"LFVideoEditAudioUrlsAttributeName";
+/** NSNumber containing LFVideoEditOperationSubType, default 0 */
+LFVideoEditOperationStringKey const LFVideoEditFilterAttributeName = @"LFVideoEditFilterAttributeName";
+/** NSNumber containing double, default 1, Range of 0.5 to 2.0. */
+LFVideoEditOperationStringKey const LFVideoEditRateAttributeName = @"LFVideoEditRateAttributeName";
+/** NSNumber containing double, default 1.0. Must be greater than 0 and less than LFVideoEditClipMaxDurationAttributeName, otherwise invalid. */
+LFVideoEditOperationStringKey const LFVideoEditClipMinDurationAttributeName = @"LFVideoEditClipMinDurationAttributeName";
+/** NSNumber containing double, default 0. Must be greater than min, otherwise invalid. 0 is not limited. */
+LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"LFVideoEditClipMaxDurationAttributeName";
+/************************ Attributes ************************/
+
 @interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate, UIGestureRecognizerDelegate>
 {
     /** 编辑模式 */
@@ -79,19 +100,6 @@
     _asset = asset;
     _placeholderImage = image;
     [_EditingView setVideoAsset:asset placeholderImage:image];
-    /** default audio urls */
-    if (!_videoEdit && self.defaultAudioUrls.count) {
-        NSMutableArray *m_audioUrls = [_EditingView.audioUrls mutableCopy];
-        for (NSURL *url in self.defaultAudioUrls) {
-            if ([url isKindOfClass:[NSURL class]]) {
-                LFAudioItem *item = [LFAudioItem new];
-                item.title = [url.lastPathComponent stringByDeletingPathExtension];;
-                item.url = url;
-                [m_audioUrls addObject:item];
-            }
-        }
-        _EditingView.audioUrls = m_audioUrls;
-    }
 }
 
 - (void)setMinClippingDuration:(double)minClippingDuration
@@ -154,14 +162,6 @@
     _EditingView = [[LFVideoEditingView alloc] initWithFrame:editRect];
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
-    _EditingView.minClippingDuration = self.minClippingDuration;
-//    _EditingView.clippingDelegate = self;
-    if (_videoEdit) {
-        _EditingView.photoEditData = _videoEdit.editData;
-        [self setVideoAsset:_videoEdit.editAsset placeholderImage:_videoEdit.editPreviewImage];
-    } else {
-        [self setVideoAsset:_asset placeholderImage:_placeholderImage];
-    }
     
     /** 单击的 Recognizer */
     singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singlePressed)];
@@ -172,6 +172,66 @@
     [self.view addGestureRecognizer:singleTapRecognizer];
     
     [self.view addSubview:_EditingView];
+    
+    double minClippingDuration = [self operationDoubleForKey:LFVideoEditClipMinDurationAttributeName];
+    double maxClippingDuration = [self operationDoubleForKey:LFVideoEditClipMaxDurationAttributeName];
+    _EditingView.minClippingDuration = minClippingDuration;
+    _EditingView.maxClippingDuration = maxClippingDuration;
+    if (_videoEdit) {
+        _EditingView.photoEditData = _videoEdit.editData;
+        [self setVideoAsset:_videoEdit.editAsset placeholderImage:_videoEdit.editPreviewImage];
+    } else {
+        [self setVideoAsset:_asset placeholderImage:_placeholderImage];
+        
+        /** default audio urls */
+        NSMutableArray *m_audioUrls = [_EditingView.audioUrls mutableCopy];
+        for (LFAudioItem *audioItem in m_audioUrls) {
+            if (audioItem.isOriginal) {
+                audioItem.isEnable = ![self operationBOOLForKey:LFVideoEditAudioMuteAttributeName];
+                break;
+            }
+        }
+        /** 音频资源 */
+        NSArray <NSURL *>*defaultAudioUrls = [self operationArrayURLForKey:LFVideoEditAudioUrlsAttributeName];
+        
+        if (defaultAudioUrls.count) {
+            for (NSURL *url in defaultAudioUrls) {
+                if ([url isKindOfClass:[NSURL class]]) {
+                    LFAudioItem *item = [LFAudioItem new];
+                    item.title = [url.lastPathComponent stringByDeletingPathExtension];;
+                    item.url = url;
+                    [m_audioUrls addObject:item];
+                }
+            }
+            _EditingView.audioUrls = m_audioUrls;
+        }
+        
+        /** 设置默认滤镜 */
+        if (self.operationType&LFVideoEditOperationType_filter) {
+            LFVideoEditOperationSubType subType = [self operationSubTypeForKey:LFVideoEditFilterAttributeName];
+            NSInteger index = 0;
+            switch (subType) {
+                case LFVideoEditOperationSubTypeLinearCurveFilter: index = 1; break;
+                case LFVideoEditOperationSubTypeChromeFilter: index = 2; break;
+                case LFVideoEditOperationSubTypeFadeFilter: index = 3; break;
+                case LFVideoEditOperationSubTypeInstantFilter: index = 4; break;
+                case LFVideoEditOperationSubTypeMonoFilter: index = 5; break;
+                case LFVideoEditOperationSubTypeNoirFilter: index = 6; break;
+                case LFVideoEditOperationSubTypeProcessFilter: index = 7; break;
+                case LFVideoEditOperationSubTypeTonalFilter: index = 8; break;
+                case LFVideoEditOperationSubTypeTransferFilter: index = 9; break;
+                case LFVideoEditOperationSubTypeCurveLinearFilter: index = 10; break;
+                case LFVideoEditOperationSubTypeInvertFilter: index = 11; break;
+                case LFVideoEditOperationSubTypeMonochromeFilter: index = 12; break;
+                default:
+                    break;
+            }
+            
+            if (index > 0) {
+                [_EditingView changeFilterType:index];
+            }
+        }
+    }
 }
 
 - (void)configCustomNaviBar
@@ -245,9 +305,43 @@
     _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
-    [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */
+    
+    NSInteger index = 2; /** 红色 */
+    
+    /** 设置默认绘画颜色 */
+    if (self.operationType&LFVideoEditOperationType_draw) {
+        LFVideoEditOperationSubType subType = [self operationSubTypeForKey:LFVideoEditDrawColorAttributeName];
+        switch (subType) {
+            case LFVideoEditOperationSubTypeDrawWhiteColor: index = 0; break;
+            case LFVideoEditOperationSubTypeDrawBlackColor: index = 1; break;
+            case LFVideoEditOperationSubTypeDrawRedColor: index = 2; break;
+            case LFVideoEditOperationSubTypeDrawLightYellowColor: index = 3; break;
+            case LFVideoEditOperationSubTypeDrawYellowColor: index = 4; break;
+            case LFVideoEditOperationSubTypeDrawLightGreenColor: index = 5; break;
+            case LFVideoEditOperationSubTypeDrawGreenColor: index = 6; break;
+            case LFVideoEditOperationSubTypeDrawAzureColor: index = 7; break;
+            case LFVideoEditOperationSubTypeDrawRoyalBlueColor: index = 8; break;
+            case LFVideoEditOperationSubTypeDrawBlueColor: index = 9; break;
+            case LFVideoEditOperationSubTypeDrawPurpleColor: index = 10; break;
+            case LFVideoEditOperationSubTypeDrawLightPinkColor: index = 11; break;
+            case LFVideoEditOperationSubTypeDrawVioletRedColor: index = 12; break;
+            case LFVideoEditOperationSubTypeDrawPinkColor: index = 13; break;
+            default:
+                break;
+        }
+    }
+    
+    [_edit_toolBar setDrawSliderColorAtIndex:index];
     /** 绘画颜色一致 */
     [_EditingView setDrawColor:[_edit_toolBar drawSliderCurrentColor]];
+    
+    /** 设置默认速率 */
+    if (self.operationType&LFVideoEditOperationType_rate && _EditingView.rate == 1.f) {
+        double rate = [self operationDoubleForKey:LFVideoEditRateAttributeName];
+        [_edit_toolBar setRate:rate];
+        [_EditingView setRate:rate];
+    }
+    
     [self.view addSubview:_edit_toolBar];
 }
 
@@ -783,6 +877,32 @@
     textBar.showText = text;
     textBar.delegate = self;
     
+    if (text == nil) {
+        /** 设置默认文字颜色 */
+        LFVideoEditOperationSubType subType = [self operationSubTypeForKey:LFVideoEditTextColorAttributeName];
+        
+        NSInteger index = 0;
+        switch (subType) {
+            case LFVideoEditOperationSubTypeTextWhiteColor: index = 0; break;
+            case LFVideoEditOperationSubTypeTextBlackColor: index = 1; break;
+            case LFVideoEditOperationSubTypeTextRedColor: index = 2; break;
+            case LFVideoEditOperationSubTypeTextLightYellowColor: index = 3; break;
+            case LFVideoEditOperationSubTypeTextYellowColor: index = 4; break;
+            case LFVideoEditOperationSubTypeTextLightGreenColor: index = 5; break;
+            case LFVideoEditOperationSubTypeTextGreenColor: index = 6; break;
+            case LFVideoEditOperationSubTypeTextAzureColor: index = 7; break;
+            case LFVideoEditOperationSubTypeTextRoyalBlueColor: index = 8; break;
+            case LFVideoEditOperationSubTypeTextBlueColor: index = 9; break;
+            case LFVideoEditOperationSubTypeTextPurpleColor: index = 10; break;
+            case LFVideoEditOperationSubTypeTextLightPinkColor: index = 11; break;
+            case LFVideoEditOperationSubTypeTextVioletRedColor: index = 12; break;
+            case LFVideoEditOperationSubTypeTextPinkColor: index = 13; break;
+            default:
+                break;
+        }
+        [textBar setTextSliderColorAtIndex:index];
+    }
+    
     [self.view addSubview:textBar];
     
     [textBar becomeFirstResponder];
@@ -870,7 +990,11 @@
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
-        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:self.stickerPath];
+        
+        /** 设置默认贴图资源路径 */
+        NSString *stickerPath = [self operationStringForKey:LFVideoEditStickerAttributeName];
+        
+        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:stickerPath];
         _edit_sticker_toolBar.delegate = self;
     }
     return _edit_sticker_toolBar;
@@ -952,6 +1076,98 @@
         return [NSBundle LFME_localizedStringForKey:languageName];
     }
     return @"";
+}
+
+#pragma mark - 配置数据
+- (LFVideoEditOperationSubType)operationSubTypeForKey:(LFVideoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        return (LFVideoEditOperationSubType)[obj integerValue];
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFVideoEditDrawColorAttributeName]
+        || [key isEqualToString:LFVideoEditTextColorAttributeName]
+        || [key isEqualToString:LFVideoEditFilterAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is LFVideoEditOperationSubType", key);
+    }
+    return 0;
+}
+
+- (BOOL)operationBOOLForKey:(LFVideoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        return [obj boolValue];
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFVideoEditAudioMuteAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is BOOL", key);
+    } else {
+        if ([key isEqualToString:LFVideoEditAudioMuteAttributeName]) {
+            return NO;
+        }
+    }
+    return NO;
+}
+
+- (double)operationDoubleForKey:(LFVideoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        double value = [obj doubleValue];
+        if ([key isEqualToString:LFVideoEditRateAttributeName]) {
+            if (value >= LFMediaEditMinRate && value <= LFMediaEditMaxRate) {
+                return value;
+            } else {
+                return 1.f;
+            }
+        } else {
+            return value;
+        }
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFVideoEditRateAttributeName]
+        || [key isEqualToString:LFVideoEditClipMinDurationAttributeName]
+        || [key isEqualToString:LFVideoEditClipMaxDurationAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is double", key);
+    } else {
+        if ([key isEqualToString:LFVideoEditRateAttributeName]) {
+            return 1.f;
+        } else if ([key isEqualToString:LFVideoEditClipMinDurationAttributeName]) {
+            return 1.f;
+        } else if ([key isEqualToString:LFVideoEditClipMaxDurationAttributeName]) {
+            return 0;
+        }
+    }
+    return 0;
+}
+
+- (NSString *)operationStringForKey:(LFVideoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSString class]]) {
+        return (NSString *)obj;
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFVideoEditStickerAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+    }
+    return nil;
+}
+
+- (NSArray<NSURL *>*)operationArrayURLForKey:(LFVideoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSArray class]]) {
+        NSArray *identifiers = (NSArray *)obj;
+        NSPredicate *p = [NSPredicate predicateWithFormat:@"self isKindOfClass: %@",
+                          [NSURL class]];
+        NSArray *filtered = [identifiers filteredArrayUsingPredicate:p];
+        NSAssert(filtered.count == identifiers.count,
+                 @"The value of key %@ can only contain NSURL.", key);
+        return identifiers;
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFVideoEditAudioUrlsAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is NSArray<NSURL *>*", key);
+    }
+    return nil;
 }
 
 @end

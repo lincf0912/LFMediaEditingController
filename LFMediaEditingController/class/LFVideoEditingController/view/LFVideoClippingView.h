@@ -65,7 +65,7 @@
 /** 重置视频 */
 - (void)resetVideoDisplay;
 /** 增加音效 */
-- (void)addAudioMix:(NSArray <NSURL *>*_Nullable)audioMix;
+- (void)setAudioMix:(NSArray <NSURL *>*_Nullable)audioMix;
 
 /** 移动到某帧 */
 - (void)beginScrubbing;

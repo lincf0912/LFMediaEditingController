@@ -12,11 +12,6 @@
 #ifndef LFMediaEditingHeader_h
 #define LFMediaEditingHeader_h
 
-#define iOS7Later ([UIDevice currentDevice].systemVersion.floatValue >= 7.0f)
-#define iOS8Later ([UIDevice currentDevice].systemVersion.floatValue >= 8.0f)
-#define iOS9Later ([UIDevice currentDevice].systemVersion.floatValue >= 9.0f)
-#define iOS9_1Later ([UIDevice currentDevice].systemVersion.floatValue >= 9.1f)
-
 #define isiPhone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define isiPad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
@@ -40,8 +35,11 @@
 , [UIColor colorWithRed:1.f/255.f green:53.f/255.f blue:190.f/255.f alpha:1.f]/*深蓝色*/\
 , [UIColor colorWithRed:141.f/255.f green:87.f/255.f blue:240.f/255.f alpha:1.f]/*紫色*/\
 , [UIColor colorWithRed:244.f/255.f green:147.f/255.f blue:244.f/255.f alpha:1.f]/*浅粉色*/\
-, [UIColor colorWithRed:242.f/255.f green:102.f/255.f blue:139.f/255.f alpha:1.f]/*橙色*/\
+, [UIColor colorWithRed:242.f/255.f green:102.f/255.f blue:139.f/255.f alpha:1.f]/*紫罗兰红色*/\
 , [UIColor colorWithRed:236.f/255.f green:36.f/255.f blue:179.f/255.f alpha:1.f]/*粉红色*/\
 ]
+
+OBJC_EXTERN double const LFMediaEditMinRate;
+OBJC_EXTERN double const LFMediaEditMaxRate;
 
 #endif /* LFMediaEditingHeader_h */
