@@ -13,6 +13,9 @@
 
 "_LFME_alertViewCancelTitle" = "OK";
 
+/* -------- LFRatioMenu  -------*/
+"_LFME_ratio_Original" = "原始尺寸";
+
 /* -------- LFAudioItem  -------*/
 "_LFME_defaultAudioItem_name" = "Default AudioTrack";
 "_LFME_MediaPicker_prompt" = "Please select the audio";

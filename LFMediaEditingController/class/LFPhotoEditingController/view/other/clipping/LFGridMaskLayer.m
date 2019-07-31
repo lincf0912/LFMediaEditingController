@@ -44,20 +44,57 @@
 
 - (void)setMaskRect:(CGRect)maskRect animated:(BOOL)animated
 {
-    CGMutablePathRef mPath = CGPathCreateMutable();
-    CGPathAddRect(mPath, NULL, self.bounds);
-    CGPathAddRect(mPath, NULL, maskRect);
+    _maskRect = maskRect;
+    CGPathRef path = nil;
+    if (CGRectEqualToRect(CGRectZero, maskRect)) {
+        path = [self drawClearGrid];
+    } else {
+        path = [self drawGrid];
+    }
     [self removeAnimationForKey:@"lf_maskLayer_opacityAnimate"];
     if (animated) {
         CABasicAnimation *animate = [CABasicAnimation animationWithKeyPath:@"opacity"];
         animate.duration = 0.25f;
         animate.fromValue = @(0.0);
         animate.toValue = @(1.0);
-        self.path = mPath;
+        self.path = path;
         [self addAnimation:animate forKey:@"lf_maskLayer_opacityAnimate"];
     } else {
-        self.path = mPath;
+        self.path = path;
     }
 }
+
+- (void)clearMask
+{
+    [self clearMaskWithAnimated:NO];
+}
+
+- (void)clearMaskWithAnimated:(BOOL)animated
+{
+    [self setMaskRect:CGRectZero animated:animated];
+    
+}
+
+- (CGPathRef)drawGrid
+{
+    CGRect maskRect = self.maskRect;
+    CGMutablePathRef mPath = CGPathCreateMutable();
+    CGPathAddRect(mPath, NULL, self.bounds);
+    if (self.isCircle) {
+        CGPathAddArc(mPath, NULL, CGRectGetMidX(maskRect), CGRectGetMidY(maskRect), maskRect.size.width/2, 0, 2*M_PI, NO);
+    } else {
+        CGPathAddRect(mPath, NULL, maskRect);
+    }
+    return mPath;
+}
+
+- (CGPathRef)drawClearGrid
+{
+    CGMutablePathRef mPath = CGPathCreateMutable();
+    CGPathAddRect(mPath, NULL, self.bounds);
+    CGPathAddRect(mPath, NULL, self.bounds);
+    return mPath;
+}
+
 
 @end

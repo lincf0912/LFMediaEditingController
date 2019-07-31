@@ -49,6 +49,13 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(videoEditing)];
 }
 
+- (void)viewSafeAreaInsetsDidChange
+{
+    [super viewSafeAreaInsetsDidChange];
+    CGFloat top = self.view.safeAreaInsets.top - self.navigationController.navigationBar.frame.size.height;
+    self.playerLayer.frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+top, self.view.bounds.size.width, self.view.bounds.size.height-top-self.view.safeAreaInsets.bottom);
+}
+
 - (void)dealloc
 {
     [self.player removeObserver:self forKeyPath:@"status"];

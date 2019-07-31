@@ -208,7 +208,7 @@
 #pragma mark - 二级菜单栏(懒加载)
 - (void)drawMenu
 {
-    if (_edit_drawMenu == nil) {
+    if (_edit_drawMenu == nil && self.type&LFEditToolbarType_draw) {
         UIView *edit_drawMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
         edit_drawMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_drawMenu.backgroundColor = _edit_menu.backgroundColor;
@@ -263,7 +263,7 @@
 
 - (void)splashMenu
 {
-    if (_edit_splashMenu == nil) {
+    if (_edit_splashMenu == nil && self.type&LFEditToolbarType_splash) {
         UIView *edit_splashMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
         edit_splashMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_splashMenu.backgroundColor = _edit_menu.backgroundColor;
@@ -298,9 +298,8 @@
         [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn.png") forState:UIControlStateNormal];
         [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn_HL.png") forState:UIControlStateHighlighted];
         [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn_HL.png") forState:UIControlStateSelected];
-        action1.tag = 0;
+        action1.tag = 1;
         [edit_splashMenu addSubview:action1];
-        _edit_splashMenu_action_button = action1;
         
         UIButton *action2 = [UIButton buttonWithType:UIButtonTypeCustom];
         action2.frame = CGRectMake(averageWidth*2-44/2, (CGRectGetHeight(edit_splashMenu.frame)-30)/2, 44, 30);
@@ -309,10 +308,11 @@
         [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn.png") forState:UIControlStateNormal];
         [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn_HL.png") forState:UIControlStateHighlighted];
         [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn_HL.png") forState:UIControlStateSelected];
-        action2.tag = 1;
+        action2.tag = 2;
         [edit_splashMenu addSubview:action2];
         
         /** 优先激活首个按钮 */
+        _edit_splashMenu_action_button = action1;
         action1.selected = YES;
         
         self.edit_splashMenu = edit_splashMenu;
@@ -342,7 +342,7 @@
 
 - (UIView *)rateMenu
 {
-    if (_edit_rateMenu == nil) {
+    if (_edit_rateMenu == nil && self.type&LFEditToolbarType_rate) {
         UIView *edit_rateMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
         edit_rateMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_rateMenu.backgroundColor = _edit_menu.backgroundColor;
@@ -353,7 +353,7 @@
         button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [edit_rateMenu addSubview:button];
         
-        /** 颜色显示 */
+        /** 间距 */
         CGFloat margin = isiPad ? 85.f : 25.f;
         
         /** 提示label */
@@ -373,8 +373,8 @@
         slider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [slider addTarget:self action:@selector(sliderDidChange:) forControlEvents:UIControlEventValueChanged];
 //        slider.continuous = NO;
-        slider.maximumValue = 2.0;
-        slider.minimumValue = 0.5;
+        slider.maximumValue = LFMediaEditMaxRate;
+        slider.minimumValue = LFMediaEditMinRate;
         slider.value = 1.0;
         [edit_rateMenu addSubview:slider];
         _edit_rateMenu_slider = slider;
@@ -464,7 +464,7 @@
         button.selected = YES;
         _edit_splashMenu_action_button = button;
         if ([self.delegate respondsToSelector:@selector(lf_editToolbar:subDidSelectAtIndex:)]) {
-            [self.delegate lf_editToolbar:self subDidSelectAtIndex:[NSIndexPath indexPathForRow:button.tag inSection:LFEditToolbarType_splash]];
+            [self.delegate lf_editToolbar:self subDidSelectAtIndex:[NSIndexPath indexPathForRow:button.tag-1 inSection:LFEditToolbarType_splash]];
         }
     }
 }
@@ -578,12 +578,21 @@
     }
 }
 
-#pragma mark - 对外
+#pragma mark - public对外
 - (void)selectMainMenuIndex:(NSUInteger)index
 {
     UIButton *button = [self.edit_menu viewWithTag:index];
     if ([button isKindOfClass:[UIButton class]]) {
         [self edit_toolBar_buttonClick:button];
+    }
+}
+
+/** 设置默认模糊类型 */
+- (void)setSplashIndex:(NSUInteger)index
+{
+    UIView *view = [self.edit_splashMenu viewWithTag:index+1];
+    if ([view isKindOfClass:[UIButton class]]) {
+        [self splashMenu_buttonClick:(UIButton *)view];
     }
 }
 

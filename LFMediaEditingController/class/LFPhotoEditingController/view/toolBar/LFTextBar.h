@@ -29,6 +29,10 @@
 
 - (instancetype)initWithFrame:(CGRect)frame layout:(void (^)(LFTextBar *textBar))layoutBlock;
 
+/** 设置文本拾色器默认颜色 */
+- (void)setTextSliderColor:(UIColor *)color;
+- (void)setTextSliderColorAtIndex:(NSUInteger)index;
+
 @end
 
 @protocol LFTextBarDelegate <NSObject>

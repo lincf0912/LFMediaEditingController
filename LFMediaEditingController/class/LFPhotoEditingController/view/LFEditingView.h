@@ -25,8 +25,8 @@
 @property (nonatomic, assign) CGRect clippingMaxRect;
 
 /** 开关编辑模式 */
-@property (nonatomic, assign) BOOL isClipping;
-- (void)setIsClipping:(BOOL)isClipping animated:(BOOL)animated;
+@property (nonatomic, assign, getter=isClipping) BOOL clipping;
+- (void)setClipping:(BOOL)clipping animated:(BOOL)animated;
 
 /** 取消剪裁 */
 - (void)cancelClipping:(BOOL)animated;
@@ -36,12 +36,14 @@
 /** 旋转 isClipping=YES 的情况有效 */
 - (void)rotate;
 /** 长宽比例 */
-- (void)setAspectRatio:(NSString *)aspectRatio;
+- (NSArray <NSString *>*)aspectRatioDescs;
+- (void)setAspectRatioIndex:(NSUInteger)aspectRatioIndex;
+- (NSUInteger)aspectRatioIndex;
+/** 默认长宽比例（仅首次执行的默认值，并非每次执行。） */
+@property (nonatomic, assign) NSUInteger defaultAspectRatioIndex;
 
 /** 创建编辑图片 */
 - (void)createEditImage:(void (^)(UIImage *editImage))complete;
-
-- (NSArray <NSString *>*)aspectRatioDescs;
 
 @end
 

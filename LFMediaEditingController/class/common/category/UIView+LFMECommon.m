@@ -80,4 +80,33 @@
     
     return color;
 }
+
+- (void)LFME_setCornerRadius:(float)cornerRadius
+{
+    if (cornerRadius > 0) {
+        self.layer.masksToBounds = YES;
+        self.layer.cornerRadius = cornerRadius;
+        self.layer.shouldRasterize = YES;
+        self.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    } else {
+        self.layer.masksToBounds = NO;
+        self.layer.cornerRadius = 0;
+        self.layer.shouldRasterize = NO;
+        self.layer.rasterizationScale = 1.f;
+    }
+}
+
+- (void)LFME_setCornerRadiusWithoutMasks:(float)cornerRadius
+{
+    if (cornerRadius > 0) {
+        self.layer.cornerRadius = cornerRadius;
+        self.layer.shouldRasterize = YES;
+        self.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    } else {
+        self.layer.cornerRadius = 0;
+        self.layer.shouldRasterize = NO;
+        self.layer.rasterizationScale = 1.f;
+    }
+}
+
 @end

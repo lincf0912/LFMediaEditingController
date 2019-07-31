@@ -55,10 +55,26 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(photoEditing)];
 }
 
+- (void)viewSafeAreaInsetsDidChange
+{
+    [super viewSafeAreaInsetsDidChange];
+    CGFloat top = self.view.safeAreaInsets.top - self.navigationController.navigationBar.frame.size.height;
+    self.imageView.frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+top, self.view.bounds.size.width, self.view.bounds.size.height-top-self.view.safeAreaInsets.bottom);
+}
+
 - (void)photoEditing
 {
     LFPhotoEditingController *lfPhotoEditVC = [[LFPhotoEditingController alloc] init];
 //    lfPhotoEditVC.operationType = LFPhotoEditOperationType_draw | LFPhotoEditOperationType_splash;
+//    lfPhotoEditVC.defaultOperationType = LFPhotoEditOperationType_crop;
+//    lfPhotoEditVC.operationAttrs = @{
+//                                     LFPhotoEditDrawColorAttributeName:@(LFPhotoEditOperationSubTypeDrawVioletRedColor),
+////                                     LFPhotoEditStickerAttributeName:@"描述（贴图路径）",
+//                                     LFPhotoEditTextColorAttributeName:@(LFPhotoEditOperationSubTypeTextAzureColor),
+//                                     LFPhotoEditSplashAttributeName:@(LFPhotoEditOperationSubTypeSplashPaintbrush),
+//                                     LFPhotoEditFilterAttributeName:@(LFPhotoEditOperationSubTypeProcessFilter),
+//                                     LFPhotoEditCropAspectRatioAttributeName:@(LFPhotoEditOperationSubTypeCropAspectRatio1x1)
+//                                     };
     lfPhotoEditVC.delegate = self;
     if (self.photoEdit) {
         lfPhotoEditVC.photoEdit = self.photoEdit;

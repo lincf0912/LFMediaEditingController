@@ -10,8 +10,12 @@
 
 @interface LFGridLayer : CAShapeLayer
 
+/** 圆形 */
+@property (nonatomic, assign, getter=isCircle) BOOL circle;
+
 @property (nonatomic, assign) CGRect gridRect;
 - (void)setGridRect:(CGRect)gridRect animated:(BOOL)animated;
+- (void)setGridRect:(CGRect)gridRect animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 
 //@property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, strong) UIColor *bgColor;

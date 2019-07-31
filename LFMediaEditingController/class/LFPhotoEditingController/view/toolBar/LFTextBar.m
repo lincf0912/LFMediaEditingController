@@ -76,7 +76,7 @@
     [self configTextView];
     [self configKeyBoardBar];
 
-    [self setTextColor:kSliderColors[0]]; /** 白色 */
+    [self setTextSliderColorAtIndex:0]; /** 白色 */
 }
 
 - (BOOL)becomeFirstResponder
@@ -184,8 +184,20 @@
 /** 设置文字拾起器默认颜色 */
 - (void)setTextColor:(UIColor *)textColor
 {
-    self.lf_colorSlider.color = textColor;
-    self.lf_textView.textColor = textColor;
+    [self setTextSliderColor:textColor];
+}
+
+/** 设置文本拾色器默认颜色 */
+- (void)setTextSliderColor:(UIColor *)color
+{
+    self.lf_colorSlider.color = color;
+    self.lf_textView.textColor = color;
+}
+
+- (void)setTextSliderColorAtIndex:(NSUInteger)index
+{
+    self.lf_colorSlider.index = index;
+    self.lf_textView.textColor = self.lf_colorSlider.color;
 }
 
 #pragma mark - 顶部栏(action)

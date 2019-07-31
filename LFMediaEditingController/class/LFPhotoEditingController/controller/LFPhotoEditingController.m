@@ -23,6 +23,21 @@
 
 #import "FilterSuiteUtils.h"
 
+/************************ Attributes ************************/
+/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+LFPhotoEditOperationStringKey const LFPhotoEditDrawColorAttributeName = @"LFPhotoEditDrawColorAttributeName";
+/** NSString containing string path, default nil. sticker resource path. */
+LFPhotoEditOperationStringKey const LFPhotoEditStickerAttributeName = @"LFPhotoEditStickerAttributeName";
+/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+LFPhotoEditOperationStringKey const LFPhotoEditTextColorAttributeName = @"LFPhotoEditTextColorAttributeName";
+/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+LFPhotoEditOperationStringKey const LFPhotoEditSplashAttributeName = @"LFPhotoEditSplashAttributeName";
+/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+LFPhotoEditOperationStringKey const LFPhotoEditFilterAttributeName = @"LFPhotoEditFilterAttributeName";
+/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"LFPhotoEditCropAspectRatioAttributeName";
+/************************ Attributes ************************/
+
 
 @interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
@@ -161,6 +176,52 @@
         _EditingView.photoEditData = _photoEdit.editData;
     } else {
         [self setEditImage:_editImage];
+        
+        /** 设置默认滤镜 */
+        if (self.operationType&LFPhotoEditOperationType_filter) {
+            LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditFilterAttributeName];
+            NSInteger index = 0;
+            switch (subType) {
+                case LFPhotoEditOperationSubTypeLinearCurveFilter: index = 1; break;
+                case LFPhotoEditOperationSubTypeChromeFilter: index = 2; break;
+                case LFPhotoEditOperationSubTypeFadeFilter: index = 3; break;
+                case LFPhotoEditOperationSubTypeInstantFilter: index = 4; break;
+                case LFPhotoEditOperationSubTypeMonoFilter: index = 5; break;
+                case LFPhotoEditOperationSubTypeNoirFilter: index = 6; break;
+                case LFPhotoEditOperationSubTypeProcessFilter: index = 7; break;
+                case LFPhotoEditOperationSubTypeTonalFilter: index = 8; break;
+                case LFPhotoEditOperationSubTypeTransferFilter: index = 9; break;
+                case LFPhotoEditOperationSubTypeCurveLinearFilter: index = 10; break;
+                case LFPhotoEditOperationSubTypeInvertFilter: index = 11; break;
+                case LFPhotoEditOperationSubTypeMonochromeFilter: index = 12; break;
+                default:
+                    break;
+            }
+            
+            if (index > 0) {
+                [_EditingView changeFilterType:index];
+            }
+        }
+        
+        /** 设置默认剪裁比例 */
+        if (self.operationType&LFPhotoEditOperationType_crop) {
+            LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditCropAspectRatioAttributeName];
+            NSInteger index = 0;
+            switch (subType) {
+                case LFPhotoEditOperationSubTypeCropAspectRatioOriginal: index = 1; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatio1x1: index = 2; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatio3x2: index = 3; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatio4x3: index = 4; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatio5x3: index = 5; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatio15x9: index = 6; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatio16x9: index = 7; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatio16x10: index = 8; break;
+                default:
+                    break;
+            }
+            
+            _EditingView.defaultAspectRatioIndex = index;
+        }
     }
 }
 
@@ -230,9 +291,51 @@
     _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
-    [_edit_toolBar setDrawSliderColorAtIndex:1]; /** 红色 */
+    
+    NSInteger index = 2; /** 红色 */
+    
+    /** 设置默认绘画颜色 */
+    if (self.operationType&LFPhotoEditOperationType_draw) {
+        LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditDrawColorAttributeName];
+        switch (subType) {
+            case LFPhotoEditOperationSubTypeDrawWhiteColor: index = 0; break;
+            case LFPhotoEditOperationSubTypeDrawBlackColor: index = 1; break;
+            case LFPhotoEditOperationSubTypeDrawRedColor: index = 2; break;
+            case LFPhotoEditOperationSubTypeDrawLightYellowColor: index = 3; break;
+            case LFPhotoEditOperationSubTypeDrawYellowColor: index = 4; break;
+            case LFPhotoEditOperationSubTypeDrawLightGreenColor: index = 5; break;
+            case LFPhotoEditOperationSubTypeDrawGreenColor: index = 6; break;
+            case LFPhotoEditOperationSubTypeDrawAzureColor: index = 7; break;
+            case LFPhotoEditOperationSubTypeDrawRoyalBlueColor: index = 8; break;
+            case LFPhotoEditOperationSubTypeDrawBlueColor: index = 9; break;
+            case LFPhotoEditOperationSubTypeDrawPurpleColor: index = 10; break;
+            case LFPhotoEditOperationSubTypeDrawLightPinkColor: index = 11; break;
+            case LFPhotoEditOperationSubTypeDrawVioletRedColor: index = 12; break;
+            case LFPhotoEditOperationSubTypeDrawPinkColor: index = 13; break;
+            default:
+                break;
+        }
+    }
+    
+    [_edit_toolBar setDrawSliderColorAtIndex:index];
     /** 绘画颜色一致 */
     [_EditingView setDrawColor:[_edit_toolBar drawSliderCurrentColor]];
+    
+    /** 设置默认模糊 */
+    if (self.operationType&LFPhotoEditOperationType_splash) {
+        /** 重置 */
+        index = 0;
+        LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditSplashAttributeName];
+        switch (subType) {
+            case LFPhotoEditOperationSubTypeSplashMosaic: index = 0; break;
+            case LFPhotoEditOperationSubTypeSplashPaintbrush: index = 1; break;
+            default:
+                break;
+        }
+        [_edit_toolBar setSplashIndex:index];
+    }
+    
+    
     [self.view addSubview:_edit_toolBar];
 }
 
@@ -249,7 +352,7 @@
         };
         
         if (containOperation(LFPhotoEditOperationType_crop)) {
-            [_EditingView setIsClipping:YES animated:NO];
+            [_EditingView setClipping:YES animated:NO];
             [self changeClipMenu:YES animated:NO];
             _edit_clipping_toolBar.enableReset = _EditingView.canReset;
         } else {
@@ -375,7 +478,7 @@
             break;
         case LFEditToolbarType_crop:
         {
-            [_EditingView setIsClipping:YES animated:YES];
+            [_EditingView setClipping:YES animated:YES];
             [self changeClipMenu:YES];
             _edit_clipping_toolBar.enableReset = _EditingView.canReset;
         }
@@ -483,6 +586,7 @@
             [self.view insertSubview:_edit_clipping_safeAreaMaskView belowSubview:_EditingView];
         }
     }
+    _edit_clipping_toolBar.selectAspectRatio = [_EditingView aspectRatioIndex] > 0;
     return _edit_clipping_toolBar;
 }
 
@@ -495,8 +599,7 @@
     } else {
         [_EditingView cancelClipping:YES];
         [self changeClipMenu:NO];
-        _edit_clipping_toolBar.selectAspectRatio = NO;
-        [_EditingView setAspectRatio:nil];
+        _edit_clipping_toolBar.selectAspectRatio = [_EditingView aspectRatioIndex] > 0;
         [self configDefaultOperation];
     }
 }
@@ -504,13 +607,12 @@
 - (void)lf_clipToolbarDidFinish:(LFClipToolbar *)clipToolbar
 {
     if (self.initSelectedOperationType == 0 && self.operationType == LFPhotoEditOperationType_crop && self.defaultOperationType == LFPhotoEditOperationType_crop) { /** 证明initSelectedOperationType已消耗完毕，defaultOperationType是有值的。只有LFPhotoEditOperationType_crop的情况，无需返回，直接完成整个编辑 */
-        [_EditingView setIsClipping:NO animated:NO];
+        [_EditingView setClipping:NO animated:NO];
         [self finishButtonClick];
     } else {
-        [_EditingView setIsClipping:NO animated:YES];
+        [_EditingView setClipping:NO animated:YES];
         [self changeClipMenu:NO];
-        _edit_clipping_toolBar.selectAspectRatio = NO;
-        [_EditingView setAspectRatio:nil];
+        _edit_clipping_toolBar.selectAspectRatio = [_EditingView aspectRatioIndex] > 0;
         [self configDefaultOperation];
     }
 }
@@ -519,8 +621,8 @@
 {
     [_EditingView reset];
     _edit_clipping_toolBar.enableReset = _EditingView.canReset;
+    [_EditingView setAspectRatioIndex:0];
     _edit_clipping_toolBar.selectAspectRatio = NO;
-    [_EditingView setAspectRatio:nil];
 }
 /** 旋转 */
 - (void)lf_clipToolbarDidRotate:(LFClipToolbar *)clipToolbar
@@ -531,21 +633,28 @@
 /** 长宽比例 */
 - (void)lf_clipToolbarDidAspectRatio:(LFClipToolbar *)clipToolbar
 {
+    if (_edit_clipping_toolBar.selectAspectRatio) {
+        _edit_clipping_toolBar.selectAspectRatio = NO;
+        [_EditingView setAspectRatioIndex:0];
+        return;
+    }
     NSArray *items = [_EditingView aspectRatioDescs];
     if (NSClassFromString(@"UIAlertController")) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             self->_edit_clipping_toolBar.selectAspectRatio = NO;
-            [self->_EditingView setAspectRatio:nil];
+            [self->_EditingView setAspectRatioIndex:0];
         }]];
         
         //Add each item to the alert controller
         NSString *languageName = nil;
-        for (NSString *item in items) {
+        NSString *item = nil;
+        for (NSInteger i=0; i<items.count; i++) {
+            item = items[i];
             languageName = [@"_LFME_ratio_" stringByAppendingString:item];
             UIAlertAction *action = [UIAlertAction actionWithTitle:[NSBundle LFME_localizedStringForKey:languageName value:item] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 self->_edit_clipping_toolBar.selectAspectRatio = YES;
-                [self->_EditingView setAspectRatio:item];
+                [self->_EditingView setAspectRatioIndex:i+1];
             }];
             [alertController addAction:action];
         }
@@ -587,10 +696,10 @@
 {
     if (buttonIndex == [actionSheet cancelButtonIndex]) {
         _edit_clipping_toolBar.selectAspectRatio = NO;
-        [_EditingView setAspectRatio:nil];
+        [_EditingView setAspectRatioIndex:0];
     } else {
         _edit_clipping_toolBar.selectAspectRatio = YES;
-        [_EditingView setAspectRatio:[actionSheet buttonTitleAtIndex:buttonIndex]];
+        [_EditingView setAspectRatioIndex:buttonIndex];
     }
 }
 #pragma clang diagnostic pop
@@ -670,7 +779,11 @@
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
-        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:self.stickerPath];
+        
+        /** 设置默认贴图资源路径 */
+        NSString *stickerPath = [self operationStringForKey:LFPhotoEditStickerAttributeName];
+        
+        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:stickerPath];
         _edit_sticker_toolBar.delegate = self;
     }
     return _edit_sticker_toolBar;
@@ -788,7 +901,7 @@
 - (void)lf_EditingViewWillBeginEditing:(LFEditingView *)EditingView
 {
     [UIView animateWithDuration:0.25f animations:^{
-        self->_edit_clipping_toolBar.alpha = 0.f;
+        self.edit_clipping_toolBar.alpha = 0.f;
     }];
     [_edit_clipping_safeAreaMaskView setShowMaskLayer:NO];
 }
@@ -796,7 +909,7 @@
 - (void)lf_EditingViewDidEndEditing:(LFEditingView *)EditingView
 {
     [UIView animateWithDuration:0.25f animations:^{
-        self->_edit_clipping_toolBar.alpha = 1.f;
+        self.edit_clipping_toolBar.alpha = 1.f;
     }];
     [_edit_clipping_safeAreaMaskView setShowMaskLayer:YES];
     _edit_clipping_toolBar.enableReset = EditingView.canReset;
@@ -949,6 +1062,33 @@
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;
     textBar.delegate = self;
+    
+    if (text == nil) {
+        /** 设置默认文字颜色 */
+        LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditTextColorAttributeName];
+        
+        NSInteger index = 0;
+        switch (subType) {
+            case LFPhotoEditOperationSubTypeTextWhiteColor: index = 0; break;
+            case LFPhotoEditOperationSubTypeTextBlackColor: index = 1; break;
+            case LFPhotoEditOperationSubTypeTextRedColor: index = 2; break;
+            case LFPhotoEditOperationSubTypeTextLightYellowColor: index = 3; break;
+            case LFPhotoEditOperationSubTypeTextYellowColor: index = 4; break;
+            case LFPhotoEditOperationSubTypeTextLightGreenColor: index = 5; break;
+            case LFPhotoEditOperationSubTypeTextGreenColor: index = 6; break;
+            case LFPhotoEditOperationSubTypeTextAzureColor: index = 7; break;
+            case LFPhotoEditOperationSubTypeTextRoyalBlueColor: index = 8; break;
+            case LFPhotoEditOperationSubTypeTextBlueColor: index = 9; break;
+            case LFPhotoEditOperationSubTypeTextPurpleColor: index = 10; break;
+            case LFPhotoEditOperationSubTypeTextLightPinkColor: index = 11; break;
+            case LFPhotoEditOperationSubTypeTextVioletRedColor: index = 12; break;
+            case LFPhotoEditOperationSubTypeTextPinkColor: index = 13; break;
+            default:
+                break;
+        }
+        [textBar setTextSliderColorAtIndex:index];
+    }
+    
 
     [self.view addSubview:textBar];
     
@@ -962,5 +1102,33 @@
     }];
 }
 
+#pragma mark - 配置数据
+- (LFPhotoEditOperationSubType)operationSubTypeForKey:(LFPhotoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        return (LFPhotoEditOperationSubType)[obj integerValue];
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFPhotoEditDrawColorAttributeName]
+        || [key isEqualToString:LFPhotoEditTextColorAttributeName]
+        || [key isEqualToString:LFPhotoEditSplashAttributeName]
+        || [key isEqualToString:LFPhotoEditFilterAttributeName]
+        || [key isEqualToString:LFPhotoEditCropAspectRatioAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is LFPhotoEditOperationSubType", key);
+    }
+    return 0;
+}
+
+- (NSString *)operationStringForKey:(LFPhotoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSString class]]) {
+        return (NSString *)obj;
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFPhotoEditStickerAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+    }
+    return nil;
+}
 
 @end

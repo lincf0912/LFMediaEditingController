@@ -10,8 +10,15 @@
 
 @interface LFGridMaskLayer : CAShapeLayer
 
+/** 遮罩颜色 */
 @property (nonatomic, assign) CGColorRef maskColor;
-@property (nonatomic, setter=setMaskRect:) CGRect maskRect;
+/** 圆形 */
+@property (nonatomic, assign, getter=isCircle) BOOL circle;
+/** 遮罩范围 */
+@property (nonatomic, assign, setter=setMaskRect:) CGRect maskRect;
 - (void)setMaskRect:(CGRect)maskRect animated:(BOOL)animated;
+/** 取消遮罩 */
+- (void)clearMask;
+- (void)clearMaskWithAnimated:(BOOL)animated;
 
 @end

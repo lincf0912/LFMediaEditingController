@@ -53,7 +53,7 @@
             [self.gridMaskLayer setMaskRect:self.maskRect animated:YES];
         } else {
             /** 扩大遮罩范围 */
-            [self.gridMaskLayer setMaskRect:self.gridMaskLayer.bounds animated:YES];
+            [self.gridMaskLayer clearMaskWithAnimated:YES];
         }
     }
 }

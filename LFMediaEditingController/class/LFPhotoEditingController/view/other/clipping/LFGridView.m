@@ -32,8 +32,7 @@ const CGFloat kControlWidth = 30.f;
 
 @property (nonatomic, weak) LFGridLayer *gridLayer;
 
-@property (nonatomic, assign) BOOL aspectRatioHorizontally;
-@property (nonatomic, assign) CGSize aspectRatioSize;
+@property (nonatomic, readonly) CGSize aspectRatioSize;
 
 @end
 
@@ -116,7 +115,7 @@ const CGFloat kControlWidth = 30.f;
             [self.gridMaskLayer setMaskRect:self.gridRect animated:YES];
         } else {
             /** 扩大遮罩范围 */
-            [self.gridMaskLayer setMaskRect:self.gridMaskLayer.bounds animated:YES];
+            [self.gridMaskLayer clearMaskWithAnimated:YES];
         }
     }
     /** 简单粗暴的禁用拖动事件 */
@@ -172,20 +171,42 @@ const CGFloat kControlWidth = 30.f;
 }
 - (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer animated:(BOOL)animated
 {
-    if (!CGRectEqualToRect(_gridRect, gridRect)) {
-        _gridRect = gridRect;
-        [self setNeedsLayout];
-        [self.gridLayer setGridRect:gridRect animated:animated];
-        if (isMaskLayer) {
-            [self.gridMaskLayer setMaskRect:gridRect animated:YES];
-        }
+    [self setGridRect:gridRect maskLayer:isMaskLayer animated:animated completion:nil];
+}
+- (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
+{
+    _gridRect = gridRect;
+    [self setNeedsLayout];
+    [self.gridLayer setGridRect:gridRect animated:animated completion:completion];
+    if (isMaskLayer) {
+        [self.gridMaskLayer setMaskRect:gridRect animated:YES];
+    }
+}
+
+- (void)setCircle:(BOOL)circle
+{
+    self.gridLayer.circle = circle;
+    self.gridMaskLayer.circle = circle;
+}
+
+- (void)setAspectRatioWithoutDelegate:(LFGridViewAspectRatioType)aspectRatio
+{
+    if (_aspectRatio != aspectRatio) {
+        _aspectRatio = aspectRatio;
     }
 }
 
 - (void)setAspectRatio:(LFGridViewAspectRatioType)aspectRatio
 {
-    if (_aspectRatio != aspectRatio) {        
+    [self setAspectRatio:aspectRatio animated:NO];
+}
+
+- (void)setAspectRatio:(LFGridViewAspectRatioType)aspectRatio animated:(BOOL)animated
+{
+    if (_aspectRatio != aspectRatio) {
+//        LFGridViewAspectRatioType prevAspectRatio = _aspectRatio;
         _aspectRatio = aspectRatio;
+//        [self setCircle:(_aspectRatio == LFGridViewAspectRatioType_Circle)];
         CGSize size = self.aspectRatioSize;
         if (!CGSizeEqualToSize(size, CGSizeZero)) {
             CGRect gridRect = self.gridRect;
@@ -203,22 +224,42 @@ const CGFloat kControlWidth = 30.f;
             gridRect.size.height = newHeight;
             gridRect.origin.y = gridRect.origin.y + diffHeight/2;
             
-            [self setGridRect:gridRect maskLayer:NO];
+            __weak typeof(self) weakSelf = self;
+            [self setGridRect:gridRect maskLayer:NO animated:animated completion:^(BOOL finished) {
+                if ([weakSelf.delegate respondsToSelector:@selector(lf_gridViewDidAspectRatio:)]) {
+                    [weakSelf.delegate lf_gridViewDidAspectRatio:weakSelf];
+                }
+            }];
             
-            if ([self.delegate respondsToSelector:@selector(lf_gridViewDidAspectRatio:)]) {
-                [self.delegate lf_gridViewDidAspectRatio:self];
-            }
         }
+//        else if (prevAspectRatio == LFGridViewAspectRatioType_Circle) {
+//            /** 方形仅需要取消固定约束，如果上次是圆形，需要取消圆形的绘制显示 */
+//            __weak typeof(self) weakSelf = self;
+//            [self setGridRect:self.gridRect maskLayer:NO animated:animated completion:^(BOOL finished) {
+//                if ([weakSelf.delegate respondsToSelector:@selector(lf_gridViewDidAspectRatio:)]) {
+//                    [weakSelf.delegate lf_gridViewDidAspectRatio:weakSelf];
+//                }
+//            }];
+//        }
     }
 }
 
-- (NSArray <NSString *>*)aspectRatioDescs:(BOOL)horizontally
+- (NSArray <NSString *>*)aspectRatioDescs
 {
-    _aspectRatioHorizontally = horizontally;
-    if (horizontally) {
-        return @[@"Original", @"1x1", @"3x2", @"4x3", @"5x3", @"15x9", @"16x9", @"16x10"];
+    if (_aspectRatioHorizontally) {
+        static NSArray <NSString *> *aspectRatioHorizontally = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            aspectRatioHorizontally = @[@"Original", @"1x1", @"3x2", @"4x3", @"5x3", @"15x9", @"16x9", @"16x10"];
+        });
+        return aspectRatioHorizontally;
     } else {
-        return @[@"Original", @"1x1", @"2x3", @"3x4", @"3x5", @"9x15", @"9x16", @"10x16"];
+        static NSArray <NSString *> *aspectRatioVertical = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            aspectRatioVertical = @[@"Original", @"1x1", @"2x3", @"3x4", @"3x5", @"9x15", @"9x16", @"10x16"];
+        });
+        return aspectRatioVertical;
     }
 }
 

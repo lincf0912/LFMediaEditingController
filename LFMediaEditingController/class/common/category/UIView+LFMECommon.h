@@ -15,4 +15,8 @@
 - (UIImage *)LFME_captureImageAtFrame:(CGRect)rect;
 /** layer坐标颜色 */
 - (UIColor *)LFME_colorOfPoint:(CGPoint)point;
+/** 设置弧边 */
+- (void)LFME_setCornerRadius:(float)cornerRadius;
+/** 设置弧边，需要手动设置masksToBounds */
+- (void)LFME_setCornerRadiusWithoutMasks:(float)cornerRadius;
 @end

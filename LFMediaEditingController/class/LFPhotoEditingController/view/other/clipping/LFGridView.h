@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
 @property (nonatomic, assign) CGRect gridRect;
 - (void)setGridRect:(CGRect)gridRect animated:(BOOL)animated;
 - (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer animated:(BOOL)animated;
+- (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 /** 最小尺寸 CGSizeMake(80, 80); */
 @property (nonatomic, assign) CGSize controlMinSize;
 /** 最大尺寸 CGRectInset(self.bounds, 20, 20) */
@@ -39,13 +40,16 @@ typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
 /** 是否正在拖动 */
 @property(nonatomic,readonly,getter=isDragging) BOOL dragging;
 
+/** 比例是否水平翻转 */
+@property (nonatomic, assign) BOOL aspectRatioHorizontally;
 /** 设置固定比例 */
 @property (nonatomic, assign) LFGridViewAspectRatioType aspectRatio;
+- (void)setAspectRatio:(LFGridViewAspectRatioType)aspectRatio animated:(BOOL)animated;
 
 @property (nonatomic, weak) id<LFGridViewDelegate> delegate;
 
 /** 长宽比例描述 */
-- (NSArray <NSString *>*)aspectRatioDescs:(BOOL)horizontally;
+- (NSArray <NSString *>*)aspectRatioDescs;
 
 @end
 
