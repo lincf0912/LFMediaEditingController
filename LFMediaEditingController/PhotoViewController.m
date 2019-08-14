@@ -58,8 +58,10 @@
 - (void)viewSafeAreaInsetsDidChange
 {
     [super viewSafeAreaInsetsDidChange];
-    CGFloat top = self.view.safeAreaInsets.top - self.navigationController.navigationBar.frame.size.height;
-    self.imageView.frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+top, self.view.bounds.size.width, self.view.bounds.size.height-top-self.view.safeAreaInsets.bottom);
+    if (self.view.safeAreaInsets.bottom > 0) {    
+        CGFloat top = self.view.safeAreaInsets.top - self.navigationController.navigationBar.frame.size.height;
+        self.imageView.frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+top, self.view.bounds.size.width, self.view.bounds.size.height-top-self.view.safeAreaInsets.bottom);
+    }
 }
 
 - (void)photoEditing

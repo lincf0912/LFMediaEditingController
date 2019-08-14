@@ -73,6 +73,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     return self;
 }
 
+#if !(TARGET_IPHONE_SIMULATOR)
 - (instancetype)initWithMTLDevice:(id<MTLDevice>)device {
     self = [super init];
     
@@ -89,20 +90,22 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     
     return self;
 }
+#endif
 
 + (LFContextType)suggestedContextType {
 
+#if !(TARGET_IPHONE_SIMULATOR)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+    if ([self supportsType:LFContextTypeMetal]) {
+        return LFContextTypeMetal;
+    } else
+#pragma clang diagnostic pop
+#endif
     if ([self supportsType:LFContextTypeEAGL]) {
         return LFContextTypeEAGL;
     } else
-        // On iOS 9.0, Metal does not behave nicely with gaussian blur filters
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wunguarded-availability"
-//        if ([self supportsType:LFContextTypeMetal]) {
-//            return LFContextTypeMetal;
-//        } else
-//#pragma clang diagnostic pop
-        
+    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
         if ([self supportsType:LFContextTypeCoreGraphics]) {
@@ -117,12 +120,14 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     id CIContextClass = [CIContext class];
     
     switch (contextType) {
+#if !(TARGET_IPHONE_SIMULATOR)
         case LFContextTypeMetal:
-            return [CIContextClass respondsToSelector:@selector(contextWithMTLDevice:options:)];
-        case LFContextTypeCoreGraphics:
-            return [CIContextClass respondsToSelector:@selector(contextWithCGContext:options:)];
+            return [CIContextClass respondsToSelector:@selector(contextWithMTLDevice:options:)] && MTLCreateSystemDefaultDevice();
+#endif
         case LFContextTypeEAGL:
             return [CIContextClass respondsToSelector:@selector(contextWithEAGLContext:options:)];
+        case LFContextTypeCoreGraphics:
+            return [CIContextClass respondsToSelector:@selector(contextWithCGContext:options:)];
         case LFContextTypeAuto:
         case LFContextTypeDefault:
         case LFContextTypeLargeImage:
@@ -135,6 +140,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     switch (type) {
         case LFContextTypeAuto:
             return [self contextWithType:[self suggestedContextType] options:options];
+#if !(TARGET_IPHONE_SIMULATOR)
         case LFContextTypeMetal: {
             if (@available(iOS 8.0, *)) {
                 id<MTLDevice> device = options[LFContextOptionsMTLDeviceKey];
@@ -148,6 +154,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
                 return [[self alloc] initWithMTLDevice:device];
             }
         }
+#endif
         case LFContextTypeCoreGraphics: {
             CGContextRef context = (__bridge CGContextRef)(options[LFContextOptionsCGContextKey]);
             

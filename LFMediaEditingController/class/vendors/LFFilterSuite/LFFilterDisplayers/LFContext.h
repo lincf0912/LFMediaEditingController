@@ -18,14 +18,14 @@ typedef NS_ENUM(NSInteger, LFContextType) {
      Automatically choose an appropriate LFContext context
      */
     LFContextTypeAuto,
-    
+#if !(TARGET_IPHONE_SIMULATOR)
     /**
      Create a hardware accelerated LFContext with Metal
      Metal is available on iOS 8 and A7 chips. Or higher.
      On iOS 9.0, Metal does not behave nicely with gaussian blur filters
      */
     LFContextTypeMetal NS_ENUM_AVAILABLE_IOS(9_0),
-    
+#endif
     /**
      Create a hardware accelerated LFContext with CoreGraphics
      */
@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, LFContextType) {
     LFContextTypeEAGL,
     
     /**
-     Create a hardware accelerated LFContext with EAGL (OpenGL)
+     Creates a standard LFContext hardware accelerated.
      */
     LFContextTypeLargeImage,
     

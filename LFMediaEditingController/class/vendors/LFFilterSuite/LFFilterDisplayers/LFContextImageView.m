@@ -159,6 +159,7 @@
             {
                 GLKView *view = [[GLKView alloc] initWithFrame:self.bounds context:context.EAGLContext];
                 view.contentScaleFactor = self.contentScaleFactor;
+                view.backgroundColor = [UIColor clearColor];
                 view.delegate = self;
                 if (self.contentView) {
                     [_contentView insertSubview:view atIndex:0];
@@ -316,6 +317,31 @@
     return [image imageByApplyingTransform:CGAffineTransformMakeScale(horizontalScale, verticalScale)];
 }
 
+- (CGRect)scaleAndResizeDrawRect:(CGRect)rect forCIImage:(CIImage *)image
+{
+    if (self.scaleAndResizeCIImageAutomatically) {
+        UIViewContentMode mode = self.contentMode;
+        switch (mode) {
+            case UIViewContentModeScaleAspectFill:
+            case UIViewContentModeScaleAspectFit:
+            {
+                if (self.context.type == LFContextTypeEAGL) {
+                    rect.origin.x = (rect.size.width - image.extent.size.width)/2;
+                    rect.origin.y = (rect.size.height - image.extent.size.height)/2;
+                    rect.size = image.extent.size;
+                } else if (self.context.type == LFContextTypeMetal) {
+                    rect.origin.x = -(rect.size.width - image.extent.size.width)/2;
+                    rect.origin.y = -(rect.size.height - image.extent.size.height)/2;
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
+    return rect;
+}
+
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
@@ -432,7 +458,7 @@ static CGRect LF_CGRectMultiply(CGRect rect, CGFloat contentScale) {
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     @autoreleasepool {
         glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         if (self.contentView) {
             CGRect targetRect = [self convertRect:self.bounds toView:view];
@@ -475,6 +501,7 @@ static CGRect LF_CGRectMultiply(CGRect rect, CGFloat contentScale) {
             }
             
             if (image != nil) {
+                rect = [self scaleAndResizeDrawRect:rect forCIImage:image];
                 [_context.CIContext drawImage:image inRect:inRect fromRect:image.extent];
             }
             
@@ -484,6 +511,7 @@ static CGRect LF_CGRectMultiply(CGRect rect, CGFloat contentScale) {
             CIImage *image = [self renderedCIImageInRect:rect];
             
             if (image != nil) {
+                rect = [self scaleAndResizeDrawRect:rect forCIImage:image];
                 [_context.CIContext drawImage:image inRect:rect fromRect:image.extent];
             }
         }
@@ -500,10 +528,11 @@ static CGRect LF_CGRectMultiply(CGRect rect, CGFloat contentScale) {
         CIImage *image = [self renderedCIImageInRect:rect];
         
         if (image != nil) {
+            rect = [self scaleAndResizeDrawRect:rect forCIImage:image];
             id<MTLCommandBuffer> commandBuffer = [_MTLCommandQueue commandBuffer];
             id<MTLTexture> texture = view.currentDrawable.texture;
             CGColorSpaceRef deviceRGB = CGColorSpaceCreateDeviceRGB();
-            [_context.CIContext render:image toMTLTexture:texture commandBuffer:commandBuffer bounds:image.extent colorSpace:deviceRGB];
+            [_context.CIContext render:image toMTLTexture:texture commandBuffer:commandBuffer bounds:rect colorSpace:deviceRGB];
             [commandBuffer presentDrawable:view.currentDrawable];
             [commandBuffer commit];
             

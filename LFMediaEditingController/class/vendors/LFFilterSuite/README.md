@@ -7,17 +7,7 @@
 * 新增可以使用UIKit
 
 ## 大图片的使用
-LFContextTypeAuto 在预览大图的时候展示图片会模糊不清，特别是长图片。以GLKView为例。
-1、哪些图片会模糊不清？
-> 缩放屏幕比例后的尺寸太小的图片，例如：原图片尺寸为：288 × 7960，缩放屏幕比例后的尺寸为（ipx为例）：29x812。因为展示的实际像素只有29x812，被UIScrollView放大后。但展示的视图仍然是使用29x812像素来绘制288 × 7960的图片，屏幕所展示的是放大后的部分像素，所以会模糊不清。实际上在没有放大的情况下就已经模糊不清了，理论上GLKView的大小需要与图片的大小一致，它们才能保存原有的清晰度。而设置GLKView的大小超过一定的范围（根据不同的机型而定）时，GLKView的开销会超出预算导致无法运作。
-
-2、怎样可以还原大图片的清晰度？
-> ·可以将contextType设置为LFContextTypeLargeImage，它是专门预览大图的。它对大图片的内存使用也是极佳的。但是小图片建议不要使用。
-> ·可以将contextType设置为LFContextTypeEAGL，并且将LFContextImageView.contentView指向UIScrollView的superView。在UIScrollView的代理方法中`- (void)scrollViewDidScroll:(UIScrollView *)scrollView` 与 `- (void)scrollViewDidZoom:(UIScrollView *)scrollView` 加入`[self.LFContextImageView setNeedsDisplay];`。 它的工作原理是使用contentView的像素实时绘制图片的可视范围像素来达到原图的清晰图。简单点说就是GLKView的大小是屏幕大小，绘制时对图片剪裁，仅绘制图片在屏幕的可见范围，达到GLKView的大小与图片的大小一致。但它是有缺陷的。总的来说OpenGLES，或者即将取代它的Metal，它们都与UIScrollView兼容性很差。
-> >缺陷1：如果UIScrollView旋转了视图，那么LFContextImageView也要跟随旋转，注意，仅是旋转部分的transform。
-> >缺陷2：当UIScrollView缩小超出最小范围后，回弹动画不跟随。放大同样。
-
-
+将属性LFContextImageView.contextType = LFContextTypeLargeImage; 即可。
 
 ## 套件使用
 1. `#import "LFFilterSuiteHeader.h"`
