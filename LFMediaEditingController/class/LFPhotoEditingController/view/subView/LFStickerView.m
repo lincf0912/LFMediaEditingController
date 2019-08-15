@@ -23,6 +23,8 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 
 @property (nonatomic, weak) LFMovingView *selectMovingView;
 
+@property (nonatomic, assign, getter=isHitTestSubView) BOOL hitTestSubView;
+
 @end
 
 @implementation LFStickerView
@@ -54,7 +56,13 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     UIView *view = [super hitTest:point withEvent:event];
+    self.hitTestSubView = [view isDescendantOfView:self];
     return (view == self ? nil : view);
+}
+
+- (BOOL)isEnable
+{
+    return self.isHitTestSubView && self.selectMovingView.isActive;
 }
 
 - (void)setTapEnded:(void (^)(LFStickerItem *, BOOL))tapEnded

@@ -562,6 +562,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 }
 
 #pragma mark - 贴图功能
+/** 贴图启用 */
+- (BOOL)stickerEnable
+{
+    return [self.clippingView stickerEnable];
+}
 /** 取消激活贴图 */
 - (void)stickerDeactivated
 {

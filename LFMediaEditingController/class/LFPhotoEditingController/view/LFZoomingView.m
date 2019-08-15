@@ -317,6 +317,11 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 }
 
 #pragma mark - 贴图功能
+/** 贴图启用 */
+- (BOOL)stickerEnable
+{
+    return [_stickerView isEnable];
+}
 /** 取消激活贴图 */
 - (void)stickerDeactivated
 {

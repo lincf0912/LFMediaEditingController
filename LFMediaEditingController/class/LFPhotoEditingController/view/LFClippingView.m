@@ -758,6 +758,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 }
 
 #pragma mark - 贴图功能
+/** 贴图启用 */
+- (BOOL)stickerEnable
+{
+    return [self.zoomingView stickerEnable];
+}
 /** 取消激活贴图 */
 - (void)stickerDeactivated
 {

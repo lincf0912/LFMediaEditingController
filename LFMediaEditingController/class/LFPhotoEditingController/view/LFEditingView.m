@@ -873,6 +873,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     } else if ([self splashEnable] && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         /** 模糊时候，禁用滑动手势 */
         return NO;
+    } else if ([self stickerEnable] && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        /** 贴图移动时候，禁用滑动手势 */
+        return NO;
     }
     return YES;
 }
@@ -1059,6 +1062,11 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 }
 
 #pragma mark - 贴图功能
+/** 贴图启用 */
+- (BOOL)stickerEnable
+{
+    return [self.clippingView stickerEnable];
+}
 /** 取消激活贴图 */
 - (void)stickerDeactivated
 {
