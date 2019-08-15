@@ -121,13 +121,13 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     
     LFMovingView *movingView = [[LFMovingView alloc] initWithItem:item];
     /** 屏幕中心 */
-    movingView.center = [self convertPoint:self.center fromView:self.superview];
+    movingView.center = [self convertPoint:[UIApplication sharedApplication].keyWindow.center fromView:(UIView *)[UIApplication sharedApplication].keyWindow];
     
     /** 最小缩放率 额外调整最小缩放率的比例，比例以屏幕1/2为标准 */
-    CGFloat diffScale = self.frame.size.width * 0.5 / movingView.view.frame.size.width;
+    CGFloat diffScale = [UIScreen mainScreen].bounds.size.width / 2 / movingView.view.frame.size.width;
     movingView.minScale = self.minScale * diffScale;
     /** 最大缩放率 额外调整最大缩放率的比例，比例以屏幕为标准。 */
-    diffScale = self.frame.size.width / movingView.view.frame.size.width;
+    diffScale = [UIScreen mainScreen].bounds.size.width / movingView.view.frame.size.width;
     movingView.maxScale = self.maxScale * diffScale;
     /** 屏幕缩放率 */
     movingView.screenScale = self.screenScale;
@@ -139,8 +139,8 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     }
     
     
+    __weak typeof(self) weakSelf = self;
     if (self.tapEnded) {
-        __weak typeof(self) weakSelf = self;
         [movingView setTapEnded:^(LFMovingView * _Nonnull view) {
             weakSelf.selectMovingView = view;
             weakSelf.tapEnded(view.item, view.isActive);
@@ -148,7 +148,6 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     }
     
     if (self.moveCenter) {
-        __weak typeof(self) weakSelf = self;
         [movingView setMoveCenter:^BOOL (CGRect rect) {
             return weakSelf.moveCenter(rect);
         }];
@@ -161,9 +160,8 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 {
     LFMovingView *movingView = [self createBaseMovingView:item active:YES];
     
-    CGFloat ratio = MIN( (0.8 * self.frame.size.width) / movingView.frame.size.width, (0.8 * self.frame.size.height) / movingView.frame.size.height);
-    CGFloat scale = ratio/self.screenScale;
-    
+    CGFloat ratio = 0.6;
+    CGFloat scale = MIN( (ratio * self.frame.size.width) / movingView.frame.size.width, (ratio * self.frame.size.height) / movingView.frame.size.height);
     [movingView setScale:scale];
     
     self.selectMovingView = movingView;
