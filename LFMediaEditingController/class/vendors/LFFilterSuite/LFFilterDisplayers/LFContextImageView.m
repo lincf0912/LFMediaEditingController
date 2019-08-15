@@ -329,10 +329,13 @@
                     rect.origin.x = (rect.size.width - image.extent.size.width)/2;
                     rect.origin.y = (rect.size.height - image.extent.size.height)/2;
                     rect.size = image.extent.size;
-                } else if (self.context.type == LFContextTypeMetal) {
+                }
+#if !(TARGET_IPHONE_SIMULATOR)
+                else if (self.context.type == LFContextTypeMetal) {
                     rect.origin.x = -(rect.size.width - image.extent.size.width)/2;
                     rect.origin.y = -(rect.size.height - image.extent.size.height)/2;
                 }
+#endif
             }
                 break;
             default:
