@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSData *gifData;
 
 /**
- Set the CIImage using an UIImage(images)
+ Set the CIImage using an animation UIImage(images)
  */
 - (void)setImageByUIImage:(UIImage *__nullable)image;
 

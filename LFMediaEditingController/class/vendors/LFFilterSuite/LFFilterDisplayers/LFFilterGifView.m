@@ -10,6 +10,26 @@
 #import "LFWeakSelectorTarget.h"
 #import "LFContextImageView+private.h"
 
+inline static NSTimeInterval LFFilterGifView_CGImageSourceGetGifFrameDelay(CGImageSourceRef imageSource, NSUInteger index)
+{
+    NSTimeInterval frameDuration = 0;
+    
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(imageSource, index, NULL);
+    NSDictionary *dict = (__bridge NSDictionary *)dictRef;
+    NSDictionary *gifDict = (dict[(NSString *)kCGImagePropertyGIFDictionary]);
+    NSNumber *unclampedDelayTime = gifDict[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
+    NSNumber *delayTime = gifDict[(NSString *)kCGImagePropertyGIFDelayTime];
+    if (dictRef) CFRelease(dictRef);
+    if (unclampedDelayTime.floatValue) {
+        frameDuration = unclampedDelayTime.floatValue;
+    }else if (delayTime.floatValue) {
+        frameDuration = delayTime.floatValue;
+    }else{
+        frameDuration = .1;
+    }
+    return frameDuration;
+}
+
 @interface LFFilterGifView ()
 {
     CADisplayLink *_displayLink;
@@ -21,6 +41,7 @@
     NSUInteger _loopTimes;
     
     NSTimeInterval _duration;
+    NSArray<NSNumber *> * _durations;
 }
 
 @property (nonatomic, strong) UIImage *gifImage;
@@ -76,13 +97,24 @@
         if (gifData) {
             _gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(gifData), NULL);
             _frameCount = CGImageSourceGetCount(_gifSourceRef);
-            [self setupDisplayLink];
+            
+            if (_frameCount) {
+                NSInteger index = 0;
+                NSMutableArray *durations = [NSMutableArray array];
+                while (index < _frameCount) {
+                    [durations addObject:@(LFFilterGifView_CGImageSourceGetGifFrameDelay(_gifSourceRef, index))];
+                    index ++;
+                }
+                _durations = [durations copy];
+            }
             
             /** 处理第一帧的图片 */
             CGImageRef imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, 0, NULL);
             self.CIImageTime = 1;
             self.CIImage = [CIImage imageWithCGImage:imageRef];
             CGImageRelease(imageRef);
+            
+            [self setupDisplayLink];
         } else {
             [self unsetupDisplayLink];
         }
@@ -143,7 +175,15 @@
     
     if (_frameCount > 0 && returnedImages.count == _frameCount) {
         /** gif */
-        return [UIImage animatedImageWithImages:returnedImages duration:_duration*_frameCount];
+        if (_durations) {
+            NSTimeInterval duration = 0;
+            for (NSNumber *d in _durations) {
+                duration += d.floatValue;
+            }
+            return [UIImage animatedImageWithImages:returnedImages duration:duration];
+        } else {
+            return [UIImage animatedImageWithImages:returnedImages duration:_duration*_frameCount];
+        }
     } else {
         if (_gifSourceRef) {
             imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, 0, NULL);
@@ -174,11 +214,19 @@
 #pragma mark - CADisplayLink
 
 - (void)setupDisplayLink {
-    if (_displayLink == nil) {
+    
+    size_t sizeMin = MIN(_index+1, _frameCount-1);
+    if (sizeMin == SIZE_MAX) {
+        //若该Gif文件无法解释为图片，需要立即返回避免内存crash
+        NSLog(@"Unable to interpret gif data");
+        [self freeData];
+        return;
+    }
+    
+    if (_displayLink == nil && _frameCount > 1) {
         LFWeakSelectorTarget *target = [[LFWeakSelectorTarget alloc] initWithTarget:self targetSelector:@selector(displayGif)];
         
         _displayLink = [CADisplayLink displayLinkWithTarget:target selector:target.handleSelector];
-        _displayLink.frameInterval = 1;
         
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         
@@ -198,63 +246,41 @@
 #pragma mark - Gif
 - (void)displayGif
 {
-    size_t sizeMin = MIN(_index+1, _frameCount-1);
-    if (sizeMin == SIZE_MAX) {
-        //若该Gif文件无法解释为图片，需要立即返回避免内存crash
-        NSLog(@"Unable to interpret gif data");
-        [self freeData];
-        [self unsetupDisplayLink];
-        return;
-    }
+    _timestamp += fmin(_displayLink.duration, 1);
     
-    float nextFrameDuration = [self frameDurationAtIndex:sizeMin ref:_gifSourceRef];
-    if (_timestamp < nextFrameDuration) {
-        _timestamp = _timestamp+_displayLink.duration;
-        return;
-    }
-    
-    CGImageRef imageRef = nil;
-    if (_gifSourceRef) {
-        imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, NULL);
-    } else if (_gifImage) {
-        imageRef = [[_gifImage.images objectAtIndex:_index] CGImage];
-    }
-    
-    if (imageRef) {
-        self.CIImageTime = _index+1;
-        self.CIImage = [CIImage imageWithCGImage:imageRef];
+    while (_timestamp >= [self frameDurationAtIndex:_index]) {
+        _timestamp -= [self frameDurationAtIndex:_index];
+        _index = MIN(_index, _frameCount - 1);
+        
+        CGImageRef imageRef = nil;
         if (_gifSourceRef) {
-            CGImageRelease(imageRef);
+            imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, NULL);
+        } else if (_gifImage) {
+            imageRef = [[_gifImage.images objectAtIndex:_index] CGImage];
+        }
+        
+        if (imageRef) {
+            self.CIImageTime = _index+1;
+            self.CIImage = [CIImage imageWithCGImage:imageRef];
+            if (_gifSourceRef) {
+                CGImageRelease(imageRef);
+            }
+        }
+        
+        if (++_index >= _frameCount) {
+            _index = 0;
+            if (_loopCount == ++_loopTimes) {
+                [self stopGif];
+                return;
+            }
         }
     }
-    
-    _index += 1;
-    if (_index == _frameCount) {
-        if (_loopCount == ++_loopTimes) {
-            [self stopGif];
-        }
-    }
-    _index = _index % _frameCount;
-    
-    _timestamp = 0.f;
 }
 
-- (float)frameDurationAtIndex:(size_t)index ref:(CGImageSourceRef)ref
+- (float)frameDurationAtIndex:(NSUInteger)index
 {
-    if (ref) {
-        CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(ref, index, NULL);
-        NSDictionary *dict = (__bridge NSDictionary *)dictRef;
-        NSDictionary *gifDict = (dict[(NSString *)kCGImagePropertyGIFDictionary]);
-        NSNumber *unclampedDelayTime = gifDict[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
-        NSNumber *delayTime = gifDict[(NSString *)kCGImagePropertyGIFDelayTime];
-        if (dictRef) CFRelease(dictRef);
-        if (unclampedDelayTime.floatValue) {
-            return unclampedDelayTime.floatValue;
-        }else if (delayTime.floatValue) {
-            return delayTime.floatValue;
-        }else{
-            return _duration;
-        }
+    if (_durations) {
+        return _durations[index].floatValue;
     } else {
         return _duration;
     }

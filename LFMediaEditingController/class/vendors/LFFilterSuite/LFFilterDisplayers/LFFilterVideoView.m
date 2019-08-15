@@ -131,7 +131,6 @@ static char* LFItemChanged = "CurrentItemContext";
         LFWeakSelectorTarget *target = [[LFWeakSelectorTarget alloc] initWithTarget:self targetSelector:@selector(willRenderFrame:)];
         
         _displayLink = [CADisplayLink displayLinkWithTarget:target selector:target.handleSelector];
-        _displayLink.frameInterval = 1;
         
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         

@@ -112,11 +112,10 @@
 #pragma mark - CADisplayLink
 
 - (void)setupDisplayLink {
-    if (_displayLink == nil) {
+    if (_displayLink == nil && _frameCount > 1) {
         LFMEWeakSelectorTarget *target = [[LFMEWeakSelectorTarget alloc] initWithTarget:self targetSelector:@selector(displayGif)];
         
         _displayLink = [CADisplayLink displayLinkWithTarget:target selector:target.handleSelector];
-        _displayLink.frameInterval = 1;
         
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         
@@ -145,30 +144,29 @@
         return;
     }
     
-    float nextFrameDuration = _duration;
-    if (_timestamp < nextFrameDuration) {
-        _timestamp = _timestamp+_displayLink.duration;
-        return;
-    }
+    _timestamp += fmin(_displayLink.duration, 1);
     
-    UIImage *image = nil;
-    if (_gifImage) {
-        image = [_gifImage.images objectAtIndex:_index];
-    }
-    
-    if (image.CGImage) {
-        self.layer.contents = (__bridge id _Nullable)(image.CGImage);
-    }
-    
-    _index += 1;
-    if (_index == _frameCount) {
-        if (_loopCount == ++_loopTimes) {
-            [self stopGif];
+    while (_timestamp >= _duration) {
+        _duration -= _duration;
+        
+        UIImage *image = nil;
+        if (_gifImage) {
+            image = [_gifImage.images objectAtIndex:_index];
+        }
+        
+        if (image.CGImage) {
+            self.layer.contents = (__bridge id _Nullable)(image.CGImage);
+        }
+        
+        _index += 1;
+        if (_index == _frameCount) {
+            _index = 0;
+            if (_loopCount == ++_loopTimes) {
+                [self stopGif];
+                return;
+            }
         }
     }
-    _index = _index % _frameCount;
-    
-    _timestamp = 0.f;
 }
 
 @end
