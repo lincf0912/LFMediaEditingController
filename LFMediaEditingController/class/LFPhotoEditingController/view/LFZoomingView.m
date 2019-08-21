@@ -122,10 +122,10 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     /** 判断是否大图、长图之类的图片，暂时规定超出当前手机屏幕的n倍就是大图了 */
     CGFloat scale = 10.f;
     BOOL isLongImage = MAX(self.imageSize.height/self.imageSize.width, self.imageSize.width/self.imageSize.height) > scale;
-    if (image.images.count == 0 && (isLongImage || (self.imageSize.width > [UIScreen mainScreen].bounds.size.width * scale || self.imageSize.height > [UIScreen mainScreen].bounds.size.height * scale))) {
+    if (image.images.count == 0 && (isLongImage || (self.imageSize.width > [UIScreen mainScreen].bounds.size.width * scale || self.imageSize.height > [UIScreen mainScreen].bounds.size.height * scale))) { // 长图UIView -> CATiledLayer
         self.imageView.contextType = LFContextTypeLargeImage;
-    } else {
-        self.imageView.contextType = LFContextTypeAuto;
+    } else { //正常图UIView
+        self.imageView.contextType = LFContextTypeDefault;
     }
     [self.imageView setImageByUIImage:image];
 }
