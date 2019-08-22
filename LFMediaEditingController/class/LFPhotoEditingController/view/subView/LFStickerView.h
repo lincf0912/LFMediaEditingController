@@ -38,7 +38,7 @@
 @property (nonatomic, assign) CGFloat screenScale;
 
 /** 是否启用（移动或点击） */
-@property (nonatomic, assign, getter=isEnable) BOOL enable;
+@property (nonatomic, readonly, getter=isEnable) BOOL enable;
 
 /** 数据 */
 @property (nonatomic, strong) NSDictionary *data;

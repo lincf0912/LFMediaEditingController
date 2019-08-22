@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-@protocol LFClipToolbarDelegate;
+@protocol LFClipToolbarDelegate, LFEditToolbarDataSource;
 
 @interface LFClipToolbar : UIView
 
 /** 代理 */
 @property (nonatomic, weak) id<LFClipToolbarDelegate> delegate;
+@property (nonatomic, weak) id<LFEditToolbarDataSource> dataSource;
 
 /** 开启重置按钮 default NO  */
 @property (nonatomic, assign) BOOL enableReset;
@@ -40,3 +41,13 @@
 @end
 
 
+
+@protocol LFEditToolbarDataSource <NSObject>
+
+@optional
+/** 允许旋转 默认YES */
+- (BOOL)lf_clipToolbarCanRotate:(LFClipToolbar *)clipToolbar;
+/** 允许长宽比例 默认YES */
+- (BOOL)lf_clipToolbarCanAspectRatio:(LFClipToolbar *)clipToolbar;
+
+@end

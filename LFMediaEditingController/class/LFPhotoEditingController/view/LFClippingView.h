@@ -38,6 +38,8 @@
 //@property (nonatomic, readonly) BOOL isZooming;
 /** 是否可还原 */
 @property (nonatomic, readonly) BOOL canReset;
+/** 以某个位置作为可还原的参照物 */
+- (BOOL)canResetWithRect:(CGRect)trueFrame;
 
 /** 可编辑范围 */
 @property (nonatomic, assign) CGRect editRect;
@@ -54,6 +56,8 @@
 - (void)rotateClockwise:(BOOL)clockwise;
 /** 还原 */
 - (void)reset;
+/** 还原到某个位置 */
+- (void)resetToRect:(CGRect)rect;
 /** 取消 */
 - (void)cancel;
 

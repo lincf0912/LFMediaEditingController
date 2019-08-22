@@ -28,18 +28,23 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationType) {
 
 typedef NSString * LFPhotoEditOperationStringKey NS_EXTENSIBLE_STRING_ENUM;
 /************************ Attributes ************************/
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 绘画颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditDrawColorAttributeName;
-/** NSString containing string path, default nil. sticker resource path. */
+/** 自定义贴图资源路径 NSString containing string path, default nil. sticker resource path. */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditStickerAttributeName;
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 文字颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditTextColorAttributeName;
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 模糊类型 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditSplashAttributeName;
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 滤镜类型 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditFilterAttributeName;
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 剪切比例 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName;
+/** 允许剪切旋转 NSNumber containing LFPhotoEditOperationSubType, default YES */
+UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditCropCanRotateAttributeName;
+/** 允许剪切比例 NSNumber containing LFPhotoEditOperationSubType, default YES */
+UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName;
+
 /************************ Attributes ************************/
 
 typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {

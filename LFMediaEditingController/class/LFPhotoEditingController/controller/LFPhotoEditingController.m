@@ -24,22 +24,26 @@
 #import "FilterSuiteUtils.h"
 
 /************************ Attributes ************************/
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 绘画颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditDrawColorAttributeName = @"LFPhotoEditDrawColorAttributeName";
-/** NSString containing string path, default nil. sticker resource path. */
+/** 自定义贴图资源路径 NSString containing string path, default nil. sticker resource path. */
 LFPhotoEditOperationStringKey const LFPhotoEditStickerAttributeName = @"LFPhotoEditStickerAttributeName";
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 文字颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditTextColorAttributeName = @"LFPhotoEditTextColorAttributeName";
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 模糊类型 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditSplashAttributeName = @"LFPhotoEditSplashAttributeName";
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 滤镜类型 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditFilterAttributeName = @"LFPhotoEditFilterAttributeName";
-/** NSNumber containing LFPhotoEditOperationSubType, default 0 */
+/** 剪切比例 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"LFPhotoEditCropAspectRatioAttributeName";
+/** 允许剪切旋转 NSNumber containing LFPhotoEditOperationSubType, default YES */
+LFPhotoEditOperationStringKey const LFPhotoEditCropCanRotateAttributeName = @"LFPhotoEditCropCanRotateAttributeName";
+/** 允许剪切比例 NSNumber containing LFPhotoEditOperationSubType, default YES */
+LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName = @"LFPhotoEditCropCanAspectRatioAttributeName";
 /************************ Attributes ************************/
 
 
-@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFClipToolbarDelegate, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
+@interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFClipToolbarDelegate, LFEditToolbarDataSource, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
     /** 编辑模式 */
     LFEditingView *_EditingView;
@@ -159,6 +163,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
     _EditingView.clippingDelegate = self;
+    _EditingView.fixedAspectRatio = ![self operationBOOLForKey:LFPhotoEditCropCanAspectRatioAttributeName];
     
     /** 单击的 Recognizer */
     singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singlePressed)];
@@ -354,7 +359,6 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
         if (containOperation(LFPhotoEditOperationType_crop)) {
             [_EditingView setClipping:YES animated:NO];
             [self changeClipMenu:YES animated:NO];
-            _edit_clipping_toolBar.enableReset = _EditingView.canReset;
         } else {
             if (containOperation(LFPhotoEditOperationType_draw)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_draw];
@@ -480,7 +484,6 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
         {
             [_EditingView setClipping:YES animated:YES];
             [self changeClipMenu:YES];
-            _edit_clipping_toolBar.enableReset = _EditingView.canReset;
         }
             break;
         default:
@@ -577,6 +580,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
         _edit_clipping_toolBar = [[LFClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
         _edit_clipping_toolBar.alpha = 0.f;
         _edit_clipping_toolBar.delegate = self;
+        _edit_clipping_toolBar.dataSource = self;
         
         /** 判断是否需要创建安全区域涂层 */
         if (!UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsetsZero, safeAreaInsets)) {
@@ -586,8 +590,21 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
             [self.view insertSubview:_edit_clipping_safeAreaMaskView belowSubview:_EditingView];
         }
     }
+    /** 默认不能重置，待进入剪切界面后重新获取 */
+    _edit_clipping_toolBar.enableReset = NO;
     _edit_clipping_toolBar.selectAspectRatio = [_EditingView aspectRatioIndex] > 0;
     return _edit_clipping_toolBar;
+}
+
+#pragma mark - LFEditToolbarDataSource
+- (BOOL)lf_clipToolbarCanRotate:(LFClipToolbar *)clipToolbar
+{
+    return [self operationBOOLForKey:LFPhotoEditCropCanRotateAttributeName];
+}
+
+- (BOOL)lf_clipToolbarCanAspectRatio:(LFClipToolbar *)clipToolbar
+{
+    return [self operationBOOLForKey:LFPhotoEditCropCanAspectRatioAttributeName];
 }
 
 #pragma mark - LFClipToolbarDelegate
@@ -621,7 +638,6 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
 {
     [_EditingView reset];
     _edit_clipping_toolBar.enableReset = _EditingView.canReset;
-    [_EditingView setAspectRatioIndex:0];
     _edit_clipping_toolBar.selectAspectRatio = NO;
 }
 /** 旋转 */
@@ -915,6 +931,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
     _edit_clipping_toolBar.enableReset = EditingView.canReset;
 }
 
+/** 进入剪切界面 */
+- (void)lf_EditingViewDidAppearClip:(LFEditingView *)EditingView
+{
+    _edit_clipping_toolBar.enableReset = EditingView.canReset;
+}
+
 #pragma mark - private
 - (void)changedBarState
 {
@@ -1129,6 +1151,25 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
         NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
     }
     return nil;
+}
+
+- (BOOL)operationBOOLForKey:(LFPhotoEditOperationStringKey)key
+{
+    id obj = [self.operationAttrs objectForKey:key];
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        return [obj boolValue];
+    } else if (obj) {
+        BOOL isContain = [key isEqualToString:LFPhotoEditCropCanRotateAttributeName]
+        || [key isEqualToString:LFPhotoEditCropCanAspectRatioAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+    } else {
+        if ([key isEqualToString:LFPhotoEditCropCanRotateAttributeName]) {
+            return YES;
+        } else if ([key isEqualToString:LFPhotoEditCropCanAspectRatioAttributeName]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

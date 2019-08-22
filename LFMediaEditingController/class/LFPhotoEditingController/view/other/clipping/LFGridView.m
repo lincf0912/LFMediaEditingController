@@ -175,10 +175,27 @@ const CGFloat kControlWidth = 30.f;
 }
 - (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
 {
+    CGSize size = self.aspectRatioSize;
+    if (!CGSizeEqualToSize(size, CGSizeZero)) {
+        /** 计算比例后高度 */
+        CGFloat newHeight = gridRect.size.width * (size.height/size.width);
+        /** 超出最大高度计算 */
+        if (newHeight > _controlMaxRect.size.height) {
+            CGFloat newWidth = gridRect.size.width * (_controlMaxRect.size.height/newHeight);
+            CGFloat diffWidth = gridRect.size.width - newWidth;
+            gridRect.size.width = newWidth;
+            gridRect.origin.x = gridRect.origin.x + diffWidth/2;
+            newHeight = _controlMaxRect.size.height;
+        }
+        CGFloat diffHeight = gridRect.size.height - newHeight;
+        gridRect.size.height = newHeight;
+        gridRect.origin.y = gridRect.origin.y + diffHeight/2;
+    }
+    
     _gridRect = gridRect;
     [self setNeedsLayout];
     [self.gridLayer setGridRect:gridRect animated:animated completion:completion];
-    if (isMaskLayer) {
+    if (isMaskLayer && _showMaskLayer) {
         [self.gridMaskLayer setMaskRect:gridRect animated:YES];
     }
 }
@@ -207,30 +224,15 @@ const CGFloat kControlWidth = 30.f;
 //        LFGridViewAspectRatioType prevAspectRatio = _aspectRatio;
         _aspectRatio = aspectRatio;
 //        [self setCircle:(_aspectRatio == LFGridViewAspectRatioType_Circle)];
+        
         CGSize size = self.aspectRatioSize;
         if (!CGSizeEqualToSize(size, CGSizeZero)) {
-            CGRect gridRect = self.gridRect;
-            /** 计算比例后高度 */
-            CGFloat newHeight = gridRect.size.width * (size.height/size.width);
-            /** 超出最大高度计算 */
-            if (newHeight > _controlMaxRect.size.height) {
-                CGFloat newWidth = gridRect.size.width * (_controlMaxRect.size.height/newHeight);
-                CGFloat diffWidth = gridRect.size.width - newWidth;
-                gridRect.size.width = newWidth;
-                gridRect.origin.x = gridRect.origin.x + diffWidth/2;
-                newHeight = _controlMaxRect.size.height;
-            }
-            CGFloat diffHeight = gridRect.size.height - newHeight;
-            gridRect.size.height = newHeight;
-            gridRect.origin.y = gridRect.origin.y + diffHeight/2;
-            
             __weak typeof(self) weakSelf = self;
-            [self setGridRect:gridRect maskLayer:NO animated:animated completion:^(BOOL finished) {
+            [self setGridRect:self.gridRect maskLayer:NO animated:animated completion:^(BOOL finished) {
                 if ([weakSelf.delegate respondsToSelector:@selector(lf_gridViewDidAspectRatio:)]) {
                     [weakSelf.delegate lf_gridViewDidAspectRatio:weakSelf];
                 }
             }];
-            
         }
 //        else if (prevAspectRatio == LFGridViewAspectRatioType_Circle) {
 //            /** 方形仅需要取消固定约束，如果上次是圆形，需要取消圆形的绘制显示 */

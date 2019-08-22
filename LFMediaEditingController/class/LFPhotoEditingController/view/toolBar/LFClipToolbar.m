@@ -10,7 +10,9 @@
 #import "LFMediaEditingHeader.h"
 
 @interface LFClipToolbar ()
-
+{
+    BOOL _needInit;
+}
 @property (nonatomic, strong) UIImage *resetImage;
 @property (nonatomic, strong) UIImage *resetImage_HL;
 @property (nonatomic, strong) UIImage *rotateCCWImage;
@@ -33,11 +35,19 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self customInit];
-        self.enableReset = NO;
-        self.selectAspectRatio = NO;
+        _needInit = YES;
+        _enableReset = NO;
+        _selectAspectRatio = NO;
     }
     return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (newSuperview && _needInit) {
+        _needInit = NO;
+        [self customInit];
+    }
 }
 
 - (void)customInit
@@ -66,11 +76,36 @@
     [leftButton addTarget:self action:@selector(clippingCancel:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:leftButton];
     
+    /** 右 */
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightButton.frame = (CGRect){{CGRectGetWidth(self.frame)-size.width-margin,0}, size};
+    [rightButton setImage:bundleEditImageNamed(@"EditImageConfirmBtn.png") forState:UIControlStateNormal];
+    [rightButton setImage:bundleEditImageNamed(@"EditImageConfirmBtn_HL.png") forState:UIControlStateHighlighted];
+    [rightButton setImage:bundleEditImageNamed(@"EditImageConfirmBtn_HL.png") forState:UIControlStateSelected];
+    [rightButton addTarget:self action:@selector(clippingOk:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:rightButton];
+    
+    int count = 4;
+    BOOL canRotate = YES;
+    if ([self.dataSource respondsToSelector:@selector(lf_clipToolbarCanRotate:)]) {
+        canRotate = [self.dataSource lf_clipToolbarCanRotate:self];
+        if (!canRotate) {
+            count--;
+        }
+    }
+    BOOL canAspectRatio = YES;
+    if ([self.dataSource respondsToSelector:@selector(lf_clipToolbarCanAspectRatio:)]) {
+        canAspectRatio = [self.dataSource lf_clipToolbarCanAspectRatio:self];
+        if (!canAspectRatio) {
+            count--;
+        }
+    }
+    
     /** 减去右按钮的剩余宽度 */
     CGFloat surplusWidth = CGRectGetWidth(self.frame)-(size.width+margin)-margin;
-    CGFloat resetButtonX = surplusWidth/4+margin;
-    CGFloat rotateButtonX = surplusWidth/4*2+margin;
-    CGFloat clampButtonX = surplusWidth/4*3+margin;
+    CGFloat resetButtonX = surplusWidth/count+margin;
+    CGFloat rotateButtonX = surplusWidth/count*2+margin;
+    CGFloat clampButtonX = surplusWidth/count*3+margin;
     
     /** 还原 */
     UIButton *resetButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -80,35 +115,35 @@
     [resetButton setImage:self.resetImage_HL forState:UIControlStateSelected];
     [resetButton addTarget:self action:@selector(clippingReset:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:resetButton];
+    resetButton.enabled = _enableReset;
     self.resetButton = resetButton;
     
-    /** 新增旋转 */
-    UIButton *rotateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    rotateButton.frame = (CGRect){{rotateButtonX,0}, size};
-    [rotateButton setImage:self.rotateCCWImage forState:UIControlStateNormal];
-    [rotateButton setImage:self.rotateCCWImage_HL forState:UIControlStateHighlighted];
-    [rotateButton setImage:self.rotateCCWImage_HL forState:UIControlStateSelected];
-    [rotateButton addTarget:self action:@selector(clippingRotate:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:rotateButton];
     
-    /** 新增长宽比例 */
-    UIButton *clampButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    clampButton.frame = (CGRect){{clampButtonX,0}, size};
-    [clampButton setImage:self.clampCCWImage forState:UIControlStateNormal];
-    [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateHighlighted];
-    [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateSelected];
-    [clampButton addTarget:self action:@selector(clippingClamp:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:clampButton];
-    self.clampButton = clampButton;
+    if (canRotate) {
+        /** 新增旋转 */
+        UIButton *rotateButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        rotateButton.frame = (CGRect){{rotateButtonX,0}, size};
+        [rotateButton setImage:self.rotateCCWImage forState:UIControlStateNormal];
+        [rotateButton setImage:self.rotateCCWImage_HL forState:UIControlStateHighlighted];
+        [rotateButton setImage:self.rotateCCWImage_HL forState:UIControlStateSelected];
+        [rotateButton addTarget:self action:@selector(clippingRotate:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:rotateButton];
+    }
     
-    /** 右 */
-    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    rightButton.frame = (CGRect){{CGRectGetWidth(self.frame)-size.width-margin,0}, size};
-    [rightButton setImage:bundleEditImageNamed(@"EditImageConfirmBtn.png") forState:UIControlStateNormal];
-    [rightButton setImage:bundleEditImageNamed(@"EditImageConfirmBtn_HL.png") forState:UIControlStateHighlighted];
-    [rightButton setImage:bundleEditImageNamed(@"EditImageConfirmBtn_HL.png") forState:UIControlStateSelected];
-    [rightButton addTarget:self action:@selector(clippingOk:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:rightButton];
+    if (canAspectRatio) {
+        /** 新增长宽比例 */
+        UIButton *clampButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        clampButton.frame = (CGRect){{clampButtonX,0}, size};
+        [clampButton setImage:self.clampCCWImage forState:UIControlStateNormal];
+        [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateHighlighted];
+        [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateSelected];
+        [clampButton addTarget:self action:@selector(clippingClamp:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:clampButton];
+        clampButton.selected = _selectAspectRatio;
+        self.clampButton = clampButton;        
+    }
+    
+    
 }
 
 - (void)setEnableReset:(BOOL)enableReset

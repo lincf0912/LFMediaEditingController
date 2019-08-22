@@ -83,11 +83,6 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 
 @synthesize image = _image;
 
-- (NSArray <NSString *>*)aspectRatioDescs
-{
-    return [self.gridView aspectRatioDescs];
-}
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -203,6 +198,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     }
     self.clippingView.image = image;
     
+    
     /** 计算图片像素参照坐标 */
     self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clippingMaxRect).size;
     
@@ -314,8 +310,21 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     self.clippingView.useGesture = clipping;
     
     self.old_aspectRatio = self.gridView.aspectRatio;
+    if (self.onceDefaultAspectRatioIndex && clipping) {
+        self.old_aspectRatio = self.onceDefaultAspectRatioIndex;
+    }
     
 //    BOOL isCircle = self.old_aspectRatio == LFGridViewAspectRatioType_Circle;
+    if (clipping) {
+        if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillAppearClip:)]) {
+            [self.clippingDelegate lf_EditingViewWillAppearClip:self];
+        }
+    } else {
+        if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillDisappearClip:)]) {
+            [self.clippingDelegate lf_EditingViewWillDisappearClip:self];
+        }
+    }
+    
     
     if (clipping) {
         [UIView animateWithDuration:(animated ? 0.125f : 0) animations:^{
@@ -332,6 +341,14 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     if (clipping) {
         /** 动画切换 */
         if (animated) {
+            
+            /** 判断是否需要调整长宽比例 */
+            BOOL changedAspectRatio = !CGRectEqualToRect(self.gridView.gridRect, self.clippingView.frame);
+            
+            if (changedAspectRatio) {
+                /** 调整长宽比例过程会对遮罩隐藏和显示，避免遮罩闪烁。 */
+                self.gridView.showMaskLayer = NO;
+            }
             [UIView animateWithDuration:0.25f animations:^{
                 self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]);
 //                if (isCircle) {
@@ -347,10 +364,21 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 //                    }
                     /** 显示多余部分 */
                     self.clippingView.clipsToBounds = NO;
-                    
+
                     if (self.onceDefaultAspectRatioIndex) {
+                        /** 代理优先执行，下面可能是编辑操作，gridView.gridRect会发生改变，影响计算结果 */
+                        if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidAppearClip:)]) {
+                            [self.clippingDelegate lf_EditingViewDidAppearClip:self];
+                        }
                         [self.gridView setAspectRatio:self.onceDefaultAspectRatioIndex animated:YES];
                         self.onceDefaultAspectRatioIndex = 0;
+                    } else {
+                        /** 处理缩放比例 */
+                        [self lf_gridViewDidAspectRatio:self.gridView];
+                        /** 代理延迟执行，因为gridView.gridRect并没有发生改变，等待clippingView的大小调整后触发 */
+                        if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidAppearClip:)]) {
+                            [self.clippingDelegate lf_EditingViewDidAppearClip:self];
+                        }
                     }
                 }];
             }];
@@ -365,8 +393,17 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             self.clippingView.clipsToBounds = NO;
             
             if (self.onceDefaultAspectRatioIndex) {
+                if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidAppearClip:)]) {
+                    [self.clippingDelegate lf_EditingViewDidAppearClip:self];
+                }
                 [self.gridView setAspectRatio:self.onceDefaultAspectRatioIndex animated:YES];
                 self.onceDefaultAspectRatioIndex = 0;
+            } else {
+                /** 处理缩放比例 */
+                [self lf_gridViewDidAspectRatio:self.gridView];
+                if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidAppearClip:)]) {
+                    [self.clippingDelegate lf_EditingViewDidAppearClip:self];
+                }
             }
         }
         [self updateImagePixelText];
@@ -394,6 +431,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
                     /** 针对长图的展示 */
                     [self fixedLongImage];
                 } completion:^(BOOL finished) {
+                    if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidDisappearClip:)]) {
+                        [self.clippingDelegate lf_EditingViewDidDisappearClip:self];
+                    }
                 }];
                 
             }];
@@ -409,6 +449,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             self.clippingRect = cropRect;
             /** 针对长图的展示 */
             [self fixedLongImage];
+            if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidDisappearClip:)]) {
+                [self.clippingDelegate lf_EditingViewDidDisappearClip:self];
+            }
         }
     }
 }
@@ -420,6 +463,10 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     _clipping = NO;
     self.clippingView.useGesture = _clipping;
 //    BOOL isCircle = self.old_aspectRatio == LFGridViewAspectRatioType_Circle;
+    if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewWillDisappearClip:)]) {
+        [self.clippingDelegate lf_EditingViewWillDisappearClip:self];
+    }
+    
     /** 剪裁多余部分 */
     self.clippingView.clipsToBounds = YES;
     if (animated) {
@@ -437,6 +484,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
                 /** 针对长图的展示 */
                 [self fixedLongImage];
             } completion:^(BOOL finished) {
+                if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidDisappearClip:)]) {
+                    [self.clippingDelegate lf_EditingViewDidDisappearClip:self];
+                }
             }];
         }];
     } else {
@@ -446,6 +496,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 //        }
         /** 针对长图的展示 */
         [self fixedLongImage];
+        if ([self.clippingDelegate respondsToSelector:@selector(lf_EditingViewDidDisappearClip:)]) {
+            [self.clippingDelegate lf_EditingViewDidDisappearClip:self];
+        }
     }
 }
 
@@ -463,14 +516,24 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 - (void)reset
 {
     if (self.isClipping) {
-        [self.clippingView reset];
+        /** 若可以调整长宽比例，则重置它，否则保留默认值 */
+        [self setAspectRatioIndex:0];
+        if (self.fixedAspectRatio) {
+            [self.clippingView resetToRect:self.gridView.gridRect];
+        } else {
+            [self.clippingView reset];            
+        }
     }
 }
 
 - (BOOL)canReset
 {
     if (self.isClipping) {
-        return self.clippingView.canReset;
+        if (self.fixedAspectRatio) {
+            return [self.clippingView canResetWithRect:self.gridView.gridRect];
+        } else {
+            return self.clippingView.canReset;
+        }
     }
     return NO;
 }
@@ -483,22 +546,32 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     }
 }
 
-/** 长宽比例 */
-- (void)setAspectRatioIndex:(NSUInteger)aspectRatioIndex
-{
-    [self.gridView setAspectRatio:(LFGridViewAspectRatioType)aspectRatioIndex];
-}
-
-- (NSUInteger)aspectRatioIndex
-{
-    LFGridViewAspectRatioType type = self.gridView.aspectRatio;
-    return (NSUInteger)type;
-}
-
+/** 默认长宽比例 */
 - (void)setDefaultAspectRatioIndex:(NSUInteger)defaultAspectRatioIndex
 {
     _defaultAspectRatioIndex = defaultAspectRatioIndex;
     _onceDefaultAspectRatioIndex = defaultAspectRatioIndex;
+}
+
+/** 长宽比例 */
+- (void)setAspectRatioIndex:(NSUInteger)aspectRatioIndex
+{
+    if (self.fixedAspectRatio) return;
+    self.onceDefaultAspectRatioIndex = 0;
+    [self.gridView setAspectRatio:(LFGridViewAspectRatioType)aspectRatioIndex];
+}
+
+- (NSArray <NSString *>*)aspectRatioDescs
+{
+    if (self.fixedAspectRatio) nil;
+    return [self.gridView aspectRatioDescs];
+}
+
+- (NSUInteger)aspectRatioIndex
+{
+    if (self.fixedAspectRatio) return 0;
+    LFGridViewAspectRatioType type = self.gridView.aspectRatio;
+    return (NSUInteger)type;
 }
 
 /** 补底操作-多手势同时触发时，部分逻辑没有实时处理，当手势完全停止后补充处理 */
@@ -795,9 +868,23 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 /** 调整长宽比例 */
 - (void)lf_gridViewDidAspectRatio:(LFGridView *)gridView
 {
-    [self lf_gridViewDidBeginResizing:gridView];
-    [self lf_gridViewDidResizing:gridView];
-    [self lf_gridViewDidEndResizing:gridView];
+    if (!CGRectEqualToRect(gridView.gridRect, self.clippingView.frame)) {
+        self.editedOperation |= LFEditingViewOperationGridResizing;
+        gridView.showMaskLayer = NO;
+        lf_me_dispatch_cancel(self.maskViewBlock);
+        
+        /** 放大 */
+        [self.clippingView zoomInToRect:gridView.gridRect];
+        
+        /** 图片像素 */
+        [self updateImagePixelText];
+        
+        /** 缩小 */
+        [self.clippingView zoomOutToRect:gridView.gridRect];
+        if (self.editedOperation & LFEditingViewOperationGridResizing) {
+            self.editedOperation ^= LFEditingViewOperationGridResizing;
+        }
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -991,6 +1078,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     self.clippingView.photoEditData = photoEditData[kLFEditingViewData_clippingView];
     _clippingRect = self.clippingView.frame;
+    self.gridView.gridRect = self.clippingRect;
     self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
     NSDictionary *myData = photoEditData[kLFEditingViewData];
     if (myData) {

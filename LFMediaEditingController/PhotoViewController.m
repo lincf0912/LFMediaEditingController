@@ -75,7 +75,9 @@
 //                                     LFPhotoEditTextColorAttributeName:@(LFPhotoEditOperationSubTypeTextAzureColor),
 //                                     LFPhotoEditSplashAttributeName:@(LFPhotoEditOperationSubTypeSplashPaintbrush),
 //                                     LFPhotoEditFilterAttributeName:@(LFPhotoEditOperationSubTypeProcessFilter),
-//                                     LFPhotoEditCropAspectRatioAttributeName:@(LFPhotoEditOperationSubTypeCropAspectRatio1x1)
+//                                     LFPhotoEditCropAspectRatioAttributeName:@(LFPhotoEditOperationSubTypeCropAspectRatio1x1),
+//                                     LFPhotoEditCropCanRotateAttributeName:@(NO),
+//                                     LFPhotoEditCropCanAspectRatioAttributeName:@(NO),
 //                                     };
     lfPhotoEditVC.delegate = self;
     if (self.photoEdit) {

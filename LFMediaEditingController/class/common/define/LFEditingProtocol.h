@@ -53,7 +53,7 @@
 
 /** =====================贴图功能===================== */
 /** 贴图启用 */
-@property (nonatomic, assign) BOOL stickerEnable;
+@property (nonatomic, readonly) BOOL stickerEnable;
 /** 取消激活贴图 */
 - (void)stickerDeactivated;
 /** 激活选中的贴图 */
