@@ -15,6 +15,7 @@
 @interface LFEditingView : LFScrollView <LFEditingProtocol>
 
 @property (nonatomic, strong) UIImage *image;
+- (void)setImage:(UIImage *)image durations:(NSArray <NSNumber *> *)durations;
 
 /** 代理 */
 @property (nonatomic, weak) id<LFEditingViewDelegate> clippingDelegate;

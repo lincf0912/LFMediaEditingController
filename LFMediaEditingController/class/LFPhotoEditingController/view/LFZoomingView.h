@@ -12,6 +12,7 @@
 @interface LFZoomingView : UIView <LFEditingProtocol>
 
 @property (nonatomic, strong) UIImage *image;
+- (void)setImage:(UIImage *)image durations:(NSArray <NSNumber *> *)durations;
 
 @property (nonatomic, assign, getter=isImageViewHidden) BOOL imageViewHidden;
 

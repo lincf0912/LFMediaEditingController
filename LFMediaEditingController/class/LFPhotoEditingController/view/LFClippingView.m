@@ -106,6 +106,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 - (void)setImage:(UIImage *)image
 {
+    [self setImage:image durations:nil];
+}
+- (void)setImage:(UIImage *)image durations:(NSArray <NSNumber *> *)durations
+{
     _image = image;
     [self setZoomScale:1.f];
     if (image) {
@@ -127,7 +131,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.normalRect = self.frame;
     self.saveRect = self.frame;
     self.contentSize = self.size;
-    [self.zoomingView setImage:image];
+    [self.zoomingView setImage:image durations:durations];
 }
 
 - (BOOL)hasZoomingViewData

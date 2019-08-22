@@ -41,7 +41,6 @@ inline static NSTimeInterval LFFilterGifView_CGImageSourceGetGifFrameDelay(CGIma
     NSUInteger _loopTimes;
     
     NSTimeInterval _duration;
-    NSArray<NSNumber *> * _durations;
 }
 
 @property (nonatomic, strong) UIImage *gifImage;
@@ -87,6 +86,12 @@ inline static NSTimeInterval LFFilterGifView_CGImageSourceGetGifFrameDelay(CGIma
         [self unsetupDisplayLink];
         [super setImageByUIImage:image];
     }
+}
+
+- (void)setImageByUIImage:(UIImage *__nullable)image durations:(NSArray <NSNumber *> *__nullable)durations
+{
+    _durations = [durations copy];
+    [self setImageByUIImage:image];
 }
 
 - (void)setGifData:(NSData *)gifData
@@ -280,7 +285,7 @@ inline static NSTimeInterval LFFilterGifView_CGImageSourceGetGifFrameDelay(CGIma
 - (float)frameDurationAtIndex:(NSUInteger)index
 {
     if (_durations) {
-        return _durations[index].floatValue;
+        return _durations[index%_durations.count].floatValue;
     } else {
         return _duration;
     }

@@ -106,6 +106,11 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 
 - (void)setImage:(UIImage *)image
 {
+    [self setImage:image durations:nil];
+}
+
+- (void)setImage:(UIImage *)image durations:(NSArray <NSNumber *> *)durations
+{
     _image = image;
     if (image) {
         CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
@@ -127,7 +132,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     } else { //正常图UIView
         self.imageView.contextType = LFContextTypeDefault;
     }
-    [self.imageView setImageByUIImage:image];
+    [self.imageView setImageByUIImage:image durations:durations];
 }
 
 - (void)setImageViewHidden:(BOOL)imageViewHidden

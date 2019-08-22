@@ -73,7 +73,6 @@
 		C73F4CBE223110EB00ED40B7 /* AVAsset+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */; };
 		C73F4CC72232540400ED40B7 /* 4.MOV in Resources */ = {isa = PBXBuildFile; fileRef = C73F4CC62232540300ED40B7 /* 4.MOV */; };
 		C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */; };
-		C73F4D7B2237B95900ED40B7 /* 5.gif in Resources */ = {isa = PBXBuildFile; fileRef = C73F4D7A2237B95900ED40B7 /* 5.gif */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 		C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A0113222F9BED0091EB4C /* FilterSuiteUtils.m */; };
@@ -231,7 +230,6 @@
 		C73F4CC62232540300ED40B7 /* 4.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 4.MOV; sourceTree = "<group>"; };
 		C73F4D772237820900ED40B7 /* LFDataFilterImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFDataFilterImageView.h; sourceTree = "<group>"; };
 		C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterImageView.m; sourceTree = "<group>"; };
-		C73F4D7A2237B95900ED40B7 /* 5.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 5.gif; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -352,15 +350,8 @@
 		6F14E5D31EE6438A0049AE56 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6F61BC1C1F298BEE005A1E63 /* 2.mp4 */,
-				6F61BC1E1F29B880005A1E63 /* 3.m4v */,
-				C73F4CC62232540300ED40B7 /* 4.MOV */,
-				6F14E65F1EE647820049AE56 /* 1.jpg */,
-				6F384D461EEA54550077D207 /* 2.png */,
-				6F307D271F3AF6A700A48B49 /* 3.jpg */,
-				C70FDAB020E46CF50053A02C /* longImage.jpg */,
-				C7269FBA20996DAE00A88CA7 /* 4.gif */,
-				C73F4D7A2237B95900ED40B7 /* 5.gif */,
+				C7AB8254230E7F3100833516 /* videoResource */,
+				C7AB8253230E7F1B00833516 /* imageResource */,
 				C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */,
 				6F14E5D41EE6438A0049AE56 /* main.m */,
 			);
@@ -730,6 +721,28 @@
 			path = FilterSuiteUtils;
 			sourceTree = "<group>";
 		};
+		C7AB8253230E7F1B00833516 /* imageResource */ = {
+			isa = PBXGroup;
+			children = (
+				6F14E65F1EE647820049AE56 /* 1.jpg */,
+				6F384D461EEA54550077D207 /* 2.png */,
+				6F307D271F3AF6A700A48B49 /* 3.jpg */,
+				C70FDAB020E46CF50053A02C /* longImage.jpg */,
+				C7269FBA20996DAE00A88CA7 /* 4.gif */,
+			);
+			name = imageResource;
+			sourceTree = "<group>";
+		};
+		C7AB8254230E7F3100833516 /* videoResource */ = {
+			isa = PBXGroup;
+			children = (
+				6F61BC1C1F298BEE005A1E63 /* 2.mp4 */,
+				6F61BC1E1F29B880005A1E63 /* 3.m4v */,
+				C73F4CC62232540300ED40B7 /* 4.MOV */,
+			);
+			name = videoResource;
+			sourceTree = "<group>";
+		};
 		C7C5805222AFA812003BD4F7 /* LFFilterSuite */ = {
 			isa = PBXGroup;
 			children = (
@@ -931,7 +944,6 @@
 			files = (
 				6F61BC1F1F29B880005A1E63 /* 3.m4v in Resources */,
 				6F384D471EEA54550077D207 /* 2.png in Resources */,
-				C73F4D7B2237B95900ED40B7 /* 5.gif in Resources */,
 				C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */,
 				C7D28F4922DC0ECB00AB83FE /* LFMediaDisplayView.bundle in Resources */,
 				6F14E5E31EE6438A0049AE56 /* LaunchScreen.storyboard in Resources */,

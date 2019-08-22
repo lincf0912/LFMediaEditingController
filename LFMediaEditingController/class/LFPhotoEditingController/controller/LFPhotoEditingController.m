@@ -75,6 +75,10 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 
 /** 滤镜缩略图 */
 @property (nonatomic, strong) UIImage *filterSmallImage;
+/**
+ GIF每帧的持续时间
+ */
+@property (nonatomic, strong) NSArray<NSNumber *> *durations;
 
 @end
 
@@ -91,8 +95,14 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 
 - (void)setEditImage:(UIImage *)editImage
 {
+    [self setEditImage:editImage durations:nil];
+}
+
+- (void)setEditImage:(UIImage *)editImage durations:(NSArray<NSNumber *> *)durations
+{
     _editImage = editImage;
-    _EditingView.image = editImage;
+    _durations = durations;
+    [_EditingView setImage:editImage durations:durations];
     if (editImage.images.count) {
         /** gif不能使用模糊功能 */
         if (_operationType & LFPhotoEditOperationType_splash) {
@@ -177,10 +187,10 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     [self.view addSubview:_EditingView];
     
     if (_photoEdit) {
-        [self setEditImage:_photoEdit.editImage];
+        [self setEditImage:_photoEdit.editImage durations:_photoEdit.durations];
         _EditingView.photoEditData = _photoEdit.editData;
     } else {
-        [self setEditImage:_editImage];
+        [self setEditImage:_editImage durations:_durations];
         
         /** 设置默认滤镜 */
         if (self.operationType&LFPhotoEditOperationType_filter) {
@@ -409,7 +419,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     void (^finishImage)(UIImage *) = ^(UIImage *image){
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (data) {
-                photoEdit = [[LFPhotoEdit alloc] initWithEditImage:weakSelf.editImage previewImage:image data:data];
+                photoEdit = [[LFPhotoEdit alloc] initWithEditImage:weakSelf.editImage previewImage:image durations:weakSelf.durations data:data];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([weakSelf.delegate respondsToSelector:@selector(lf_PhotoEditingController:didFinishPhotoEdit:)]) {

@@ -171,6 +171,10 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 
 - (void)setImage:(UIImage *)image
 {
+    [self setImage:image durations:nil];
+}
+- (void)setImage:(UIImage *)image durations:(NSArray <NSNumber *> *)durations
+{
     _image = image;
     if (image) {
         CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
@@ -196,7 +200,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             [self setStickerMaxScale:(lf_editingView_stickMaxScale * diffScale)];
         }
     }
-    self.clippingView.image = image;
+    [self.clippingView setImage:image durations:durations];
     
     
     /** 计算图片像素参照坐标 */

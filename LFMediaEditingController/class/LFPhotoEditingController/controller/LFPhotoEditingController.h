@@ -168,6 +168,17 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
  Set edit photo -> init
  */
 @property (nonatomic, strong) UIImage *editImage;
+
+/**
+ 对GIF而言。editImage的每帧持续间隔是平均分配的，durations的每帧持续间隔是真实的。同时也会影响到最终生成的GIF数据。
+ 
+ For GIF. The per-frame duration of the editImage is evenly distributed, and the per-frame duration of the durations is real. It also affects the final generated GIF data.
+ 
+ NSError *error;
+ durations = LFME_UIImageGIFDurationsFromData(imageData, &error);
+ */
+- (void)setEditImage:(UIImage *)editImage durations:(NSArray<NSNumber *> *)durations;
+
 /**
  设置编辑对象->重新编辑
  Set edit object -> re-edit

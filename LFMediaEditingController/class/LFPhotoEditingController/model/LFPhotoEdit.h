@@ -16,6 +16,8 @@
 @property (nonatomic, readonly) UIImage *editPreviewImage;
 /** 编辑图片数据 */
 @property (nonatomic, readonly) NSData *editPreviewData;
+/** 编辑GIF的每帧持续时间 */
+@property (nonatomic, readonly) NSArray<NSNumber *> *durations;
 /** 编辑原图片 */
 @property (nonatomic, readonly) UIImage *editImage;
 /** 编辑数据 */
@@ -23,4 +25,7 @@
 
 /** 初始化 */
 - (instancetype)initWithEditImage:(UIImage *)image previewImage:(UIImage *)previewImage data:(NSDictionary *)data;
+/** 初始化-每帧带持续时间 */
+- (instancetype)initWithEditImage:(UIImage *)image previewImage:(UIImage *)previewImage durations:(NSArray<NSNumber *> *)durations data:(NSDictionary *)data;
+
 @end

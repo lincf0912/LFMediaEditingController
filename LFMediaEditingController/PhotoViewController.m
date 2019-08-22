@@ -8,12 +8,14 @@
 
 #import "PhotoViewController.h"
 #import "UIImage+LF_Format.h"
+#import "LFMEGIFImageSerialization.h"
 
 #import "LFPhotoEditingController.h"
 
 @interface PhotoViewController () <LFPhotoEditingControllerDelegate>
 
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) NSArray<NSNumber *> *durations;
 @property (nonatomic, weak) UIImageView *imageView;
 /** 需要保存到编辑数据 */
 @property (nonatomic, strong) LFPhotoEdit *photoEdit;
@@ -29,9 +31,15 @@
     self.view.backgroundColor = [UIColor redColor];
     
     /** 拍照图片 */
-    UIImage *image = [UIImage imageNamed:@"1.jpg"];
+//    UIImage *image = [UIImage imageNamed:@"1.jpg"];
     /** gif */
-//    UIImage *image = [UIImage LF_imageWithImagePath:[[NSBundle mainBundle] pathForResource:@"5.gif" ofType:nil]];
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"4.gif" ofType:nil];
+    NSData *imgData = [NSData dataWithContentsOfFile:imagePath options:NSDataReadingMappedIfSafe error:nil];
+    UIImage *image = [UIImage LF_imageWithImageData:imgData];
+    /**
+     真实播放GIF
+     */
+    self.durations = LFME_UIImageGIFDurationsFromData(imgData, nil);
     /** 非拍照图片 */
 //    UIImage *image = [UIImage imageNamed:@"2.png"];
     /** 长图 */
@@ -83,7 +91,7 @@
     if (self.photoEdit) {
         lfPhotoEditVC.photoEdit = self.photoEdit;
     } else {
-        lfPhotoEditVC.editImage = self.imageView.image;
+        [lfPhotoEditVC setEditImage:self.image durations:self.durations];
     }
     [self.navigationController setNavigationBarHidden:YES];
     [self.navigationController pushViewController:lfPhotoEditVC animated:NO];
