@@ -934,8 +934,20 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 
 - (BOOL)touchesShouldCancelInContentView:(UIView *)view
 {
-    if (!([[self subviews] containsObject:view] || [[self.clipZoomView subviews] containsObject:view])) { /** 非自身子视图 */
-        return NO;
+    /**
+     如果返回YES:(系统默认)是允许UIScrollView，按照消息响应链向子视图传递消息的
+     如果返回NO:UIScrollView,就接收不到滑动事件了。
+     */
+    if (!([[self subviews] containsObject:view] || [[self.clipZoomView subviews] containsObject:view])) {
+        if ([self drawEnable] || [self splashEnable] || [self stickerEnable] ) {
+            /**
+             编辑视图正在编辑时，优先处理。
+             这里不用条件判断，gestureRecognizer:shouldReceiveTouch:时已经对手势进行筛选了。
+             */
+        } else {
+            /** 非自身子视图 */
+            return NO;
+        }
     }
     return [super touchesShouldCancelInContentView:view];
 }
@@ -958,13 +970,13 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     if (self.isClipping) {
         /** 自身手势被触发、响应视图非自身、被触发手势为滑动手势 */
         return NO;
-    } else if ([self drawEnable] && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    } else if ([self drawEnable] && ![gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
         /** 绘画时候，禁用滑动手势 */
         return NO;
-    } else if ([self splashEnable] && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    } else if ([self splashEnable] && ![gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
         /** 模糊时候，禁用滑动手势 */
         return NO;
-    } else if ([self stickerEnable] && [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+    } else if ([self stickerEnable] && ![gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
         /** 贴图移动时候，禁用滑动手势 */
         return NO;
     }
