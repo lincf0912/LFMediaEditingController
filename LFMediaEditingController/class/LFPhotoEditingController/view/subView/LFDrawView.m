@@ -8,11 +8,19 @@
 
 #import "LFDrawView.h"
 
+inline static CGPoint LFDrawMidPoint(CGPoint p0, CGPoint p1) {
+    return (CGPoint) {
+        (p0.x + p1.x) / 2.0,
+        (p0.y + p1.y) / 2.0
+    };
+}
+
 NSString *const kLFDrawViewData = @"LFDrawViewData";
 
 @interface LFDrawBezierPath : UIBezierPath
 
 @property (nonatomic, strong) UIColor *color;
+@property (nonatomic, assign) CGPoint previousPoint;
 
 @end
 
@@ -104,6 +112,7 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
         path.lineCapStyle = kCGLineCapRound; //线条拐角
         path.lineJoinStyle = kCGLineJoinRound; //终点处理
         [path moveToPoint:point];
+        path.previousPoint = point; // 保存上一个节点
         //设置颜色
         path.color = self.lineColor;//保存线条当前颜色
         [self.lineArray addObject:path];
@@ -126,9 +135,13 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
             if (_isBegan && self.drawBegan) self.drawBegan();
             _isBegan = NO;
             _isWork = YES;
-            [path addLineToPoint:point];
+            CGPoint midPoint = LFDrawMidPoint(path.previousPoint, point);
+            // 使用二次曲线方程式
+            [path addQuadCurveToPoint:midPoint controlPoint:path.previousPoint];
+            path.previousPoint = point;
             CAShapeLayer *slayer = self.slayerArray.lastObject;
             slayer.path = path.CGPath;
+            
         }        
     }
     
