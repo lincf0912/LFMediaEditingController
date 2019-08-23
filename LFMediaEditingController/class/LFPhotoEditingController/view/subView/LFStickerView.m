@@ -167,10 +167,10 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 - (void)createStickerItem:(LFStickerItem *)item
 {
     LFMovingView *movingView = [self createBaseMovingView:item active:YES];
-    
-    CGFloat ratio = 0.6;
-    CGFloat scale = MIN( (ratio * self.frame.size.width) / movingView.frame.size.width, (ratio * self.frame.size.height) / movingView.frame.size.height);
-    [movingView setScale:scale];
+    CGFloat ratio = 0.5;
+    CGFloat scale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.frame.size.height);
+    [movingView setScale:scale/self.screenScale];
+//    NSLog(@"minScale:%f, maxScale:%f, scale:%f", movingView.minScale, movingView.maxScale, movingView.scale);
     
     self.selectMovingView = movingView;
 }
