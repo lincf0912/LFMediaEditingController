@@ -31,15 +31,15 @@
     self.view.backgroundColor = [UIColor redColor];
     
     /** 拍照图片 */
-//    UIImage *image = [UIImage imageNamed:@"1.jpg"];
+    UIImage *image = [UIImage imageNamed:@"1.jpg"];
     /** gif */
-    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"4.gif" ofType:nil];
-    NSData *imgData = [NSData dataWithContentsOfFile:imagePath options:NSDataReadingMappedIfSafe error:nil];
-    UIImage *image = [UIImage LF_imageWithImageData:imgData];
+//    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"4.gif" ofType:nil];
+//    NSData *imgData = [NSData dataWithContentsOfFile:imagePath options:NSDataReadingMappedIfSafe error:nil];
+//    UIImage *image = [UIImage LF_imageWithImageData:imgData];
     /**
      真实播放GIF
      */
-    self.durations = LFME_UIImageGIFDurationsFromData(imgData, nil);
+//    self.durations = LFME_UIImageGIFDurationsFromData(imgData, nil);
     /** 非拍照图片 */
 //    UIImage *image = [UIImage imageNamed:@"2.png"];
     /** 长图 */
