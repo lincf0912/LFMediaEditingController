@@ -167,4 +167,14 @@
 {
     [_ProgressView setProgress:progress animated:YES];
 }
+
+/**
+ 从状态栏下拉或底部栏上滑，跟系统的下拉通知中心手势和上滑控制中心手势冲突。
+ 设置后下拉状态栏只会展示指示器，继续下拉才能将通知中心拉出来。如果返回UIRectEdgeNone则会直接下拉出来。
+ */
+- (UIRectEdge)preferredScreenEdgesDeferringSystemGestures
+{
+    return UIRectEdgeAll;   
+}
+
 @end
