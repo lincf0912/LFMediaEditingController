@@ -1083,6 +1083,11 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 
 - (void)showTextBarController:(LFText *)text
 {
+    static NSInteger LFTextBarTag = 32795812735;
+    if ([self.view viewWithTag:LFTextBarTag]) {
+        return;
+    }
+    
     LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFTextBar *textBar) {
         textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
         textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
@@ -1094,6 +1099,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textBar.showText = text;
     textBar.delegate = self;
+    textBar.tag = LFTextBarTag;
     
     if (text == nil) {
         /** 设置默认文字颜色 */
