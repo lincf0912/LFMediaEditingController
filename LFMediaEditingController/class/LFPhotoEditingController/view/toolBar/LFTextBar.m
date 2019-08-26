@@ -155,7 +155,7 @@
     textView.backgroundColor = [UIColor clearColor];
 //    [textView setTextColor:[UIColor whiteColor]];
     [textView setFont:[UIFont systemFontOfSize:25.f]];
-    textView.returnKeyType = UIReturnKeyDone;
+    textView.returnKeyType = UIReturnKeyDefault;
     [self addSubview:textView];
     self.lf_textView = textView;
 }
@@ -253,11 +253,11 @@
  replacementText:(NSString *)text
 {
     
-    if ([text isEqualToString:@"\n"])
-    {
-        [self finishButtonClick];
-        return NO;
-    }
+//    if ([text isEqualToString:@"\n"])
+//    {
+//        [self finishButtonClick];
+//        return NO;
+//    }
     
     UITextRange *selectedRange = [textView markedTextRange];
     //获取高亮部分

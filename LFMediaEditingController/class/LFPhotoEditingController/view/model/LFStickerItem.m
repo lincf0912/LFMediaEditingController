@@ -74,22 +74,23 @@
             CGSize textSize = [self.text.text LFME_sizeWithConstrainedToWidth:[UIScreen mainScreen].bounds.size.width-(self.textInsets.left+self.textInsets.right) fromFont:self.text.font lineSpace:1.f lineBreakMode:kCTLineBreakByCharWrapping];
             textSize.width += (self.textInsets.left+self.textInsets.right);
             textSize.height += (self.textInsets.top+self.textInsets.bottom);
+            @autoreleasepool {
+                /** 创建画布 */
+                UIGraphicsBeginImageContextWithOptions(textSize, NO, 0.0);
+                CGContextRef context = UIGraphicsGetCurrentContext();
+                
+                UIColor *shadowColor = ([self.text.textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor] : [UIColor blackColor];
+                CGColorRef shadow = [shadowColor colorWithAlphaComponent:0.8f].CGColor;
+                CGContextSetShadowWithColor(context, CGSizeMake(1, 1), 3.f, shadow);
+                CGContextSetAllowsAntialiasing(context, YES);
+                
+                [self.text.text LFME_drawInContext:context withPosition:CGPointMake(self.textInsets.left, self.textInsets.top) andFont:self.text.font andTextColor:self.text.textColor andHeight:textSize.height andWidth:textSize.width linespace:1.f lineBreakMode:kCTLineBreakByCharWrapping];
+                
+                UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                _textCacheDisplayImage = temp;
+            }
             
-            /** 创建画布 */
-            UIGraphicsBeginImageContextWithOptions(textSize, NO, 0.0);
-            CGContextRef context = UIGraphicsGetCurrentContext();
-            
-            UIColor *shadowColor = ([self.text.textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor] : [UIColor blackColor];
-            CGColorRef shadow = [shadowColor colorWithAlphaComponent:0.8f].CGColor;
-            CGContextSetShadowWithColor(context, CGSizeMake(1, 1), 3.f, shadow);
-            CGContextSetAllowsAntialiasing(context, YES);
-            
-            [self.text.text LFME_drawInContext:context withPosition:CGPointMake(self.textInsets.left, self.textInsets.top) andFont:self.text.font andTextColor:self.text.textColor andHeight:textSize.height andWidth:textSize.width linespace:1.f lineBreakMode:kCTLineBreakByCharWrapping];
-            
-            UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            
-            _textCacheDisplayImage = temp;
         }
         
         return _textCacheDisplayImage;
