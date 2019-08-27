@@ -335,7 +335,7 @@
     
     if (sender.state == UIGestureRecognizerStateEnded) {
         BOOL isMoveCenter = NO;
-        CGRect rect = CGRectInset(self.frame, self.frame.size.width/2, self.frame.size.height/2);
+        CGRect rect = [self convertRect:_contentView.frame toView:self.superview];
         if (self.moveCenter) {
             isMoveCenter = self.moveCenter(rect);
         } else {

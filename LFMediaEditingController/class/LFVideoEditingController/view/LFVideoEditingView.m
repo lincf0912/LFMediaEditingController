@@ -107,6 +107,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         /** 判断缩放后贴图是否超出边界线 */
         CGRect newRect = [weakSelf.clippingView convertRect:rect toView:weakSelf];
         CGRect screenRect = weakSelf.frame;
+        screenRect = CGRectInset(screenRect, 44, 44);
         return !CGRectIntersectsRect(screenRect, newRect);
     };
     [self addSubview:clippingView];

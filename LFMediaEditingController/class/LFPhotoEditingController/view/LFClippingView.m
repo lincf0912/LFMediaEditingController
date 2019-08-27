@@ -95,6 +95,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
         CGRect newRect = [weakSelf.zoomingView convertRect:rect toView:weakSelf];
         CGRect clipTransRect = CGRectApplyAffineTransform(weakSelf.frame, weakSelf.transform);
         CGRect screenRect = (CGRect){weakSelf.contentOffset, clipTransRect.size};
+        screenRect = CGRectInset(screenRect, 44, 44);
         return !CGRectIntersectsRect(screenRect, newRect);
     };
     [self addSubview:zoomingView];
