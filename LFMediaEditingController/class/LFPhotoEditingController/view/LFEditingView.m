@@ -26,7 +26,7 @@ CGFloat const lf_editingView_drawLineWidth = 5.f;
 CGFloat const lf_editingView_splashWidth = 15.f;
 CGFloat const lf_editingView_paintWidth = 50.f;
 CGFloat const lf_editingView_stickMinScale = .2f;
-CGFloat const lf_editingView_stickMaxScale = 1.2f;
+CGFloat const lf_editingView_stickMaxScale = 3.f;
 
 typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     LFEditingViewOperationNone = 0,
