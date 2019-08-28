@@ -200,6 +200,7 @@
                 view.delegate = self;
                 view.opaque = NO;
                 view.enableSetNeedsDisplay = YES;
+                view.paused = YES;
                 view.framebufferOnly = NO;
                 [self insertSubview:view atIndex:0];
                 _MTKView = view;

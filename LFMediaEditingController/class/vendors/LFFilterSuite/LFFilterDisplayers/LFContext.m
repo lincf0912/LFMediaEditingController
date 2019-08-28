@@ -95,12 +95,12 @@ static NSDictionary *LFContextCreateCIContextOptions() {
 + (LFContextType)suggestedContextType {
 
 #if !(TARGET_IPHONE_SIMULATOR)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-    if ([self supportsType:LFContextTypeMetal]) {
-        return LFContextTypeMetal;
-    } else
-#pragma clang diagnostic pop
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wunguarded-availability"
+//    if ([self supportsType:LFContextTypeMetal]) {
+//        return LFContextTypeMetal;
+//    } else
+//#pragma clang diagnostic pop
 #endif
     if ([self supportsType:LFContextTypeEAGL]) {
         return LFContextTypeEAGL;
