@@ -11,8 +11,9 @@
 #import "LFMEGIFImageSerialization.h"
 
 #import "LFPhotoEditingController.h"
+#import "UIImage+LFMECommon.h"
 
-@interface PhotoViewController () <LFPhotoEditingControllerDelegate>
+@interface PhotoViewController () <LFPhotoEditingControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) NSArray<NSNumber *> *durations;
@@ -49,7 +50,7 @@
         self.image = image;
     } else {
         /** 普通图片更正方向 */
-        self.image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationUp];
+        self.image = [image LFME_fixOrientation];
     }
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
@@ -60,7 +61,11 @@
     
     _imageView = imageView;
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(photoEditing)];
+    UIBarButtonItem *editItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(photoEditing)];
+    UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(photoadd)];
+    
+    self.navigationItem.rightBarButtonItems = @[editItem, fixedSpace, addItem];
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -70,6 +75,37 @@
         CGFloat top = self.view.safeAreaInsets.top - self.navigationController.navigationBar.frame.size.height;
         self.imageView.frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+top, self.view.bounds.size.width, self.view.bounds.size.height-top-self.view.safeAreaInsets.bottom);
     }
+}
+
+- (void)photoadd
+{
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//指定数据来源是相册
+    
+    picker.delegate = self;
+    
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+//选取图片之后执行的方法
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
+    
+    NSLog(@"%@",info);//是个字典
+    
+    //通过字典的key值来找到图片
+    
+    self.image = [info objectForKey:UIImagePickerControllerOriginalImage];//选取的是原始图片。还有其他的样式；如编辑的图片：UIImagePickerControllerEditedImage
+    
+    //并且赋值给声明好的imageView
+    
+    self.imageView.image = self.image;
+    
+    //最后模态返回 最初的 控制器
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 - (void)photoEditing
@@ -87,6 +123,11 @@
 //                                     LFPhotoEditCropCanRotateAttributeName:@(NO),
 //                                     LFPhotoEditCropCanAspectRatioAttributeName:@(NO),
 //                                     };
+    lfPhotoEditVC.operationAttrs = @{
+                                     LFPhotoEditCropCanRotateAttributeName: @(NO),
+                                     LFPhotoEditCropCanAspectRatioAttributeName:@(YES)
+                                     };
+    
     lfPhotoEditVC.delegate = self;
     if (self.photoEdit) {
         lfPhotoEditVC.photoEdit = self.photoEdit;

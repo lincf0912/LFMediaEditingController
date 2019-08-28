@@ -113,8 +113,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     _image = image;
     if (image) {
-        CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
-        _imageSize = CGSizeApplyAffineTransform(image.size, transform);
+        _imageSize = image.size;
         CGRect imageViewRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.originalRect);
         self.size = imageViewRect.size;
         
@@ -125,7 +124,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     }
     
     /** 判断是否大图、长图之类的图片，暂时规定超出当前手机屏幕的n倍就是大图了 */
-    CGFloat scale = 10.f;
+    CGFloat scale = 12.5f;
     BOOL isLongImage = MAX(self.imageSize.height/self.imageSize.width, self.imageSize.width/self.imageSize.height) > scale;
     if (image.images.count == 0 && (isLongImage || (self.imageSize.width > [UIScreen mainScreen].bounds.size.width * scale || self.imageSize.height > [UIScreen mainScreen].bounds.size.height * scale))) { // 长图UIView -> CATiledLayer
         self.imageView.contextType = LFContextTypeLargeImage;

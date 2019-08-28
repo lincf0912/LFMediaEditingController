@@ -114,8 +114,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     _image = image;
     [self setZoomScale:1.f];
     if (image) {
-        CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
-        CGSize imageSize = CGSizeApplyAffineTransform(image.size, transform);
+        CGSize imageSize = image.size;
         CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(imageSize, self.originalRect);
         self.frame = cropRect;
         {

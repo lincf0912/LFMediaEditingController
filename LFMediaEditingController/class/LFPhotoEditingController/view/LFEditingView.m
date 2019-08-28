@@ -177,9 +177,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     _image = image;
     if (image) {
-        CGAffineTransform transform = [UIImage LFME_exchangeOrientation:image.imageOrientation size:image.size];
-        _imageSize = CGSizeApplyAffineTransform(image.size, transform);
-        
+        _imageSize = image.size;
         CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.bounds);
         self.gridView.controlSize = cropRect.size;
         self.gridView.gridRect = cropRect;
