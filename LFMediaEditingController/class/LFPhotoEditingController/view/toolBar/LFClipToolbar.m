@@ -103,13 +103,11 @@
     
     /** 减去右按钮的剩余宽度 */
     CGFloat surplusWidth = CGRectGetWidth(self.frame)-(size.width+margin)-margin;
-    CGFloat resetButtonX = surplusWidth/count+margin;
-    CGFloat rotateButtonX = surplusWidth/count*2+margin;
-    CGFloat clampButtonX = surplusWidth/count*3+margin;
+    CGFloat buttonX = surplusWidth/count+margin;
     
     /** 还原 */
     UIButton *resetButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    resetButton.frame = (CGRect){{resetButtonX,0}, size};
+    resetButton.frame = (CGRect){{buttonX,0}, size};
     [resetButton setImage:self.resetImage forState:UIControlStateNormal];
     [resetButton setImage:self.resetImage_HL forState:UIControlStateHighlighted];
     [resetButton setImage:self.resetImage_HL forState:UIControlStateSelected];
@@ -120,9 +118,10 @@
     
     
     if (canRotate) {
+        buttonX += surplusWidth/count;
         /** 新增旋转 */
         UIButton *rotateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        rotateButton.frame = (CGRect){{rotateButtonX,0}, size};
+        rotateButton.frame = (CGRect){{buttonX,0}, size};
         [rotateButton setImage:self.rotateCCWImage forState:UIControlStateNormal];
         [rotateButton setImage:self.rotateCCWImage_HL forState:UIControlStateHighlighted];
         [rotateButton setImage:self.rotateCCWImage_HL forState:UIControlStateSelected];
@@ -131,9 +130,10 @@
     }
     
     if (canAspectRatio) {
+        buttonX += surplusWidth/count;
         /** 新增长宽比例 */
         UIButton *clampButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        clampButton.frame = (CGRect){{clampButtonX,0}, size};
+        clampButton.frame = (CGRect){{buttonX,0}, size};
         [clampButton setImage:self.clampCCWImage forState:UIControlStateNormal];
         [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateHighlighted];
         [clampButton setImage:self.clampCCWImage_HL forState:UIControlStateSelected];
