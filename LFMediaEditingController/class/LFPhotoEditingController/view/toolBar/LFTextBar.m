@@ -104,9 +104,16 @@
 - (void)setShowText:(LFText *)showText
 {
     _showText = showText;
-    [self.lf_textView setText:showText.text];
-    if (showText.textColor) {
-        [self setTextColor:showText.textColor];
+    if (showText.attributedText.length > 0) {
+        NSRange range = NSMakeRange(0, 1);
+        NSDictionary *typingAttributes = [showText.attributedText attributesAtIndex:0 effectiveRange:&range];
+        UIColor *color = [typingAttributes objectForKey:NSForegroundColorAttributeName];
+        if (color) {[self setTextColor:color];}
+        [self.lf_textView setAttributedText:showText.attributedText];
+    } else {
+//        if (showText.font) {self.lf_textView.font = showText.font;}
+//        if (showText.textColor) {[self setTextColor:showText.textColor];}
+//        [self.lf_textView setText:showText.text];
     }
 }
 
@@ -154,7 +161,7 @@
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor];
 //    [textView setTextColor:[UIColor whiteColor]];
-    [textView setFont:[UIFont systemFontOfSize:25.f]];
+    [textView setFont:[UIFont systemFontOfSize:30.f]];
     textView.returnKeyType = UIReturnKeyDefault;
     [self addSubview:textView];
     self.lf_textView = textView;
@@ -214,11 +221,10 @@
         LFText *text = nil;
         if (self.lf_textView.text.length) {            
             text = [LFText new];
-            text.text = self.lf_textView.text;
-            text.textColor = self.lf_textView.textColor;
-            CGFloat fontSize = 30.f;
-            UIFont *font = [UIFont systemFontOfSize:fontSize];
-            text.font = font;
+//            text.text = self.lf_textView.text;
+//            text.textColor = self.lf_textView.textColor;
+//            text.font = self.lf_textView.font;
+            text.attributedText = self.lf_textView.attributedText;
         }
         [self.delegate lf_textBarController:self didFinishText:text];
     }

@@ -8,6 +8,7 @@
 
 #import "LFStickerItem.h"
 #import "NSString+LFMECoreText.h"
+#import "NSAttributedString+LFMECoreText.h"
 
 @interface LFStickerItem ()
 
@@ -68,10 +69,22 @@
 {
     if (self.image) {
         return self.image;
-    } else if (self.text.text.length) {
+    } else if (/*self.text.text.length || */self.text.attributedText.length) {
         
         if (_textCacheDisplayImage == nil) {
-            CGSize textSize = [self.text.text LFME_sizeWithConstrainedToWidth:[UIScreen mainScreen].bounds.size.width-(self.textInsets.left+self.textInsets.right) fromFont:self.text.font lineSpace:1.f lineBreakMode:kCTLineBreakByCharWrapping];
+            
+            BOOL useAttrib = self.text.attributedText.length > 0;
+            CGSize textSize = CGSizeZero;
+            UIColor *textColor = nil;
+            if (useAttrib) {
+                textSize = [self.text.attributedText LFME_sizeWithConstrainedToSize:CGSizeMake([UIScreen mainScreen].bounds.size.width-(self.textInsets.left+self.textInsets.right), CGFLOAT_MAX)];
+                NSRange range = NSMakeRange(0, 1);
+                NSDictionary *typingAttributes = [self.text.attributedText attributesAtIndex:0 effectiveRange:&range];
+                textColor = [typingAttributes objectForKey:NSForegroundColorAttributeName];
+            } else {
+//                textSize = [self.text.text LFME_sizeWithConstrainedToWidth:[UIScreen mainScreen].bounds.size.width-(self.textInsets.left+self.textInsets.right) fromFont:self.text.font lineSpace:1.f lineBreakMode:kCTLineBreakByCharWrapping];
+//                textColor = self.text.textColor;
+            }
             textSize.width += (self.textInsets.left+self.textInsets.right);
             textSize.height += (self.textInsets.top+self.textInsets.bottom);
             @autoreleasepool {
@@ -79,12 +92,16 @@
                 UIGraphicsBeginImageContextWithOptions(textSize, NO, 0.0);
                 CGContextRef context = UIGraphicsGetCurrentContext();
                 
-                UIColor *shadowColor = ([self.text.textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor] : [UIColor blackColor];
+                UIColor *shadowColor = ([textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor] : [UIColor blackColor];
                 CGColorRef shadow = [shadowColor colorWithAlphaComponent:0.8f].CGColor;
                 CGContextSetShadowWithColor(context, CGSizeMake(1, 1), 3.f, shadow);
                 CGContextSetAllowsAntialiasing(context, YES);
                 
-                [self.text.text LFME_drawInContext:context withPosition:CGPointMake(self.textInsets.left, self.textInsets.top) andFont:self.text.font andTextColor:self.text.textColor andHeight:textSize.height andWidth:textSize.width linespace:1.f lineBreakMode:kCTLineBreakByCharWrapping];
+                if (useAttrib) {
+                    [self.text.attributedText LFME_drawInContext:context withPosition:CGPointMake(self.textInsets.left, self.textInsets.top) andHeight:textSize.height andWidth:textSize.width];
+                } else {
+//                    [self.text.text LFME_drawInContext:context withPosition:CGPointMake(self.textInsets.left, self.textInsets.top) andFont:self.text.font andTextColor:self.text.textColor andHeight:textSize.height andWidth:textSize.width linespace:1.f lineBreakMode:kCTLineBreakByCharWrapping];
+                }
                 
                 UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
                 UIGraphicsEndImageContext();

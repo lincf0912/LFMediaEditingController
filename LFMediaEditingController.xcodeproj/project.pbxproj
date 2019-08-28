@@ -73,6 +73,7 @@
 		C73F4CBE223110EB00ED40B7 /* AVAsset+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */; };
 		C73F4CC72232540400ED40B7 /* 4.MOV in Resources */ = {isa = PBXBuildFile; fileRef = C73F4CC62232540300ED40B7 /* 4.MOV */; };
 		C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */; };
+		C7735EB62313D3D5009BB077 /* NSAttributedString+LFMECoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 		C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A0113222F9BED0091EB4C /* FilterSuiteUtils.m */; };
@@ -230,6 +231,8 @@
 		C73F4CC62232540300ED40B7 /* 4.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 4.MOV; sourceTree = "<group>"; };
 		C73F4D772237820900ED40B7 /* LFDataFilterImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFDataFilterImageView.h; sourceTree = "<group>"; };
 		C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterImageView.m; sourceTree = "<group>"; };
+		C7735EB42313D3D5009BB077 /* NSAttributedString+LFMECoreText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+LFMECoreText.h"; sourceTree = "<group>"; };
+		C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LFMECoreText.m"; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -658,6 +661,8 @@
 			children = (
 				6FAB0D4B1F27360300C1BCFD /* UIDevice+LFMEOrientation.h */,
 				6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */,
+				C7735EB42313D3D5009BB077 /* NSAttributedString+LFMECoreText.h */,
+				C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */,
 				6FAB0D3F1F2735D800C1BCFD /* NSString+LFMECoreText.h */,
 				6FAB0D401F2735D800C1BCFD /* NSString+LFMECoreText.m */,
 				6FAB0D411F2735D800C1BCFD /* UIImage+LFMECommon.h */,
@@ -988,6 +993,7 @@
 				6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */,
 				6F359B371F1DDE6D009F2035 /* LFVideoClipToolbar.m in Sources */,
 				C73F4CBA2230FE1800ED40B7 /* LFDataFilterVideoView.m in Sources */,
+				C7735EB62313D3D5009BB077 /* NSAttributedString+LFMECoreText.m in Sources */,
 				C7ED893C20ABBC7100D37465 /* LFMEGIFImageSerialization.m in Sources */,
 				6F384D3F1EE7D9E70077D207 /* LFSplashView.m in Sources */,
 				6F14E65E1EE643AB0049AE56 /* PhotoViewController.m in Sources */,
