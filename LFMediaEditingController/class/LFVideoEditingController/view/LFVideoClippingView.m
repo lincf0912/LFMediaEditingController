@@ -303,27 +303,23 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 {
     if (self.hasWatermark) {
         
-        NSDictionary *data = self.photoEditData;
-        
         UIView *copyZoomView = [[UIView alloc] initWithFrame:self.zoomView.bounds];
         copyZoomView.hidden = NO;
         copyZoomView.backgroundColor = [UIColor clearColor];
         copyZoomView.userInteractionEnabled = NO;
         
-        NSDictionary *drawData = data[kLFVideoCLippingViewData_draw];
-        if (drawData) {
+        if (self.drawView.canUndo) {
             /** 绘画 */
-            LFDrawView *drawView = [[LFDrawView alloc] initWithFrame:copyZoomView.bounds];
+            UIView *drawView = [[UIView alloc] initWithFrame:copyZoomView.bounds];
+            drawView.layer.contents = (__bridge id _Nullable)([self.drawView LFME_captureImage].CGImage);
             [copyZoomView addSubview:drawView];
-            [drawView setData:drawData];
         }
         
-        NSDictionary *stickerData = data[kLFVideoCLippingViewData_sticker];
-        if (stickerData) {
+        if (self.stickerView.subviews.count) {
             /** 贴图 */
-            LFStickerView *stickerView = [[LFStickerView alloc] initWithFrame:copyZoomView.bounds];
+            UIView *stickerView = [[UIView alloc] initWithFrame:copyZoomView.bounds];
+            stickerView.layer.contents = (__bridge id _Nullable)([self.stickerView LFME_captureImage].CGImage);
             [copyZoomView addSubview:stickerView];
-            [stickerView setData:stickerData];
         }
         
         return copyZoomView;
