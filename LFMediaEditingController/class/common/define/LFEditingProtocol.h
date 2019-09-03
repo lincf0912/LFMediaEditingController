@@ -10,6 +10,11 @@
 #import "LFPhotoEditDelegate.h"
 #import "LFStickerItem.h"
 
+#import "LFPaintBrush.h"
+#import "LFStampBrush.h"
+
+@class LFBrush;
+
 @protocol LFEditingProtocol <NSObject>
 
 /** 代理 */
@@ -46,6 +51,9 @@
 @property (nonatomic, readonly) BOOL isDrawing;
 /** 撤销绘画 */
 - (void)drawUndo;
+/**
+ - (void)setDrawBrush:(LFBrush *)brush;
+ */
 /** 设置绘画颜色 */
 - (void)setDrawColor:(UIColor *)color;
 /** 设置绘画线粗 */

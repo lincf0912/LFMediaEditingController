@@ -46,7 +46,6 @@
 		6F359B3B1F1DE99F009F2035 /* LFVideoTrimmerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359B3A1F1DE99F009F2035 /* LFVideoTrimmerView.m */; };
 		6F359B411F1E0A2B009F2035 /* LFVideoTrimmerGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359B401F1E0A2B009F2035 /* LFVideoTrimmerGridView.m */; };
 		6F359B441F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F359B431F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m */; };
-		6F359B4A1F21A326009F2035 /* LFMediaEditingController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F359B491F21A326009F2035 /* LFMediaEditingController.bundle */; };
 		6F384D3F1EE7D9E70077D207 /* LFSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D3E1EE7D9E70077D207 /* LFSplashView.m */; };
 		6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D411EE7EA6D0077D207 /* LFSplashLayer.m */; };
 		6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F384D441EEA2C290077D207 /* LFBaseEditingController.m */; };
@@ -74,6 +73,9 @@
 		C73F4CC72232540400ED40B7 /* 4.MOV in Resources */ = {isa = PBXBuildFile; fileRef = C73F4CC62232540300ED40B7 /* 4.MOV */; };
 		C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */; };
 		C7735EB62313D3D5009BB077 /* NSAttributedString+LFMECoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */; };
+		C786A51F231D1D5200546B8C /* LFBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A51E231D1D5200546B8C /* LFBrush.m */; };
+		C786A522231D1DB600546B8C /* LFPaintBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A521231D1DB600546B8C /* LFPaintBrush.m */; };
+		C786A525231D1DCE00546B8C /* LFStampBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A524231D1DCE00546B8C /* LFStampBrush.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 		C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A0113222F9BED0091EB4C /* FilterSuiteUtils.m */; };
@@ -90,6 +92,7 @@
 		C7C5807E22AFA812003BD4F7 /* LFSampleBufferHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5806C22AFA812003BD4F7 /* LFSampleBufferHolder.m */; };
 		C7C5807F22AFA812003BD4F7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C7C5807022AFA812003BD4F7 /* README.md */; };
 		C7C5808022AFA812003BD4F7 /* LFVideoExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C5807322AFA812003BD4F7 /* LFVideoExportSession.m */; };
+		C7CFB2F823166F860085836F /* LFMediaEditingController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C7CFB2F723166F860085836F /* LFMediaEditingController.bundle */; };
 		C7D28F4722DC0ECB00AB83FE /* LFMEVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F3E22DC0ECB00AB83FE /* LFMEVideoView.m */; };
 		C7D28F4822DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D28F4122DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m */; };
 		C7D28F4922DC0ECB00AB83FE /* LFMediaDisplayView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C7D28F4522DC0ECB00AB83FE /* LFMediaDisplayView.bundle */; };
@@ -183,7 +186,6 @@
 		6F359B401F1E0A2B009F2035 /* LFVideoTrimmerGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoTrimmerGridView.m; sourceTree = "<group>"; };
 		6F359B421F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoTrimmerGridLayer.h; sourceTree = "<group>"; };
 		6F359B431F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoTrimmerGridLayer.m; sourceTree = "<group>"; };
-		6F359B491F21A326009F2035 /* LFMediaEditingController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LFMediaEditingController.bundle; sourceTree = "<group>"; };
 		6F384D3D1EE7D9E70077D207 /* LFSplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFSplashView.h; sourceTree = "<group>"; };
 		6F384D3E1EE7D9E70077D207 /* LFSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFSplashView.m; sourceTree = "<group>"; };
 		6F384D401EE7EA6D0077D207 /* LFSplashLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFSplashLayer.h; sourceTree = "<group>"; };
@@ -233,6 +235,12 @@
 		C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterImageView.m; sourceTree = "<group>"; };
 		C7735EB42313D3D5009BB077 /* NSAttributedString+LFMECoreText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+LFMECoreText.h"; sourceTree = "<group>"; };
 		C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LFMECoreText.m"; sourceTree = "<group>"; };
+		C786A51D231D1D5200546B8C /* LFBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFBrush.h; sourceTree = "<group>"; };
+		C786A51E231D1D5200546B8C /* LFBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFBrush.m; sourceTree = "<group>"; };
+		C786A520231D1DB600546B8C /* LFPaintBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFPaintBrush.h; sourceTree = "<group>"; };
+		C786A521231D1DB600546B8C /* LFPaintBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFPaintBrush.m; sourceTree = "<group>"; };
+		C786A523231D1DCE00546B8C /* LFStampBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFStampBrush.h; sourceTree = "<group>"; };
+		C786A524231D1DCE00546B8C /* LFStampBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFStampBrush.m; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -268,6 +276,7 @@
 		C7C5807022AFA812003BD4F7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C7C5807222AFA812003BD4F7 /* LFVideoExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFVideoExportSession.h; sourceTree = "<group>"; };
 		C7C5807322AFA812003BD4F7 /* LFVideoExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFVideoExportSession.m; sourceTree = "<group>"; };
+		C7CFB2F723166F860085836F /* LFMediaEditingController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LFMediaEditingController.bundle; sourceTree = "<group>"; };
 		C7D28F3E22DC0ECB00AB83FE /* LFMEVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMEVideoView.m; sourceTree = "<group>"; };
 		C7D28F4022DC0ECB00AB83FE /* LFMEWeakSelectorTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFMEWeakSelectorTarget.h; sourceTree = "<group>"; };
 		C7D28F4122DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFMEWeakSelectorTarget.m; sourceTree = "<group>"; };
@@ -490,8 +499,7 @@
 		6F14E6271EE6439E0049AE56 /* subView */ = {
 			isa = PBXGroup;
 			children = (
-				6F14E6281EE6439E0049AE56 /* LFDrawView.h */,
-				6F14E6291EE6439E0049AE56 /* LFDrawView.m */,
+				C786A51B231D1D1F00546B8C /* LFDrawView */,
 				6F384D3D1EE7D9E70077D207 /* LFSplashView.h */,
 				6F384D3E1EE7D9E70077D207 /* LFSplashView.m */,
 				6F14E62C1EE6439E0049AE56 /* LFStickerView.h */,
@@ -556,7 +564,7 @@
 		6F359B171F1C8AA3009F2035 /* common */ = {
 			isa = PBXGroup;
 			children = (
-				6F359B491F21A326009F2035 /* LFMediaEditingController.bundle */,
+				C7CFB2F723166F860085836F /* LFMediaEditingController.bundle */,
 				6F359B181F1C8AA3009F2035 /* define */,
 				C7E2F85321D3655B000A9CAE /* utils */,
 				6FAB0D341F27345600C1BCFD /* view */,
@@ -715,6 +723,29 @@
 				C703CD8F22B7973400561AAC /* LFLView.m */,
 			);
 			path = LFLView;
+			sourceTree = "<group>";
+		};
+		C786A51B231D1D1F00546B8C /* LFDrawView */ = {
+			isa = PBXGroup;
+			children = (
+				C786A51C231D1D2E00546B8C /* Brush */,
+				6F14E6281EE6439E0049AE56 /* LFDrawView.h */,
+				6F14E6291EE6439E0049AE56 /* LFDrawView.m */,
+			);
+			path = LFDrawView;
+			sourceTree = "<group>";
+		};
+		C786A51C231D1D2E00546B8C /* Brush */ = {
+			isa = PBXGroup;
+			children = (
+				C786A51D231D1D5200546B8C /* LFBrush.h */,
+				C786A51E231D1D5200546B8C /* LFBrush.m */,
+				C786A520231D1DB600546B8C /* LFPaintBrush.h */,
+				C786A521231D1DB600546B8C /* LFPaintBrush.m */,
+				C786A523231D1DCE00546B8C /* LFStampBrush.h */,
+				C786A524231D1DCE00546B8C /* LFStampBrush.m */,
+			);
+			path = Brush;
 			sourceTree = "<group>";
 		};
 		C79A0111222F9BB60091EB4C /* FilterSuiteUtils */ = {
@@ -951,12 +982,12 @@
 				6F384D471EEA54550077D207 /* 2.png in Resources */,
 				C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */,
 				C7D28F4922DC0ECB00AB83FE /* LFMediaDisplayView.bundle in Resources */,
+				C7CFB2F823166F860085836F /* LFMediaEditingController.bundle in Resources */,
 				6F14E5E31EE6438A0049AE56 /* LaunchScreen.storyboard in Resources */,
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				C73F4CC72232540400ED40B7 /* 4.MOV in Resources */,
 				6F307D281F3AF6A700A48B49 /* 3.jpg in Resources */,
 				6F14E6601EE647820049AE56 /* 1.jpg in Resources */,
-				6F359B4A1F21A326009F2035 /* LFMediaEditingController.bundle in Resources */,
 				C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */,
 				C7269FBB20996DAE00A88CA7 /* 4.gif in Resources */,
 				C7C5807F22AFA812003BD4F7 /* README.md in Resources */,
@@ -979,6 +1010,7 @@
 				6F14E6471EE6439E0049AE56 /* LFEditingView.m in Sources */,
 				6F14E65B1EE6439E0049AE56 /* JRPickColorView.m in Sources */,
 				6F14E6591EE6439E0049AE56 /* LFStickerBar.m in Sources */,
+				C786A525231D1DCE00546B8C /* LFStampBrush.m in Sources */,
 				6F14E64C1EE6439E0049AE56 /* LFGridMaskLayer.m in Sources */,
 				6F307D311F3C5DF800A48B49 /* LFAudioTrackBar.m in Sources */,
 				6F359B2B1F1CBB3F009F2035 /* LFVideoClippingView.m in Sources */,
@@ -1027,6 +1059,7 @@
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,
 				6F359B131F1C678D009F2035 /* VideoViewController.m in Sources */,
 				6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */,
+				C786A522231D1DB600546B8C /* LFPaintBrush.m in Sources */,
 				6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */,
 				C73F4CB22230C99C00ED40B7 /* JRFilterModel.m in Sources */,
 				6F14E6501EE6439E0049AE56 /* LFMaskLayer.m in Sources */,
@@ -1037,6 +1070,7 @@
 				C7C5807922AFA812003BD4F7 /* LFFilterGifView.m in Sources */,
 				C7D28F4722DC0ECB00AB83FE /* LFMEVideoView.m in Sources */,
 				6F359B101F1C676A009F2035 /* LFVideoEditingController.m in Sources */,
+				C786A51F231D1D5200546B8C /* LFBrush.m in Sources */,
 				C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */,
 				6F359B2E1F1D9567009F2035 /* LFVideoPlayerLayerView.m in Sources */,
 				6F14E6511EE6439E0049AE56 /* LFMovingView.m in Sources */,

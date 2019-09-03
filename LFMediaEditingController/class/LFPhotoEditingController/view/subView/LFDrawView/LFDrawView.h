@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LFBrush.h"
 
 @interface LFDrawView : UIView
 
-/** 线粗 */
-@property (nonatomic, assign) CGFloat lineWidth;
-/** 线颜色 */
-@property (nonatomic, strong) UIColor *lineColor;
+/** 画笔 */
+@property (nonatomic, strong) LFBrush *brush;
 /** 正在绘画 */
 @property (nonatomic, readonly) BOOL isDrawing;
 

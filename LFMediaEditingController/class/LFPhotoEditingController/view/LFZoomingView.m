@@ -91,6 +91,10 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     
     /** 绘画 */
     LFDrawView *drawView = [[LFDrawView alloc] initWithFrame:self.bounds];
+    /**
+     默认画笔
+     */
+    drawView.brush = [LFPaintBrush new];
     /** 默认不能触发绘画 */
     drawView.userInteractionEnabled = NO;
     [self addSubview:drawView];
@@ -311,13 +315,15 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 /** 设置绘画颜色 */
 - (void)setDrawColor:(UIColor *)color
 {
-    _drawView.lineColor = color;
+    if ([_drawView.brush isKindOfClass:[LFPaintBrush class]]) {
+        ((LFPaintBrush *)_drawView.brush).lineColor = color;
+    }
 }
 
 /** 设置绘画线粗 */
 - (void)setDrawLineWidth:(CGFloat)lineWidth
 {
-    _drawView.lineWidth = lineWidth;
+    _drawView.brush.lineWidth = lineWidth;
 }
 
 #pragma mark - 贴图功能
