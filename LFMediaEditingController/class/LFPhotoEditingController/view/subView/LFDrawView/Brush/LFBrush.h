@@ -14,34 +14,42 @@ OBJC_EXTERN const NSString *LFBrushClassName;
 OBJC_EXTERN const NSString *LFBrushAllPoints;
 OBJC_EXTERN const NSString *LFBrushLineWidth;
 
+// 为CGPoint{inf, inf}
+CG_EXTERN const CGPoint LFBrushPointNull;
+
+CG_EXTERN bool LFBrushPointIsNull(CGPoint point);
+
 @interface LFBrush : NSObject
 
 /** 线粗 */
 @property (nonatomic, assign) CGFloat lineWidth;
 
 /**
- 1、创建点与画笔结合的绘画层(意味着重新绘画，重置所有数据)
+ 1、创建点与画笔结合的绘画层(意味着重新绘画，重置轨迹数据)；应在手势开始时调用，例如：touchesBegan，若需要忽略轨迹坐标，入参修改为CGPoint{inf, inf}
  */
 - (CALayer *)createDrawLayerWithPoint:(CGPoint)point;
 /**
- 2、结合手势的坐标
+ 2、结合手势的坐标（手势移动时产生的坐标）；应在手势移动时调用，例如：touchesMoved
  */
 - (void)addPoint:(CGPoint)point;
 
 /**
- 当前点 CGPoint(NAN, NAN)
+ 当前点。如果没值，回调CGPoint{inf, inf}
  */
 @property (nonatomic, readonly) CGPoint currentPoint;
 /**
- 上一个点 CGPoint(NAN, NAN)
+ 上一个点。如果没值，回调CGPoint{inf, inf}
  */
 @property (nonatomic, readonly) CGPoint previousPoint;
 
 /**
- 所有轨迹数据
+ 所有轨迹数据；应在手势结束时调用，例如：touchesEnded、touchesCancelled
  */
 @property (nonatomic, readonly, nullable) NSDictionary *allTracks;
 
+/**
+ 使用轨迹数据恢复绘画层，持有所有轨迹数据，轻松实现undo、redo操作。
+ */
 + (CALayer *__nullable)drawLayerWithTrackDict:(NSDictionary *)trackDict;
 
 @end

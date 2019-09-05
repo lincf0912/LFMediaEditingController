@@ -51,9 +51,8 @@
 @property (nonatomic, readonly) BOOL isDrawing;
 /** 撤销绘画 */
 - (void)drawUndo;
-/**
- - (void)setDrawBrush:(LFBrush *)brush;
- */
+/** 设置绘画画笔 */
+- (void)setDrawBrush:(LFBrush *)brush;
 /** 设置绘画颜色 */
 - (void)setDrawColor:(UIColor *)color;
 /** 设置绘画线粗 */

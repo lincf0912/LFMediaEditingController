@@ -55,9 +55,10 @@ inline static CGPoint LFPaintBrushMidPoint(CGPoint p0, CGPoint p1) {
      */
     self.path = [[self class] createBezierPathWithPoint:point];
     
-    self.layer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
+    CAShapeLayer *layer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
+    self.layer = layer;
     
-    return self.layer;
+    return layer;
 }
 
 - (CGPoint)currentPoint

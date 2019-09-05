@@ -568,6 +568,11 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 {
     [_drawView undo];
 }
+/** 设置绘画画笔 */
+- (void)setDrawBrush:(LFBrush *)brush
+{
+    _drawView.brush = brush;
+}
 /** 设置绘画颜色 */
 - (void)setDrawColor:(UIColor *)color
 {

@@ -12,6 +12,13 @@ const NSString *LFBrushClassName = @"LFBrushClassName";
 const NSString *LFBrushAllPoints = @"LFBrushAllPoints";
 const NSString *LFBrushLineWidth = @"LFBrushLineWidth";
 
+const CGPoint LFBrushPointNull = {INFINITY, INFINITY};
+
+CG_EXTERN bool LFBrushPointIsNull(CGPoint point)
+{
+    return isinf(point.x) || isinf(point.y);
+}
+
 @interface LFBrush ()
 
 @property (nonatomic, strong) NSMutableArray <NSString /*CGPoint*/*>*allPoints;
@@ -36,9 +43,12 @@ const NSString *LFBrushLineWidth = @"LFBrushLineWidth";
 
 - (CALayer *)createDrawLayerWithPoint:(CGPoint)point
 {
-    self.allPoints = [NSMutableArray array];
-    [self.allPoints addObject:NSStringFromCGPoint(point)];
     NSAssert(![self isMemberOfClass:[LFBrush class]], @"Use subclasses of LFBrush.");
+    self.allPoints = [NSMutableArray array];
+    if (LFBrushPointIsNull(point)) {
+        return nil;
+    }
+    [self.allPoints addObject:NSStringFromCGPoint(point)];
     return nil;
 }
 
@@ -48,7 +58,7 @@ const NSString *LFBrushLineWidth = @"LFBrushLineWidth";
     if (pointStr) {
         return CGPointFromString(pointStr);
     }
-    return CGPointMake(NAN, NAN);
+    return LFBrushPointNull;
 }
 
 - (CGPoint)previousPoint
@@ -57,7 +67,7 @@ const NSString *LFBrushLineWidth = @"LFBrushLineWidth";
         NSString *pointStr = [self.allPoints objectAtIndex:self.allPoints.count-2];
         return CGPointFromString(pointStr);
     }
-    return CGPointMake(NAN, NAN);
+    return LFBrushPointNull;
 }
 
 - (NSDictionary *)allTracks

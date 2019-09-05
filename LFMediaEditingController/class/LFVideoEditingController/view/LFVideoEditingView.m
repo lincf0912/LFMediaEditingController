@@ -550,6 +550,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 {
     [self.clippingView drawUndo];
 }
+/** 设置绘画画笔 */
+- (void)setDrawBrush:(LFBrush *)brush
+{
+    [self.clippingView setDrawBrush:brush];
+}
 /** 设置绘画颜色 */
 - (void)setDrawColor:(UIColor *)color
 {

@@ -91,15 +91,17 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event{
     
-    if (_isBegan || _isWork) {
-        // 3.添加画笔数据
-        [self.brushData addObject:self.brush.allTracks];
-    }
-    
     if (_isWork) {
+        // 3.1.添加画笔数据
+        id data = self.brush.allTracks;
+        if (data) {
+            [self.brushData addObject:data];
+        }
         if (self.drawEnded) self.drawEnded();
     } else if (_isBegan) {
-        [self undo];
+        // 3.2.移除开始时添加的图层
+        [self.layerArray.lastObject removeFromSuperlayer];
+        [self.layerArray removeLastObject];
     }
     _isBegan = NO;
     _isWork = NO;
@@ -109,30 +111,23 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    if (_isBegan || _isWork) {
-        // 3.添加画笔数据
-        [self.brushData addObject:self.brush.allTracks];
-    }
-    
     if (_isWork) {
+        // 3.1.添加画笔数据
+        id data = self.brush.allTracks;
+        if (data) {
+            [self.brushData addObject:data];
+        }
         if (self.drawEnded) self.drawEnded();
     } else if (_isBegan) {
-        [self undo];
+        // 3.2.移除开始时添加的图层
+        [self.layerArray.lastObject removeFromSuperlayer];
+        [self.layerArray removeLastObject];
     }
     _isBegan = NO;
     _isWork = NO;
     
     [super touchesCancelled:touches withEvent:event];
 }
-
-//- (void)drawRect:(CGRect)rect{
-//    //遍历数组，绘制曲线
-//    for (LFDrawBezierPath *path in self.lineArray) {
-//        [path.color setStroke];
-//        [path setLineCapStyle:kCGLineCapRound];
-//        [path stroke];
-//    }
-//}
 
 - (BOOL)isDrawing
 {

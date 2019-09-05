@@ -790,6 +790,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     [self.zoomingView drawUndo];
 }
+/** 设置绘画画笔 */
+- (void)setDrawBrush:(LFBrush *)brush
+{
+    [self.zoomingView setDrawBrush:brush];
+}
 /** 设置绘画颜色 */
 - (void)setDrawColor:(UIColor *)color
 {
