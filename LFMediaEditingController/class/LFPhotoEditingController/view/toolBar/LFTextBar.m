@@ -173,10 +173,27 @@
     keyboardBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     keyboardBar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.8];
     
+    CGFloat maxSliderWidth = CGRectGetWidth(keyboardBar.frame);
+    /**
+     字体
+     */
+    {
+        UIButton *font = [UIButton buttonWithType:UIButtonTypeCustom];
+        font.frame = CGRectMake(CGRectGetWidth(keyboardBar.frame)-44-5, 0, 44, CGRectGetHeight(keyboardBar.frame));
+        font.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+        [font setImage:bundleEditImageNamed(@"EditImageTextFont.png") forState:UIControlStateNormal];
+        [font setImage:bundleEditImageNamed(@"EditImageTextFont_HL.png") forState:UIControlStateHighlighted];
+        [font setImage:bundleEditImageNamed(@"EditImageTextFont_HL.png") forState:UIControlStateSelected];
+        [font addTarget:self action:@selector(font_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [keyboardBar addSubview:font];
+        
+        maxSliderWidth = CGRectGetMinX(font.frame);
+    }
+    
     /** 拾色器 */
     CGFloat sliderHeight = 34.f, margin = 30.f;
-    CGFloat sliderWidth = MIN(400, CGRectGetWidth(keyboardBar.frame)-2*margin);
-    JRPickColorView *_colorSlider = [[JRPickColorView alloc] initWithFrame:CGRectMake((CGRectGetWidth(keyboardBar.frame)-sliderWidth)/2, (CGRectGetHeight(keyboardBar.frame)-sliderHeight)/2, sliderWidth, sliderHeight) colors:kSliderColors];
+    CGFloat sliderWidth = MIN(400, maxSliderWidth-2*margin);
+    JRPickColorView *_colorSlider = [[JRPickColorView alloc] initWithFrame:CGRectMake((maxSliderWidth-sliderWidth)/2, (CGRectGetHeight(keyboardBar.frame)-sliderHeight)/2, sliderWidth, sliderHeight) colors:kSliderColors];
 //    _colorSlider.showColor = kSliderColors[0]; /** 白色 */
     _colorSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     _colorSlider.delegate = self;
@@ -205,6 +222,12 @@
 {
     self.lf_colorSlider.index = index;
     self.lf_textView.textColor = self.lf_colorSlider.color;
+}
+
+#pragma mark - button action
+- (void)font_buttonClick:(UIButton *)button
+{
+    
 }
 
 #pragma mark - 顶部栏(action)
