@@ -10,6 +10,8 @@
 #import "LFMediaEditingHeader.h"
 #import "UIDevice+LFMEOrientation.h"
 
+#import "LFBrushCache.h"
+
 @interface LFBaseEditingController ()
 {
     
@@ -43,6 +45,8 @@
         _oKButtonTitleColorNormal = [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0];
         _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
         _isHiddenStatusBar = YES;
+        /** 创建笔刷缓存 */
+        [LFBrushCache share].countLimit = 20;
     }
     return self;
 }
@@ -56,6 +60,8 @@
 
 - (void)dealloc
 {
+    /** 销毁笔刷缓存 */
+    [LFBrushCache free];
     [self hideProgressHUD];
 }
 

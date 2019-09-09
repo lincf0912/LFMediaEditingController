@@ -1,16 +1,16 @@
 //
-//  LFPaintBrush.m
+//  LFFluorescentBrush.m
 //  LFMediaEditingController
 //
-//  Created by TsanFeng Lam on 2019/9/2.
+//  Created by TsanFeng Lam on 2019/9/6.
 //  Copyright © 2019 LamTsanFeng. All rights reserved.
 //
 
-#import "LFPaintBrush.h"
+#import "LFFluorescentBrush.h"
 
-NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
+NSString *const LFFluorescentBrushLineColor = @"LFFluorescentBrushLineColor";
 
-@interface LFPaintBrush ()
+@interface LFFluorescentBrush ()
 
 @property (nonatomic, strong) UIBezierPath *path;
 
@@ -18,7 +18,7 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
 
 @end
 
-@implementation LFPaintBrush
+@implementation LFFluorescentBrush
 
 - (instancetype)init
 {
@@ -27,6 +27,11 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
         self.lineColor = [UIColor redColor];
     }
     return self;
+}
+
+- (void)setLineColor:(UIColor *)lineColor
+{
+    _lineColor = [lineColor colorWithAlphaComponent:0.5];
 }
 
 - (void)addPoint:(CGPoint)point
@@ -54,6 +59,11 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
     return layer;
 }
 
+- (CGPoint)currentPoint
+{
+    return self.path.currentPoint;
+}
+
 - (NSDictionary *)allTracks
 {
     NSDictionary *superAllTracks = [super allTracks];
@@ -62,7 +72,7 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
     if (superAllTracks) {
         myAllTracks = [NSMutableDictionary dictionary];
         [myAllTracks addEntriesFromDictionary:superAllTracks];
-        [myAllTracks addEntriesFromDictionary:@{LFPaintBrushLineColor:self.lineColor}];
+        [myAllTracks addEntriesFromDictionary:@{LFFluorescentBrushLineColor:self.lineColor}];
     }
     return myAllTracks;
 }
@@ -70,7 +80,7 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
 + (CALayer *__nullable)drawLayerWithTrackDict:(NSDictionary *)trackDict
 {
     CGFloat lineWidth = [trackDict[LFBrushLineWidth] floatValue];
-    UIColor *lineColor = trackDict[LFPaintBrushLineColor];
+    UIColor *lineColor = trackDict[LFFluorescentBrushLineColor];
     NSArray <NSString /*CGPoint*/*>*allPoints = trackDict[LFBrushAllPoints];
     
     if (allPoints) {
@@ -116,7 +126,7 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
         slayer.path = path.CGPath;
         slayer.backgroundColor = [UIColor clearColor].CGColor;
         slayer.fillColor = [UIColor clearColor].CGColor;
-        slayer.lineCap = kCALineCapRound;
+        slayer.lineCap = kCALineCapSquare;
         slayer.lineJoin = kCALineJoinRound;
         slayer.strokeColor = strokeColor.CGColor;
         slayer.lineWidth = lineWidth;

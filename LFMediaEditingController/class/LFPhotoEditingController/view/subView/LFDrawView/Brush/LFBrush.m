@@ -8,15 +8,32 @@
 
 #import "LFBrush.h"
 
-const NSString *LFBrushClassName = @"LFBrushClassName";
-const NSString *LFBrushAllPoints = @"LFBrushAllPoints";
-const NSString *LFBrushLineWidth = @"LFBrushLineWidth";
+NSString *const LFBrushClassName = @"LFBrushClassName";
+NSString *const LFBrushAllPoints = @"LFBrushAllPoints";
+NSString *const LFBrushLineWidth = @"LFBrushLineWidth";
 
 const CGPoint LFBrushPointNull = {INFINITY, INFINITY};
 
-CG_EXTERN bool LFBrushPointIsNull(CGPoint point)
+bool LFBrushPointIsNull(CGPoint point)
 {
     return isinf(point.x) || isinf(point.y);
+}
+
+CGPoint LFBrushMidPoint(CGPoint p0, CGPoint p1) {
+    if (LFBrushPointIsNull(p0) || LFBrushPointIsNull(p1)) {
+        return CGPointZero;
+    }
+    return (CGPoint) {
+        (p0.x + p1.x) / 2.0,
+        (p0.y + p1.y) / 2.0
+    };
+}
+
+CGFloat LFBrushDistancePoint(CGPoint p0, CGPoint p1) {
+    if (LFBrushPointIsNull(p0) || LFBrushPointIsNull(p1)) {
+        return 0;
+    }
+    return sqrt(pow(p0.x - p1.x, 2) + pow(p0.y - p1.y, 2));
 }
 
 @interface LFBrush ()

@@ -10,9 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-OBJC_EXTERN const NSString *LFBrushPatterns;
-OBJC_EXTERN const NSString *LFBrushSpacing;
-OBJC_EXTERN const NSString *LFBrushScale;
+OBJC_EXTERN NSString *const LFStampBrushPatterns;
+OBJC_EXTERN NSString *const LFStampBrushSpacing;
+OBJC_EXTERN NSString *const LFStampBrushScale;
 
 @class LFStampBrush;
 OBJC_EXTERN LFStampBrush *LFStampBrushAnimal(void);

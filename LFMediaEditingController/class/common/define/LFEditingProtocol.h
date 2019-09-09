@@ -12,6 +12,9 @@
 
 #import "LFPaintBrush.h"
 #import "LFStampBrush.h"
+#import "LFHighlightBrush.h"
+#import "LFChalkBrush.h"
+#import "LFFluorescentBrush.h"
 
 @class LFBrush;
 

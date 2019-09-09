@@ -76,6 +76,10 @@
 		C786A51F231D1D5200546B8C /* LFBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A51E231D1D5200546B8C /* LFBrush.m */; };
 		C786A522231D1DB600546B8C /* LFPaintBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A521231D1DB600546B8C /* LFPaintBrush.m */; };
 		C786A525231D1DCE00546B8C /* LFStampBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A524231D1DCE00546B8C /* LFStampBrush.m */; };
+		C786A5332320FC0800546B8C /* LFHighlightBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A5322320FC0800546B8C /* LFHighlightBrush.m */; };
+		C786A5362321ECD600546B8C /* LFChalkBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A5352321ECD600546B8C /* LFChalkBrush.m */; };
+		C786A5392322000A00546B8C /* LFBrushCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A5382322000A00546B8C /* LFBrushCache.m */; };
+		C786A5672322497300546B8C /* LFFluorescentBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A5662322497300546B8C /* LFFluorescentBrush.m */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 		C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A0113222F9BED0091EB4C /* FilterSuiteUtils.m */; };
@@ -241,6 +245,14 @@
 		C786A521231D1DB600546B8C /* LFPaintBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFPaintBrush.m; sourceTree = "<group>"; };
 		C786A523231D1DCE00546B8C /* LFStampBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFStampBrush.h; sourceTree = "<group>"; };
 		C786A524231D1DCE00546B8C /* LFStampBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFStampBrush.m; sourceTree = "<group>"; };
+		C786A5312320FC0800546B8C /* LFHighlightBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFHighlightBrush.h; sourceTree = "<group>"; };
+		C786A5322320FC0800546B8C /* LFHighlightBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFHighlightBrush.m; sourceTree = "<group>"; };
+		C786A5342321ECD600546B8C /* LFChalkBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFChalkBrush.h; sourceTree = "<group>"; };
+		C786A5352321ECD600546B8C /* LFChalkBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFChalkBrush.m; sourceTree = "<group>"; };
+		C786A5372322000A00546B8C /* LFBrushCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFBrushCache.h; sourceTree = "<group>"; };
+		C786A5382322000A00546B8C /* LFBrushCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFBrushCache.m; sourceTree = "<group>"; };
+		C786A5652322497300546B8C /* LFFluorescentBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFluorescentBrush.h; sourceTree = "<group>"; };
+		C786A5662322497300546B8C /* LFFluorescentBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFluorescentBrush.m; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -738,14 +750,30 @@
 		C786A51C231D1D2E00546B8C /* Brush */ = {
 			isa = PBXGroup;
 			children = (
+				C786A53A2322001500546B8C /* cache */,
 				C786A51D231D1D5200546B8C /* LFBrush.h */,
 				C786A51E231D1D5200546B8C /* LFBrush.m */,
 				C786A520231D1DB600546B8C /* LFPaintBrush.h */,
 				C786A521231D1DB600546B8C /* LFPaintBrush.m */,
+				C786A5312320FC0800546B8C /* LFHighlightBrush.h */,
+				C786A5322320FC0800546B8C /* LFHighlightBrush.m */,
 				C786A523231D1DCE00546B8C /* LFStampBrush.h */,
 				C786A524231D1DCE00546B8C /* LFStampBrush.m */,
+				C786A5342321ECD600546B8C /* LFChalkBrush.h */,
+				C786A5352321ECD600546B8C /* LFChalkBrush.m */,
+				C786A5652322497300546B8C /* LFFluorescentBrush.h */,
+				C786A5662322497300546B8C /* LFFluorescentBrush.m */,
 			);
 			path = Brush;
+			sourceTree = "<group>";
+		};
+		C786A53A2322001500546B8C /* cache */ = {
+			isa = PBXGroup;
+			children = (
+				C786A5372322000A00546B8C /* LFBrushCache.h */,
+				C786A5382322000A00546B8C /* LFBrushCache.m */,
+			);
+			path = cache;
 			sourceTree = "<group>";
 		};
 		C79A0111222F9BB60091EB4C /* FilterSuiteUtils */ = {
@@ -1019,6 +1047,7 @@
 				6F359B411F1E0A2B009F2035 /* LFVideoTrimmerGridView.m in Sources */,
 				C7D28F4822DC0ECB00AB83FE /* LFMEWeakSelectorTarget.m in Sources */,
 				C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */,
+				C786A5672322497300546B8C /* LFFluorescentBrush.m in Sources */,
 				C7C5807422AFA812003BD4F7 /* LFMutableFilter.m in Sources */,
 				6F359B441F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m in Sources */,
 				6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */,
@@ -1054,7 +1083,9 @@
 				6F14E5D51EE6438A0049AE56 /* main.m in Sources */,
 				C7C5807B22AFA812003BD4F7 /* LFFilterImageView.m in Sources */,
 				6F359B281F1CB662009F2035 /* LFVideoEditingView.m in Sources */,
+				C786A5392322000A00546B8C /* LFBrushCache.m in Sources */,
 				C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */,
+				C786A5362321ECD600546B8C /* LFChalkBrush.m in Sources */,
 				C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */,
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,
 				6F359B131F1C678D009F2035 /* VideoViewController.m in Sources */,
@@ -1088,6 +1119,7 @@
 				6FAB0D481F2735D800C1BCFD /* UIImage+LFMECommon.m in Sources */,
 				6F14E64B1EE6439E0049AE56 /* LFGridLayer.m in Sources */,
 				6F14E6581EE6439E0049AE56 /* LFEditToolbar.m in Sources */,
+				C786A5332320FC0800546B8C /* LFHighlightBrush.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

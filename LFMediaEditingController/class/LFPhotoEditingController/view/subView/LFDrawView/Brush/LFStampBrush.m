@@ -8,17 +8,11 @@
 
 #import "LFStampBrush.h"
 #import "NSBundle+LFMediaEditing.h"
+#import "LFBrushCache.h"
 
-const NSString *LFBrushPatterns = @"LFBrushPatterns";
-const NSString *LFBrushSpacing = @"LFBrushSpacing";
-const NSString *LFBrushScale = @"LFBrushScale";
-
-inline static CGFloat LFStampBrushDistancePoint(CGPoint p0, CGPoint p1) {
-    if (LFBrushPointIsNull(p0) || LFBrushPointIsNull(p1)) {
-        return 0;
-    }
-    return sqrt(pow(p0.x - p1.x, 2) + pow(p0.y - p1.y, 2));
-}
+NSString *const LFStampBrushPatterns = @"LFStampBrushPatterns";
+NSString *const LFStampBrushSpacing = @"LFStampBrushSpacing";
+NSString *const LFStampBrushScale = @"LFStampBrushScale";
 
 inline LFStampBrush *LFStampBrushAnimal(void)
 {
@@ -49,8 +43,6 @@ inline LFStampBrush *LFStampBrushHeart(void)
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, weak) CALayer *layer;
 
-@property (nonatomic, strong) NSMapTable *cacheImageMap;
-
 @end
 
 @implementation LFStampBrush
@@ -61,20 +53,13 @@ inline LFStampBrush *LFStampBrushHeart(void)
     if (self) {
         _spacing = 1.f;
         _scale = 4.f;
-        _cacheImageMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory];
     }
     return self;
 }
 
-- (void)setPatterns:(NSArray<NSString *> *)patterns
-{
-    _patterns = patterns;
-    [_cacheImageMap removeAllObjects];
-}
-
 - (void)addPoint:(CGPoint)point
 {
-    CGFloat distance = LFStampBrushDistancePoint(self.currentPoint, point);
+    CGFloat distance = LFBrushDistancePoint(self.currentPoint, point);
     CGFloat width = self.lineWidth*self.scale;
     if(distance == 0 || distance >= (width + self.spacing)){
 
@@ -109,9 +94,9 @@ inline LFStampBrush *LFStampBrushHeart(void)
     if (superAllTracks) {
         myAllTracks = [NSMutableDictionary dictionary];
         [myAllTracks addEntriesFromDictionary:superAllTracks];
-        [myAllTracks addEntriesFromDictionary:@{LFBrushPatterns:self.patterns,
-                                                LFBrushSpacing:@(self.spacing),
-                                                LFBrushScale:@(self.scale)
+        [myAllTracks addEntriesFromDictionary:@{LFStampBrushPatterns:self.patterns,
+                                                LFStampBrushSpacing:@(self.spacing),
+                                                LFStampBrushScale:@(self.scale)
                                                 }];
     }
     return myAllTracks;
@@ -120,20 +105,19 @@ inline LFStampBrush *LFStampBrushHeart(void)
 + (CALayer *__nullable)drawLayerWithTrackDict:(NSDictionary *)trackDict
 {
     CGFloat lineWidth = [trackDict[LFBrushLineWidth] floatValue];
-    NSArray <NSString *> *patterns = trackDict[LFBrushPatterns];
-//    CGFloat spacing = [trackDict[LFBrushSpacing] floatValue];
-    CGFloat scale = [trackDict[LFBrushScale] floatValue];
+    NSArray <NSString *> *patterns = trackDict[LFStampBrushPatterns];
+//    CGFloat spacing = [trackDict[LFStampBrushSpacing] floatValue];
+    CGFloat scale = [trackDict[LFStampBrushScale] floatValue];
     NSArray <NSString /*CGPoint*/*>*allPoints = trackDict[LFBrushAllPoints];
     
     if (allPoints) {
         CGFloat width = lineWidth*scale;
         CALayer *layer = [[self class] createLayer];
-        NSMapTable *cacheImageMap = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory];
         NSInteger index = 0;
         for (NSString *pointStr in allPoints) {
             CGPoint point = CGPointFromString(pointStr);
             
-            UIImage *image = [[self class] cacheImageIndex:index patterns:patterns cacheImageMap:&cacheImageMap];
+            UIImage *image = [[self class] cacheImageIndex:index patterns:patterns imageCache:[LFBrushCache share]];
             if (image == nil) continue;
             
             CGRect rect = CGRectMake(point.x-width/2, point.y-width/2, width, width);
@@ -150,7 +134,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
 }
 
 #pragma mark - private
-+ (UIImage *)cacheImageIndex:(NSInteger)index patterns:(NSArray <NSString *>*)patterns cacheImageMap:(NSMapTable **)cacheImageMap
++ (UIImage *)cacheImageIndex:(NSInteger)index patterns:(NSArray <NSString *>*)patterns imageCache:(NSCache *)imageCache
 {
     NSInteger count = patterns.count;
     NSString *imageName = patterns[index%count];
@@ -158,8 +142,11 @@ inline LFStampBrush *LFStampBrushHeart(void)
     
     UIImage *image = nil;
     
-    if (cacheImageMap) {
-        image = [*cacheImageMap objectForKey:imageName];
+    if (imageCache) {
+        image = [imageCache objectForKey:imageName];
+        if (image) {
+            return image;
+        }
     }
     
     if (image == nil) {
@@ -174,8 +161,15 @@ inline LFStampBrush *LFStampBrushHeart(void)
          */
         image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageName ofType:nil]];
     }
-    if (image && cacheImageMap) {
-        [*cacheImageMap setObject:image forKey:imageName];
+    if (image && imageCache) {
+        @autoreleasepool {
+            //redraw image using device context
+            UIGraphicsBeginImageContextWithOptions(image.size, NO, 0);
+            [image drawAtPoint:CGPointZero];
+            image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+        [imageCache setObject:image forKey:imageName];
     }
     
     return image;
@@ -183,7 +177,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
 
 + (CALayer *)createLayer
 {
-    CALayer *layer = [CALayer new];
+    CALayer *layer = [CALayer layer];
     layer.contentsScale = [UIScreen mainScreen].scale;
     return layer;
 }
@@ -192,7 +186,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
 {
     if (image == nil) return nil;
     
-    CALayer *subLayer = [CALayer new];
+    CALayer *subLayer = [CALayer layer];
     subLayer.frame = rect;
     subLayer.contentsScale = [UIScreen mainScreen].scale;
     subLayer.contentsGravity = kCAGravityResizeAspect;
@@ -203,8 +197,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
 
 - (BOOL)drawSubLayerInLayerAtRect:(CGRect)rect
 {
-    NSMapTable *cacheImageMap = self.cacheImageMap;
-    UIImage *image = [[self class] cacheImageIndex:self.index patterns:self.patterns cacheImageMap:&cacheImageMap];
+    UIImage *image = [[self class] cacheImageIndex:self.index patterns:self.patterns imageCache:[LFBrushCache share]];
     
     if (image == nil) return NO;
     

@@ -1,30 +1,40 @@
 //
-//  LFPaintBrush.m
+//  LFHighlightBrush.m
 //  LFMediaEditingController
 //
-//  Created by TsanFeng Lam on 2019/9/2.
+//  Created by TsanFeng Lam on 2019/9/5.
 //  Copyright © 2019 LamTsanFeng. All rights reserved.
 //
 
-#import "LFPaintBrush.h"
+#import "LFHighlightBrush.h"
 
-NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
+NSString *const LFHighlightBrushLineColor = @"LFHighlightBrushLineColor";
+NSString *const LFHighlightBrushOuterLineWidth = @"LFHighlightBrushOuterLineWidth";
+NSString *const LFHighlightBrushOuterLineColor = @"LFHighlightBrushOuterLineColor";
 
-@interface LFPaintBrush ()
+CGFloat const LFHighlightBrushAlpha = 0.6;
+
+
+@interface LFHighlightBrush ()
+
+@property (nonatomic, weak) CALayer *layer;
 
 @property (nonatomic, strong) UIBezierPath *path;
 
-@property (nonatomic, weak) CAShapeLayer *layer;
+@property (nonatomic, weak) CAShapeLayer *innerLayer;
+@property (nonatomic, weak) CAShapeLayer *outerLayer;
 
 @end
 
-@implementation LFPaintBrush
+@implementation LFHighlightBrush
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        self.lineColor = [UIColor redColor];
+        _lineColor = [UIColor whiteColor];
+        _outerLineColor = [UIColor redColor];
+        _outerLineWidth = 3.0;
     }
     return self;
 }
@@ -36,7 +46,9 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
         CGPoint midPoint = LFBrushMidPoint(self.previousPoint, point);
         // 使用二次曲线方程式
         [self.path addQuadCurveToPoint:midPoint controlPoint:self.previousPoint];
-        self.layer.path = self.path.CGPath;
+        
+        self.outerLayer.path = self.path.CGPath;
+        self.innerLayer.path = self.path.CGPath;
     }
 }
 
@@ -48,10 +60,24 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
      */
     self.path = [[self class] createBezierPathWithPoint:point];
     
-    CAShapeLayer *layer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
+    CALayer *layer = [CALayer layer];
+    layer.contentsScale = [UIScreen mainScreen].scale;
     self.layer = layer;
     
+    CAShapeLayer *outerLayer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth+self.outerLineWidth*2 strokeColor:self.outerLineColor];
+    [layer addSublayer:outerLayer];
+    self.outerLayer = outerLayer;
+    
+    CAShapeLayer *innerLayer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
+    [layer addSublayer:innerLayer];
+    self.innerLayer = innerLayer;
+    
     return layer;
+}
+
+- (CGPoint)currentPoint
+{
+    return self.path.currentPoint;
 }
 
 - (NSDictionary *)allTracks
@@ -62,7 +88,10 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
     if (superAllTracks) {
         myAllTracks = [NSMutableDictionary dictionary];
         [myAllTracks addEntriesFromDictionary:superAllTracks];
-        [myAllTracks addEntriesFromDictionary:@{LFPaintBrushLineColor:self.lineColor}];
+        [myAllTracks addEntriesFromDictionary:@{LFHighlightBrushLineColor:self.lineColor,
+                                                LFHighlightBrushOuterLineColor:self.outerLineColor,
+                                                LFHighlightBrushOuterLineWidth:@(self.outerLineWidth)
+                                                }];
     }
     return myAllTracks;
 }
@@ -70,7 +99,9 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
 + (CALayer *__nullable)drawLayerWithTrackDict:(NSDictionary *)trackDict
 {
     CGFloat lineWidth = [trackDict[LFBrushLineWidth] floatValue];
-    UIColor *lineColor = trackDict[LFPaintBrushLineColor];
+    UIColor *lineColor = trackDict[LFHighlightBrushLineColor];
+    CGFloat outerLineWidth = [trackDict[LFHighlightBrushOuterLineWidth] floatValue];
+    UIColor *outerLineColor = trackDict[LFHighlightBrushOuterLineColor];
     NSArray <NSString /*CGPoint*/*>*allPoints = trackDict[LFBrushAllPoints];
     
     if (allPoints) {
@@ -87,7 +118,16 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
             }
             previousPoint = point;
         }
-        return [[self class] createShapeLayerWithPath:path lineWidth:lineWidth strokeColor:lineColor];
+        CALayer *layer = [CALayer layer];
+        layer.contentsScale = [UIScreen mainScreen].scale;
+        
+        CAShapeLayer *outerLayer = [[self class] createShapeLayerWithPath:path lineWidth:lineWidth+outerLineWidth*2 strokeColor:outerLineColor];
+        [layer addSublayer:outerLayer];
+        
+        CAShapeLayer *innerLayer = [[self class] createShapeLayerWithPath:path lineWidth:lineWidth strokeColor:lineColor];
+        [layer addSublayer:innerLayer];
+        
+        return layer;
     }
     return nil;
 }

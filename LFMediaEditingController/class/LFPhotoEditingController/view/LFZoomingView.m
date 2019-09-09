@@ -322,13 +322,30 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     if ([_drawView.brush isKindOfClass:[LFPaintBrush class]]) {
         ((LFPaintBrush *)_drawView.brush).lineColor = color;
+    } else if ([_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
+        ((LFFluorescentBrush *)_drawView.brush).lineColor = color;
+    } else if ([_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {
+        ((LFHighlightBrush *)_drawView.brush).outerLineColor = color;
+        ((LFHighlightBrush *)_drawView.brush).lineColor = ([color isEqual:[UIColor whiteColor]]) ? [UIColor blackColor] : [UIColor whiteColor];
     }
 }
 
 /** 设置绘画线粗 */
 - (void)setDrawLineWidth:(CGFloat)lineWidth
 {
-    _drawView.brush.lineWidth = lineWidth;
+    if ([_drawView.brush isKindOfClass:[LFChalkBrush class]]) {
+        // 对粉笔的线粗相对调整
+        ((LFChalkBrush *)_drawView.brush).lineWidth = lineWidth*2.5;
+    } else if ([_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
+        // 对荧光笔的线粗相对调整
+        ((LFFluorescentBrush *)_drawView.brush).lineWidth = lineWidth*4.5;
+    } else {
+        _drawView.brush.lineWidth = lineWidth;
+        if ([_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {
+            // 对高亮画笔的外边线粗相对调整
+            ((LFHighlightBrush *)_drawView.brush).outerLineWidth = lineWidth/1.6;
+        }
+    }
 }
 
 #pragma mark - 贴图功能

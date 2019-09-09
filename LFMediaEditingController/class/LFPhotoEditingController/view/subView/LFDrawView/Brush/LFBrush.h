@@ -10,14 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-OBJC_EXTERN const NSString *LFBrushClassName;
-OBJC_EXTERN const NSString *LFBrushAllPoints;
-OBJC_EXTERN const NSString *LFBrushLineWidth;
+OBJC_EXTERN NSString *const LFBrushClassName;
+OBJC_EXTERN NSString *const LFBrushAllPoints;
+OBJC_EXTERN NSString *const LFBrushLineWidth;
 
 // 为CGPoint{inf, inf}
-CG_EXTERN const CGPoint LFBrushPointNull;
+OBJC_EXTERN const CGPoint LFBrushPointNull;
 
-CG_EXTERN bool LFBrushPointIsNull(CGPoint point);
+OBJC_EXTERN bool LFBrushPointIsNull(CGPoint point);
+
+OBJC_EXTERN CGPoint LFBrushMidPoint(CGPoint p0, CGPoint p1);
+
+OBJC_EXTERN CGFloat LFBrushDistancePoint(CGPoint p0, CGPoint p1);
 
 @interface LFBrush : NSObject
 
