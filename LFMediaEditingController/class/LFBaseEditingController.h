@@ -28,6 +28,8 @@
 - (void)showProgressVideoHUD;
 - (void)setProgress:(float)progress;
 
+- (void)showInfoMessage:(NSString *)text;
+
 /** 初始化 */
 - (instancetype)initWithOrientation:(UIInterfaceOrientation)orientation;
 

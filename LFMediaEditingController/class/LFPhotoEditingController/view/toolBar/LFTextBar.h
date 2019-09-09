@@ -21,8 +21,13 @@
 @property (nonatomic, strong) UIColor *cancelButtonTitleColorNormal;
 @property (nonatomic, copy) NSString *oKButtonTitle;
 @property (nonatomic, copy) NSString *cancelButtonTitle;
+/** 输入字符限制，默认150 */
+@property (nonatomic, assign) NSUInteger maxLimitCount;
+
+/** 布局，必须在layoutBlock时设置 */
 @property (nonatomic, assign) CGFloat customTopbarHeight;
 @property (nonatomic, assign) CGFloat naviHeight;
+
 
 /** 代理 */
 @property (nonatomic, weak) id<LFTextBarDelegate> delegate;
@@ -41,5 +46,7 @@
 - (void)lf_textBarController:(LFTextBar *)textBar didFinishText:(LFText *)text;
 /** 取消回调 */
 - (void)lf_textBarControllerDidCancel:(LFTextBar *)textBar;
+/** 输入数量已经达到最大值 */
+- (void)lf_textBarControllerDidReachMaximumLimit:(LFTextBar *)textBar;
 
 @end

@@ -865,6 +865,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     }];
 }
 
+/** 输入数量已经达到最大值 */
+- (void)lf_textBarControllerDidReachMaximumLimit:(LFTextBar *)textBar
+{
+    [self showInfoMessage:[NSBundle LFME_localizedStringForKey:@"_LFME_reachMaximumLimitTitle"]];
+}
+
 #pragma mark - LFPhotoEditDelegate
 #pragma mark - LFPhotoEditDrawDelegate
 /** 开始绘画 */

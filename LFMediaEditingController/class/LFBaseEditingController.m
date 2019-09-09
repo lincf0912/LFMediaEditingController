@@ -9,6 +9,7 @@
 #import "LFBaseEditingController.h"
 #import "LFMediaEditingHeader.h"
 #import "UIDevice+LFMEOrientation.h"
+#import "LFEasyNoticeBar.h"
 
 #import "LFBrushCache.h"
 
@@ -101,6 +102,52 @@
     return mask;
 }
 
+/**
+ 从状态栏下拉或底部栏上滑，跟系统的下拉通知中心手势和上滑控制中心手势冲突。
+ 设置后下拉状态栏只会展示指示器，继续下拉才能将通知中心拉出来。如果返回UIRectEdgeNone则会直接下拉出来。
+ */
+- (UIRectEdge)preferredScreenEdgesDeferringSystemGestures
+{
+    return UIRectEdgeAll;
+}
+
+#pragma public
+- (void)showProgressHUDText:(NSString *)text
+{
+    [self showProgressHUDText:text isTop:NO needProcess:NO];
+}
+
+- (void)showProgressHUD
+{
+    [self showProgressHUDText:nil isTop:NO needProcess:NO];
+}
+
+- (void)hideProgressHUD {
+    if (_progressHUD) {
+        [_HUDIndicatorView stopAnimating];
+        [_progressHUD removeFromSuperview];
+        [_ProgressView setProgress:0.f];
+    }
+}
+
+- (void)showProgressVideoHUD
+{
+    [self showProgressHUDText:nil isTop:NO needProcess:YES];
+}
+
+- (void)setProgress:(float)progress
+{
+    [_ProgressView setProgress:progress animated:YES];
+}
+
+- (void)showInfoMessage:(NSString *)text
+{
+    LFEasyNoticeBarConfig config = LFEasyNoticeBarConfigDefault();
+    config.title = text;
+    config.type = LFEasyNoticeBarDisplayTypeInfo;
+    [LFEasyNoticeBar showAnimationWithConfig:config];
+}
+
 #pragma mark - private
 - (void)showProgressHUDText:(NSString *)text isTop:(BOOL)isTop needProcess:(BOOL)needProcess
 {
@@ -144,43 +191,6 @@
     [_HUDIndicatorView startAnimating];
     UIView *view = isTop ? [[UIApplication sharedApplication] keyWindow] : self.view;
     [view addSubview:_progressHUD];
-}
-
-- (void)showProgressHUDText:(NSString *)text
-{
-    [self showProgressHUDText:text isTop:NO needProcess:NO];
-}
-
-- (void)showProgressHUD
-{
-    [self showProgressHUDText:nil isTop:NO needProcess:NO];
-}
-
-- (void)hideProgressHUD {
-    if (_progressHUD) {
-        [_HUDIndicatorView stopAnimating];
-        [_progressHUD removeFromSuperview];
-        [_ProgressView setProgress:0.f];
-    }
-}
-
-- (void)showProgressVideoHUD
-{
-    [self showProgressHUDText:nil isTop:NO needProcess:YES];
-}
-
-- (void)setProgress:(float)progress
-{
-    [_ProgressView setProgress:progress animated:YES];
-}
-
-/**
- 从状态栏下拉或底部栏上滑，跟系统的下拉通知中心手势和上滑控制中心手势冲突。
- 设置后下拉状态栏只会展示指示器，继续下拉才能将通知中心拉出来。如果返回UIRectEdgeNone则会直接下拉出来。
- */
-- (UIRectEdge)preferredScreenEdgesDeferringSystemGestures
-{
-    return UIRectEdgeAll;   
 }
 
 @end

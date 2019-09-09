@@ -80,6 +80,8 @@
 		C786A5362321ECD600546B8C /* LFChalkBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A5352321ECD600546B8C /* LFChalkBrush.m */; };
 		C786A5392322000A00546B8C /* LFBrushCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A5382322000A00546B8C /* LFBrushCache.m */; };
 		C786A5672322497300546B8C /* LFFluorescentBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A5662322497300546B8C /* LFFluorescentBrush.m */; };
+		C786A56B2325F4D400546B8C /* LFEasyNoticeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A56A2325F4D400546B8C /* LFEasyNoticeBar.m */; };
+		C786A56F2325FC9D00546B8C /* LFEasyNoticeBar.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C786A56E2325FC9C00546B8C /* LFEasyNoticeBar.bundle */; };
 		C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */; };
 		C78B9C561FC55DF500D82F1F /* LFEditCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B9C551FC55DF500D82F1F /* LFEditCollectionView.m */; };
 		C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C79A0113222F9BED0091EB4C /* FilterSuiteUtils.m */; };
@@ -253,6 +255,9 @@
 		C786A5382322000A00546B8C /* LFBrushCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFBrushCache.m; sourceTree = "<group>"; };
 		C786A5652322497300546B8C /* LFFluorescentBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFluorescentBrush.h; sourceTree = "<group>"; };
 		C786A5662322497300546B8C /* LFFluorescentBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFFluorescentBrush.m; sourceTree = "<group>"; };
+		C786A5692325F4D400546B8C /* LFEasyNoticeBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFEasyNoticeBar.h; sourceTree = "<group>"; };
+		C786A56A2325F4D400546B8C /* LFEasyNoticeBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFEasyNoticeBar.m; sourceTree = "<group>"; };
+		C786A56E2325FC9C00546B8C /* LFEasyNoticeBar.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LFEasyNoticeBar.bundle; sourceTree = "<group>"; };
 		C78B9C4D1FC54E2100D82F1F /* NaviViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaviViewController.h; sourceTree = "<group>"; };
 		C78B9C4E1FC54E2100D82F1F /* NaviViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NaviViewController.m; sourceTree = "<group>"; };
 		C78B9C541FC55DF400D82F1F /* LFEditCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditCollectionView.h; sourceTree = "<group>"; };
@@ -546,6 +551,7 @@
 		6F14E6391EE6439E0049AE56 /* vendors */ = {
 			isa = PBXGroup;
 			children = (
+				C786A5682325F4B200546B8C /* LFEasyNoticeBar */,
 				C7D28F3D22DC0ECB00AB83FE /* LFMediaDisplayView */,
 				C7C5805222AFA812003BD4F7 /* LFFilterSuite */,
 				C73F4CA82230C99C00ED40B7 /* JRFilterBar */,
@@ -774,6 +780,16 @@
 				C786A5382322000A00546B8C /* LFBrushCache.m */,
 			);
 			path = cache;
+			sourceTree = "<group>";
+		};
+		C786A5682325F4B200546B8C /* LFEasyNoticeBar */ = {
+			isa = PBXGroup;
+			children = (
+				C786A56E2325FC9C00546B8C /* LFEasyNoticeBar.bundle */,
+				C786A5692325F4D400546B8C /* LFEasyNoticeBar.h */,
+				C786A56A2325F4D400546B8C /* LFEasyNoticeBar.m */,
+			);
+			path = LFEasyNoticeBar;
 			sourceTree = "<group>";
 		};
 		C79A0111222F9BB60091EB4C /* FilterSuiteUtils */ = {
@@ -1015,6 +1031,7 @@
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				C73F4CC72232540400ED40B7 /* 4.MOV in Resources */,
 				6F307D281F3AF6A700A48B49 /* 3.jpg in Resources */,
+				C786A56F2325FC9D00546B8C /* LFEasyNoticeBar.bundle in Resources */,
 				6F14E6601EE647820049AE56 /* 1.jpg in Resources */,
 				C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */,
 				C7269FBB20996DAE00A88CA7 /* 4.gif in Resources */,
@@ -1104,6 +1121,7 @@
 				C786A51F231D1D5200546B8C /* LFBrush.m in Sources */,
 				C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */,
 				6F359B2E1F1D9567009F2035 /* LFVideoPlayerLayerView.m in Sources */,
+				C786A56B2325F4D400546B8C /* LFEasyNoticeBar.m in Sources */,
 				6F14E6511EE6439E0049AE56 /* LFMovingView.m in Sources */,
 				6F14E6451EE6439E0049AE56 /* LFPhotoEdit.m in Sources */,
 				C7D28F5022DC118800AB83FE /* LFStickerItem.m in Sources */,

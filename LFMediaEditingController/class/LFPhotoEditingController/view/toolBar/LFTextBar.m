@@ -12,8 +12,8 @@
 #import "LFStickerItem.h"
 #import "JRPickColorView.h"
 
-/** 来限制最大输入只能100个字符 */
-#define MAX_LIMIT_NUMS 100
+/** 来限制最大输入只能150个字符 */
+#define MAX_LIMIT_NUMS 150
 
 @interface LFTextBar () <UITextViewDelegate, JRPickColorViewDelegate>
 
@@ -58,6 +58,7 @@
 
 - (void)customInit
 {
+    _maxLimitCount = MAX_LIMIT_NUMS;
     if (@available(iOS 8.0, *)) {
         // 定义毛玻璃效果
         self.backgroundColor = [UIColor clearColor];
@@ -227,7 +228,7 @@
 #pragma mark - button action
 - (void)font_buttonClick:(UIButton *)button
 {
-    
+    self.lf_textView.att
 }
 
 #pragma mark - 顶部栏(action)
@@ -300,7 +301,7 @@
         NSInteger endOffset = [textView offsetFromPosition:textView.beginningOfDocument toPosition:selectedRange.end];
         NSRange offsetRange = NSMakeRange(startOffset, endOffset - startOffset);
         
-        if (offsetRange.location < MAX_LIMIT_NUMS) {
+        if (offsetRange.location < _maxLimitCount) {
             return YES;
         }
         else
@@ -312,51 +313,60 @@
     
     NSString *comcatstr = [textView.text stringByReplacingCharactersInRange:range withString:text];
     
-    NSInteger caninputlen = MAX_LIMIT_NUMS - comcatstr.length;
+    // 回车的限制
+//    NSString *searchString = @"\n";
+    NSInteger canInputEnter = 0;//_maxLimitCount/10 - ([comcatstr length] - [[comcatstr stringByReplacingOccurrencesOfString:searchString withString:@""] length]) / [searchString length];
     
-    if (caninputlen >= 0)
+    NSInteger caninputlen = _maxLimitCount - comcatstr.length;
+    
+    if (caninputlen >= 0 && canInputEnter >= 0)
     {
         return YES;
     }
     else
     {
-        NSInteger len = text.length + caninputlen;
-        //防止当text.length + caninputlen < 0时，使得rg.length为一个非法最大正数出错
-        NSRange rg = {0,MAX(len,0)};
-        
-        if (rg.length > 0)
-        {
-            NSString *s = @"";
-            //判断是否只普通的字符或asc码(对于中文和表情返回NO)
-            BOOL asc = [text canBeConvertedToEncoding:NSASCIIStringEncoding];
-            if (asc) {
-                s = [text substringWithRange:rg];//因为是ascii码直接取就可以了不会错
-            }
-            else
+        if (caninputlen < 0) {
+            NSInteger len = text.length + caninputlen;
+            //防止当text.length + caninputlen < 0时，使得rg.length为一个非法最大正数出错
+            NSRange rg = {0,MAX(len,0)};
+            
+            if (rg.length > 0)
             {
-                __block NSInteger idx = 0;
-                __block NSString  *trimString = @"";//截取出的字串
-                //使用字符串遍历，这个方法能准确知道每个emoji是占一个unicode还是两个
-                [text enumerateSubstringsInRange:NSMakeRange(0, [text length])
-                                         options:NSStringEnumerationByComposedCharacterSequences
-                                      usingBlock: ^(NSString* substring, NSRange substringRange, NSRange enclosingRange, BOOL* stop) {
-                                          
-                                          if (idx >= rg.length) {
-                                              *stop = YES; //取出所需要就break，提高效率
-                                              return ;
-                                          }
-                                          
-                                          trimString = [trimString stringByAppendingString:substring];
-                                          
-                                          idx++;
-                                      }];
-                
-                s = trimString;
+                NSString *s = @"";
+                //判断是否只普通的字符或asc码(对于中文和表情返回NO)
+                BOOL asc = [text canBeConvertedToEncoding:NSASCIIStringEncoding];
+                if (asc) {
+                    s = [text substringWithRange:rg];//因为是ascii码直接取就可以了不会错
+                }
+                else
+                {
+                    __block NSInteger idx = 0;
+                    __block NSString  *trimString = @"";//截取出的字串
+                    //使用字符串遍历，这个方法能准确知道每个emoji是占一个unicode还是两个
+                    [text enumerateSubstringsInRange:NSMakeRange(0, [text length])
+                                             options:NSStringEnumerationByComposedCharacterSequences
+                                          usingBlock: ^(NSString* substring, NSRange substringRange, NSRange enclosingRange, BOOL* stop) {
+                                              
+                                              if (idx >= rg.length) {
+                                                  *stop = YES; //取出所需要就break，提高效率
+                                                  return ;
+                                              }
+                                              
+                                              trimString = [trimString stringByAppendingString:substring];
+                                              
+                                              idx++;
+                                          }];
+                    
+                    s = trimString;
+                }
+                //rang是指从当前光标处进行替换处理(注意如果执行此句后面返回的是YES会触发didchange事件)
+                [textView setText:[textView.text stringByReplacingCharactersInRange:range withString:s]];
+                //既然是超出部分截取了，哪一定是最大限制了。
+                //            self.lbNums.text = [NSString stringWithFormat:@"%d/%ld",0,(long)_maxLimitCount];
             }
-            //rang是指从当前光标处进行替换处理(注意如果执行此句后面返回的是YES会触发didchange事件)
-            [textView setText:[textView.text stringByReplacingCharactersInRange:range withString:s]];
-            //既然是超出部分截取了，哪一定是最大限制了。
-//            self.lbNums.text = [NSString stringWithFormat:@"%d/%ld",0,(long)MAX_LIMIT_NUMS];
+        }
+        if ([self.delegate respondsToSelector:@selector(lf_textBarControllerDidReachMaximumLimit:)]) {
+            [self.delegate lf_textBarControllerDidReachMaximumLimit:self];
         }
         return NO;
     }
@@ -377,16 +387,16 @@
     NSString  *nsTextContent = textView.text;
     NSInteger existTextNum = nsTextContent.length;
     
-    if (existTextNum > MAX_LIMIT_NUMS)
+    if (existTextNum > _maxLimitCount)
     {
         //截取到最大位置的字符(由于超出截部分在should时被处理了所在这里这了提高效率不再判断)
-        NSString *s = [nsTextContent substringToIndex:MAX_LIMIT_NUMS];
+        NSString *s = [nsTextContent substringToIndex:_maxLimitCount];
         
         [textView setText:s];
     }
     
     //不让显示负数 口口日
-//    self.lbNums.text = [NSString stringWithFormat:@"%ld/%d",MAX(0,MAX_LIMIT_NUMS - existTextNum),MAX_LIMIT_NUMS];
+//    self.lbNums.text = [NSString stringWithFormat:@"%ld/%d",MAX(0,_maxLimitCount - existTextNum),_maxLimitCount];
 }
 
 #pragma mark - JRPickColorViewDelegate

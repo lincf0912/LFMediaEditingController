@@ -13,6 +13,8 @@
 
 "_LFME_alertViewCancelTitle" = "确定";
 
+"_LFME_reachMaximumLimitTitle" = "已达到输入上限";
+
 /* -------- LFAudioItem  -------*/
 "_LFME_defaultAudioItem_name" = "Default AudioTrack";
 "_LFME_MediaPicker_prompt" = "请选择需要的歌曲";
