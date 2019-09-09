@@ -15,6 +15,8 @@
 /** 来限制最大输入只能150个字符 */
 #define MAX_LIMIT_NUMS 150
 
+CGFloat const LFTextBarAlignmentTag = 221;
+
 @interface LFTextBar () <UITextViewDelegate, JRPickColorViewDelegate>
 
 @property (nonatomic, weak) UIView *topbar;
@@ -22,6 +24,8 @@
 
 @property (nonatomic, weak) JRPickColorView *lf_colorSlider;
 @property (nonatomic, weak) UIView *lf_keyboardBar;
+
+
 
 @end
 
@@ -106,15 +110,13 @@
 {
     _showText = showText;
     if (showText.attributedText.length > 0) {
-        NSRange range = NSMakeRange(0, 1);
-        NSDictionary *typingAttributes = [showText.attributedText attributesAtIndex:0 effectiveRange:&range];
-        UIColor *color = [typingAttributes objectForKey:NSForegroundColorAttributeName];
-        if (color) {[self setTextColor:color];}
         [self.lf_textView setAttributedText:showText.attributedText];
-    } else {
-//        if (showText.font) {self.lf_textView.font = showText.font;}
-//        if (showText.textColor) {[self setTextColor:showText.textColor];}
-//        [self.lf_textView setText:showText.text];
+    }
+    if (self.lf_textView.textAlignment) {
+        UIView *alignmentView = [self.lf_keyboardBar viewWithTag:LFTextBarAlignmentTag];
+        for (UIButton *btn in alignmentView.subviews) {
+            btn.selected = (btn.tag == self.lf_textView.textAlignment);
+        }
     }
 }
 
@@ -161,7 +163,7 @@
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor];
-//    [textView setTextColor:[UIColor whiteColor]];
+    textView.textAlignment = NSTextAlignmentLeft;
     [textView setFont:[UIFont systemFontOfSize:30.f]];
     textView.returnKeyType = UIReturnKeyDefault;
     [self addSubview:textView];
@@ -170,7 +172,8 @@
 
 - (void)configKeyBoardBar
 {
-    UIView *keyboardBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height-44, self.width, 44)];
+    CGFloat margin = isiPad ? 40.f : 10.f;
+    UIView *keyboardBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height-margin, self.width, 44)];
     keyboardBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     keyboardBar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.8];
     
@@ -181,7 +184,6 @@
     {
         UIButton *font = [UIButton buttonWithType:UIButtonTypeCustom];
         font.frame = CGRectMake(CGRectGetWidth(keyboardBar.frame)-44-5, 0, 44, CGRectGetHeight(keyboardBar.frame));
-        font.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
         [font setImage:bundleEditImageNamed(@"EditImageTextFont.png") forState:UIControlStateNormal];
         [font setImage:bundleEditImageNamed(@"EditImageTextFont_HL.png") forState:UIControlStateHighlighted];
         [font setImage:bundleEditImageNamed(@"EditImageTextFont_HL.png") forState:UIControlStateSelected];
@@ -191,9 +193,70 @@
         maxSliderWidth = CGRectGetMinX(font.frame);
     }
     
+    /**
+     对齐方式
+     */
+    {
+        NSInteger count = 3;
+        CGFloat width = 42, margin = isiPad ? 5 : 0;
+        CGFloat maxWidth = width*count + margin*(count+1);
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(maxSliderWidth-maxWidth, 0, maxWidth, 44)];
+        view.backgroundColor = [UIColor clearColor];
+        view.tag = LFTextBarAlignmentTag;
+        
+        UIButton * (^createButtonWithIndex)(NSInteger) = ^UIButton * (NSInteger index){
+            
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(margin*(index+1)+index*width, (CGRectGetHeight(view.frame)-width)/2, width, width);
+            button.tag = index;
+            NSString *name = nil, *highlightName = nil;;
+            switch (index) {
+                case 0: //left
+                {
+                    name = @"EditImageTextAlignmentLeft.png";
+                    highlightName = @"EditImageTextAlignmentLeft_HL.png";
+                }
+                    break;
+                case 1: //center
+                {
+                    name = @"EditImageTextAlignmentCenter.png";
+                    highlightName = @"EditImageTextAlignmentCenter_HL.png";
+                }
+                    break;
+                case 2: //right
+                {
+                    name = @"EditImageTextAlignmentRight.png";
+                    highlightName = @"EditImageTextAlignmentRight_HL.png";
+                }
+                    break;
+                default:
+                    return nil;
+            }
+            [button setImage:bundleEditImageNamed(name) forState:UIControlStateNormal];
+            [button setImage:bundleEditImageNamed(highlightName) forState:UIControlStateHighlighted];
+            [button setImage:bundleEditImageNamed(highlightName) forState:UIControlStateSelected];
+            [button addTarget:self action:@selector(alignment_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+            
+            return button;
+        };
+        
+        for (NSInteger i = 0; i < count; i++) {
+            UIButton *button = createButtonWithIndex(i);
+            if (button) {
+                [view addSubview:button];
+            }
+            if (i == 0) {
+                button.selected = YES;
+            }
+        }
+        [keyboardBar addSubview:view];
+        
+        maxSliderWidth = CGRectGetMinX(view.frame);
+    }
+    
     /** 拾色器 */
-    CGFloat sliderHeight = 34.f, margin = 30.f;
-    CGFloat sliderWidth = MIN(400, maxSliderWidth-2*margin);
+    CGFloat sliderHeight = 34.f;
+    CGFloat sliderWidth = MIN(380, maxSliderWidth-2*margin);
     JRPickColorView *_colorSlider = [[JRPickColorView alloc] initWithFrame:CGRectMake((maxSliderWidth-sliderWidth)/2, (CGRectGetHeight(keyboardBar.frame)-sliderHeight)/2, sliderWidth, sliderHeight) colors:kSliderColors];
 //    _colorSlider.showColor = kSliderColors[0]; /** 白色 */
     _colorSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -226,9 +289,18 @@
 }
 
 #pragma mark - button action
+- (void)alignment_buttonClick:(UIButton *)button
+{
+    UIView *alignmentView = [self.lf_keyboardBar viewWithTag:LFTextBarAlignmentTag];
+    for (UIButton *btn in alignmentView.subviews) {
+        btn.selected = (btn == button);
+    }
+    self.lf_textView.textAlignment = (NSTextAlignment)button.tag;
+    
+}
 - (void)font_buttonClick:(UIButton *)button
 {
-    self.lf_textView.att
+    
 }
 
 #pragma mark - 顶部栏(action)
