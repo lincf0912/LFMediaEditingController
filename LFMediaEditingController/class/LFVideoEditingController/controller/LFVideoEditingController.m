@@ -658,6 +658,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     }];
 }
 
+/** 输入数量已经达到最大值 */
+- (void)lf_textBarControllerDidReachMaximumLimit:(LFTextBar *)textBar
+{
+    [self showInfoMessage:[NSBundle LFME_localizedStringForKey:@"_LFME_reachMaximumLimitTitle"]];
+}
+
 #pragma mark - LFAudioTrackBarDelegate
 /** 完成回调 */
 - (void)lf_audioTrackBar:(LFAudioTrackBar *)audioTrackBar didFinishAudioUrls:(NSArray <LFAudioItem *> *)audioUrls
