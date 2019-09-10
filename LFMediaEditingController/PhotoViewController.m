@@ -123,10 +123,6 @@
 //                                     LFPhotoEditCropCanRotateAttributeName:@(NO),
 //                                     LFPhotoEditCropCanAspectRatioAttributeName:@(NO),
 //                                     };
-    lfPhotoEditVC.operationAttrs = @{
-                                     LFPhotoEditCropCanRotateAttributeName: @(NO),
-                                     LFPhotoEditCropCanAspectRatioAttributeName:@(YES)
-                                     };
     
     lfPhotoEditVC.delegate = self;
     if (self.photoEdit) {
