@@ -111,6 +111,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
     _showText = showText;
     if (showText.attributedText.length > 0) {
         [self.lf_textView setAttributedText:showText.attributedText];
+        [self setTextColor:self.lf_textView.textColor];
     }
     if (self.lf_textView.textAlignment) {
         UIView *alignmentView = [self.lf_keyboardBar viewWithTag:LFTextBarAlignmentTag];
@@ -165,7 +166,9 @@ CGFloat const LFTextBarAlignmentTag = 221;
     textView.backgroundColor = [UIColor clearColor];
     textView.textAlignment = NSTextAlignmentLeft;
     [textView setFont:[UIFont systemFontOfSize:30.f]];
+    //UITextInputTraits
     textView.returnKeyType = UIReturnKeyDefault;
+    textView.spellCheckingType = UITextSpellCheckingTypeNo;
     [self addSubview:textView];
     self.lf_textView = textView;
 }
