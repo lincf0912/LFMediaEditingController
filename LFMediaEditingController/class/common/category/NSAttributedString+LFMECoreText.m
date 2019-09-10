@@ -13,7 +13,22 @@
 
 - (CGSize)LFME_sizeWithConstrainedToSize:(CGSize)size
 {
+    /**
+     修复CTFramesetterSuggestFrameSizeWithConstraints对空格的计算存在的bug，替换其他字符代替空格计算大小。
+     */
     CFAttributedStringRef attributedString = (__bridge CFAttributedStringRef)self;
+    NSString *replaceStr = @" ", *toStr = @"*";
+    if ([self.string containsString:replaceStr]) {
+        NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self];
+        while ([mutableAttributedString.mutableString containsString:replaceStr]) {
+            NSRange range = [mutableAttributedString.mutableString rangeOfString:replaceStr];
+            NSDictionary *attributes = [mutableAttributedString attributesAtIndex:range.location effectiveRange:nil];
+            [mutableAttributedString replaceCharactersInRange:range withAttributedString:[[NSAttributedString alloc] initWithString:toStr attributes:attributes]];
+        }
+        attributedString = (__bridge CFAttributedStringRef)[mutableAttributedString attributedSubstringFromRange:NSMakeRange(0, mutableAttributedString.length)];
+    }
+    
+    
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedString);
     CGSize result = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, [self length]), NULL, size, NULL);
     CFRelease(framesetter);

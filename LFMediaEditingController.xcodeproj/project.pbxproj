@@ -53,7 +53,6 @@
 		6F61BC1D1F298BF8005A1E63 /* 2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6F61BC1C1F298BEE005A1E63 /* 2.mp4 */; };
 		6F61BC1F1F29B880005A1E63 /* 3.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 6F61BC1E1F29B880005A1E63 /* 3.m4v */; };
 		6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D361F27345600C1BCFD /* LFScrollView.m */; };
-		6FAB0D471F2735D800C1BCFD /* NSString+LFMECoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D401F2735D800C1BCFD /* NSString+LFMECoreText.m */; };
 		6FAB0D481F2735D800C1BCFD /* UIImage+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D421F2735D800C1BCFD /* UIImage+LFMECommon.m */; };
 		6FAB0D491F2735D800C1BCFD /* UIView+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D441F2735D800C1BCFD /* UIView+LFMECommon.m */; };
 		6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D461F2735D800C1BCFD /* UIView+LFMEFrame.m */; };
@@ -205,8 +204,6 @@
 		6FAB0D361F27345600C1BCFD /* LFScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFScrollView.m; sourceTree = "<group>"; };
 		6FAB0D3C1F27357A00C1BCFD /* LFEditingProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditingProtocol.h; sourceTree = "<group>"; };
 		6FAB0D3D1F27357A00C1BCFD /* LFPhotoEditDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFPhotoEditDelegate.h; sourceTree = "<group>"; };
-		6FAB0D3F1F2735D800C1BCFD /* NSString+LFMECoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LFMECoreText.h"; sourceTree = "<group>"; };
-		6FAB0D401F2735D800C1BCFD /* NSString+LFMECoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LFMECoreText.m"; sourceTree = "<group>"; };
 		6FAB0D411F2735D800C1BCFD /* UIImage+LFMECommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+LFMECommon.h"; sourceTree = "<group>"; };
 		6FAB0D421F2735D800C1BCFD /* UIImage+LFMECommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+LFMECommon.m"; sourceTree = "<group>"; };
 		6FAB0D431F2735D800C1BCFD /* UIView+LFMECommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+LFMECommon.h"; sourceTree = "<group>"; };
@@ -689,8 +686,6 @@
 				6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */,
 				C7735EB42313D3D5009BB077 /* NSAttributedString+LFMECoreText.h */,
 				C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */,
-				6FAB0D3F1F2735D800C1BCFD /* NSString+LFMECoreText.h */,
-				6FAB0D401F2735D800C1BCFD /* NSString+LFMECoreText.m */,
 				6FAB0D411F2735D800C1BCFD /* UIImage+LFMECommon.h */,
 				6FAB0D421F2735D800C1BCFD /* UIImage+LFMECommon.m */,
 				6FAB0D431F2735D800C1BCFD /* UIView+LFMECommon.h */,
@@ -1126,7 +1121,6 @@
 				6F14E6451EE6439E0049AE56 /* LFPhotoEdit.m in Sources */,
 				C7D28F5022DC118800AB83FE /* LFStickerItem.m in Sources */,
 				C7D28F4D22DC0F2F00AB83FE /* NSBundle+LFMediaDisplayView.m in Sources */,
-				6FAB0D471F2735D800C1BCFD /* NSString+LFMECoreText.m in Sources */,
 				6F14E64E1EE6439E0049AE56 /* LFResizeControl.m in Sources */,
 				C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */,
 				6F14E64D1EE6439E0049AE56 /* LFGridView.m in Sources */,
