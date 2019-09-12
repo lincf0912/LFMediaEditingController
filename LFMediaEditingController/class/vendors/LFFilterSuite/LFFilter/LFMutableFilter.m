@@ -118,8 +118,8 @@
 }
 
 #pragma mark - Initialize
-+ (LFMutableFilter *)filterWithFilters:(NSArray *)filters {
-    LFMutableFilter *filter = (LFMutableFilter *)[[self class] emptyFilter];
++ (instancetype)filterWithFilters:(NSArray *)filters {
+    LFMutableFilter *filter = [[self class] emptyFilter];
     
     for (LFFilter *subFilter in filters) {
         [filter addSubFilter:subFilter];

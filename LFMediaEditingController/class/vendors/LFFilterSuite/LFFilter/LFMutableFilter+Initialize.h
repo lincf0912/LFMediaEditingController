@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Creates and returns a filter containg the given sub LFFilters.
  */
-+ (LFMutableFilter *__nonnull)filterWithFilters:(NSArray <LFFilter *>*__nonnull)filters;
++ (instancetype)filterWithFilters:(NSArray <LFFilter *>*)filters;
 
 @end
 

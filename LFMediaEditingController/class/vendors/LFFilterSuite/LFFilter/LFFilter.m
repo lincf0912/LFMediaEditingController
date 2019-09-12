@@ -168,15 +168,15 @@
 }
 
 #pragma mark - Initialize
-+ (LFFilter *)emptyFilter {
++ (instancetype)emptyFilter {
     return [[self class] filterWithCIFilter:nil];
 }
 
-+ (LFFilter *)filterWithCIFilter:(CIFilter *)filterDescription {
++ (instancetype)filterWithCIFilter:(CIFilter *)filterDescription {
     return [[[self class] alloc] initWithCIFilter:filterDescription];
 }
 
-+ (LFFilter *)filterWithCIFilterName:(NSString *)name {
++ (instancetype __nullable)filterWithCIFilterName:(NSString *)name {
     CIFilter *coreImageFilter = [CIFilter filterWithName:name];
     [coreImageFilter setDefaults];
     
@@ -184,7 +184,7 @@
 }
 
 
-+ (LFFilter *)filterWithAffineTransform:(CGAffineTransform)affineTransform {
++ (instancetype)filterWithAffineTransform:(CGAffineTransform)affineTransform {
     CIFilter *filter = [CIFilter filterWithName:@"CIAffineTransform"];
     [filter setValue:[NSValue valueWithBytes:&affineTransform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
     
@@ -192,11 +192,11 @@
 }
 
 
-+ (LFFilter *)filterWithData:(NSData *)data {
++ (instancetype __nullable)filterWithData:(NSData *)data {
     return [[self class] filterWithData:data error:nil];
 }
 
-+ (LFFilter *)filterWithData:(NSData *)data error:(NSError *__autoreleasing *)error {
++ (instancetype __nullable)filterWithData:(NSData *)data error:(NSError *__autoreleasing *)error {
     id obj = nil;
     @try {
         obj = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -221,7 +221,7 @@
     return obj;
 }
 
-+ (LFFilter *)filterWithContentsOfURL:(NSURL *)url {
++ (instancetype)filterWithContentsOfURL:(NSURL *)url {
     NSData *data = [NSData dataWithContentsOfURL:url];
     
     if (data != nil) {
@@ -232,14 +232,14 @@
 }
 
 
-+ (LFFilter *)filterWithCIImage:(CIImage *)image {
++ (instancetype)filterWithCIImage:(CIImage *)image {
     LFFilter *filter = [[self class] emptyFilter];
     filter.overlayImage = image;
     
     return filter;
 }
 
-+ (LFFilter *)filterWithBlock:(LFFilterHandle)block {
++ (instancetype)filterWithBlock:(LFFilterHandle)block {
     LFFilter *filter = [[self class] emptyFilter];
     filter.filterHandle = [block copy];
     

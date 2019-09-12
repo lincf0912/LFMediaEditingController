@@ -101,10 +101,30 @@ NSString *lf_filterNameWithType(LFFilterNameType type)
     return filterName;
 }
 
+LFFilter *lf_filterWithType(LFFilterNameType type)
+{
+    LFFilter *filter = nil;
+    NSString *name = lf_filterNameWithType(type);
+    if ([name containsString:@"|"]) {
+        //组合滤镜
+        LFMutableFilter *mutableFilter = nil;
+        for (NSString *subName in [name componentsSeparatedByString:@"|"]) {
+            if (mutableFilter == nil) {
+                mutableFilter = [LFMutableFilter filterWithCIFilterName:subName];
+            } else {
+                [mutableFilter addSubFilter:[LFFilter filterWithCIFilterName:subName]];
+            }
+        }
+        filter = mutableFilter;
+    } else {
+        filter = [LFFilter filterWithCIFilterName:name];
+    }
+    return filter;
+}
+
 UIImage *lf_filterImageWithType(UIImage *image, LFFilterNameType type)
 {
-    NSString *name = lf_filterNameWithType(type);
-    LFFilter *filter = [LFFilter filterWithCIFilterName:name];
+    LFFilter *filter = lf_filterWithType(type);
     if (filter) {
         return [filter UIImageByProcessingUIImage:image];
     } else {

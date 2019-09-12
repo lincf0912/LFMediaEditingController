@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+@class LFFilter;
 
 typedef NS_ENUM(NSUInteger, LFFilterNameType) {
     LFFilterNameType_None = 0,
@@ -27,5 +28,7 @@ typedef NS_ENUM(NSUInteger, LFFilterNameType) {
 OBJC_EXTERN NSString *lf_descWithType(LFFilterNameType type);
 
 OBJC_EXTERN NSString *lf_filterNameWithType(LFFilterNameType type);
+
+OBJC_EXTERN LFFilter *lf_filterWithType(LFFilterNameType type);
 
 OBJC_EXTERN UIImage *lf_filterImageWithType(UIImage *image, LFFilterNameType type);

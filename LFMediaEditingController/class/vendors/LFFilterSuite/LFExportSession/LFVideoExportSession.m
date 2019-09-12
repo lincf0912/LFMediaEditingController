@@ -326,7 +326,7 @@
     
     if (customFilter != nil) {
         if (watermarkFilter != nil) {
-            LFMutableFilter *tempFilter = (LFMutableFilter *)[LFMutableFilter emptyFilter];
+            LFMutableFilter *tempFilter = [LFMutableFilter emptyFilter];
             [tempFilter addSubFilter:customFilter];
             [tempFilter addSubFilter:watermarkFilter];
             renderingFilter = tempFilter;
