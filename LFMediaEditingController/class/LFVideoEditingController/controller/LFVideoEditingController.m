@@ -211,18 +211,20 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             LFVideoEditOperationSubType subType = [self operationSubTypeForKey:LFVideoEditFilterAttributeName];
             NSInteger index = 0;
             switch (subType) {
-                case LFVideoEditOperationSubTypeLinearCurveFilter: index = 1; break;
-                case LFVideoEditOperationSubTypeChromeFilter: index = 2; break;
-                case LFVideoEditOperationSubTypeFadeFilter: index = 3; break;
-                case LFVideoEditOperationSubTypeInstantFilter: index = 4; break;
-                case LFVideoEditOperationSubTypeMonoFilter: index = 5; break;
-                case LFVideoEditOperationSubTypeNoirFilter: index = 6; break;
-                case LFVideoEditOperationSubTypeProcessFilter: index = 7; break;
-                case LFVideoEditOperationSubTypeTonalFilter: index = 8; break;
-                case LFVideoEditOperationSubTypeTransferFilter: index = 9; break;
-                case LFVideoEditOperationSubTypeCurveLinearFilter: index = 10; break;
-                case LFVideoEditOperationSubTypeInvertFilter: index = 11; break;
-                case LFVideoEditOperationSubTypeMonochromeFilter: index = 12; break;
+                case LFVideoEditOperationSubTypeLinearCurveFilter:
+                case LFVideoEditOperationSubTypeChromeFilter:
+                case LFVideoEditOperationSubTypeFadeFilter:
+                case LFVideoEditOperationSubTypeInstantFilter:
+                case LFVideoEditOperationSubTypeMonoFilter:
+                case LFVideoEditOperationSubTypeNoirFilter:
+                case LFVideoEditOperationSubTypeProcessFilter:
+                case LFVideoEditOperationSubTypeTonalFilter:
+                case LFVideoEditOperationSubTypeTransferFilter:
+                case LFVideoEditOperationSubTypeCurveLinearFilter:
+                case LFVideoEditOperationSubTypeInvertFilter:
+                case LFVideoEditOperationSubTypeMonochromeFilter:
+                    index = subType % 400 + 1;
+                    break;
                 default:
                     break;
             }
@@ -312,20 +314,22 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     if (self.operationType&LFVideoEditOperationType_draw) {
         LFVideoEditOperationSubType subType = [self operationSubTypeForKey:LFVideoEditDrawColorAttributeName];
         switch (subType) {
-            case LFVideoEditOperationSubTypeDrawWhiteColor: index = 0; break;
-            case LFVideoEditOperationSubTypeDrawBlackColor: index = 1; break;
-            case LFVideoEditOperationSubTypeDrawRedColor: index = 2; break;
-            case LFVideoEditOperationSubTypeDrawLightYellowColor: index = 3; break;
-            case LFVideoEditOperationSubTypeDrawYellowColor: index = 4; break;
-            case LFVideoEditOperationSubTypeDrawLightGreenColor: index = 5; break;
-            case LFVideoEditOperationSubTypeDrawGreenColor: index = 6; break;
-            case LFVideoEditOperationSubTypeDrawAzureColor: index = 7; break;
-            case LFVideoEditOperationSubTypeDrawRoyalBlueColor: index = 8; break;
-            case LFVideoEditOperationSubTypeDrawBlueColor: index = 9; break;
-            case LFVideoEditOperationSubTypeDrawPurpleColor: index = 10; break;
-            case LFVideoEditOperationSubTypeDrawLightPinkColor: index = 11; break;
-            case LFVideoEditOperationSubTypeDrawVioletRedColor: index = 12; break;
-            case LFVideoEditOperationSubTypeDrawPinkColor: index = 13; break;
+            case LFVideoEditOperationSubTypeDrawWhiteColor:
+            case LFVideoEditOperationSubTypeDrawBlackColor:
+            case LFVideoEditOperationSubTypeDrawRedColor:
+            case LFVideoEditOperationSubTypeDrawLightYellowColor:
+            case LFVideoEditOperationSubTypeDrawYellowColor:
+            case LFVideoEditOperationSubTypeDrawLightGreenColor:
+            case LFVideoEditOperationSubTypeDrawGreenColor:
+            case LFVideoEditOperationSubTypeDrawAzureColor:
+            case LFVideoEditOperationSubTypeDrawRoyalBlueColor:
+            case LFVideoEditOperationSubTypeDrawBlueColor:
+            case LFVideoEditOperationSubTypeDrawPurpleColor:
+            case LFVideoEditOperationSubTypeDrawLightPinkColor:
+            case LFVideoEditOperationSubTypeDrawVioletRedColor:
+            case LFVideoEditOperationSubTypeDrawPinkColor:
+                index = subType - 1;
+                break;
             default:
                 break;
         }

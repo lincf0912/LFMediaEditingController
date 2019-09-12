@@ -197,18 +197,19 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditFilterAttributeName];
             NSInteger index = 0;
             switch (subType) {
-                case LFPhotoEditOperationSubTypeLinearCurveFilter: index = 1; break;
-                case LFPhotoEditOperationSubTypeChromeFilter: index = 2; break;
-                case LFPhotoEditOperationSubTypeFadeFilter: index = 3; break;
-                case LFPhotoEditOperationSubTypeInstantFilter: index = 4; break;
-                case LFPhotoEditOperationSubTypeMonoFilter: index = 5; break;
-                case LFPhotoEditOperationSubTypeNoirFilter: index = 6; break;
-                case LFPhotoEditOperationSubTypeProcessFilter: index = 7; break;
-                case LFPhotoEditOperationSubTypeTonalFilter: index = 8; break;
-                case LFPhotoEditOperationSubTypeTransferFilter: index = 9; break;
-                case LFPhotoEditOperationSubTypeCurveLinearFilter: index = 10; break;
-                case LFPhotoEditOperationSubTypeInvertFilter: index = 11; break;
-                case LFPhotoEditOperationSubTypeMonochromeFilter: index = 12; break;
+                case LFPhotoEditOperationSubTypeLinearCurveFilter:
+                case LFPhotoEditOperationSubTypeChromeFilter:
+                case LFPhotoEditOperationSubTypeFadeFilter:
+                case LFPhotoEditOperationSubTypeInstantFilter:
+                case LFPhotoEditOperationSubTypeMonoFilter:
+                case LFPhotoEditOperationSubTypeNoirFilter:
+                case LFPhotoEditOperationSubTypeProcessFilter:
+                case LFPhotoEditOperationSubTypeTonalFilter:
+                case LFPhotoEditOperationSubTypeTransferFilter:
+                case LFPhotoEditOperationSubTypeCurveLinearFilter:
+                case LFPhotoEditOperationSubTypeInvertFilter:
+                case LFPhotoEditOperationSubTypeMonochromeFilter:
+                    index = subType % 400 + 1;
                 default:
                     break;
             }
@@ -223,14 +224,16 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditCropAspectRatioAttributeName];
             NSInteger index = 0;
             switch (subType) {
-                case LFPhotoEditOperationSubTypeCropAspectRatioOriginal: index = 1; break;
-                case LFPhotoEditOperationSubTypeCropAspectRatio1x1: index = 2; break;
-                case LFPhotoEditOperationSubTypeCropAspectRatio3x2: index = 3; break;
-                case LFPhotoEditOperationSubTypeCropAspectRatio4x3: index = 4; break;
-                case LFPhotoEditOperationSubTypeCropAspectRatio5x3: index = 5; break;
-                case LFPhotoEditOperationSubTypeCropAspectRatio15x9: index = 6; break;
-                case LFPhotoEditOperationSubTypeCropAspectRatio16x9: index = 7; break;
-                case LFPhotoEditOperationSubTypeCropAspectRatio16x10: index = 8; break;
+                case LFPhotoEditOperationSubTypeCropAspectRatioOriginal:
+                case LFPhotoEditOperationSubTypeCropAspectRatio1x1:
+                case LFPhotoEditOperationSubTypeCropAspectRatio3x2:
+                case LFPhotoEditOperationSubTypeCropAspectRatio4x3:
+                case LFPhotoEditOperationSubTypeCropAspectRatio5x3:
+                case LFPhotoEditOperationSubTypeCropAspectRatio15x9:
+                case LFPhotoEditOperationSubTypeCropAspectRatio16x9:
+                case LFPhotoEditOperationSubTypeCropAspectRatio16x10:
+                    index = subType % 500 + 1;
+                    break;
                 default:
                     break;
             }
@@ -313,20 +316,22 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if (self.operationType&LFPhotoEditOperationType_draw) {
         LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditDrawColorAttributeName];
         switch (subType) {
-            case LFPhotoEditOperationSubTypeDrawWhiteColor: index = 0; break;
-            case LFPhotoEditOperationSubTypeDrawBlackColor: index = 1; break;
-            case LFPhotoEditOperationSubTypeDrawRedColor: index = 2; break;
-            case LFPhotoEditOperationSubTypeDrawLightYellowColor: index = 3; break;
-            case LFPhotoEditOperationSubTypeDrawYellowColor: index = 4; break;
-            case LFPhotoEditOperationSubTypeDrawLightGreenColor: index = 5; break;
-            case LFPhotoEditOperationSubTypeDrawGreenColor: index = 6; break;
-            case LFPhotoEditOperationSubTypeDrawAzureColor: index = 7; break;
-            case LFPhotoEditOperationSubTypeDrawRoyalBlueColor: index = 8; break;
-            case LFPhotoEditOperationSubTypeDrawBlueColor: index = 9; break;
-            case LFPhotoEditOperationSubTypeDrawPurpleColor: index = 10; break;
-            case LFPhotoEditOperationSubTypeDrawLightPinkColor: index = 11; break;
-            case LFPhotoEditOperationSubTypeDrawVioletRedColor: index = 12; break;
-            case LFPhotoEditOperationSubTypeDrawPinkColor: index = 13; break;
+            case LFPhotoEditOperationSubTypeDrawWhiteColor:
+            case LFPhotoEditOperationSubTypeDrawBlackColor:
+            case LFPhotoEditOperationSubTypeDrawRedColor:
+            case LFPhotoEditOperationSubTypeDrawLightYellowColor:
+            case LFPhotoEditOperationSubTypeDrawYellowColor:
+            case LFPhotoEditOperationSubTypeDrawLightGreenColor:
+            case LFPhotoEditOperationSubTypeDrawGreenColor:
+            case LFPhotoEditOperationSubTypeDrawAzureColor:
+            case LFPhotoEditOperationSubTypeDrawRoyalBlueColor:
+            case LFPhotoEditOperationSubTypeDrawBlueColor:
+            case LFPhotoEditOperationSubTypeDrawPurpleColor:
+            case LFPhotoEditOperationSubTypeDrawLightPinkColor:
+            case LFPhotoEditOperationSubTypeDrawVioletRedColor:
+            case LFPhotoEditOperationSubTypeDrawPinkColor:
+                index = subType - 1;
+                break;
             default:
                 break;
         }
@@ -342,8 +347,10 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         index = 0;
         LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditSplashAttributeName];
         switch (subType) {
-            case LFPhotoEditOperationSubTypeSplashMosaic: index = 0; break;
-            case LFPhotoEditOperationSubTypeSplashPaintbrush: index = 1; break;
+            case LFPhotoEditOperationSubTypeSplashMosaic:
+            case LFPhotoEditOperationSubTypeSplashPaintbrush:
+                index = subType % 300;
+                break;
             default:
                 break;
         }
@@ -773,7 +780,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 {
     if (_filterSmallImage == nil) {
         CGSize size = CGSizeZero;
-        CGSize imageSize = CGSizeMake(CGImageGetWidth(self.editImage.CGImage), CGImageGetHeight(self.editImage.CGImage));
+        CGSize imageSize = self.editImage.size;
         size.width = MIN(JR_FilterBar_MAX_WIDTH*[UIScreen mainScreen].scale, imageSize.width);
         size.height = ((int)(imageSize.height*size.width/imageSize.width))*1.f;
         
