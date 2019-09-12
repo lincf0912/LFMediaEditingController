@@ -320,13 +320,17 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 /** 设置绘画颜色 */
 - (void)setDrawColor:(UIColor *)color
 {
-    if ([_drawView.brush isKindOfClass:[LFPaintBrush class]]) {
-        ((LFPaintBrush *)_drawView.brush).lineColor = color;
-    } else if ([_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
+    if ([_drawView.brush isKindOfClass:[LFBlurryBrush class]]) {
+        // LFBlurryBrush 不因颜色而改变效果。
+    } else if ([_drawView.brush isKindOfClass:[LFMosaicBrush class]]) {
+        // LFMosaicBrush 不因颜色而改变效果。
+    }  else if ([_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
         ((LFFluorescentBrush *)_drawView.brush).lineColor = color;
     } else if ([_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {
         ((LFHighlightBrush *)_drawView.brush).outerLineColor = color;
         ((LFHighlightBrush *)_drawView.brush).lineColor = ([color isEqual:[UIColor whiteColor]]) ? [UIColor blackColor] : [UIColor whiteColor];
+    } else if ([_drawView.brush isKindOfClass:[LFPaintBrush class]]) {
+        ((LFPaintBrush *)_drawView.brush).lineColor = color;
     }
 }
 
@@ -335,10 +339,16 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     if ([_drawView.brush isKindOfClass:[LFChalkBrush class]]) {
         // 对粉笔的线粗相对调整
-        ((LFChalkBrush *)_drawView.brush).lineWidth = lineWidth*2.5;
+        _drawView.brush.lineWidth = lineWidth*2.5;
     } else if ([_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
         // 对荧光笔的线粗相对调整
-        ((LFFluorescentBrush *)_drawView.brush).lineWidth = lineWidth*4.5;
+        _drawView.brush.lineWidth = lineWidth*4.5;
+    } else if ([_drawView.brush isKindOfClass:[LFBlurryBrush class]]) {
+        // 对模糊笔的线粗相对调整
+        _drawView.brush.lineWidth = lineWidth*5;
+    } else if ([_drawView.brush isKindOfClass:[LFMosaicBrush class]]) {
+        // 对马赛克笔的线粗相对调整
+        _drawView.brush.lineWidth = lineWidth*5;
     } else {
         _drawView.brush.lineWidth = lineWidth;
         if ([_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {

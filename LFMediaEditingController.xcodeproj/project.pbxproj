@@ -59,6 +59,9 @@
 		6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB0D4C1F27360300C1BCFD /* UIDevice+LFMEOrientation.m */; };
 		C703CD6222B3991100561AAC /* LFSafeAreaMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = C703CD6122B3991100561AAC /* LFSafeAreaMaskView.m */; };
 		C703CD9122B7973400561AAC /* LFLView.m in Sources */ = {isa = PBXBuildFile; fileRef = C703CD8F22B7973400561AAC /* LFLView.m */; };
+		C708908223288B2800ABF2FB /* LFBlurryBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C708908123288B2800ABF2FB /* LFBlurryBrush.m */; };
+		C708908F2329E7B800ABF2FB /* LFBrush+create.m in Sources */ = {isa = PBXBuildFile; fileRef = C708908E2329E7B800ABF2FB /* LFBrush+create.m */; };
+		C70890932329F27B00ABF2FB /* LFMosaicBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C70890922329F27B00ABF2FB /* LFMosaicBrush.m */; };
 		C70BAD3B205A50DC005B7894 /* NSBundle+LFMediaEditing.m in Sources */ = {isa = PBXBuildFile; fileRef = C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */; };
 		C70BAD3D205A5A7F005B7894 /* LFMediaEditingController.strings in Resources */ = {isa = PBXBuildFile; fileRef = C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */; };
 		C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C70FDAB020E46CF50053A02C /* longImage.jpg */; };
@@ -216,6 +219,12 @@
 		C703CD6122B3991100561AAC /* LFSafeAreaMaskView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFSafeAreaMaskView.m; sourceTree = "<group>"; };
 		C703CD8F22B7973400561AAC /* LFLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFLView.m; sourceTree = "<group>"; };
 		C703CD9022B7973400561AAC /* LFLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFLView.h; sourceTree = "<group>"; };
+		C708908023288B2800ABF2FB /* LFBlurryBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFBlurryBrush.h; sourceTree = "<group>"; };
+		C708908123288B2800ABF2FB /* LFBlurryBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFBlurryBrush.m; sourceTree = "<group>"; };
+		C708908D2329E7B800ABF2FB /* LFBrush+create.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LFBrush+create.h"; sourceTree = "<group>"; };
+		C708908E2329E7B800ABF2FB /* LFBrush+create.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "LFBrush+create.m"; sourceTree = "<group>"; };
+		C70890912329F27B00ABF2FB /* LFMosaicBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFMosaicBrush.h; sourceTree = "<group>"; };
+		C70890922329F27B00ABF2FB /* LFMosaicBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFMosaicBrush.m; sourceTree = "<group>"; };
 		C70BAD39205A50DC005B7894 /* NSBundle+LFMediaEditing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+LFMediaEditing.h"; sourceTree = "<group>"; };
 		C70BAD3A205A50DC005B7894 /* NSBundle+LFMediaEditing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+LFMediaEditing.m"; sourceTree = "<group>"; };
 		C70BAD3C205A5A7E005B7894 /* LFMediaEditingController.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = LFMediaEditingController.strings; sourceTree = "<group>"; };
@@ -754,16 +763,22 @@
 				C786A53A2322001500546B8C /* cache */,
 				C786A51D231D1D5200546B8C /* LFBrush.h */,
 				C786A51E231D1D5200546B8C /* LFBrush.m */,
+				C708908D2329E7B800ABF2FB /* LFBrush+create.h */,
+				C708908E2329E7B800ABF2FB /* LFBrush+create.m */,
 				C786A520231D1DB600546B8C /* LFPaintBrush.h */,
 				C786A521231D1DB600546B8C /* LFPaintBrush.m */,
-				C786A5312320FC0800546B8C /* LFHighlightBrush.h */,
-				C786A5322320FC0800546B8C /* LFHighlightBrush.m */,
-				C786A523231D1DCE00546B8C /* LFStampBrush.h */,
-				C786A524231D1DCE00546B8C /* LFStampBrush.m */,
 				C786A5342321ECD600546B8C /* LFChalkBrush.h */,
 				C786A5352321ECD600546B8C /* LFChalkBrush.m */,
 				C786A5652322497300546B8C /* LFFluorescentBrush.h */,
 				C786A5662322497300546B8C /* LFFluorescentBrush.m */,
+				C786A5312320FC0800546B8C /* LFHighlightBrush.h */,
+				C786A5322320FC0800546B8C /* LFHighlightBrush.m */,
+				C786A523231D1DCE00546B8C /* LFStampBrush.h */,
+				C786A524231D1DCE00546B8C /* LFStampBrush.m */,
+				C708908023288B2800ABF2FB /* LFBlurryBrush.h */,
+				C708908123288B2800ABF2FB /* LFBlurryBrush.m */,
+				C70890912329F27B00ABF2FB /* LFMosaicBrush.h */,
+				C70890922329F27B00ABF2FB /* LFMosaicBrush.m */,
 			);
 			path = Brush;
 			sourceTree = "<group>";
@@ -1070,6 +1085,7 @@
 				C7ED893C20ABBC7100D37465 /* LFMEGIFImageSerialization.m in Sources */,
 				6F384D3F1EE7D9E70077D207 /* LFSplashView.m in Sources */,
 				6F14E65E1EE643AB0049AE56 /* PhotoViewController.m in Sources */,
+				C708908F2329E7B800ABF2FB /* LFBrush+create.m in Sources */,
 				6F359B211F1C8F24009F2035 /* LFVideoEdit.m in Sources */,
 				C73F4CB12230C99C00ED40B7 /* JRFilterBarCell.m in Sources */,
 				C7E750F121182F6700022FCF /* LFFilterView.m in Sources */,
@@ -1094,11 +1110,13 @@
 				C7E750F92119294F00022FCF /* LFColorMatrixType.m in Sources */,
 				6F14E5D51EE6438A0049AE56 /* main.m in Sources */,
 				C7C5807B22AFA812003BD4F7 /* LFFilterImageView.m in Sources */,
+				C70890932329F27B00ABF2FB /* LFMosaicBrush.m in Sources */,
 				6F359B281F1CB662009F2035 /* LFVideoEditingView.m in Sources */,
 				C786A5392322000A00546B8C /* LFBrushCache.m in Sources */,
 				C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */,
 				C786A5362321ECD600546B8C /* LFChalkBrush.m in Sources */,
 				C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */,
+				C708908223288B2800ABF2FB /* LFBlurryBrush.m in Sources */,
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,
 				6F359B131F1C678D009F2035 /* VideoViewController.m in Sources */,
 				6F14E65A1EE6439E0049AE56 /* LFTextBar.m in Sources */,

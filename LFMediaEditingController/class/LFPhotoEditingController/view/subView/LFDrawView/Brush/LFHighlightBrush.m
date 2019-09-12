@@ -7,6 +7,7 @@
 //
 
 #import "LFHighlightBrush.h"
+#import "LFBrush+create.h"
 
 NSString *const LFHighlightBrushLineColor = @"LFHighlightBrushLineColor";
 NSString *const LFHighlightBrushOuterLineWidth = @"LFHighlightBrushOuterLineWidth";
@@ -54,30 +55,29 @@ CGFloat const LFHighlightBrushAlpha = 0.6;
 
 - (CALayer *)createDrawLayerWithPoint:(CGPoint)point
 {
-    [super createDrawLayerWithPoint:point];
-    /**
-     首次创建UIBezierPath
-     */
-    self.path = [[self class] createBezierPathWithPoint:point];
-    
-    CALayer *layer = [CALayer layer];
-    layer.contentsScale = [UIScreen mainScreen].scale;
-    self.layer = layer;
-    
-    CAShapeLayer *outerLayer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth+self.outerLineWidth*2 strokeColor:self.outerLineColor];
-    [layer addSublayer:outerLayer];
-    self.outerLayer = outerLayer;
-    
-    CAShapeLayer *innerLayer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
-    [layer addSublayer:innerLayer];
-    self.innerLayer = innerLayer;
-    
-    return layer;
-}
-
-- (CGPoint)currentPoint
-{
-    return self.path.currentPoint;
+    if (self.lineColor && self.outerLineColor) {
+        [super createDrawLayerWithPoint:point];
+        
+        /**
+         首次创建UIBezierPath
+         */
+        self.path = [[self class] createBezierPathWithPoint:point];
+        
+        CALayer *layer = [CALayer layer];
+        layer.contentsScale = [UIScreen mainScreen].scale;
+        self.layer = layer;
+        
+        CAShapeLayer *outerLayer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth+self.outerLineWidth*2 strokeColor:self.outerLineColor];
+        [layer addSublayer:outerLayer];
+        self.outerLayer = outerLayer;
+        
+        CAShapeLayer *innerLayer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
+        [layer addSublayer:innerLayer];
+        self.innerLayer = innerLayer;
+        
+        return layer;
+    }
+    return nil;
 }
 
 - (NSDictionary *)allTracks
@@ -88,10 +88,12 @@ CGFloat const LFHighlightBrushAlpha = 0.6;
     if (superAllTracks) {
         myAllTracks = [NSMutableDictionary dictionary];
         [myAllTracks addEntriesFromDictionary:superAllTracks];
-        [myAllTracks addEntriesFromDictionary:@{LFHighlightBrushLineColor:self.lineColor,
-                                                LFHighlightBrushOuterLineColor:self.outerLineColor,
-                                                LFHighlightBrushOuterLineWidth:@(self.outerLineWidth)
-                                                }];
+        if (self.lineColor && self.outerLineColor) {
+            [myAllTracks addEntriesFromDictionary:@{LFHighlightBrushLineColor:self.lineColor,
+                                                    LFHighlightBrushOuterLineColor:self.outerLineColor,
+                                                    LFHighlightBrushOuterLineWidth:@(self.outerLineWidth)
+                                                    }];
+        }
     }
     return myAllTracks;
 }
@@ -130,39 +132,6 @@ CGFloat const LFHighlightBrushAlpha = 0.6;
         return layer;
     }
     return nil;
-}
-
-#pragma mark - private
-+ (UIBezierPath *)createBezierPathWithPoint:(CGPoint)point
-{
-    UIBezierPath *path = [UIBezierPath new];
-    path.lineCapStyle = kCGLineCapRound; //线条拐角
-    path.lineJoinStyle = kCGLineJoinRound; //终点处理
-    [path moveToPoint:point];
-    return path;
-}
-
-+ (CAShapeLayer *)createShapeLayerWithPath:(UIBezierPath *)path lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor
-{
-    /**
-     1、渲染快速。CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多。
-     2、高效使用内存。一个CAShapeLayer不需要像普通CALayer一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。
-     3、不会被图层边界剪裁掉。
-     4、不会出现像素化。
-     */
-    CAShapeLayer *slayer = nil;
-    if (path) {
-        slayer = [CAShapeLayer layer];
-        slayer.path = path.CGPath;
-        slayer.backgroundColor = [UIColor clearColor].CGColor;
-        slayer.fillColor = [UIColor clearColor].CGColor;
-        slayer.lineCap = kCALineCapRound;
-        slayer.lineJoin = kCALineJoinRound;
-        slayer.strokeColor = strokeColor.CGColor;
-        slayer.lineWidth = lineWidth;
-    }
-    
-    return slayer;
 }
 
 @end

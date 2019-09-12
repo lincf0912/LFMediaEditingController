@@ -6,16 +6,11 @@
 //  Copyright © 2019 LamTsanFeng. All rights reserved.
 //
 
-#import "LFBrush.h"
+#import "LFPaintBrush.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-OBJC_EXTERN NSString *const LFFluorescentBrushLineColor;
-
-@interface LFFluorescentBrush : LFBrush
-
-/** 线颜色 默认红色 */
-@property (nonatomic, strong) UIColor *lineColor;
+@interface LFFluorescentBrush : LFPaintBrush
 
 @end
 

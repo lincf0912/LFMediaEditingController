@@ -7,6 +7,7 @@
 //
 
 #import "LFStampBrush.h"
+#import "LFBrush+create.h"
 #import "NSBundle+LFMediaEditing.h"
 #import "LFBrushCache.h"
 
@@ -53,6 +54,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
     if (self) {
         _spacing = 1.f;
         _scale = 4.f;
+        _patterns = @[];
     }
     return self;
 }
@@ -75,7 +77,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
 - (CALayer *)createDrawLayerWithPoint:(CGPoint)point
 {
     /**
-     忽略第一个落点。可能是误操作，知道真正滑动时才触发。
+     忽略第一个落点。可能是误操作，直到真正滑动时才记录点。
      */
     [super createDrawLayerWithPoint:LFBrushPointNull];
     self.index = 0;

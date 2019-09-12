@@ -64,9 +64,12 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
         // 1.创建画布
         CALayer *layer = [self.brush createDrawLayerWithPoint:point];
         
-        [self.layer addSublayer:layer];
-        [self.layerArray addObject:layer];
-        
+        if (layer) {
+            [self.layer addSublayer:layer];
+            [self.layerArray addObject:layer];
+        } else {
+            _isBegan = NO;
+        }
     }
     [super touchesBegan:touches withEvent:event];
 }

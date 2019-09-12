@@ -11,6 +11,7 @@
 #import "LFBrushCache.h"
 
 NSString *const LFChalkBrushName = @"Chalk";
+NSString *const LFChalkBrushImage = @"ChalkImage";
 
 @interface LFChalkBrush ()
 
@@ -22,17 +23,17 @@ NSString *const LFChalkBrushName = @"Chalk";
 {
     self = [super init];
     if (self) {
-        
+        self.lineColor = [UIColor redColor];
     }
     return self;
 }
 
 - (void)setLineColor:(UIColor *)lineColor
 {
-    UIImage *image =  [[LFBrushCache share] objectForKey:LFChalkBrushName];
+    UIImage *image =  [[LFBrushCache share] objectForKey:LFChalkBrushImage];
     if (image == nil) {
         image = [NSBundle LFME_brushImageNamed:LFChalkBrushName];
-        [[LFBrushCache share] setObject:image forKey:LFChalkBrushName];
+        [[LFBrushCache share] setObject:image forKey:LFChalkBrushImage];
     }
     
     @autoreleasepool {

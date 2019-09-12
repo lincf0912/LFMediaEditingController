@@ -7,6 +7,7 @@
 //
 
 #import "LFPaintBrush.h"
+#import "LFBrush+create.h"
 
 NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
 
@@ -24,7 +25,7 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
 {
     self = [super init];
     if (self) {
-        self.lineColor = [UIColor redColor];
+        _lineColor = [UIColor redColor];
     }
     return self;
 }
@@ -42,18 +43,20 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
 
 - (CALayer *)createDrawLayerWithPoint:(CGPoint)point
 {
-    [super createDrawLayerWithPoint:point];
-    /**
-     首次创建UIBezierPath
-     */
-    self.path = [[self class] createBezierPathWithPoint:point];
-    
-    CAShapeLayer *layer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
-    self.layer = layer;
-    
-    return layer;
+    if (self.lineColor) {
+        [super createDrawLayerWithPoint:point];
+        /**
+         首次创建UIBezierPath
+         */
+        self.path = [[self class] createBezierPathWithPoint:point];
+        
+        CAShapeLayer *layer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
+        self.layer = layer;
+        
+        return layer;
+    }
+    return nil;
 }
-
 - (NSDictionary *)allTracks
 {
     NSDictionary *superAllTracks = [super allTracks];
@@ -62,7 +65,9 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
     if (superAllTracks) {
         myAllTracks = [NSMutableDictionary dictionary];
         [myAllTracks addEntriesFromDictionary:superAllTracks];
-        [myAllTracks addEntriesFromDictionary:@{LFPaintBrushLineColor:self.lineColor}];
+        if (self.lineColor) {
+            [myAllTracks addEntriesFromDictionary:@{LFPaintBrushLineColor:self.lineColor}];            
+        }
     }
     return myAllTracks;
 }
@@ -90,39 +95,6 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
         return [[self class] createShapeLayerWithPath:path lineWidth:lineWidth strokeColor:lineColor];
     }
     return nil;
-}
-
-#pragma mark - private
-+ (UIBezierPath *)createBezierPathWithPoint:(CGPoint)point
-{
-    UIBezierPath *path = [UIBezierPath new];
-    path.lineCapStyle = kCGLineCapRound; //线条拐角
-    path.lineJoinStyle = kCGLineJoinRound; //终点处理
-    [path moveToPoint:point];
-    return path;
-}
-
-+ (CAShapeLayer *)createShapeLayerWithPath:(UIBezierPath *)path lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor
-{
-    /**
-     1、渲染快速。CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多。
-     2、高效使用内存。一个CAShapeLayer不需要像普通CALayer一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。
-     3、不会被图层边界剪裁掉。
-     4、不会出现像素化。
-     */
-    CAShapeLayer *slayer = nil;
-    if (path) {
-        slayer = [CAShapeLayer layer];
-        slayer.path = path.CGPath;
-        slayer.backgroundColor = [UIColor clearColor].CGColor;
-        slayer.fillColor = [UIColor clearColor].CGColor;
-        slayer.lineCap = kCALineCapRound;
-        slayer.lineJoin = kCALineJoinRound;
-        slayer.strokeColor = strokeColor.CGColor;
-        slayer.lineWidth = lineWidth;
-    }
-    
-    return slayer;
 }
 
 @end
