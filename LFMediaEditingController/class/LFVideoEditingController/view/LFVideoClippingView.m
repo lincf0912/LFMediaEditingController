@@ -304,7 +304,6 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     if (self.hasWatermark) {
         
         UIView *copyZoomView = [[UIView alloc] initWithFrame:self.zoomView.bounds];
-        copyZoomView.hidden = NO;
         copyZoomView.backgroundColor = [UIColor clearColor];
         copyZoomView.userInteractionEnabled = NO;
         

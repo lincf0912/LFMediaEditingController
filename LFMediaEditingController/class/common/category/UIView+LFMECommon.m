@@ -28,8 +28,8 @@
             point = CGPointMake(-rect.origin.x, -rect.origin.y);
         }
         @autoreleasepool {
-            UIGraphicsBeginImageContextWithOptions(size, YES, 0.0);
-            [self drawViewHierarchyInRect:(CGRect){point, self.bounds.size} afterScreenUpdates:NO];
+            UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+            [self drawViewHierarchyInRect:(CGRect){point, self.bounds.size} afterScreenUpdates:YES];
             image = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
         }
