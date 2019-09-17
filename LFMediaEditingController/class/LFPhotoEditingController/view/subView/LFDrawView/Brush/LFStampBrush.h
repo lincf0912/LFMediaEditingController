@@ -23,7 +23,7 @@ OBJC_EXTERN LFStampBrush *LFStampBrushHeart(void);
 
 /** 图案间隔 默认1 */
 @property (nonatomic, assign) CGFloat spacing;
-/** 线粗的缩放系数 默认4 */
+/** 线粗的缩放系数（图案大小） 默认4 */
 @property (nonatomic, assign) CGFloat scale;
 /** 印章图案名称 */
 @property (nonatomic, strong) NSArray <NSString *> *patterns;

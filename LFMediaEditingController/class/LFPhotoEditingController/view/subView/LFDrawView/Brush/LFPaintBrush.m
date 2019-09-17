@@ -62,12 +62,10 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
     NSDictionary *superAllTracks = [super allTracks];
     
     NSMutableDictionary *myAllTracks = nil;
-    if (superAllTracks) {
+    if (superAllTracks && self.lineColor) {
         myAllTracks = [NSMutableDictionary dictionary];
         [myAllTracks addEntriesFromDictionary:superAllTracks];
-        if (self.lineColor) {
-            [myAllTracks addEntriesFromDictionary:@{LFPaintBrushLineColor:self.lineColor}];            
-        }
+        [myAllTracks addEntriesFromDictionary:@{LFPaintBrushLineColor:self.lineColor}];
     }
     return myAllTracks;
 }
@@ -79,17 +77,16 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
     NSArray <NSString /*CGPoint*/*>*allPoints = trackDict[LFBrushAllPoints];
     
     if (allPoints) {
-        UIBezierPath *path = nil;
-        CGPoint previousPoint = CGPointZero;
-        for (NSString *pointStr in allPoints) {
-            CGPoint point = CGPointFromString(pointStr);
-            if (path == nil) {
-                path = [[self class] createBezierPathWithPoint:point];
-            } else {
-                CGPoint midPoint = LFBrushMidPoint(previousPoint, point);
-                // 使用二次曲线方程式
-                [path addQuadCurveToPoint:midPoint controlPoint:previousPoint];
-            }
+        CGPoint previousPoint = CGPointFromString(allPoints.firstObject);
+        UIBezierPath *path = [[self class] createBezierPathWithPoint:previousPoint];
+        
+        for (NSInteger i=1; i<allPoints.count; i++) {
+            
+            CGPoint point = CGPointFromString(allPoints[i]);
+            
+            CGPoint midPoint = LFBrushMidPoint(previousPoint, point);
+            // 使用二次曲线方程式
+            [path addQuadCurveToPoint:midPoint controlPoint:previousPoint];
             previousPoint = point;
         }
         return [[self class] createShapeLayerWithPath:path lineWidth:lineWidth strokeColor:lineColor];

@@ -10,7 +10,7 @@
 #import "NSBundle+LFMediaEditing.h"
 #import "LFBrushCache.h"
 
-NSString *const LFChalkBrushName = @"Chalk";
+NSString *const LFChalkBrushName = @"EditImageChalkBrush";
 NSString *const LFChalkBrushImage = @"ChalkImage";
 
 @interface LFChalkBrush ()

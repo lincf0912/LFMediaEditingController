@@ -17,6 +17,7 @@
 #import "LFFluorescentBrush.h"
 #import "LFBlurryBrush.h"
 #import "LFMosaicBrush.h"
+#import "LFSmearBrush.h"
 
 @class LFBrush;
 

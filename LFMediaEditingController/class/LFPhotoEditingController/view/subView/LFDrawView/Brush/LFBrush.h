@@ -16,12 +16,14 @@ OBJC_EXTERN NSString *const LFBrushLineWidth;
 
 // 为CGPoint{inf, inf}
 OBJC_EXTERN const CGPoint LFBrushPointNull;
-
+// 点是否为CGPoint{inf, inf}
 OBJC_EXTERN bool LFBrushPointIsNull(CGPoint point);
-
+// 2点的中点
 OBJC_EXTERN CGPoint LFBrushMidPoint(CGPoint p0, CGPoint p1);
-
+// 2点的距离
 OBJC_EXTERN CGFloat LFBrushDistancePoint(CGPoint p0, CGPoint p1);
+// 2点的角度
+OBJC_EXTERN CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1);
 
 @interface LFBrush : NSObject
 

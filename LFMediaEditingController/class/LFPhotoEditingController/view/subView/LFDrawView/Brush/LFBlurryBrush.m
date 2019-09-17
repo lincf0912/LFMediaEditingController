@@ -41,7 +41,7 @@ NSString *const LFBlurryBrushImageColor = @"LFBlurryBrushImageColor";
             self->_lineColor = color;
         } else {
             if (image) {
-                NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+//                NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
                 __weak typeof(self) weakSelf = self;
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
                     
@@ -55,7 +55,7 @@ NSString *const LFBlurryBrushImageColor = @"LFBlurryBrushImageColor";
                         return filter;
                     }];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"used time : %fs", ([[NSDate date] timeIntervalSince1970] - time));
+//                        NSLog(@"used time : %fs", ([[NSDate date] timeIntervalSince1970] - time));
                         if (weakSelf && patternColor) {
                             __strong typeof(self) strongSelf = weakSelf;
                             strongSelf->_lineColor = patternColor;

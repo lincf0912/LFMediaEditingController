@@ -36,6 +36,31 @@ CGFloat LFBrushDistancePoint(CGPoint p0, CGPoint p1) {
     return sqrt(pow(p0.x - p1.x, 2) + pow(p0.y - p1.y, 2));
 }
 
+CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1) {
+    
+    if (LFBrushPointIsNull(p0) || LFBrushPointIsNull(p1)) {
+        return 0;
+    }
+    
+    CGPoint p = CGPointMake(p0.x, p0.y+100);
+    
+    CGFloat x1 = p.x - p0.x;
+    CGFloat y1 = p.y - p0.y;
+    CGFloat x2 = p1.x - p0.x;
+    CGFloat y2 = p1.y - p0.y;
+    
+    CGFloat x = x1 * x2 + y1 * y2;
+    CGFloat y = x1 * y2 - x2 * y1;
+    
+    CGFloat angle = acos(x/sqrt(x*x+y*y));
+    
+    if (p1.x < p0.x) {
+        angle = M_PI*2 - angle;
+    }
+    
+    return (180.0 * angle / M_PI);
+}
+
 @interface LFBrush ()
 
 @property (nonatomic, strong) NSMutableArray <NSString /*CGPoint*/*>*allPoints;
