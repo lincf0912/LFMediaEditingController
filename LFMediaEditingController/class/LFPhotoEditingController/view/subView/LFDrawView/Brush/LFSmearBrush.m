@@ -201,7 +201,7 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 {
     if (image == nil) return nil;
     
-    CGFloat height = lineWidth+image.size.height;
+    CGFloat height = lineWidth;
     CGSize size = CGSizeMake(image.size.width*height/image.size.height, height);
     CGRect rect = CGRectMake(point.x-size.width/2, point.y-size.height/2, size.width, size.height);
     

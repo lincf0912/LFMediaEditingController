@@ -337,7 +337,10 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 /** 设置绘画线粗 */
 - (void)setDrawLineWidth:(CGFloat)lineWidth
 {
-    if ([_drawView.brush isKindOfClass:[LFChalkBrush class]]) {
+    if ([_drawView.brush isKindOfClass:[LFSmearBrush class]]) {
+        // 对涂抹画笔的线粗相对调整
+        _drawView.brush.lineWidth = lineWidth*25;
+    } else if ([_drawView.brush isKindOfClass:[LFChalkBrush class]]) {
         // 对粉笔的线粗相对调整
         _drawView.brush.lineWidth = lineWidth*2.5;
     } else if ([_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
