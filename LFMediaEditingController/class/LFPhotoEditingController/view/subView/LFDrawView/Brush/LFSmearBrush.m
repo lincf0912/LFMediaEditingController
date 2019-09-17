@@ -62,7 +62,7 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 {
     self = [super init];
     if (self) {
-        
+        self.level = 5;
     }
     return self;
 }
@@ -109,6 +109,7 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
     _points = [NSMutableArray array];
     
     CALayer *layer = [[self class] createLayer];
+    layer.lf_level = self.level;
     self.layer = layer;
     
     return layer;

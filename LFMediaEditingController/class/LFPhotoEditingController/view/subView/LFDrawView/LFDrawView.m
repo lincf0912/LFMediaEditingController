@@ -33,14 +33,6 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     return self;
 }
 
-//- (void)setFrame:(CGRect)frame
-//{
-//    [super setFrame:frame];
-//    [[self.layer sublayers] enumerateObjectsUsingBlock:^(CALayer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        obj.frame = self.bounds;
-//    }];
-//}
-
 - (void)customInit
 {
     _layerArray = [@[] mutableCopy];
@@ -48,8 +40,6 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     self.backgroundColor = [UIColor clearColor];
     self.clipsToBounds = YES;
     self.exclusiveTouch = YES;
-//    self.layer.anchorPoint = CGPointMake(0, 0);
-//    self.layer.position = CGPointMake(0, 0);
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -65,7 +55,18 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
         CALayer *layer = [self.brush createDrawLayerWithPoint:point];
         
         if (layer) {
-            [self.layer addSublayer:layer];
+            /** 使用画笔的图层层级，层级越大，图层越低 */
+            [self.layer.sublayers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof CALayer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                /** 图层层级<=，放在该图层上方 */
+                if (layer.lf_level <= obj.lf_level) {
+                    [self.layer insertSublayer:layer above:obj];
+                    *stop = YES;
+                }
+            }];
+            /** 没有被加入到显示图层，直接放到最低 */
+            if (layer.superlayer) {
+                [self.layer insertSublayer:layer atIndex:0];
+            }
             [self.layerArray addObject:layer];
         } else {
             _isBegan = NO;
@@ -167,7 +168,18 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
         for (NSDictionary *allTracks in brushData) {
             CALayer *layer = [LFBrush drawLayerWithTrackDict:allTracks];
             if (layer) {
-                [self.layer addSublayer:layer];
+                /** 使用画笔的图层层级，层级越大，图层越低 */
+                [self.layer.sublayers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof CALayer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    /** 图层层级<=，放在该图层上方 */
+                    if (layer.lf_level <= obj.lf_level) {
+                        [self.layer insertSublayer:layer above:obj];
+                        *stop = YES;
+                    }
+                }];
+                /** 没有被加入到显示图层，直接放到最低 */
+                if (layer.superlayer) {
+                    [self.layer insertSublayer:layer atIndex:0];
+                }
                 [self.layerArray addObject:layer];
             }
         }

@@ -51,6 +51,7 @@ NSString *const LFPaintBrushLineColor = @"LFPaintBrushLineColor";
         self.path = [[self class] createBezierPathWithPoint:point];
         
         CAShapeLayer *layer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth strokeColor:self.lineColor];
+        layer.lf_level = self.level;
         self.layer = layer;
         
         return layer;

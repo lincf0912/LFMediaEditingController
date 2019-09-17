@@ -74,6 +74,7 @@
 		C73F4CBE223110EB00ED40B7 /* AVAsset+LFMECommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */; };
 		C73F4CC72232540400ED40B7 /* 4.MOV in Resources */ = {isa = PBXBuildFile; fileRef = C73F4CC62232540300ED40B7 /* 4.MOV */; };
 		C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */; };
+		C763E8262330CF160004ED6C /* CALayer+LFBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C763E8252330CF160004ED6C /* CALayer+LFBrush.m */; };
 		C7735EB62313D3D5009BB077 /* NSAttributedString+LFMECoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */; };
 		C786A51F231D1D5200546B8C /* LFBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A51E231D1D5200546B8C /* LFBrush.m */; };
 		C786A522231D1DB600546B8C /* LFPaintBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A521231D1DB600546B8C /* LFPaintBrush.m */; };
@@ -246,6 +247,8 @@
 		C73F4CC62232540300ED40B7 /* 4.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 4.MOV; sourceTree = "<group>"; };
 		C73F4D772237820900ED40B7 /* LFDataFilterImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFDataFilterImageView.h; sourceTree = "<group>"; };
 		C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFDataFilterImageView.m; sourceTree = "<group>"; };
+		C763E8242330CF160004ED6C /* CALayer+LFBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CALayer+LFBrush.h"; sourceTree = "<group>"; };
+		C763E8252330CF160004ED6C /* CALayer+LFBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CALayer+LFBrush.m"; sourceTree = "<group>"; };
 		C7735EB42313D3D5009BB077 /* NSAttributedString+LFMECoreText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+LFMECoreText.h"; sourceTree = "<group>"; };
 		C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LFMECoreText.m"; sourceTree = "<group>"; };
 		C786A51D231D1D5200546B8C /* LFBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFBrush.h; sourceTree = "<group>"; };
@@ -750,6 +753,17 @@
 			path = LFLView;
 			sourceTree = "<group>";
 		};
+		C763E8202330CAC80004ED6C /* category */ = {
+			isa = PBXGroup;
+			children = (
+				C708908D2329E7B800ABF2FB /* LFBrush+create.h */,
+				C708908E2329E7B800ABF2FB /* LFBrush+create.m */,
+				C763E8242330CF160004ED6C /* CALayer+LFBrush.h */,
+				C763E8252330CF160004ED6C /* CALayer+LFBrush.m */,
+			);
+			path = category;
+			sourceTree = "<group>";
+		};
 		C786A51B231D1D1F00546B8C /* LFDrawView */ = {
 			isa = PBXGroup;
 			children = (
@@ -763,11 +777,10 @@
 		C786A51C231D1D2E00546B8C /* Brush */ = {
 			isa = PBXGroup;
 			children = (
+				C763E8202330CAC80004ED6C /* category */,
 				C786A53A2322001500546B8C /* cache */,
 				C786A51D231D1D5200546B8C /* LFBrush.h */,
 				C786A51E231D1D5200546B8C /* LFBrush.m */,
-				C708908D2329E7B800ABF2FB /* LFBrush+create.h */,
-				C708908E2329E7B800ABF2FB /* LFBrush+create.m */,
 				C786A520231D1DB600546B8C /* LFPaintBrush.h */,
 				C786A521231D1DB600546B8C /* LFPaintBrush.m */,
 				C786A5342321ECD600546B8C /* LFChalkBrush.h */,
@@ -1105,6 +1118,7 @@
 				6F384D421EE7EA6D0077D207 /* LFSplashLayer.m in Sources */,
 				C7D28F5622DC13F800AB83FE /* LFText.m in Sources */,
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
+				C763E8262330CF160004ED6C /* CALayer+LFBrush.m in Sources */,
 				6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */,
 				6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */,
 				C7C5807E22AFA812003BD4F7 /* LFSampleBufferHolder.m in Sources */,

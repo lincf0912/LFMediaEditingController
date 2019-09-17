@@ -55,6 +55,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
         _spacing = 1.f;
         _scale = 4.f;
         _patterns = @[];
+        self.level = 3;
     }
     return self;
 }
@@ -83,6 +84,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
     self.index = 0;
     
     CALayer *layer = [[self class] createLayer];
+    layer.lf_level = self.level;
     self.layer = layer;
     
     return layer;

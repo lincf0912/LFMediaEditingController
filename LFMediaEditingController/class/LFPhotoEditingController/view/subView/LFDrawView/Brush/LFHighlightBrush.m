@@ -65,6 +65,7 @@ CGFloat const LFHighlightBrushAlpha = 0.6;
         
         CALayer *layer = [CALayer layer];
         layer.contentsScale = [UIScreen mainScreen].scale;
+        layer.lf_level = self.level;
         self.layer = layer;
         
         CAShapeLayer *outerLayer = [[self class] createShapeLayerWithPath:self.path lineWidth:self.lineWidth+self.outerLineWidth*2 strokeColor:self.outerLineColor];

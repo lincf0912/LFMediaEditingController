@@ -29,6 +29,7 @@
     super.lineColor = [lineColor colorWithAlphaComponent:0.5];
 }
 
+#pragma mark - overwrite
 + (CAShapeLayer *)createShapeLayerWithPath:(UIBezierPath *)path lineWidth:(CGFloat)lineWidth strokeColor:(UIColor *)strokeColor
 {
     /**

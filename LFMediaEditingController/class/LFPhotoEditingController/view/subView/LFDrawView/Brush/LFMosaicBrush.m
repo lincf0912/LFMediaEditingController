@@ -25,6 +25,7 @@ NSString *const LFMosaicBrushImageColor = @"LFMosaicBrushImageColor";
     self = [super init];
     if (self) {
         self->_lineColor = nil;
+        self.level = 5;
     }
     return self;
 }
