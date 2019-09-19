@@ -8,10 +8,16 @@
 
 #import "LFSmearBrush.h"
 #import "NSBundle+LFMediaEditing.h"
+#import "LFBrush+create.h"
 #import "LFBrushCache.h"
 
+NSString *const LFSmearBrushImage = @"LFSmearBrushImage";
+
 NSString *const LFSmearBrushName = @"EditImageSmearBrush";
+
 NSString *const LFSmearBrushPoints = @"LFSmearBrushPoints";
+
+// points sub data
 NSString *const LFSmearBrushPoint = @"LFSmearBrushPoint";
 NSString *const LFSmearBrushAngle = @"LFSmearBrushAngle";
 NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
@@ -25,19 +31,28 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 #pragma mark - 获取屏幕的颜色块
 - (UIColor *)colorOfPoint:(CGPoint)point
 {
+    UIImage *cacheImage = [[LFBrushCache share] objectForKey:LFSmearBrushImage];
+    if (!CGRectContainsPoint(CGRectMake(0.0f, 0.0f, cacheImage.size.width, cacheImage.size.height), point)) {
+        return nil;
+    }
     UIColor *color = nil;
     @autoreleasepool {
+        
+        NSUInteger width = cacheImage.size.width;
+        NSUInteger height = cacheImage.size.height;
+        
         unsigned char pixel[4] = {0};
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = CGBitmapContextCreate(pixel,
-                                                     1, 1, 8, 4, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
+                                                     1, 1, 8, 4, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+        CGColorSpaceRelease(colorSpace);
+        CGContextSetBlendMode(context, kCGBlendModeCopy);
+        CGContextTranslateCTM(context, -point.x, point.y-(CGFloat)height);
         
-        CGContextTranslateCTM(context, -point.x, -point.y);
-        
-        [[[UIApplication sharedApplication] keyWindow].layer renderInContext:context];
+//        [[[UIApplication sharedApplication] keyWindow].layer renderInContext:context];
+        CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, (CGFloat)width, (CGFloat)height), cacheImage.CGImage);
         
         CGContextRelease(context);
-        CGColorSpaceRelease(colorSpace);
         color = [UIColor colorWithRed:pixel[0]/255.0
                                 green:pixel[1]/255.0 blue:pixel[2]/255.0
                                 alpha:pixel[3]/255.0];
@@ -63,8 +78,62 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
     self = [super init];
     if (self) {
         self.level = 5;
+        self.lineWidth = 100;
     }
     return self;
+}
+
+- (instancetype)initWithImage:(UIImage *)image canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache
+{
+    self = [super init];
+    if (self) {
+        if (image) {
+            [LFSmearBrush loadBrushImage:image canvasSize:canvasSize useCache:useCache complete:nil];
+        } else {
+            NSAssert(image!=nil, @"LFBlurryBrush image is nil.");
+        }
+    }
+    return self;
+}
+
++ (void)loadBrushImage:(UIImage *)image canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache complete:(void (^ _Nullable )(BOOL success))complete
+{
+    if (!useCache) {
+        [[LFBrushCache share] removeObjectForKey:LFSmearBrushImage];
+    }
+    UIImage *cacheImage = [[LFBrushCache share] objectForKey:LFSmearBrushImage];
+    if (cacheImage) {
+        if (complete) {
+            complete(YES);
+        }
+        return;
+    }
+    if (image) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            
+            UIImage *patternImage = [image LFBB_patternGaussianImageWithSize:canvasSize filterHandler:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (patternImage) {
+                    [[LFBrushCache share] setForceObject:patternImage forKey:LFSmearBrushImage];
+                }
+                
+                if (complete) {
+                    complete((BOOL)patternImage);
+                }
+            });
+        });
+    } else {
+        if (complete) {
+            complete(NO);
+        }
+    }
+}
+
++ (BOOL)smearBrushCache
+{
+    UIImage *cacheImage = [[LFBrushCache share] objectForKey:LFSmearBrushImage];
+    return (BOOL)cacheImage;
 }
 
 - (void)addPoint:(CGPoint)point
@@ -84,8 +153,8 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
     UIColor *color = nil;
     UIView *drawView = (UIView *)self.layer.superlayer.delegate;
     if ([drawView isKindOfClass:[UIView class]]) {
-        CGPoint screenPoint = [drawView convertPoint:point toView:[UIApplication sharedApplication].keyWindow];
-        color = [self colorOfPoint:screenPoint];
+//        CGPoint screenPoint = [drawView convertPoint:point toView:[UIApplication sharedApplication].keyWindow];
+        color = [self colorOfPoint:point];
     }
 
     CALayer *subLayer = [[self class] createSubLayerWithImage:image lineWidth:self.lineWidth point:point angle:angle color:color];
@@ -105,14 +174,16 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 
 - (CALayer *)createDrawLayerWithPoint:(CGPoint)point
 {
-    [super createDrawLayerWithPoint:point];
-    _points = [NSMutableArray array];
-    
-    CALayer *layer = [[self class] createLayer];
-    layer.lf_level = self.level;
-    self.layer = layer;
-    
-    return layer;
+    if ([LFSmearBrush smearBrushCache]) {
+        [super createDrawLayerWithPoint:point];
+        _points = [NSMutableArray array];
+        
+        CALayer *layer = [[self class] createLayer];
+        layer.lf_level = self.level;
+        self.layer = layer;
+        return layer;
+    }
+    return nil;
 }
 
 - (NSDictionary *)allTracks

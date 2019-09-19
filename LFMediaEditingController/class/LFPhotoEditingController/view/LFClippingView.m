@@ -103,6 +103,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     
     /** 默认编辑范围 */
     _editRect = self.bounds;
+    
+    // 实现LFEditingProtocol协议
+    {
+        self.lf_protocolxecutor = self.zoomingView;
+    }
 }
 
 - (void)setImage:(UIImage *)image
@@ -487,7 +492,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [self.displayView setNeedsDisplay];
+//    [self.displayView setNeedsDisplay];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -534,7 +539,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
         /** 代码调整zoom，会导致居中计算错误，必须2指控制UI自动缩放时才调用 */
         [self refreshImageZoomViewCenter];
     }
-    [self.displayView setNeedsDisplay];
+//    [self.displayView setNeedsDisplay];
     if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidZoom:)]) {
         [self.clippingDelegate lf_clippingViewDidZoom:self];
     }
@@ -678,35 +683,13 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 #pragma mark - LFEditingProtocol
 
-- (void)setEditDelegate:(id<LFPhotoEditDelegate>)editDelegate
-{
-    self.zoomingView.editDelegate = editDelegate;
-}
-
-- (id<LFPhotoEditDelegate>)editDelegate
-{
-    return self.zoomingView.editDelegate;
-}
-
-/** 禁用其他功能 */
-- (void)photoEditEnable:(BOOL)enable
-{
-    [self.zoomingView photoEditEnable:enable];
-}
-
-/** 显示视图 */
-- (UIView *)displayView
-{
-    return self.zoomingView.displayView;
-}
-
 #pragma mark - 数据
 - (NSDictionary *)photoEditData
 {
     NSMutableDictionary *data = [@{} mutableCopy];
     
     if ([self canReset]) { /** 可还原证明已编辑过 */
-//        CGRect trueFrame = CGRectApplyAffineTransform(self.frame, CGAffineTransformInvert(self.transform));
+        //        CGRect trueFrame = CGRectApplyAffineTransform(self.frame, CGAffineTransformInvert(self.transform));
         NSDictionary *myData = @{kLFClippingViewData_frame:[NSValue valueWithCGRect:self.saveRect]
                                  , kLFClippingViewData_zoomScale:@(self.zoomScale)
                                  , kLFClippingViewData_contentSize:[NSValue valueWithCGSize:self.contentSize]
@@ -747,169 +730,6 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     }
     
     self.zoomingView.photoEditData = photoEditData[kLFClippingViewData_zoomingView];
-}
-
-#pragma mark - 滤镜功能
-/** 滤镜类型 */
-- (void)changeFilterType:(NSInteger)cmType
-{
-    [self.zoomingView changeFilterType:cmType];
-}
-/** 当前使用滤镜类型 */
-- (NSInteger)getFilterType
-{
-    return [self.zoomingView getFilterType];
-}
-/** 获取滤镜图片 */
-- (UIImage *)getFilterImage
-{
-    return [self.zoomingView getFilterImage];
-}
-
-#pragma mark - 绘画功能
-/** 启用绘画功能 */
-- (void)setDrawEnable:(BOOL)drawEnable
-{
-    self.zoomingView.drawEnable = drawEnable;
-}
-- (BOOL)drawEnable
-{
-    return self.zoomingView.drawEnable;
-}
-
-- (BOOL)isDrawing
-{
-    return self.zoomingView.isDrawing;
-}
-
-- (BOOL)drawCanUndo
-{
-    return [self.zoomingView drawCanUndo];
-}
-- (void)drawUndo
-{
-    [self.zoomingView drawUndo];
-}
-/** 设置绘画画笔 */
-- (void)setDrawBrush:(LFBrush *)brush
-{
-    [self.zoomingView setDrawBrush:brush];
-}
-/** 设置绘画颜色 */
-- (void)setDrawColor:(UIColor *)color
-{
-    [self.zoomingView setDrawColor:color];
-}
-
-/** 设置绘画线粗 */
-- (void)setDrawLineWidth:(CGFloat)lineWidth
-{
-    [self.zoomingView setDrawLineWidth:lineWidth/self.zoomScale];
-}
-
-#pragma mark - 贴图功能
-/** 贴图启用 */
-- (BOOL)stickerEnable
-{
-    return [self.zoomingView stickerEnable];
-}
-/** 取消激活贴图 */
-- (void)stickerDeactivated
-{
-    [self.zoomingView stickerDeactivated];
-}
-- (void)activeSelectStickerView
-{
-    [self.zoomingView activeSelectStickerView];
-}
-/** 删除选中贴图 */
-- (void)removeSelectStickerView
-{
-    [self.zoomingView removeSelectStickerView];
-}
-/** 屏幕缩放率 */
-- (void)setScreenScale:(CGFloat)scale
-{
-    [self.zoomingView setScreenScale:scale*self.zoomScale];
-}
-/** 最小缩放率 默认0.2 */
-- (void)setStickerMinScale:(CGFloat)stickerMinScale
-{
-    self.zoomingView.stickerMinScale = stickerMinScale;
-}
-- (CGFloat)stickerMinScale
-{
-    return self.zoomingView.stickerMinScale;
-}
-/** 最大缩放率 默认3.0 */
-- (void)setStickerMaxScale:(CGFloat)stickerMaxScale
-{
-    self.zoomingView.stickerMaxScale = stickerMaxScale;
-}
-- (CGFloat)stickerMaxScale
-{
-    return self.zoomingView.stickerMaxScale;
-}
-/** 创建贴图 */
-- (void)createSticker:(LFStickerItem *)item
-{
-    [self.zoomingView createSticker:item];
-}
-/** 获取选中贴图的内容 */
-- (LFStickerItem *)getSelectSticker
-{
-    return [self.zoomingView getSelectSticker];
-}
-/** 更改选中贴图内容 */
-- (void)changeSelectSticker:(LFStickerItem *)item
-{
-    [self.zoomingView changeSelectSticker:item];
-}
-
-#pragma mark - 模糊功能
-/** 启用模糊功能 */
-- (void)setSplashEnable:(BOOL)splashEnable
-{
-    self.zoomingView.splashEnable = splashEnable;
-}
-- (BOOL)splashEnable
-{
-    return self.zoomingView.splashEnable;
-}
-- (BOOL)isSplashing
-{
-    return self.zoomingView.isSplashing;
-}
-/** 是否可撤销 */
-- (BOOL)splashCanUndo
-{
-    return [self.zoomingView splashCanUndo];
-}
-/** 撤销模糊 */
-- (void)splashUndo
-{
-    [self.zoomingView splashUndo];
-}
-
-- (void)setSplashState:(BOOL)splashState
-{
-    self.zoomingView.splashState = splashState;
-}
-
-- (BOOL)splashState
-{
-    return self.zoomingView.splashState;
-}
-
-/** 设置马赛克大小 */
-- (void)setSplashWidth:(CGFloat)squareWidth
-{
-    [self.zoomingView setSplashWidth:squareWidth/self.zoomScale];
-}
-/** 设置画笔大小 */
-- (void)setPaintWidth:(CGFloat)paintWidth
-{
-    [self.zoomingView setPaintWidth:paintWidth/self.zoomScale];
 }
 
 @end

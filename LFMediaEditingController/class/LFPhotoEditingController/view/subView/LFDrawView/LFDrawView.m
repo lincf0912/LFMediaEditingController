@@ -64,7 +64,7 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
                 }
             }];
             /** 没有被加入到显示图层，直接放到最低 */
-            if (layer.superlayer) {
+            if (layer.superlayer == nil) {
                 [self.layer insertSublayer:layer atIndex:0];
             }
             [self.layerArray addObject:layer];
@@ -177,7 +177,7 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
                     }
                 }];
                 /** 没有被加入到显示图层，直接放到最低 */
-                if (layer.superlayer) {
+                if (layer.superlayer == nil) {
                     [self.layer insertSublayer:layer atIndex:0];
                 }
                 [self.layerArray addObject:layer];

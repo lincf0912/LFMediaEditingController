@@ -26,6 +26,7 @@ NSString *const LFMosaicBrushImageColor = @"LFMosaicBrushImageColor";
     if (self) {
         self->_lineColor = nil;
         self.level = 5;
+        self.lineWidth = 25;
     }
     return self;
 }
@@ -34,38 +35,10 @@ NSString *const LFMosaicBrushImageColor = @"LFMosaicBrushImageColor";
 {
     self = [super init];
     if (self) {
-        if (!useCache) {
-            [[LFBrushCache share] removeObjectForKey:LFMosaicBrushImageColor];
-        }
-        UIColor *color = [[LFBrushCache share] objectForKey:LFMosaicBrushImageColor];
-        if (color) {
-            self->_lineColor = color;
+        if (image) {
+            [LFMosaicBrush loadBrushImage:image scale:scale canvasSize:canvasSize useCache:useCache complete:nil];
         } else {
-            if (image) {
-                __weak typeof(self) weakSelf = self;
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                    
-                    UIColor *patternColor = [image LFBB_patternGaussianColorWithSize:canvasSize filterHandler:^CIFilter *(CIImage *ciimage) {
-                        //高斯模糊滤镜
-                        CIFilter *filter = [CIFilter filterWithName:@"CIPixellate"];
-                        [filter setDefaults];
-                        [filter setValue:ciimage forKey:kCIInputImageKey];
-                        //value 改变马赛克的大小
-                        [filter setValue:@(scale) forKey:kCIInputScaleKey];
-                        return filter;
-                    }];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        if (weakSelf && patternColor) {
-                            __strong typeof(self) strongSelf = weakSelf;
-                            strongSelf->_lineColor = patternColor;
-                            [[LFBrushCache share] setObject:patternColor forKey:LFMosaicBrushImageColor];
-                        }
-                    });
-                });
-            } else {
-                NSAssert(image!=nil, @"LFMosaicBrush image is nil.");
-            }
+            NSAssert(image!=nil, @"LFMosaicBrush image is nil.");
         }
     }
     return self;
@@ -78,7 +51,65 @@ NSString *const LFMosaicBrushImageColor = @"LFMosaicBrushImageColor";
 
 - (UIColor *)lineColor
 {
-    return _lineColor;
+    return [[LFBrushCache share] objectForKey:LFMosaicBrushImageColor];
+}
+
++ (CALayer *__nullable)drawLayerWithTrackDict:(NSDictionary *)trackDict
+{
+    UIColor *lineColor = trackDict[LFPaintBrushLineColor];
+    if (lineColor) {
+        [[LFBrushCache share] setForceObject:lineColor forKey:LFMosaicBrushImageColor];
+    }
+    return [super drawLayerWithTrackDict:trackDict];
+    
+}
+
++ (void)loadBrushImage:(UIImage *)image scale:(CGFloat)scale canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache complete:(void (^ _Nullable )(BOOL success))complete
+{
+    if (!useCache) {
+        [[LFBrushCache share] removeObjectForKey:LFMosaicBrushImageColor];
+    }
+    UIColor *color = [[LFBrushCache share] objectForKey:LFMosaicBrushImageColor];
+    if (color) {
+        if (complete) {
+            complete(YES);
+        }
+        return;
+    }
+    if (image) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            
+            UIColor *patternColor = [image LFBB_patternGaussianColorWithSize:canvasSize filterHandler:^CIFilter *(CIImage *ciimage) {
+                //高斯模糊滤镜
+                CIFilter *filter = [CIFilter filterWithName:@"CIPixellate"];
+                [filter setDefaults];
+                [filter setValue:ciimage forKey:kCIInputImageKey];
+                //value 改变马赛克的大小
+                [filter setValue:@(scale) forKey:kCIInputScaleKey];
+                return filter;
+            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (patternColor) {
+                    [[LFBrushCache share] setForceObject:patternColor forKey:LFMosaicBrushImageColor];
+                }
+                
+                if (complete) {
+                    complete((BOOL)patternColor);
+                }
+            });
+        });
+    } else {
+        if (complete) {
+            complete(NO);
+        }
+    }
+}
+
++ (BOOL)mosaicBrushCache
+{
+    UIColor *color = [[LFBrushCache share] objectForKey:LFMosaicBrushImageColor];
+    return (BOOL)color;
 }
 
 @end

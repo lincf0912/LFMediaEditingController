@@ -26,6 +26,7 @@ NSString *const LFBlurryBrushImageColor = @"LFBlurryBrushImageColor";
     if (self) {
         self->_lineColor = nil;
         self.level = 5;
+        self.lineWidth = 25;
     }
     return self;
 }
@@ -34,39 +35,10 @@ NSString *const LFBlurryBrushImageColor = @"LFBlurryBrushImageColor";
 {
     self = [super init];
     if (self) {
-        if (!useCache) {
-            [[LFBrushCache share] removeObjectForKey:LFBlurryBrushImageColor];
-        }
-        UIColor *color = [[LFBrushCache share] objectForKey:LFBlurryBrushImageColor];
-        if (color) {
-            self->_lineColor = color;
+        if (image) {
+            [LFBlurryBrush loadBrushImage:image radius:radius canvasSize:canvasSize useCache:useCache complete:nil];
         } else {
-            if (image) {
-//                NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
-                __weak typeof(self) weakSelf = self;
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                    
-                    UIColor *patternColor = [image LFBB_patternGaussianColorWithSize:canvasSize filterHandler:^CIFilter *(CIImage *ciimage) {
-                        //高斯模糊滤镜
-                        CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"];
-                        [filter setDefaults];
-                        [filter setValue:ciimage forKey:kCIInputImageKey];
-                        //value 改变模糊效果值
-                        [filter setValue:@(radius) forKey:kCIInputRadiusKey];
-                        return filter;
-                    }];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        NSLog(@"used time : %fs", ([[NSDate date] timeIntervalSince1970] - time));
-                        if (weakSelf && patternColor) {
-                            __strong typeof(self) strongSelf = weakSelf;
-                            strongSelf->_lineColor = patternColor;
-                            [[LFBrushCache share] setObject:patternColor forKey:LFBlurryBrushImageColor];
-                        }
-                    });
-                });
-            } else {
-                NSAssert(image!=nil, @"LFBlurryBrush image is nil.");
-            }
+            NSAssert(image!=nil, @"LFBlurryBrush image is nil.");
         }
     }
     return self;
@@ -79,7 +51,66 @@ NSString *const LFBlurryBrushImageColor = @"LFBlurryBrushImageColor";
 
 - (UIColor *)lineColor
 {
-    return _lineColor;
+    return [[LFBrushCache share] objectForKey:LFBlurryBrushImageColor];
+}
+
++ (CALayer *__nullable)drawLayerWithTrackDict:(NSDictionary *)trackDict
+{
+    UIColor *lineColor = trackDict[LFPaintBrushLineColor];
+    if (lineColor) {
+        [[LFBrushCache share] setForceObject:lineColor forKey:LFBlurryBrushImageColor];
+    }
+    return [super drawLayerWithTrackDict:trackDict];
+    
+}
+
++ (void)loadBrushImage:(UIImage *)image radius:(CGFloat)radius canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache complete:(void (^ _Nullable )(BOOL success))complete
+{
+    if (!useCache) {
+        [[LFBrushCache share] removeObjectForKey:LFBlurryBrushImageColor];
+    }
+    UIColor *color = [[LFBrushCache share] objectForKey:LFBlurryBrushImageColor];
+    if (color) {
+        if (complete) {
+            complete(YES);
+        }
+        return;
+    }
+    if (image) {
+        //                NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            
+            UIColor *patternColor = [image LFBB_patternGaussianColorWithSize:canvasSize filterHandler:^CIFilter *(CIImage *ciimage) {
+                //高斯模糊滤镜
+                CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"];
+                [filter setDefaults];
+                [filter setValue:ciimage forKey:kCIInputImageKey];
+                //value 改变模糊效果值
+                [filter setValue:@(radius) forKey:kCIInputRadiusKey];
+                return filter;
+            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //                        NSLog(@"used time : %fs", ([[NSDate date] timeIntervalSince1970] - time));
+                if (patternColor) {
+                    [[LFBrushCache share] setForceObject:patternColor forKey:LFBlurryBrushImageColor];
+                }
+                
+                if (complete) {
+                    complete((BOOL)patternColor);
+                }
+            });
+        });
+    } else {
+        if (complete) {
+            complete(NO);
+        }
+    }
+}
+
++ (BOOL)blurryBrushCache
+{
+    UIColor *color = [[LFBrushCache share] objectForKey:LFBlurryBrushImageColor];
+    return (BOOL)color;
 }
 
 @end

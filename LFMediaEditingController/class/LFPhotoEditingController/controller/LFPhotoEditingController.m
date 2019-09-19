@@ -489,6 +489,28 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             _EditingView.drawEnable = NO;
             /** 打开涂抹 */
             _EditingView.splashEnable = !_EditingView.splashEnable;
+            /** 加载涂抹相关画笔 */
+            if (![LFMosaicBrush mosaicBrushCache]) {
+                [editToolbar setSplashWait:YES index:LFSplashStateType_Mosaic];
+                CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+                [LFMosaicBrush loadBrushImage:self.editImage scale:15.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+                    [editToolbar setSplashWait:NO index:LFSplashStateType_Mosaic];
+                }];
+            }
+            if (![LFBlurryBrush blurryBrushCache]) {
+                [editToolbar setSplashWait:YES index:LFSplashStateType_Blurry];
+                CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+                [LFBlurryBrush loadBrushImage:self.editImage radius:5.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+                    [editToolbar setSplashWait:NO index:LFSplashStateType_Blurry];
+                }];
+            }
+            if (![LFSmearBrush smearBrushCache]) {
+                [editToolbar setSplashWait:YES index:LFSplashStateType_Smear];
+                CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+                [LFSmearBrush loadBrushImage:self.editImage canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+                    [editToolbar setSplashWait:NO index:LFSplashStateType_Smear];
+                }];
+            }
         }
             break;
         case LFEditToolbarType_filter:
@@ -543,7 +565,21 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             break;
         case LFEditToolbarType_splash:
         {
-            _EditingView.splashState = indexPath.row == 1;
+            LFBrush *brush = nil;
+            switch ((LFSplashStateType)indexPath.row) {
+                case LFSplashStateType_Mosaic:
+                    
+                    break;
+                case LFSplashStateType_Blurry:
+                    
+                    break;
+                case LFSplashStateType_Smear:
+                    
+                    break;
+            }
+            if (brush) {
+                [_EditingView setSplashBrush:brush];
+            }
         }
             break;
         case LFEditToolbarType_crop:

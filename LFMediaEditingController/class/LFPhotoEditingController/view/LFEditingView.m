@@ -23,8 +23,7 @@
 #define kClipZoom_margin 20.f
 
 CGFloat const lf_editingView_drawLineWidth = 5.f;
-CGFloat const lf_editingView_splashWidth = 15.f;
-CGFloat const lf_editingView_paintWidth = 50.f;
+CGFloat const lf_editingView_splashWidth = 25.f;
 CGFloat const lf_editingView_stickMinScale = .2f;
 CGFloat const lf_editingView_stickMaxScale = 3.f;
 
@@ -141,6 +140,10 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     [self addSubview:imagePixel];
     self.imagePixel = imagePixel;
     
+    // 实现LFEditingProtocol协议
+    {
+        self.lf_protocolxecutor = self.clippingView;
+    }
     
     [self setSubViewData];
     
@@ -892,7 +895,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [self.displayView setNeedsDisplay];
+//    [self.displayView setNeedsDisplay];
 }
 
 
@@ -905,7 +908,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     self.scrollIndicatorInsets = UIEdgeInsetsZero;
     [self refreshImageZoomViewCenter];
     
-    [self.displayView setNeedsDisplay];
+//    [self.displayView setNeedsDisplay];
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
@@ -1007,10 +1010,8 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     /** 默认绘画线粗 */
     [self setDrawLineWidth:lf_editingView_drawLineWidth/self.zoomScale];
-    /** 默认马赛克大小 */
-    [self setSplashWidth:lf_editingView_splashWidth/self.zoomScale];
-    /** 默认画笔大小 */
-    [self setPaintWidth:lf_editingView_paintWidth/self.zoomScale];
+    /** 默认模糊线粗 */
+    [self setSplashLineWidth:lf_editingView_splashWidth/self.zoomScale];
     /** 屏幕缩放率 */
     [self setScreenScale:self.zoomScale];
 }
@@ -1047,27 +1048,6 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 }
 
 #pragma mark - LFEditingProtocol
-
-- (void)setEditDelegate:(id<LFPhotoEditDelegate>)editDelegate
-{
-    self.clippingView.editDelegate = editDelegate;
-}
-- (id<LFPhotoEditDelegate>)editDelegate
-{
-    return self.clippingView.editDelegate;
-}
-
-/** 禁用其他功能 */
-- (void)photoEditEnable:(BOOL)enable
-{
-    [self.clippingView photoEditEnable:enable];
-}
-
-/** 显示视图 */
-- (UIView *)displayView
-{
-    return self.clippingView.displayView;
-}
 
 #pragma mark - 数据
 - (NSDictionary *)photoEditData
@@ -1106,173 +1086,6 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     }
     /** 针对长图的展示 */
     [self fixedLongImage];
-}
-
-#pragma mark - 滤镜功能
-/** 滤镜类型 */
-- (void)changeFilterType:(NSInteger)cmType
-{
-    [self.clippingView changeFilterType:cmType];
-}
-/** 当前使用滤镜类型 */
-- (NSInteger)getFilterType
-{
-    return [self.clippingView getFilterType];
-}
-/** 获取滤镜图片 */
-- (UIImage *)getFilterImage
-{
-    return [self.clippingView getFilterImage];
-}
-
-#pragma mark - 绘画功能
-/** 启用绘画功能 */
-- (void)setDrawEnable:(BOOL)drawEnable
-{
-    /** 禁止移动 */
-    self.panGestureRecognizer.enabled = !drawEnable;
-    self.clippingView.drawEnable = drawEnable;
-}
-- (BOOL)drawEnable
-{
-    return self.clippingView.drawEnable;
-}
-
-- (BOOL)isDrawing
-{
-    return self.clippingView.isDrawing;
-}
-
-- (BOOL)drawCanUndo
-{
-    return [self.clippingView drawCanUndo];
-}
-- (void)drawUndo
-{
-    [self.clippingView drawUndo];
-}
-/** 设置绘画画笔 */
-- (void)setDrawBrush:(LFBrush *)brush
-{
-    [self.clippingView setDrawBrush:brush];
-}
-/** 设置绘画颜色 */
-- (void)setDrawColor:(UIColor *)color
-{
-    [self.clippingView setDrawColor:color];
-}
-
-/** 设置绘画线粗 */
-- (void)setDrawLineWidth:(CGFloat)lineWidth
-{
-    [self.clippingView setDrawLineWidth:lineWidth];
-}
-
-#pragma mark - 贴图功能
-/** 贴图启用 */
-- (BOOL)stickerEnable
-{
-    return [self.clippingView stickerEnable];
-}
-/** 取消激活贴图 */
-- (void)stickerDeactivated
-{
-    [self.clippingView stickerDeactivated];
-}
-- (void)activeSelectStickerView
-{
-    [self.clippingView activeSelectStickerView];
-}
-/** 删除选中贴图 */
-- (void)removeSelectStickerView
-{
-    [self.clippingView removeSelectStickerView];
-}
-/** 屏幕缩放率 */
-- (void)setScreenScale:(CGFloat)scale
-{
-    [self.clippingView setScreenScale:scale];
-}
-/** 最小缩放率 默认0.2 */
-- (void)setStickerMinScale:(CGFloat)stickerMinScale
-{
-    self.clippingView.stickerMinScale = stickerMinScale;
-}
-- (CGFloat)stickerMinScale
-{
-    return self.clippingView.stickerMinScale;
-}
-/** 最大缩放率 默认3.0 */
-- (void)setStickerMaxScale:(CGFloat)stickerMaxScale
-{
-    self.clippingView.stickerMaxScale = stickerMaxScale;
-}
-- (CGFloat)stickerMaxScale
-{
-    return self.clippingView.stickerMaxScale;
-}
-/** 创建贴图 */
-- (void)createSticker:(LFStickerItem *)item
-{
-    [self.clippingView createSticker:item];
-}
-/** 获取选中贴图的内容 */
-- (LFStickerItem *)getSelectSticker
-{
-    return [self.clippingView getSelectSticker];
-}
-/** 更改选中贴图内容 */
-- (void)changeSelectSticker:(LFStickerItem *)item
-{
-    [self.clippingView changeSelectSticker:item];
-}
-
-#pragma mark - 模糊功能
-/** 启用模糊功能 */
-- (void)setSplashEnable:(BOOL)splashEnable
-{
-    /** 禁止移动 */
-    self.panGestureRecognizer.enabled = !splashEnable;
-    self.clippingView.splashEnable = splashEnable;
-}
-- (BOOL)splashEnable
-{
-    return self.clippingView.splashEnable;
-}
-/** 是否可撤销 */
-- (BOOL)splashCanUndo
-{
-    return [self.clippingView splashCanUndo];
-}
-- (BOOL)isSplashing
-{
-    return self.clippingView.isSplashing;
-}
-/** 撤销模糊 */
-- (void)splashUndo
-{
-    [self.clippingView splashUndo];
-}
-
-- (void)setSplashState:(BOOL)splashState
-{
-    self.clippingView.splashState = splashState;
-}
-
-- (BOOL)splashState
-{
-    return self.clippingView.splashState;
-}
-
-/** 设置马赛克大小 */
-- (void)setSplashWidth:(CGFloat)squareWidth
-{
-    [self.clippingView setSplashWidth:squareWidth];
-}
-/** 设置画笔大小 */
-- (void)setPaintWidth:(CGFloat)paintWidth
-{
-    [self.clippingView setPaintWidth:paintWidth];
 }
 
 @end

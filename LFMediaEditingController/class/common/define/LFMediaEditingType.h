@@ -15,7 +15,7 @@ typedef NS_ENUM(NSUInteger, LFSplashStateType) {
     /** 高斯模糊 */
     LFSplashStateType_Blurry,
     /** 画笔涂抹 */
-    LFSplashStateType_Paintbrush,
+    LFSplashStateType_Smear,
 };
 
 #endif /* LFImagePickerEditingType_h */

@@ -38,9 +38,6 @@
 /** 数据 */
 - (void)setVideoAsset:(AVAsset *_Nonnull)asset placeholderImage:(UIImage *_Nonnull)image;
 
-/** 贴图是否需要移到屏幕中心 */
-@property (nonatomic, copy) BOOL(^ _Nullable moveCenter)(CGRect rect);
-
 /** 剪切范围 */
 @property (nonatomic, assign) CGRect cropRect;
 

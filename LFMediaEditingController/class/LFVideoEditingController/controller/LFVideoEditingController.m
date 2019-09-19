@@ -560,9 +560,6 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         case LFEditToolbarType_text:
             break;
         case LFEditToolbarType_splash:
-        {
-            _EditingView.splashState = indexPath.row == 1;
-        }
             break;
         case LFEditToolbarType_audio:
             break;

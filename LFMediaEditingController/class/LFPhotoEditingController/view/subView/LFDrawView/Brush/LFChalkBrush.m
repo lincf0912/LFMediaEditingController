@@ -24,6 +24,7 @@ NSString *const LFChalkBrushImage = @"ChalkImage";
     self = [super init];
     if (self) {
         self.lineColor = [UIColor redColor];
+        self.lineWidth = 12.5;
     }
     return self;
 }

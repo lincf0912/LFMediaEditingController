@@ -48,16 +48,35 @@
 @implementation UIImage (LFBlurryBrush)
 
 /**
+ 创建图案
+ */
+- (UIImage *)LFBB_patternGaussianImageWithSize:(CGSize)size filterHandler:(CIFilter *(^ _Nullable )(CIImage *ciimage))filterHandler
+{
+    return [self LFBB_patternGaussianImageWithSize:size orientation:0 filterHandler:filterHandler];
+}
+/**
  创建图案颜色
  */
-- (UIColor *)LFBB_patternGaussianColorWithSize:(CGSize)size filterHandler:(CIFilter *(^)(CIImage *ciimage))filterHandler
+- (UIColor *)LFBB_patternGaussianColorWithSize:(CGSize)size filterHandler:(CIFilter *(^ _Nullable )(CIImage *ciimage))filterHandler
 {
-    CIContext *context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer: @(NO)}];
+    //翻转图片（因为图片转换成图像颜色后在layer上使用，layer的画布是反转的，这里需要翻转方向。理应这里不应该调整方向，为了提高效率，这里的方法私有化，仅为LFBlurryBrush/LFMosaicBrush提供。）
+    UIImage *image = [self LFBB_patternGaussianImageWithSize:size orientation:kCGImagePropertyOrientationDownMirrored filterHandler:filterHandler];
+    return [UIColor colorWithPatternImage:image];
+}
+
+- (UIImage *)LFBB_patternGaussianImageWithSize:(CGSize)size orientation:(CGImagePropertyOrientation)orientation filterHandler:(CIFilter *(^ _Nullable )(CIImage *ciimage))filterHandler
+{
+    static CIContext *context = nil;
+    if (context == nil) {
+        context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer: @(NO)}];
+    }
     CIImage *midImage = [CIImage imageWithCGImage:self.CGImage];
     midImage = [midImage imageByApplyingTransform:[self LFBB_preferredTransform]];
     midImage = [midImage imageByApplyingTransform:CGAffineTransformMakeScale(size.width/self.size.width, size.height/self.size.height)];
-    //翻转图片（因为图片转换成图像颜色后在layer上使用，layer的画布是反转的，这里需要翻转方向。理应这里不应该调整方向，为了提高效率，这里的方法私有化，仅为LFBlurryBrush提供。）
-    midImage = [midImage imageByApplyingOrientation:4];
+    
+    if (orientation > 0 && orientation < 9) {
+        midImage = [midImage imageByApplyingOrientation:orientation];
+    }
     //图片开始处理
     CIImage *result = midImage;
     if (filterHandler) {
@@ -68,10 +87,9 @@
     }
     
     CGImageRef outImage = [context createCGImage:result fromRect:[midImage extent]];
-    context = nil;
     UIImage *image = [UIImage imageWithCGImage:outImage];
     
-    return [UIColor colorWithPatternImage:image];
+    return image;
 }
 
 - (CGAffineTransform)LFBB_preferredTransform {

@@ -287,33 +287,30 @@
         /** 剩余长度 */
         CGFloat width = CGRectGetMinX(edit_splashMenu_revoke.frame);
         /** 按钮个数 */
-        int count = 2;
+        int count = 3;
         /** 平分空间 */
         CGFloat averageWidth = width/(count+1);
         
-        UIButton *action1 = [UIButton buttonWithType:UIButtonTypeCustom];
-        action1.frame = CGRectMake(averageWidth*1-44/2, (CGRectGetHeight(edit_splashMenu.frame)-30)/2, 44, 30);
-        action1.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        [action1 addTarget:self action:@selector(splashMenu_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn.png") forState:UIControlStateNormal];
-        [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn_HL.png") forState:UIControlStateHighlighted];
-        [action1 setImage:bundleEditImageNamed(@"EditImageTraditionalMosaicBtn_HL.png") forState:UIControlStateSelected];
-        action1.tag = 1;
-        [edit_splashMenu addSubview:action1];
+        NSArray *icons = @[@"EditImageTraditionalMosaicBtn.png", @"EditImageBrushBlurryBtn.png", @"EditImageBrushMosaicBtn.png"];
+        NSArray *icons_HL = @[@"EditImageTraditionalMosaicBtn_HL.png", @"EditImageBrushBlurryBtn_HL.png", @"EditImageBrushMosaicBtn_HL.png"];
         
-        UIButton *action2 = [UIButton buttonWithType:UIButtonTypeCustom];
-        action2.frame = CGRectMake(averageWidth*2-44/2, (CGRectGetHeight(edit_splashMenu.frame)-30)/2, 44, 30);
-        action2.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        [action2 addTarget:self action:@selector(splashMenu_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn.png") forState:UIControlStateNormal];
-        [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn_HL.png") forState:UIControlStateHighlighted];
-        [action2 setImage:bundleEditImageNamed(@"EditImageBrushMosaicBtn_HL.png") forState:UIControlStateSelected];
-        action2.tag = 2;
-        [edit_splashMenu addSubview:action2];
-        
-        /** 优先激活首个按钮 */
-        _edit_splashMenu_action_button = action1;
-        action1.selected = YES;
+        for (NSInteger i=0; i<count; i++) {
+            UIButton *action = [UIButton buttonWithType:UIButtonTypeCustom];
+            action.frame = CGRectMake(averageWidth*(i+1)-44/2, (CGRectGetHeight(edit_splashMenu.frame)-30)/2, 44, 30);
+            action.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+            [action addTarget:self action:@selector(splashMenu_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+            [action setImage:bundleEditImageNamed(icons[i]) forState:UIControlStateNormal];
+            [action setImage:bundleEditImageNamed(icons_HL[i]) forState:UIControlStateHighlighted];
+            [action setImage:bundleEditImageNamed(icons_HL[i]) forState:UIControlStateSelected];
+            action.tag = i+1;
+            [edit_splashMenu addSubview:action];
+            
+            if (i == 0) {
+                /** 优先激活首个按钮 */
+                _edit_splashMenu_action_button = action;
+                action.selected = YES;
+            }
+        }
         
         self.edit_splashMenu = edit_splashMenu;
         [self insertSubview:edit_splashMenu belowSubview:_edit_menu];
@@ -593,6 +590,29 @@
     UIView *view = [self.edit_splashMenu viewWithTag:index+1];
     if ([view isKindOfClass:[UIButton class]]) {
         [self splashMenu_buttonClick:(UIButton *)view];
+    }
+}
+
+/** 设置模糊等待状态 */
+- (void)setSplashWait:(BOOL)isWait index:(NSUInteger)index
+{
+    UIView *view = [self.edit_splashMenu viewWithTag:index+1];
+    if ([view isKindOfClass:[UIButton class]]) {
+        NSInteger tag = 100 + view.tag;
+        if (isWait) {
+            if ([view.superview viewWithTag:tag]) {
+                return;
+            }
+            UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+            aiView.frame = view.frame;
+            aiView.tag = tag;
+            [aiView startAnimating];
+            [view.superview addSubview:aiView];
+            view.hidden = YES;
+        } else {
+            [[view.superview viewWithTag:tag] removeFromSuperview];
+            view.hidden = NO;
+        }
     }
 }
 

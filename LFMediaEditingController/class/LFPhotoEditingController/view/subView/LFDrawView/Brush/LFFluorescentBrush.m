@@ -20,6 +20,7 @@
     self = [super init];
     if (self) {
         self.lineColor = [UIColor redColor];
+        self.lineWidth = 22.5;
     }
     return self;
 }

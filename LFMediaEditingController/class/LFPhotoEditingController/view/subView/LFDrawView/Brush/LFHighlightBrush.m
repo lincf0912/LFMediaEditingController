@@ -35,7 +35,7 @@ CGFloat const LFHighlightBrushAlpha = 0.6;
     if (self) {
         _lineColor = [UIColor whiteColor];
         _outerLineColor = [UIColor redColor];
-        _outerLineWidth = 3.0;
+        _outerLineWidth = self.lineWidth/1.6;
     }
     return self;
 }

@@ -21,9 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIImage (LFBlurryBrush)
 
 /**
+ 创建图案
+ */
+- (UIImage *)LFBB_patternGaussianImageWithSize:(CGSize)size filterHandler:(CIFilter *(^ _Nullable )(CIImage *ciimage))filterHandler;
+/**
  创建图案颜色
  */
-- (UIColor *)LFBB_patternGaussianColorWithSize:(CGSize)size filterHandler:(CIFilter *(^)(CIImage *ciimage))filterHandler;
+- (UIColor *)LFBB_patternGaussianColorWithSize:(CGSize)size filterHandler:(CIFilter *(^ _Nullable )(CIImage *ciimage))filterHandler;
 
 @end
 

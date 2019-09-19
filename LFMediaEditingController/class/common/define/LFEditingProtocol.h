@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LFPhotoEditDelegate.h"
 #import "LFStickerItem.h"
+#import "LFMediaEditingType.h"
 
 #import "LFPaintBrush.h"
 #import "LFStampBrush.h"
@@ -19,18 +20,32 @@
 #import "LFMosaicBrush.h"
 #import "LFSmearBrush.h"
 
-@class LFBrush;
+NS_ASSUME_NONNULL_BEGIN
+
+@class LFBrush, LFDrawView, LFStickerView, LFDataFilterImageView, LFDataFilterVideoView;
+@protocol LFEditingProtocol;
+
+// 实现LFEditingProtocol的所有非必要方法。
+@interface UIView (LFEditingProtocol)
+
+// 协议执行者
+@property (nonatomic, weak) UIView <LFEditingProtocol>* lf_protocolxecutor;
+
+/** 绘画 */
+@property (nonatomic, weak) LFDrawView *lf_drawView;
+/** 贴图 */
+@property (nonatomic, weak) LFStickerView *lf_stickerView;
+/** 模糊（马赛克、高斯模糊、涂抹） */
+@property (nonatomic, weak) LFDrawView *lf_splashView;
+
+/** 图片展示 */
+@property (nonatomic, weak) LFDataFilterImageView *lf_imageView;
+/** 视频展示 */
+@property (nonatomic, weak) LFDataFilterVideoView *lf_playerView;
+
+@end
 
 @protocol LFEditingProtocol <NSObject>
-
-/** 代理 */
-@property (nonatomic ,weak) id<LFPhotoEditDelegate> editDelegate;
-
-/** 禁用其他功能 */
-- (void)photoEditEnable:(BOOL)enable;
-
-/** 显示视图 */
-@property (nonatomic, weak, readonly) UIView *displayView;
 
 /** =====================数据===================== */
 
@@ -38,15 +53,13 @@
 @property (nonatomic, strong) NSDictionary *photoEditData;
 
 @optional
-/** =====================滤镜功能===================== */
-/** 滤镜类型 */
-- (void)changeFilterType:(NSInteger)cmType;
-/** 当前使用滤镜类型 */
-- (NSInteger)getFilterType;
-/** 获取滤镜图片 */
-- (UIImage *)getFilterImage;
+/** =====================设置项===================== */
+/** 代理 */
+@property (nonatomic, weak) id<LFPhotoEditDelegate> editDelegate;
 
-@required
+/** 禁用其他功能 */
+- (void)photoEditEnable:(BOOL)enable;
+
 /** =====================绘画功能===================== */
 
 /** 启用绘画功能 */
@@ -87,7 +100,6 @@
 /** 更改选中贴图内容 */
 - (void)changeSelectSticker:(LFStickerItem *)item;
 
-
 /** =====================模糊功能===================== */
 
 /** 启用模糊功能 */
@@ -98,11 +110,19 @@
 @property (nonatomic, readonly) BOOL isSplashing;
 /** 撤销模糊 */
 - (void)splashUndo;
-/** 改变模糊状态 */
-@property (nonatomic, readwrite) BOOL splashState;
-/** 设置马赛克大小 */
-- (void)setSplashWidth:(CGFloat)squareWidth;
-/** 设置画笔大小 */
-- (void)setPaintWidth:(CGFloat)paintWidth;
+/** 设置模糊类型 */
+@property (nonatomic, assign) LFSplashStateType splashStateType;
+/** 设置模糊线粗 */
+- (void)setSplashLineWidth:(CGFloat)lineWidth;
+
+/** =====================滤镜功能===================== */
+/** 滤镜类型 */
+- (void)changeFilterType:(NSInteger)cmType;
+/** 当前使用滤镜类型 */
+- (NSInteger)getFilterType;
+/** 获取滤镜图片 */
+- (UIImage *)getFilterImage;
 
 @end
+
+NS_ASSUME_NONNULL_END

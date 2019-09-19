@@ -102,14 +102,6 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     LFVideoClippingView *clippingView = [[LFVideoClippingView alloc] initWithFrame:self.bounds];
     clippingView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     clippingView.clipDelegate = self;
-    __weak typeof(self) weakSelf = self;
-    clippingView.moveCenter = ^BOOL(CGRect rect) {
-        /** 判断缩放后贴图是否超出边界线 */
-        CGRect newRect = [weakSelf.clippingView convertRect:rect toView:weakSelf];
-        CGRect screenRect = weakSelf.frame;
-        screenRect = CGRectInset(screenRect, 44, 44);
-        return !CGRectIntersectsRect(screenRect, newRect);
-    };
     [self addSubview:clippingView];
     _clippingView = clippingView;
     
@@ -118,6 +110,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     trimmerView.delegate = self;
     [self addSubview:trimmerView];
     _trimmerView = trimmerView;
+    
+    // 实现LFEditingProtocol协议
+    {
+        self.lf_protocolxecutor = self.clippingView;
+    }
 }
 
 - (UIEdgeInsets)refer_clippingInsets
@@ -222,7 +219,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     self.asset = asset;
     [self.clippingView setVideoAsset:asset placeholderImage:image];
     
-    [self setNeedsDisplay];
+//    [self setNeedsDisplay];
 }
 
 - (void)setAudioUrls:(NSArray<LFAudioItem *> *)audioUrls
@@ -427,27 +424,6 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 
 #pragma mark - LFEditingProtocol
 
-- (void)setEditDelegate:(id<LFPhotoEditDelegate>)editDelegate
-{
-    self.clippingView.editDelegate = editDelegate;
-}
-- (id<LFPhotoEditDelegate>)editDelegate
-{
-    return self.clippingView.editDelegate;
-}
-
-/** 禁用其他功能 */
-- (void)photoEditEnable:(BOOL)enable
-{
-    [self.clippingView photoEditEnable:enable];
-}
-
-/** 显示视图 */
-- (UIView *)displayView
-{
-    return self.clippingView.displayView;
-}
-
 #pragma mark - 数据
 - (NSDictionary *)photoEditData
 {
@@ -507,167 +483,6 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         }
     }
     self.clippingView.photoEditData = photoEditData[kLFVideoEditingViewData_clipping];
-}
-
-#pragma mark - 滤镜功能
-/** 滤镜类型 */
-- (void)changeFilterType:(NSInteger)cmType
-{
-    [self.clippingView changeFilterType:cmType];
-}
-/** 当前使用滤镜类型 */
-- (NSInteger)getFilterType
-{
-    return [self.clippingView getFilterType];
-}
-/** 获取滤镜图片 */
-- (UIImage *)getFilterImage
-{
-    return [self.clippingView getFilterImage];
-}
-
-#pragma mark - 绘画功能
-/** 启用绘画功能 */
-- (void)setDrawEnable:(BOOL)drawEnable
-{
-    self.clippingView.drawEnable = drawEnable;
-}
-- (BOOL)drawEnable
-{
-    return self.clippingView.drawEnable;
-}
-
-- (BOOL)isDrawing
-{
-    return self.clippingView.isDrawing;
-}
-
-- (BOOL)drawCanUndo
-{
-    return [self.clippingView drawCanUndo];
-}
-- (void)drawUndo
-{
-    [self.clippingView drawUndo];
-}
-/** 设置绘画画笔 */
-- (void)setDrawBrush:(LFBrush *)brush
-{
-    [self.clippingView setDrawBrush:brush];
-}
-/** 设置绘画颜色 */
-- (void)setDrawColor:(UIColor *)color
-{
-    [self.clippingView setDrawColor:color];
-}
-
-/** 设置绘画线粗 */
-- (void)setDrawLineWidth:(CGFloat)lineWidth
-{
-    [self.clippingView setDrawLineWidth:lineWidth];
-}
-
-#pragma mark - 贴图功能
-/** 贴图启用 */
-- (BOOL)stickerEnable
-{
-    return [self.clippingView stickerEnable];
-}
-/** 取消激活贴图 */
-- (void)stickerDeactivated
-{
-    [self.clippingView stickerDeactivated];
-}
-- (void)activeSelectStickerView
-{
-    [self.clippingView activeSelectStickerView];
-}
-/** 删除选中贴图 */
-- (void)removeSelectStickerView
-{
-    [self.clippingView removeSelectStickerView];
-}
-- (void)setScreenScale:(CGFloat)scale
-{
-    [self.clippingView setScreenScale:scale];
-}
-/** 最小缩放率 默认0.2 */
-- (void)setStickerMinScale:(CGFloat)stickerMinScale
-{
-    self.clippingView.stickerMinScale = stickerMinScale;
-}
-- (CGFloat)stickerMinScale
-{
-    return self.clippingView.stickerMinScale;
-}
-/** 最大缩放率 默认3.0 */
-- (void)setStickerMaxScale:(CGFloat)stickerMaxScale
-{
-    self.clippingView.stickerMaxScale = stickerMaxScale;
-}
-- (CGFloat)stickerMaxScale
-{
-    return self.clippingView.stickerMaxScale;
-}
-/** 创建贴图 */
-- (void)createSticker:(LFStickerItem *)item
-{
-    [self.clippingView createSticker:item];
-}
-/** 获取选中贴图的内容 */
-- (LFStickerItem *)getSelectSticker
-{
-    return [self.clippingView getSelectSticker];
-}
-/** 更改选中贴图内容 */
-- (void)changeSelectSticker:(LFStickerItem *)item
-{
-    [self.clippingView changeSelectSticker:item];
-}
-
-#pragma mark - 模糊功能
-/** 启用模糊功能 */
-- (void)setSplashEnable:(BOOL)splashEnable
-{
-    self.clippingView.splashEnable = splashEnable;
-}
-- (BOOL)splashEnable
-{
-    return self.clippingView.splashEnable;
-}
-/** 是否可撤销 */
-- (BOOL)splashCanUndo
-{
-    return [self.clippingView splashCanUndo];
-}
-/** 撤销模糊 */
-- (void)splashUndo
-{
-    [self.clippingView splashUndo];
-}
-- (BOOL)isSplashing
-{
-    return self.clippingView.isSplashing;
-}
-- (void)setSplashState:(BOOL)splashState
-{
-    self.clippingView.splashState = splashState;
-}
-
-- (BOOL)splashState
-{
-    return self.clippingView.splashState;
-}
-
-/** 设置马赛克大小 */
-- (void)setSplashWidth:(CGFloat)squareWidth
-{
-    [self.clippingView setSplashWidth:squareWidth];
-}
-/** 设置画笔大小 */
-- (void)setPaintWidth:(CGFloat)paintWidth
-{
-    [self.clippingView setPaintWidth:paintWidth];
 }
 
 @end

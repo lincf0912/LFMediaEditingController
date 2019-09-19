@@ -54,8 +54,10 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
 /** 设置绘画拾色器默认颜色 */
 - (void)setDrawSliderColor:(UIColor *)color;
 - (void)setDrawSliderColorAtIndex:(NSUInteger)index;
-/** 设置默认模糊类型 */
+/** 设置默认模糊类型（会触发代理） */
 - (void)setSplashIndex:(NSUInteger)index;
+/** 设置模糊等待状态 */
+- (void)setSplashWait:(BOOL)isWait index:(NSUInteger)index;
 
 /** 选择主菜单的功能类型（会触发代理） */
 - (void)selectMainMenuIndex:(NSUInteger)index;
