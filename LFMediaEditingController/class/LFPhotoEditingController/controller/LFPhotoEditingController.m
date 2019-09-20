@@ -22,6 +22,7 @@
 #import "LFSafeAreaMaskView.h"
 
 #import "FilterSuiteUtils.h"
+#import "LFImageCoder.h"
 
 /************************ Attributes ************************/
 /** 绘画颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
@@ -80,6 +81,8 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
  */
 @property (nonatomic, strong) NSArray<NSNumber *> *durations;
 
+@property (nonatomic, strong, nullable) NSDictionary *editData;
+
 @end
 
 @implementation LFPhotoEditingController
@@ -100,15 +103,21 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 
 - (void)setEditImage:(UIImage *)editImage durations:(NSArray<NSNumber *> *)durations
 {
-    _editImage = editImage;
+    _editImage = newUIImageDecodedCopy(editImage);
     _durations = durations;
-    [_EditingView setImage:editImage durations:durations];
-    if (editImage.images.count) {
+    
+    if (_editImage.images.count) {
         /** gif不能使用模糊功能 */
         if (_operationType & LFPhotoEditOperationType_splash) {
             _operationType ^= LFPhotoEditOperationType_splash;
         }
     }
+}
+
+- (void)setPhotoEdit:(LFPhotoEdit *)photoEdit
+{
+    [self setEditImage:photoEdit.editImage durations:photoEdit.durations];
+    _editData = photoEdit.editData;
 }
 
 - (void)setDefaultOperationType:(LFPhotoEditOperationType)defaultOperationType
@@ -186,12 +195,13 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     
     [self.view addSubview:_EditingView];
     
-    if (_photoEdit) {
-        [self setEditImage:_photoEdit.editImage durations:_photoEdit.durations];
-        _EditingView.photoEditData = _photoEdit.editData;
+    [_EditingView setImage:self.editImage durations:self.durations];
+    if (self.editData) {
+        // 设置编辑数据
+        _EditingView.photoEditData = self.editData;
+        // 释放销毁
+        self.editData = nil;
     } else {
-        [self setEditImage:_editImage durations:_durations];
-        
         /** 设置默认滤镜 */
         if (self.operationType&LFPhotoEditOperationType_filter) {
             LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditFilterAttributeName];
@@ -407,8 +417,8 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 }
 - (void)cancelButtonClick
 {
-    if ([self.delegate respondsToSelector:@selector(lf_PhotoEditingController:didCancelPhotoEdit:)]) {
-        [self.delegate lf_PhotoEditingController:self didCancelPhotoEdit:self.photoEdit];
+    if ([self.delegate respondsToSelector:@selector(lf_PhotoEditingControllerDidCancel:)]) {
+        [self.delegate lf_PhotoEditingControllerDidCancel:self];
     }
 }
 
@@ -565,21 +575,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             break;
         case LFEditToolbarType_splash:
         {
-            LFBrush *brush = nil;
-            switch ((LFSplashStateType)indexPath.row) {
-                case LFSplashStateType_Mosaic:
-                    
-                    break;
-                case LFSplashStateType_Blurry:
-                    
-                    break;
-                case LFSplashStateType_Smear:
-                    
-                    break;
-            }
-            if (brush) {
-                [_EditingView setSplashBrush:brush];
-            }
+            [_EditingView setSplashStateType:(LFSplashStateType)indexPath.row];
         }
             break;
         case LFEditToolbarType_crop:

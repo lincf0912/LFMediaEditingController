@@ -19,7 +19,7 @@ NSString *const kLFDataFilterImageViewData = @"LFDataFilterImageViewData";
 }
 
 #pragma mark  - 数据
-- (NSDictionary *)data
+- (NSDictionary * __nullable)data
 {
     if (self.type != LFFilterNameType_None) {
         return @{kLFDataFilterImageViewData:@(self.type)};

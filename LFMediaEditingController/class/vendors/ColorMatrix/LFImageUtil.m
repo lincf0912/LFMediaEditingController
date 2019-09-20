@@ -159,7 +159,7 @@ static void lf_changeRGBA(int *red,int *green,int *blue,int *alpha, const float*
 	UIImage *myImage = [UIImage imageWithCGImage:imageRef];
 	
 	CFRelease(imageRef);
-	CGColorSpaceRelease(colorSpaceRef);
+//    CGColorSpaceRelease(colorSpaceRef);
 	CGDataProviderRelease(provider);
 	return myImage;
 }

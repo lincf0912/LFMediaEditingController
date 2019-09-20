@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LFStickerItem : NSObject
+@interface LFStickerItem : NSObject <NSSecureCoding>
 
 @property (nonatomic, assign, readonly, getter=isMain) BOOL main;
 
@@ -28,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AVAsset *asset;
 
 /** display(image/text) */
-- (UIImage *)displayImage;
-- (UIImage *)displayImageAtTime:(NSTimeInterval)time;
+- (UIImage * __nullable)displayImage;
+- (UIImage * __nullable)displayImageAtTime:(NSTimeInterval)time;
 
 /** main view */
 + (instancetype)mainWithImage:(UIImage *)image;

@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  Write this filter to a specific file.
  This filter can then be restored from this file using [LFFilter filterWithContentsOfUrl:].
  */
-- (void)writeToFile:(NSURL *__nonnull)fileUrl error:(NSError *__nullable*__nullable)error;
+- (BOOL)writeToFile:(NSURL *__nonnull)fileUrl error:(NSError *__nullable*__nullable)error;
 
 @end
 

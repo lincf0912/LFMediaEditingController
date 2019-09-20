@@ -15,13 +15,6 @@
     
     if (self.imageOrientation == UIImageOrientationUp) return self;
     
-    CGImageRef cgimg = [self LFME_cgFixOrientation];
-    UIImage *img = [UIImage imageWithCGImage:cgimg];
-    CGImageRelease(cgimg);
-    return img;
-}
-
-- (CGImageRef)LFME_cgFixOrientation {
     // No-op if the orientation is already correct
     
     UIImage *editImg = self;//[UIImage imageWithData:UIImagePNGRepresentation(self)];
@@ -57,7 +50,9 @@
     
     CGContextRelease(ctx);
     
-    return cgimg;
+    UIImage *img = [UIImage imageWithCGImage:cgimg];
+    CGImageRelease(cgimg);
+    return img;
 }
 
 + (CGAffineTransform)LFME_exchangeOrientation:(UIImageOrientation)imageOrientation size:(CGSize)size

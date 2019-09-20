@@ -15,7 +15,7 @@ OBJC_EXTERN NSString *const LFPaintBrushLineColor;
 @interface LFPaintBrush : LFBrush
 
 /** 线颜色 默认红色 */
-@property (nonatomic, strong) UIColor *lineColor;
+@property (nonatomic, strong, nullable) UIColor *lineColor;
 
 @end
 

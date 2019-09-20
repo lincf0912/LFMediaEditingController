@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LFStickerItem (View)
 
-- (UIView *)displayView;
+- (UIView * __nullable)displayView;
 
 @end
 

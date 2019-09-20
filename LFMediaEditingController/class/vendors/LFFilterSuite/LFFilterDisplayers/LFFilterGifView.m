@@ -260,18 +260,18 @@ inline static NSTimeInterval LFFilterGifView_CGImageSourceGetGifFrameDelay(CGIma
         CGImageRef imageRef = nil;
         if (_gifSourceRef) {
             imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, NULL);
-        } else if (_gifImage) {
-            imageRef = [[_gifImage.images objectAtIndex:_index] CGImage];
-        }
-        
-        if (imageRef) {
-            self.CIImageTime = _index+1;
-            self.CIImage = [CIImage imageWithCGImage:imageRef];
-            if (_gifSourceRef) {
+            if (imageRef) {
+                self.CIImageTime = _index+1;
+                self.CIImage = [CIImage imageWithCGImage:imageRef];
                 CGImageRelease(imageRef);
             }
+        } else if (_gifImage) {
+            imageRef = [[_gifImage.images objectAtIndex:_index] CGImage];
+            if (imageRef) {
+                self.CIImageTime = _index+1;
+                self.CIImage = [CIImage imageWithCGImage:imageRef];
+            }
         }
-        
         if (++_index >= _frameCount) {
             _index = 0;
             if (_loopCount == ++_loopTimes) {

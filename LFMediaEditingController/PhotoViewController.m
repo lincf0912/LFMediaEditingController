@@ -32,19 +32,21 @@
     self.view.backgroundColor = [UIColor redColor];
     
     /** 拍照图片 */
-    UIImage *image = [UIImage imageNamed:@"1.jpg"];
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"1.jpg" ofType:nil];
+    
     /** gif */
 //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"4.gif" ofType:nil];
-//    NSData *imgData = [NSData dataWithContentsOfFile:imagePath options:NSDataReadingMappedIfSafe error:nil];
-//    UIImage *image = [UIImage LF_imageWithImageData:imgData];
     /**
      真实播放GIF
      */
+//    NSData *imgData = [NSData dataWithContentsOfFile:imagePath options:NSDataReadingMappedIfSafe error:nil];
 //    self.durations = LFME_UIImageGIFDurationsFromData(imgData, nil);
     /** 非拍照图片 */
-//    UIImage *image = [UIImage imageNamed:@"2.png"];
+//    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"2.png" ofType:nil];
     /** 长图 */
-//    UIImage *image = [UIImage imageNamed:@"longImage.jpg"];
+//    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"longImage.jpg" ofType:nil];
+    /** 使用UIImage imageNamed加载的UIImage不能序列化 */
+    UIImage *image = [UIImage LF_imageWithImagePath:imagePath];
     /** 必须确保图片方向是正确的，当然有很多方法更正图片的方向，这里只是举例，请酌情参考。 */
     if (image.images.count) {
         self.image = image;
@@ -141,7 +143,7 @@
 }
 
 #pragma mark - LFPhotoEditingControllerDelegate
-- (void)lf_PhotoEditingController:(LFPhotoEditingController *)photoEditingVC didCancelPhotoEdit:(LFPhotoEdit *)photoEdit
+- (void)lf_PhotoEditingControllerDidCancel:(LFPhotoEditingController *)photoEditingVC
 {
     [self.navigationController popViewControllerAnimated:NO];
     [self.navigationController setNavigationBarHidden:NO];

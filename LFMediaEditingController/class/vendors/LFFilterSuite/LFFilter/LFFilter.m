@@ -124,6 +124,11 @@
 
 }
 
++ (BOOL)supportsSecureCoding
+{
+    return YES;
+}
+
 - (CIImage *)imageByProcessingImage:(CIImage *)image {
     return [self imageByProcessingImage:image atTime:0];
 }

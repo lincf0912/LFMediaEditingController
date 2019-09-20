@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef CIImage *_Nullable(^LFFilterHandle)(CIImage *image);
 
-@interface LFFilter : NSObject <NSCoding, NSCopying>
+@interface LFFilter : NSObject <NSSecureCoding, NSCopying>
 
 /**
  The underlying CIFilter attached to this LFFilter instance.

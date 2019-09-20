@@ -47,9 +47,9 @@
     _maskRect = maskRect;
     CGPathRef path = nil;
     if (CGRectEqualToRect(CGRectZero, maskRect)) {
-        path = [self drawClearGrid];
+        path = [self newDrawClearGrid];
     } else {
-        path = [self drawGrid];
+        path = [self newDrawGrid];
     }
     [self removeAnimationForKey:@"lf_maskLayer_opacityAnimate"];
     if (animated) {
@@ -62,6 +62,7 @@
     } else {
         self.path = path;
     }
+    CGPathRelease(path);
 }
 
 - (void)clearMask
@@ -75,7 +76,7 @@
     
 }
 
-- (CGPathRef)drawGrid
+- (CGPathRef)newDrawGrid
 {
     CGRect maskRect = self.maskRect;
     CGMutablePathRef mPath = CGPathCreateMutable();
@@ -88,7 +89,7 @@
     return mPath;
 }
 
-- (CGPathRef)drawClearGrid
+- (CGPathRef)newDrawClearGrid
 {
     CGMutablePathRef mPath = CGPathCreateMutable();
     CGPathAddRect(mPath, NULL, self.bounds);

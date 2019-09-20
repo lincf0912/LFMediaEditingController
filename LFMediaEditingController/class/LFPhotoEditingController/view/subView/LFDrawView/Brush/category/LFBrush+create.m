@@ -88,6 +88,7 @@
     
     CGImageRef outImage = [context createCGImage:result fromRect:[midImage extent]];
     UIImage *image = [UIImage imageWithCGImage:outImage];
+    CGImageRelease(outImage);
     
     return image;
 }

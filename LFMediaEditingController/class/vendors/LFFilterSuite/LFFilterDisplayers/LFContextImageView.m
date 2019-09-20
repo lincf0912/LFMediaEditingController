@@ -224,7 +224,11 @@
         _LFLView.image = [self renderedUIImage];
     }
     if (_UIView) {
-        _UIView.layer.contents = (__bridge id _Nullable)([self renderedUIImage].CGImage);
+        CGImageRef imageRef = [self newRenderedCGImage];
+        if (imageRef) {
+            _UIView.layer.contents = (__bridge id _Nullable)(imageRef);
+            CGImageRelease(imageRef);
+        }
     }
 #if !(TARGET_IPHONE_SIMULATOR)
     [_MTKView setNeedsDisplay];
@@ -242,6 +246,27 @@
     UIImage *returnedImage = nil;
     
     if (image != nil) {
+        
+        CGImageRef imageRef = [self newRenderedCGImageInCIImage:image];
+        
+        if (imageRef != nil) {
+            returnedImage = [UIImage imageWithCGImage:imageRef];
+            CGImageRelease(imageRef);
+        }
+    }
+    
+    return returnedImage;
+}
+
+- (CGImageRef)newRenderedCGImageInRect:(CGRect)rect {
+    
+    CIImage *image = [self renderedCIImageInRect:rect];
+    return [self newRenderedCGImageInCIImage:image];
+}
+
+- (CGImageRef)newRenderedCGImageInCIImage:(CIImage * __nullable)image
+{
+    if (image != nil) {
         CIContext *context = nil;
         if (![self loadContextIfNeeded]) {
             context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer: @(NO)}];
@@ -251,13 +276,9 @@
         
         CGImageRef imageRef = [context createCGImage:image fromRect:image.extent];
         
-        if (imageRef != nil) {
-            returnedImage = [UIImage imageWithCGImage:imageRef];
-            CGImageRelease(imageRef);
-        }
+        return imageRef;
     }
-    
-    return returnedImage;
+    return NULL;
 }
 
 - (CIImage *)renderedCIImageInRect:(CGRect)rect {
@@ -297,6 +318,11 @@
 - (UIImage *)renderedUIImage {
     CGRect extent = CGRectApplyAffineTransform(self.CIImage.extent, self.preferredCIImageTransform);
     return [self renderedUIImageInRect:extent];
+}
+
+- (CGImageRef)newRenderedCGImage {
+    CGRect extent = CGRectApplyAffineTransform(self.CIImage.extent, self.preferredCIImageTransform);
+    return [self newRenderedCGImageInRect:extent];
 }
 
 - (CIImage *)scaleAndResizeCIImage:(CIImage *)image forRect:(CGRect)rect {
@@ -505,7 +531,7 @@ static CGRect LF_CGRectMultiply(CGRect rect, CGFloat contentScale) {
             }
             
             if (image != nil) {
-                rect = [self scaleAndResizeDrawRect:rect forCIImage:image];
+                [self scaleAndResizeDrawRect:rect forCIImage:image];
                 [_context.CIContext drawImage:image inRect:inRect fromRect:image.extent];
             }
             

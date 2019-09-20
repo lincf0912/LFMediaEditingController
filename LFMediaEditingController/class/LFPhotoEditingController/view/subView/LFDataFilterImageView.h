@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) LFFilterNameType type;
 
 /** 数据 */
-@property (nonatomic, strong) NSDictionary *data;
+@property (nonatomic, strong, nullable) NSDictionary *data;
 
 @end
 

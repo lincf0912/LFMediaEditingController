@@ -64,7 +64,7 @@
     _generator = nil;
 }
 
-- (UIImage *)displayImage
+- (UIImage * __nullable)displayImage
 {
     if (self.image) {
         return self.image;
@@ -107,7 +107,7 @@
     return nil;
 }
 
-- (UIImage *)displayImageAtTime:(NSTimeInterval)time
+- (UIImage * __nullable)displayImageAtTime:(NSTimeInterval)time
 {
     if (self.displayImage.images.count) {
         NSInteger frameCount = self.displayImage.images.count;
@@ -133,6 +133,38 @@
         
     }
     return self.displayImage;
+}
+
+#pragma mark - NSSecureCoding
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super init];
+    if (self) {
+        _main = [coder decodeBoolForKey:@"main"];
+        _image = [coder decodeObjectForKey:@"image"];
+        NSURL *assetURL = [coder decodeObjectForKey:@"assetURL"];
+        if (assetURL) {
+            _asset = [AVAsset assetWithURL:assetURL];            
+        }
+        _textCacheDisplayImage = [coder decodeObjectForKey:@"textCacheDisplayImage"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [coder encodeBool:self.isMain forKey:@"main"];
+    [coder encodeObject:self.image forKey:@"image"];
+    if ([_asset isKindOfClass:[AVURLAsset class]]) {
+        NSURL *assetURL = ((AVURLAsset *)_asset).URL;
+        [coder encodeObject:assetURL forKey:@"assetURL"];
+    }
+    [coder encodeObject:_textCacheDisplayImage forKey:@"textCacheDisplayImage"];
+}
+
++ (BOOL)supportsSecureCoding
+{
+    return YES;
 }
 
 @end

@@ -12,7 +12,7 @@
 
 @implementation LFStickerItem (View)
 
-- (UIView *)displayView
+- (UIView * __nullable)displayView
 {
     if (self.image) {
         LFMEGifView *view = [[LFMEGifView alloc] initWithFrame:(CGRect){CGPointZero, self.displayImage.size}];

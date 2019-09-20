@@ -183,7 +183,7 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
  设置编辑对象->重新编辑
  Set edit object -> re-edit
  */
-@property (nonatomic, strong) LFPhotoEdit *photoEdit;
+- (void)setPhotoEdit:(LFPhotoEdit *)photoEdit;
 
 /**
  设置操作类型
@@ -221,7 +221,8 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
 
 @protocol LFPhotoEditingControllerDelegate <NSObject>
 
-- (void)lf_PhotoEditingController:(LFPhotoEditingController *)photoEditingVC didCancelPhotoEdit:(LFPhotoEdit *)photoEdit;
+- (void)lf_PhotoEditingControllerDidCancel:(LFPhotoEditingController *)photoEditingVC;
 - (void)lf_PhotoEditingController:(LFPhotoEditingController *)photoEditingVC didFinishPhotoEdit:(LFPhotoEdit *)photoEdit;
-
+@optional
+- (void)lf_PhotoEditingController:(LFPhotoEditingController *)photoEditingVC didCancelPhotoEdit:(LFPhotoEdit *)photoEdit __deprecated_msg("delete deprecated. Use `lf_PhotoEditingControllerDidCancel:`");
 @end

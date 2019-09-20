@@ -10,9 +10,9 @@
 
 @implementation LFFilter (save)
 
-- (void)writeToFile:(NSURL *)fileUrl error:(NSError *__autoreleasing *)error {
+- (BOOL)writeToFile:(NSURL *__nonnull)fileUrl error:(NSError *__nullable*__nullable)error {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
-    [data writeToURL:fileUrl options:NSDataWritingAtomic error:error];
+    return [data writeToURL:fileUrl options:NSDataWritingAtomic error:error];
 }
 
 @end

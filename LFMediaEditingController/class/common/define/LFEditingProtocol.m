@@ -110,7 +110,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
 - (BOOL)lf_editEnable
 {
     NSNumber *num = objc_getAssociatedObject(self, LFEditingProtocolEditEnableKey);
-    if (num) {
+    if (num != nil) {
         return [num boolValue];
     }
     return YES;

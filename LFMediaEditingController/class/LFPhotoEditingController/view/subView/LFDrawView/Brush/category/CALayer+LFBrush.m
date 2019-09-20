@@ -21,7 +21,7 @@ static const char * LFBrushLayerLevelKey = "LFBrushLayerLevelKey";
 - (NSInteger)lf_level
 {
     NSNumber *num = objc_getAssociatedObject(self, LFBrushLayerLevelKey);
-    if (num) {
+    if (num != nil) {
         return [num integerValue];
     }
     return 0;

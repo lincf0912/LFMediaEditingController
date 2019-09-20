@@ -358,7 +358,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [[[UIAlertView alloc] initWithTitle:@"LFVideoPlayer_Error"
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"LFVideoPlayer_Error", nil)
                                 message:error.localizedDescription
                                delegate:nil
                       cancelButtonTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_alertViewCancelTitle"]

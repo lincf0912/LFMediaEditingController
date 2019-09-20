@@ -54,7 +54,6 @@ CGFloat const LFTextBarAlignmentTag = 221;
         if (layoutBlock) {
             layoutBlock(self);
         }
-        layoutBlock = nil;
         [self customInit];
     }
     return self;
@@ -86,11 +85,13 @@ CGFloat const LFTextBarAlignmentTag = 221;
 
 - (BOOL)becomeFirstResponder
 {
+    [super becomeFirstResponder];
     return [self.lf_textView becomeFirstResponder];
 }
 
 - (BOOL)resignFirstResponder
 {
+    [super resignFirstResponder];
     return [self.lf_textView resignFirstResponder];
 }
 
@@ -180,7 +181,8 @@ CGFloat const LFTextBarAlignmentTag = 221;
     keyboardBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     keyboardBar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.8];
     
-    CGFloat maxSliderWidth = CGRectGetWidth(keyboardBar.frame);
+//    CGFloat maxSliderWidth = CGRectGetWidth(keyboardBar.frame);
+    CGFloat maxSliderWidth = 0;
     /**
      字体
      */

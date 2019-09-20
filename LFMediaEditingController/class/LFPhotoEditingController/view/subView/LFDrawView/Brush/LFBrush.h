@@ -36,7 +36,7 @@ OBJC_EXTERN CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1);
 /**
  1、创建点与画笔结合的绘画层(意味着重新绘画，重置轨迹数据)；应在手势开始时调用，例如：touchesBegan，若需要忽略轨迹坐标，入参修改为CGPoint{inf, inf}
  */
-- (CALayer *)createDrawLayerWithPoint:(CGPoint)point;
+- (CALayer * __nullable)createDrawLayerWithPoint:(CGPoint)point;
 /**
  2、结合手势的坐标（手势移动时产生的坐标）；应在手势移动时调用，例如：touchesMoved
  */

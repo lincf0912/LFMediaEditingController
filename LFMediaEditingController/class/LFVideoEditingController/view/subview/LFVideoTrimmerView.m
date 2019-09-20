@@ -60,7 +60,7 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
     CGRect timeLabelRect = CGRectMake(0, 0, 60, LFVideoTrimmerView_timeLabel_height);
     UILabel *startTimeLabel = [self timeLabel];
     startTimeLabel.frame = timeLabelRect;
-    startTimeLabel.text = @"00:00";
+    startTimeLabel.text = NSLocalizedString(@"00:00", nil);
     [self addSubview:startTimeLabel];
     _startTimeLabel = startTimeLabel;
     
@@ -68,7 +68,7 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
     timeLabelRect.origin.x = CGRectGetWidth(self.frame)-timeLabelRect.size.width;
     endTimeLabel.frame = timeLabelRect;
     endTimeLabel.textAlignment = NSTextAlignmentRight;
-    endTimeLabel.text = @"00:00";
+    endTimeLabel.text = NSLocalizedString(@"00:00", nil);
     [self addSubview:endTimeLabel];
     _endTimeLabel = endTimeLabel;
     
@@ -77,7 +77,7 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
     timeLabelRect.origin.y = CGRectGetHeight(self.frame)-timeLabelRect.size.height;
     totalTimeLabel.frame = timeLabelRect;
     totalTimeLabel.textAlignment = NSTextAlignmentCenter;
-    totalTimeLabel.text = @"00:00";
+    totalTimeLabel.text = NSLocalizedString(@"00:00", nil);
     [self addSubview:totalTimeLabel];
     _totalTimeLabel = totalTimeLabel;
     

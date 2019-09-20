@@ -91,15 +91,16 @@
 }
 
 #pragma mark - UICollectionViewDataSource
-- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+- (__kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
     NSArray *subDataSources = self.dataSources[indexPath.section];
     id model = subDataSources[indexPath.row];
     
-    NSString *LFEditCollectionViewCellIdentifier = nil;
+    NSString *LFEditCollectionViewCellIdentifier = @"LFEditCollectionViewCell";
     if (self.dequeueReusableCellBlock) {
         LFEditCollectionViewCellIdentifier = self.dequeueReusableCellBlock(indexPath);
     }
+    
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:LFEditCollectionViewCellIdentifier forIndexPath:indexPath];
     
     if (self.cellConfigureBlock) {
@@ -107,7 +108,6 @@
     }
     
     return cell;
-    
 }
 
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {

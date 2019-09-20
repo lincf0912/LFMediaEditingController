@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** =====================数据===================== */
 
 /** 数据 */
-@property (nonatomic, strong) NSDictionary *photoEditData;
+@property (nonatomic, strong, nullable) NSDictionary *photoEditData;
 
 @optional
 /** =====================设置项===================== */

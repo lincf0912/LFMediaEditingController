@@ -412,7 +412,6 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                          if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
                              void (^block)(CGRect) = [self.clippingDelegate lf_clippingViewWillBeginZooming:self];
                              if (block) block(self.frame);
-                             block = nil;
                          }
                      } completion:^(BOOL finished) {
                          if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewDidEndZooming:)]) {
