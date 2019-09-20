@@ -72,6 +72,7 @@
 		C73F4D792237820900ED40B7 /* LFDataFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4D782237820900ED40B7 /* LFDataFilterImageView.m */; };
 		C763E8262330CF160004ED6C /* CALayer+LFBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C763E8252330CF160004ED6C /* CALayer+LFBrush.m */; };
 		C763E8282331D4D90004ED6C /* LFEditingProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = C763E8272331D4D90004ED6C /* LFEditingProtocol.m */; };
+		C763E82F233476BD0004ED6C /* LFImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = C763E82E233476BD0004ED6C /* LFImageCoder.m */; };
 		C7735EB62313D3D5009BB077 /* NSAttributedString+LFMECoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */; };
 		C786A51F231D1D5200546B8C /* LFBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A51E231D1D5200546B8C /* LFBrush.m */; };
 		C786A522231D1DB600546B8C /* LFPaintBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A521231D1DB600546B8C /* LFPaintBrush.m */; };
@@ -239,6 +240,8 @@
 		C763E8242330CF160004ED6C /* CALayer+LFBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CALayer+LFBrush.h"; sourceTree = "<group>"; };
 		C763E8252330CF160004ED6C /* CALayer+LFBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CALayer+LFBrush.m"; sourceTree = "<group>"; };
 		C763E8272331D4D90004ED6C /* LFEditingProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFEditingProtocol.m; sourceTree = "<group>"; };
+		C763E82D233476BD0004ED6C /* LFImageCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFImageCoder.h; sourceTree = "<group>"; };
+		C763E82E233476BD0004ED6C /* LFImageCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFImageCoder.m; sourceTree = "<group>"; };
 		C7735EB42313D3D5009BB077 /* NSAttributedString+LFMECoreText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+LFMECoreText.h"; sourceTree = "<group>"; };
 		C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LFMECoreText.m"; sourceTree = "<group>"; };
 		C786A51D231D1D5200546B8C /* LFBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFBrush.h; sourceTree = "<group>"; };
@@ -539,6 +542,7 @@
 		6F14E6391EE6439E0049AE56 /* vendors */ = {
 			isa = PBXGroup;
 			children = (
+				C763E82C233476840004ED6C /* LFImageCoder */,
 				C786A5682325F4B200546B8C /* LFEasyNoticeBar */,
 				C7D28F3D22DC0ECB00AB83FE /* LFMediaDisplayView */,
 				C7C5805222AFA812003BD4F7 /* LFFilterSuite */,
@@ -737,6 +741,15 @@
 				C763E8252330CF160004ED6C /* CALayer+LFBrush.m */,
 			);
 			path = category;
+			sourceTree = "<group>";
+		};
+		C763E82C233476840004ED6C /* LFImageCoder */ = {
+			isa = PBXGroup;
+			children = (
+				C763E82D233476BD0004ED6C /* LFImageCoder.h */,
+				C763E82E233476BD0004ED6C /* LFImageCoder.m */,
+			);
+			path = LFImageCoder;
 			sourceTree = "<group>";
 		};
 		C786A51B231D1D1F00546B8C /* LFDrawView */ = {
@@ -1098,6 +1111,7 @@
 				C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */,
 				6F359B3B1F1DE99F009F2035 /* LFVideoTrimmerView.m in Sources */,
 				6F14E6561EE6439E0049AE56 /* LFClipToolbar.m in Sources */,
+				C763E82F233476BD0004ED6C /* LFImageCoder.m in Sources */,
 				6F14E6491EE6439E0049AE56 /* LFZoomingView.m in Sources */,
 				C7E750F92119294F00022FCF /* LFColorMatrixType.m in Sources */,
 				6F14E5D51EE6438A0049AE56 /* main.m in Sources */,
@@ -1279,6 +1293,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				DEVELOPMENT_TEAM = 3VDRUN62M8;
 				INFOPLIST_FILE = LFMediaEditingController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1292,6 +1307,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				DEVELOPMENT_TEAM = 3VDRUN62M8;
 				INFOPLIST_FILE = LFMediaEditingController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
