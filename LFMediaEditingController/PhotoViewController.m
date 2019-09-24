@@ -103,7 +103,7 @@
     //并且赋值给声明好的imageView
     
     self.imageView.image = self.image;
-    
+    self.photoEdit = nil;
     //最后模态返回 最初的 控制器
     
     [picker dismissViewControllerAnimated:YES completion:nil];
@@ -127,8 +127,10 @@
 //                                     };
     
     lfPhotoEditVC.delegate = self;
-    if (self.photoEdit) {
-        lfPhotoEditVC.photoEdit = self.photoEdit;
+    LFPhotoEdit *photoEdit = self.photoEdit;
+    if (photoEdit) {
+        lfPhotoEditVC.photoEdit = photoEdit;
+        self.photoEdit = nil;// 释放编辑内存
     } else {
         [lfPhotoEditVC setEditImage:self.image durations:self.durations];
     }
