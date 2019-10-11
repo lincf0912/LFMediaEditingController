@@ -147,7 +147,7 @@
     _timestamp += fmin(_displayLink.duration, 1);
     
     while (_timestamp >= _duration) {
-        _duration -= _duration;
+        _timestamp -= _duration;
         
         UIImage *image = nil;
         if (_gifImage) {
