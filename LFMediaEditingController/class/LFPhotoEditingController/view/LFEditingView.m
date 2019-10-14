@@ -1015,7 +1015,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     /** 默认模糊线粗 */
     [self setSplashLineWidth:lf_editingView_splashWidth/self.zoomScale];
     /** 屏幕缩放率 */
-    [self setScreenScale:self.zoomScale];
+    [self setScreenScale:self.zoomScale*self.clippingView.zoomScale];
 }
 
 - (void)fixedLongImage
