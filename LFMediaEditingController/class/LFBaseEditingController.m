@@ -10,6 +10,7 @@
 #import "LFMediaEditingHeader.h"
 #import "UIDevice+LFMEOrientation.h"
 #import "LFEasyNoticeBar.h"
+#import "UIViewController+LFPresentation.h"
 
 #import "LFBrushCache.h"
 
@@ -57,6 +58,28 @@
     // Do any additional setup after loading the view.
     NSAssert(self.navigationController, @"You must wrap it with UINavigationController");
     self.view.backgroundColor = [UIColor blackColor];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (@available(iOS 13.0, *)) {
+        if (isiPhone && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
+            // 不允许下拉关闭
+            self.modalInPresentation = YES;
+            // 彻底关闭下拉手势
+            self.lf_dropShadowPanGestureRecognizer.enabled = NO;            
+        }
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (@available(iOS 13.0, *)) {
+        // 重新开启下拉手势
+        self.lf_dropShadowPanGestureRecognizer.enabled = YES;
+    }
 }
 
 - (void)dealloc

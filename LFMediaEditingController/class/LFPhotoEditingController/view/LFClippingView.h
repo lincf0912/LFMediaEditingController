@@ -26,11 +26,6 @@
 /** 是否存在剪切以外的编辑操作 */
 @property (nonatomic, readonly) BOOL hasZoomingViewData;
 
-/** 原始坐标 */
-@property (nonatomic, readonly) CGRect originalRect;
-/** 开始的基础坐标 */
-@property (nonatomic, readonly) CGRect normalRect;
-
 /** 是否重置中 */
 @property (nonatomic, readonly) BOOL isReseting;
 /** 是否旋转中 */

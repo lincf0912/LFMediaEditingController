@@ -10,6 +10,4 @@
 
 @interface LFScrollView : UIScrollView
 
-- (void)scrollViewEnabled:(BOOL)enabled;
-
 @end

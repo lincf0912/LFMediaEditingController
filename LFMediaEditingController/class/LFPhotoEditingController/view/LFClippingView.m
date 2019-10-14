@@ -38,8 +38,6 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 
 @property (nonatomic, weak) LFZoomingView *zoomingView;
 
-/** 原始坐标 */
-@property (nonatomic, assign) CGRect originalRect;
 /** 开始的基础坐标 */
 @property (nonatomic, assign) CGRect normalRect;
 /** 处理完毕的基础坐标（因为可能会被父类在缩放时改变当前frame的问题，导致记录坐标不正确） */
@@ -68,7 +66,6 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _originalRect = frame;
         [self customInit];
     }
     return self;
@@ -119,23 +116,17 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     _image = image;
     [self setZoomScale:1.f];
     if (image) {
-        CGSize imageSize = image.size;
-        CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(imageSize, self.originalRect);
-        self.frame = cropRect;
-        {
-            if (cropRect.size.width < cropRect.size.height) {
-                self.defaultMaximumZoomScale = self.originalRect.size.width * kDefaultMaximumZoomScale / cropRect.size.width;
-            } else {
-                self.defaultMaximumZoomScale = self.originalRect.size.height * kDefaultMaximumZoomScale / cropRect.size.height;
-            }
-            self.maximumZoomScale = self.defaultMaximumZoomScale;
+        if (self.frame.size.width < self.frame.size.height) {
+            self.defaultMaximumZoomScale = [UIScreen mainScreen].bounds.size.width * kDefaultMaximumZoomScale / self.frame.size.width;
+        } else {
+            self.defaultMaximumZoomScale = [UIScreen mainScreen].bounds.size.height * kDefaultMaximumZoomScale / self.frame.size.height;
         }
-    } else {
-        self.frame = _originalRect;
+        self.maximumZoomScale = self.defaultMaximumZoomScale;
     }
     self.normalRect = self.frame;
     self.saveRect = self.frame;
     self.contentSize = self.size;
+    self.zoomingView.frame = self.bounds;
     [self.zoomingView setImage:image durations:durations];
 }
 

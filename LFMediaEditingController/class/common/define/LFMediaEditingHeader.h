@@ -19,8 +19,8 @@
 #define bundleStickerImageNamed(name) [NSBundle LFME_stickersImageNamed:name]
 #define bundleAudioTrackImageNamed(name) [NSBundle LFME_audioTrackImageNamed:name]
 
-#define kCustomTopbarHeight CGRectGetHeight(self.navigationController.navigationBar.frame) + (CGRectGetWidth([UIScreen mainScreen].bounds) < CGRectGetHeight([UIScreen mainScreen].bounds) ? 20 : 0)
-#define kCustomTopbarHeight_iOS11 CGRectGetHeight(self.navigationController.navigationBar.frame) + (self.navigationController.view.safeAreaInsets.top > 0 ? self.navigationController.view.safeAreaInsets.top : (CGRectGetWidth([UIScreen mainScreen].bounds) < CGRectGetHeight([UIScreen mainScreen].bounds) ? 20 : 0))
+#define kCustomTopbarHeight CGRectGetHeight(self.navigationController.navigationBar.frame) + CGRectGetHeight([UIApplication sharedApplication].statusBarFrame)
+#define kCustomTopbarHeight_iOS11 CGRectGetHeight(self.navigationController.navigationBar.frame) + self.navigationController.view.safeAreaInsets.top
 
 
 #define kSliderColors @[[UIColor whiteColor]/*白色*/\

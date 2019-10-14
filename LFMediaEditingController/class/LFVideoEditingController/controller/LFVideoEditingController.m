@@ -119,10 +119,29 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    /** 为了适配iOS13的UIModalPresentationPageSheet模态，它会在viewDidLoad之后对self.view的大小调整，迫不得已暂时只能在viewWillAppear加载视图 */
+    if (@available(iOS 13.0, *)) {
+        if (isiPhone && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
+            return;
+        }
+    }
+    
     [self configEditingView];
     [self configCustomNaviBar];
     [self configBottomToolBar];
     [self configDefaultOperation];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (_EditingView == nil) {
+        [self configEditingView];
+        [self configCustomNaviBar];
+        [self configBottomToolBar];
+        [self configDefaultOperation];
+    }
 }
 
 - (void)viewWillLayoutSubviews

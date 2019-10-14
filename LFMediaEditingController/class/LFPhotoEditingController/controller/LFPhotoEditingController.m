@@ -130,6 +130,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    /** 为了适配iOS13的UIModalPresentationPageSheet模态，它会在viewDidLoad之后对self.view的大小调整，迫不得已暂时只能在viewWillAppear加载视图 */
+    if (@available(iOS 13.0, *)) {
+        if (isiPhone && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
+            return;
+        }
+    }
     [self configScrollView];
     [self configCustomNaviBar];
     [self configBottomToolBar];
@@ -139,6 +145,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if (_EditingView == nil) {
+        [self configScrollView];
+        [self configCustomNaviBar];
+        [self configBottomToolBar];
+        [self configDefaultOperation];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -179,7 +191,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     }
     
     _EditingView = [[LFEditingView alloc] initWithFrame:editRect];
-    _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
     _EditingView.clippingDelegate = self;
     _EditingView.fixedAspectRatio = ![self operationBOOLForKey:LFPhotoEditCropCanAspectRatioAttributeName];
@@ -319,6 +331,30 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
+    
+    __weak typeof(_edit_toolBar) weakToolBar = _edit_toolBar;
+    /** 加载涂抹相关画笔 */
+    if (![LFMosaicBrush mosaicBrushCache]) {
+        [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Mosaic];
+        CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+        [LFMosaicBrush loadBrushImage:self.editImage scale:15.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+            [weakToolBar setSplashWait:NO index:LFSplashStateType_Mosaic];
+        }];
+    }
+    if (![LFBlurryBrush blurryBrushCache]) {
+        [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Blurry];
+        CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+        [LFBlurryBrush loadBrushImage:self.editImage radius:5.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+            [weakToolBar setSplashWait:NO index:LFSplashStateType_Blurry];
+        }];
+    }
+    if (![LFSmearBrush smearBrushCache]) {
+        [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Smear];
+        CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+        [LFSmearBrush loadBrushImage:self.editImage canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+            [weakToolBar setSplashWait:NO index:LFSplashStateType_Smear];
+        }];
+    }
     
     NSInteger index = 2; /** 红色 */
     
@@ -499,28 +535,6 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             _EditingView.drawEnable = NO;
             /** 打开涂抹 */
             _EditingView.splashEnable = !_EditingView.splashEnable;
-            /** 加载涂抹相关画笔 */
-            if (![LFMosaicBrush mosaicBrushCache]) {
-                [editToolbar setSplashWait:YES index:LFSplashStateType_Mosaic];
-                CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
-                [LFMosaicBrush loadBrushImage:self.editImage scale:15.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
-                    [editToolbar setSplashWait:NO index:LFSplashStateType_Mosaic];
-                }];
-            }
-            if (![LFBlurryBrush blurryBrushCache]) {
-                [editToolbar setSplashWait:YES index:LFSplashStateType_Blurry];
-                CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
-                [LFBlurryBrush loadBrushImage:self.editImage radius:5.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
-                    [editToolbar setSplashWait:NO index:LFSplashStateType_Blurry];
-                }];
-            }
-            if (![LFSmearBrush smearBrushCache]) {
-                [editToolbar setSplashWait:YES index:LFSplashStateType_Smear];
-                CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
-                [LFSmearBrush loadBrushImage:self.editImage canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
-                    [editToolbar setSplashWait:NO index:LFSplashStateType_Smear];
-                }];
-            }
         }
             break;
         case LFEditToolbarType_filter:

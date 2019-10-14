@@ -84,7 +84,7 @@
         height += self.safeAreaInsets.bottom;
     }
     
-    self.frame = (CGRect){{0, [UIScreen mainScreen].bounds.size.height-height}, {[UIScreen mainScreen].bounds.size.width, height}};
+    self.frame = (CGRect){{0, self.superview.frame.size.height-height}, {self.superview.frame.size.width, height}};
     self.edit_menu.frame = CGRectMake(0, kToolbar_SubHeight, self.width, height-kToolbar_SubHeight);
 }
 
@@ -200,13 +200,13 @@
 
 - (void)subBar
 {
-    [self drawMenu];
-    [self splashMenu];
-    [self rateMenu];
+    [self edit_drawMenu];
+    [self edit_splashMenu];
+    [self edit_rateMenu];
 }
 
 #pragma mark - 二级菜单栏(懒加载)
-- (void)drawMenu
+- (UIView *)edit_drawMenu
 {
     if (_edit_drawMenu == nil && self.type&LFEditToolbarType_draw) {
         UIView *edit_drawMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
@@ -255,13 +255,14 @@
         /** 颜色显示 */
         self.edit_drawMenu_color.backgroundColor = _colorSlider.color;
         
-        self.edit_drawMenu = edit_drawMenu;
+        _edit_drawMenu = edit_drawMenu;
         
         [self insertSubview:edit_drawMenu belowSubview:_edit_menu];
     }
+    return _edit_drawMenu;
 }
 
-- (void)splashMenu
+- (UIView *)edit_splashMenu
 {
     if (_edit_splashMenu == nil && self.type&LFEditToolbarType_splash) {
         UIView *edit_splashMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
@@ -312,9 +313,10 @@
             }
         }
         
-        self.edit_splashMenu = edit_splashMenu;
+        _edit_splashMenu = edit_splashMenu;
         [self insertSubview:edit_splashMenu belowSubview:_edit_menu];
     }
+    return _edit_splashMenu;
 }
 
 - (UIButton *)revokeButtonWithType:(NSInteger)type
@@ -337,7 +339,7 @@
     return imageView;
 }
 
-- (UIView *)rateMenu
+- (UIView *)edit_rateMenu
 {
     if (_edit_rateMenu == nil && self.type&LFEditToolbarType_rate) {
         UIView *edit_rateMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
@@ -376,7 +378,7 @@
         [edit_rateMenu addSubview:slider];
         _edit_rateMenu_slider = slider;
         
-        self.edit_rateMenu = edit_rateMenu;
+        _edit_rateMenu = edit_rateMenu;
         
         [self insertSubview:edit_rateMenu belowSubview:_edit_menu];
     }
@@ -407,7 +409,7 @@
     switch (button.tag) {
         case LFEditToolbarType_draw:
         {
-            [self showMenuView:_edit_drawMenu];
+            [self showMenuView:self.edit_drawMenu];
             if (button.isSelected == NO) {
                 if ([self.delegate respondsToSelector:@selector(lf_editToolbar:canRevokeAtIndex:)]) {
                     BOOL canRevoke = [self.delegate lf_editToolbar:self canRevokeAtIndex:button.tag];
@@ -419,7 +421,7 @@
             break;
         case LFEditToolbarType_splash:
         {
-            [self showMenuView:_edit_splashMenu];
+            [self showMenuView:self.edit_splashMenu];
             if (button.isSelected == NO) {
                 if ([self.delegate respondsToSelector:@selector(lf_editToolbar:canRevokeAtIndex:)]) {
                     BOOL canRevoke = [self.delegate lf_editToolbar:self canRevokeAtIndex:button.tag];
@@ -431,7 +433,7 @@
             break;
         case LFEditToolbarType_rate:
         {
-            [self showMenuView:_edit_rateMenu];
+            [self showMenuView:self.edit_rateMenu];
             [self changedButton:button];
         }
         default:

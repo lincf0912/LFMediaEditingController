@@ -74,6 +74,7 @@
 		C763E8282331D4D90004ED6C /* LFEditingProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = C763E8272331D4D90004ED6C /* LFEditingProtocol.m */; };
 		C763E82F233476BD0004ED6C /* LFImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = C763E82E233476BD0004ED6C /* LFImageCoder.m */; };
 		C7735EB62313D3D5009BB077 /* NSAttributedString+LFMECoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */; };
+		C783DED523545C7A0083EDBD /* UIViewController+LFPresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = C783DED423545C7A0083EDBD /* UIViewController+LFPresentation.m */; };
 		C786A51F231D1D5200546B8C /* LFBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A51E231D1D5200546B8C /* LFBrush.m */; };
 		C786A522231D1DB600546B8C /* LFPaintBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A521231D1DB600546B8C /* LFPaintBrush.m */; };
 		C786A525231D1DCE00546B8C /* LFStampBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = C786A524231D1DCE00546B8C /* LFStampBrush.m */; };
@@ -244,6 +245,8 @@
 		C763E82E233476BD0004ED6C /* LFImageCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFImageCoder.m; sourceTree = "<group>"; };
 		C7735EB42313D3D5009BB077 /* NSAttributedString+LFMECoreText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+LFMECoreText.h"; sourceTree = "<group>"; };
 		C7735EB52313D3D5009BB077 /* NSAttributedString+LFMECoreText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LFMECoreText.m"; sourceTree = "<group>"; };
+		C783DED323545C7A0083EDBD /* UIViewController+LFPresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LFPresentation.h"; sourceTree = "<group>"; };
+		C783DED423545C7A0083EDBD /* UIViewController+LFPresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LFPresentation.m"; sourceTree = "<group>"; };
 		C786A51D231D1D5200546B8C /* LFBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFBrush.h; sourceTree = "<group>"; };
 		C786A51E231D1D5200546B8C /* LFBrush.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFBrush.m; sourceTree = "<group>"; };
 		C786A520231D1DB600546B8C /* LFPaintBrush.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFPaintBrush.h; sourceTree = "<group>"; };
@@ -542,6 +545,7 @@
 		6F14E6391EE6439E0049AE56 /* vendors */ = {
 			isa = PBXGroup;
 			children = (
+				C783DED223545C5E0083EDBD /* LFPresentationCategory */,
 				C763E82C233476840004ED6C /* LFImageCoder */,
 				C786A5682325F4B200546B8C /* LFEasyNoticeBar */,
 				C7D28F3D22DC0ECB00AB83FE /* LFMediaDisplayView */,
@@ -750,6 +754,15 @@
 				C763E82E233476BD0004ED6C /* LFImageCoder.m */,
 			);
 			path = LFImageCoder;
+			sourceTree = "<group>";
+		};
+		C783DED223545C5E0083EDBD /* LFPresentationCategory */ = {
+			isa = PBXGroup;
+			children = (
+				C783DED323545C7A0083EDBD /* UIViewController+LFPresentation.h */,
+				C783DED423545C7A0083EDBD /* UIViewController+LFPresentation.m */,
+			);
+			path = LFPresentationCategory;
 			sourceTree = "<group>";
 		};
 		C786A51B231D1D1F00546B8C /* LFDrawView */ = {
@@ -1136,6 +1149,7 @@
 				C7D28F4A22DC0ECB00AB83FE /* LFMEGifView.m in Sources */,
 				C7C5807922AFA812003BD4F7 /* LFFilterGifView.m in Sources */,
 				C7D28F4722DC0ECB00AB83FE /* LFMEVideoView.m in Sources */,
+				C783DED523545C7A0083EDBD /* UIViewController+LFPresentation.m in Sources */,
 				6F359B101F1C676A009F2035 /* LFVideoEditingController.m in Sources */,
 				C786A51F231D1D5200546B8C /* LFBrush.m in Sources */,
 				C7E750F621183A5300022FCF /* LFImageUtil.m in Sources */,

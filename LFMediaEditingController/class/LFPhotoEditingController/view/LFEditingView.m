@@ -104,6 +104,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     
     /** 创建缩放层，避免直接缩放LFClippingView，会改变其transform */
     UIView *clipZoomView = [[UIView alloc] initWithFrame:self.bounds];
+    clipZoomView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     clipZoomView.backgroundColor = [UIColor clearColor];
     [self addSubview:clipZoomView];
     self.clipZoomView = clipZoomView;
@@ -200,6 +201,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             [self setStickerMinScale:(lf_editingView_stickMinScale * diffScale)];
             [self setStickerMaxScale:(lf_editingView_stickMaxScale * diffScale)];
         }
+        self.clippingView.frame = cropRect;
     }
     [self.clippingView setImage:image durations:durations];
     
@@ -626,7 +628,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 //    CGFloat degree = rotate/M_PI * 180;
     
     __block UIImage *editImage = self.image;
-    CGRect clipViewRect = self.clippingView.normalRect;
+    CGRect clipViewRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.bounds);
     /** UIScrollView的缩放率 * 剪裁尺寸变化比例 / 图片屏幕缩放率 */
     CGFloat clipScale = scale * (clipViewRect.size.width/(self.imageSize.width*editImage.scale));
     /** 计算被剪裁的原尺寸图片位置 */

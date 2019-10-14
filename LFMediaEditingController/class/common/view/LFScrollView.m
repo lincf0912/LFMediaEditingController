@@ -40,14 +40,10 @@
     if (@available(iOS 11.0, *)){
         [self setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
     }
-}
-
-- (void)scrollViewEnabled:(BOOL)enabled
-{
-    /** 手势 */
-    self.pinchGestureRecognizer.enabled = enabled;
-    self.panGestureRecognizer.enabled = enabled;
-    self.scrollEnabled = enabled;
+    
+    if (@available(iOS 13.0, *)) {
+        self.automaticallyAdjustsScrollIndicatorInsets = NO;
+    }
 }
 
 - (BOOL)touchesShouldBegin:(NSSet *)touches withEvent:(UIEvent *)event inContentView:(UIView *)view

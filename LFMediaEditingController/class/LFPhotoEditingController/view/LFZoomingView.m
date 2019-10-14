@@ -25,11 +25,6 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 
 @interface LFZoomingView ()
 
-/** 原始坐标 */
-@property (nonatomic, assign) CGRect originalRect;
-/** 真实的图片尺寸 */
-@property (nonatomic, assign) CGSize imageSize;
-
 @property (nonatomic, weak) LFDataFilterImageView *imageView;
 
 /** 绘画 */
@@ -47,7 +42,6 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _originalRect = frame;
         [self customInit];
     }
     return self;
@@ -98,6 +92,16 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     }
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    /** 子控件更新 */
+    [[self subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.frame = self.bounds;
+    }];
+}
+
 - (void)setImage:(UIImage *)image
 {
     [self setImage:image durations:nil];
@@ -106,24 +110,17 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
 - (void)setImage:(UIImage *)image durations:(NSArray <NSNumber *> *)durations
 {
     _image = image;
-    if (image) {
-        _imageSize = image.size;
-        CGRect imageViewRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.originalRect);
-        self.size = imageViewRect.size;
-        
-        /** 子控件更新 */
-        [[self subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            obj.frame = self.bounds;
-        }];
-    }
+    CGSize imageSize = image.size;
     
-    /** 判断是否大图、长图之类的图片，暂时规定超出当前手机屏幕的n倍就是大图了 */
-    CGFloat scale = 12.5f;
-    BOOL isLongImage = MAX(self.imageSize.height/self.imageSize.width, self.imageSize.width/self.imageSize.height) > scale;
-    if (image.images.count == 0 && (isLongImage || (self.imageSize.width > [UIScreen mainScreen].bounds.size.width * scale || self.imageSize.height > [UIScreen mainScreen].bounds.size.height * scale))) { // 长图UIView -> CATiledLayer
-        self.imageView.contextType = LFContextTypeLargeImage;
-    } else { //正常图UIView
-        self.imageView.contextType = LFContextTypeDefault;
+    if (image) {
+        /** 判断是否大图、长图之类的图片，暂时规定超出当前手机屏幕的n倍就是大图了 */
+        CGFloat scale = 12.5f;
+        BOOL isLongImage = MAX(imageSize.height/imageSize.width, imageSize.width/imageSize.height) > scale;
+        if (image.images.count == 0 && (isLongImage || (imageSize.width > [UIScreen mainScreen].bounds.size.width * scale || imageSize.height > [UIScreen mainScreen].bounds.size.height * scale))) { // 长图UIView -> CATiledLayer
+            self.imageView.contextType = LFContextTypeLargeImage;
+        } else { //正常图UIView
+            self.imageView.contextType = LFContextTypeDefault;
+        }
     }
     [self.imageView setImageByUIImage:image durations:durations];
 }
