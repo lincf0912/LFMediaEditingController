@@ -46,9 +46,14 @@
         [UIDevice LFME_setOrientation:orientation];
         _oKButtonTitleColorNormal = [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0];
         _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
-        _isHiddenStatusBar = YES;
         /** 创建笔刷缓存 */
         [LFBrushCache share].countLimit = 20;
+        /** 刘海屏的顶部一直会存在安全区域，window的显示区域不在刘海屏范围，调整window的层级无法遮挡状态栏。 */
+        if (@available(iOS 11.0, *)) {
+            if (hasSafeArea) {
+                self.isHiddenStatusBar = YES;
+            }
+        }
     }
     return self;
 }
@@ -58,6 +63,13 @@
     // Do any additional setup after loading the view.
     NSAssert(self.navigationController, @"You must wrap it with UINavigationController");
     self.view.backgroundColor = [UIColor blackColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    // 隐藏状态栏而不改变安全区域的高度
+    [UIApplication sharedApplication].keyWindow.windowLevel = UIWindowLevelStatusBar + 1;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -76,6 +88,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [UIApplication sharedApplication].keyWindow.windowLevel = UIWindowLevelNormal;
     if (@available(iOS 13.0, *)) {
         // 重新开启下拉手势
         self.lf_dropShadowPanGestureRecognizer.enabled = YES;
@@ -168,6 +181,14 @@
     LFEasyNoticeBarConfig config = LFEasyNoticeBarConfigDefault();
     config.title = text;
     config.type = LFEasyNoticeBarDisplayTypeInfo;
+    [LFEasyNoticeBar showAnimationWithConfig:config];
+}
+
+- (void)showErrorMessage:(NSString *)text
+{
+    LFEasyNoticeBarConfig config = LFEasyNoticeBarConfigDefault();
+    config.title = text;
+    config.type = LFEasyNoticeBarDisplayTypeError;
     [LFEasyNoticeBar showAnimationWithConfig:config];
 }
 

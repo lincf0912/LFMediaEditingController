@@ -172,10 +172,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     CGRect editRect = self.view.bounds;
     
     if (@available(iOS 11.0, *)) {
-        editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
-        editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
-        editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
-        editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
+        if (hasSafeArea) {
+            editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
+            editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
+            editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
+            editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
+        }
     }
     
     _EditingView = [[LFVideoEditingView alloc] initWithFrame:editRect];
@@ -444,15 +446,13 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 [strongSelf->_EditingView exportAsynchronouslyWithTrimVideo:^(NSURL *trimURL, NSError *error) {
-                    videoEdit = [[LFVideoEdit alloc] initWithEditAsset:weakSelf.asset editFinalURL:trimURL data:data];
                     if (error) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                        [[[UIAlertView alloc] initWithTitle:nil message:error.localizedDescription delegate:nil cancelButtonTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_alertViewCancelTitle"] otherButtonTitles:nil] show];
-#pragma clang diagnostic pop
-                    }
-                    if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
-                        [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
+                        [weakSelf showErrorMessage:error.description];
+                    } else {
+                        videoEdit = [[LFVideoEdit alloc] initWithEditAsset:weakSelf.asset editFinalURL:trimURL data:data];
+                        if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
+                            [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
+                        }                        
                     }
                     [weakSelf hideProgressHUD];
                 } progress:^(float progress) {

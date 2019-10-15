@@ -350,6 +350,9 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     self.exportSession.audioUrls = audioUrls;
     
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(NSError *error) {
+        if (error) {
+            [self playVideo];
+        }
         if (complete) complete(trimURL, error);
     } progress:progress];
 }

@@ -21,7 +21,7 @@
 
 #define kCustomTopbarHeight CGRectGetHeight(self.navigationController.navigationBar.frame) + CGRectGetHeight([UIApplication sharedApplication].statusBarFrame)
 #define kCustomTopbarHeight_iOS11 CGRectGetHeight(self.navigationController.navigationBar.frame) + self.navigationController.view.safeAreaInsets.top
-
+#define hasSafeArea ([[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0)
 
 #define kSliderColors @[[UIColor whiteColor]/*白色*/\
 , [UIColor blackColor]/*黑色*/\

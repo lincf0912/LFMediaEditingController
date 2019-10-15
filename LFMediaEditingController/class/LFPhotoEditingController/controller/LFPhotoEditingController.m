@@ -169,10 +169,6 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     }
 }
 
-- (void)dealloc{
-    [self hideProgressHUD];
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -184,10 +180,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     CGRect editRect = self.view.bounds;
     
     if (@available(iOS 11.0, *)) {
-        editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
-        editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
-        editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
-        editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
+        if (hasSafeArea) {
+            editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
+            editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
+            editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
+            editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
+        }
     }
     
     _EditingView = [[LFEditingView alloc] initWithFrame:editRect];
@@ -637,7 +635,9 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if (_edit_clipping_toolBar == nil) {
         UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
         if (@available(iOS 11.0, *)) {
-            safeAreaInsets = self.navigationController.view.safeAreaInsets;
+            if (hasSafeArea) {
+                safeAreaInsets = self.navigationController.view.safeAreaInsets;
+            }
         }
         CGFloat h = 44.f + safeAreaInsets.bottom;
         _edit_clipping_toolBar = [[LFClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
