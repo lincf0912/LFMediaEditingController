@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
  }
  
  */
-@property (nonatomic, readonly) UIPanGestureRecognizer *lf_dropShadowPanGestureRecognizer;
+@property (nonatomic, readonly) UIPanGestureRecognizer *lf_dropShadowPanGestureRecognizer API_AVAILABLE(ios(13.0));
 
 @end
 

@@ -60,10 +60,11 @@ static const char * LFPresentationDropItemListKey = "LFPresentationDropItemListK
 + (void)load{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        
-        SEL originalSelector = @selector(addGestureRecognizer:);
-        SEL swizzledSelector = NSSelectorFromString([NSString stringWithFormat:@"lf_presentation_track_%@", NSStringFromSelector(originalSelector)]);
-        [self LFPresentation_swizzledSelector:originalSelector swizzledSelector:swizzledSelector];
+        if (@available(iOS 13.0, *)) {
+            SEL originalSelector = @selector(addGestureRecognizer:);
+            SEL swizzledSelector = NSSelectorFromString([NSString stringWithFormat:@"lf_presentation_track_%@", NSStringFromSelector(originalSelector)]);
+            [self LFPresentation_swizzledSelector:originalSelector swizzledSelector:swizzledSelector];
+        }
     });
 }
 
