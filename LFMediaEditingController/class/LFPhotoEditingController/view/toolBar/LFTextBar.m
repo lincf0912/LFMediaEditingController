@@ -181,12 +181,12 @@ CGFloat const LFTextBarAlignmentTag = 221;
     keyboardBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     keyboardBar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.8];
     
-//    CGFloat maxSliderWidth = CGRectGetWidth(keyboardBar.frame);
-    CGFloat maxSliderWidth = 0;
+    CGFloat maxSliderWidth = CGRectGetWidth(keyboardBar.frame);
+    CGFloat sliderX = 0;
     /**
      字体
      */
-    {
+    if (/* DISABLES CODE */ (NO)) {
         UIButton *font = [UIButton buttonWithType:UIButtonTypeCustom];
         font.frame = CGRectMake(CGRectGetWidth(keyboardBar.frame)-44-5, 0, 44, CGRectGetHeight(keyboardBar.frame));
         [font setImage:bundleEditImageNamed(@"EditImageTextFont.png") forState:UIControlStateNormal];
@@ -259,10 +259,24 @@ CGFloat const LFTextBarAlignmentTag = 221;
         maxSliderWidth = CGRectGetMinX(view.frame);
     }
     
+    /** 文字背景 */
+    {
+        UIButton *fontBG = [UIButton buttonWithType:UIButtonTypeCustom];
+        fontBG.frame = CGRectMake(5, 0, 44, CGRectGetHeight(keyboardBar.frame));
+        [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG.png") forState:UIControlStateNormal];
+        [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG_HL.png") forState:UIControlStateHighlighted];
+        [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG_HL.png") forState:UIControlStateSelected];
+        [fontBG addTarget:self action:@selector(fontBG_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [keyboardBar addSubview:fontBG];
+        
+        sliderX = CGRectGetMaxX(fontBG.frame);
+        maxSliderWidth -= CGRectGetWidth(fontBG.frame) + 5;
+    }
+    
     /** 拾色器 */
     CGFloat sliderHeight = 34.f;
     CGFloat sliderWidth = MIN(380, maxSliderWidth-2*margin);
-    JRPickColorView *_colorSlider = [[JRPickColorView alloc] initWithFrame:CGRectMake((maxSliderWidth-sliderWidth)/2, (CGRectGetHeight(keyboardBar.frame)-sliderHeight)/2, sliderWidth, sliderHeight) colors:kSliderColors];
+    JRPickColorView *_colorSlider = [[JRPickColorView alloc] initWithFrame:CGRectMake(sliderX + (maxSliderWidth-sliderWidth)/2, (CGRectGetHeight(keyboardBar.frame)-sliderHeight)/2, sliderWidth, sliderHeight) colors:kSliderColors];
 //    _colorSlider.showColor = kSliderColors[0]; /** 白色 */
     _colorSlider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     _colorSlider.delegate = self;
@@ -305,7 +319,12 @@ CGFloat const LFTextBarAlignmentTag = 221;
 }
 - (void)font_buttonClick:(UIButton *)button
 {
-    
+    NSLog(@"正在完善...");
+}
+- (void)fontBG_buttonClick:(UIButton *)button
+{
+    button.selected = !button.isSelected;
+    NSLog(@"正在完善...");
 }
 
 #pragma mark - 顶部栏(action)
