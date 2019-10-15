@@ -738,10 +738,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             [alertController addAction:action];
         }
         
-        alertController.modalPresentationStyle = UIModalPresentationPopover;
-        UIPopoverPresentationController *presentationController = [alertController popoverPresentationController];
-        presentationController.sourceView = clipToolbar;
-        presentationController.sourceRect = clipToolbar.clickViewRect;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            alertController.modalPresentationStyle = UIModalPresentationPopover;
+            UIPopoverPresentationController *presentationController = [alertController popoverPresentationController];
+            presentationController.sourceView = clipToolbar;
+            presentationController.sourceRect = clipToolbar.clickViewRect;            
+        }
         [self presentViewController:alertController animated:YES completion:nil];
     }
     else {
