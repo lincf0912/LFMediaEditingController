@@ -260,7 +260,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
     }
     
     /** 文字背景 */
-    {
+    if (/* DISABLES CODE */ (NO)) {
         UIButton *fontBG = [UIButton buttonWithType:UIButtonTypeCustom];
         fontBG.frame = CGRectMake(5, 0, 44, CGRectGetHeight(keyboardBar.frame));
         [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG.png") forState:UIControlStateNormal];
