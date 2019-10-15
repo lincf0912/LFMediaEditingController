@@ -20,10 +20,17 @@
 + (CGSize)LFME_scaleImageSizeBySize:(CGSize)imageSize targetSize:(CGSize)size isBoth:(BOOL)isBoth;
 
 /** 缩放图片到指定大小 */
-- (UIImage*)LFME_scaleToSize:(CGSize)size;
+- (UIImage*)LFME_scaleToFitSize:(CGSize)size;
+/** 缩放图片到指定大小 */
+- (UIImage*)LFME_scaleToFillSize:(CGSize)size;
 
-/** 合并图片 */
+/** 截取部分图像 */
+- (UIImage *)LFME_cropInRect:(CGRect)rect;
+
+/** 合并图片（图片大小一致） */
 - (UIImage *)LFME_mergeimages:(NSArray <UIImage *>*)images;
+/** 合并图片(图片大小以第一张为准) */
++ (UIImage *)LFME_mergeimages:(NSArray <UIImage *>*)images;
 
 /** 将图片旋转弧度radians */
 - (UIImage *)LFME_imageRotatedByRadians:(CGFloat)radians;

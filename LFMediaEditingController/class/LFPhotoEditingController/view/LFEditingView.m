@@ -600,23 +600,14 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     CGSize contentSize = self.clippingView.contentSize;
     CGRect clippingRect = self.clippingView.frame;
     
-//    /** 参数取整，否则可能会出现1像素偏差 */
-//    clippingRect.origin.x = ((int)(clippingRect.origin.x+0.5)*1.f);
-//    clippingRect.origin.y = ((int)(clippingRect.origin.y+0.5)*1.f);
-//    clippingRect.size.width = ((int)(clippingRect.size.width+0.5)*1.f);
-//    clippingRect.size.height = ((int)(clippingRect.size.height+0.5)*1.f);
+    /** 参数取整，否则可能会出现1像素偏差 */
+    clippingRect.origin.x = ((int)(clippingRect.origin.x+0.5)*1.f);
+    clippingRect.origin.y = ((int)(clippingRect.origin.y+0.5)*1.f);
+    clippingRect.size.width = ((int)(clippingRect.size.width+0.5)*1.f);
+    clippingRect.size.height = ((int)(clippingRect.size.height+0.5)*1.f);
     
     CGSize size = clippingRect.size;
     
-    UIImage *otherImage = nil;
-    if (self.clippingView.hasZoomingViewData) {
-        /** 忽略原图的显示，仅需要原图以上的编辑图层 */
-        self.clippingView.imageViewHidden = YES;
-        /** 获取编辑图层视图 */
-        otherImage = [self.clipZoomView LFME_captureImageAtFrame:clippingRect];
-        /** 恢复原图的显示 */
-        self.clippingView.imageViewHidden = NO;
-    }
     
     /* Return a transform which rotates by `angle' radians:
      t' = [ cos(angle) sin(angle) -sin(angle) cos(angle) 0 0 ] */
@@ -626,6 +617,8 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     }
     // 将弧度转换为角度
 //    CGFloat degree = rotate/M_PI * 180;
+    /** 获取编辑图层视图 */
+    UIImage *otherImage = [self.clippingView editOtherImagesInRect:clippingRect rotate:rotate];
     
     __block UIImage *editImage = self.image;
     CGRect clipViewRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.bounds);
@@ -645,80 +638,32 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     clipRect.size.height = ((int)(clipRect.size.height+0.5)*1.f);
     
     // CIImage 的原始坐标在左下角，y值需要重新计算。
-    clipRect.origin.y = contentSize.height/clipScale - clipRect.size.height - clipRect.origin.y;
+    clipRect.origin.y = (int)((contentSize.height/clipScale - clipRect.size.height - clipRect.origin.y)+0.5)*1.f;
     
     /** 滤镜图片 */
     UIImage *showImage = [self getFilterImage];
-//    BOOL isCircle = self.old_aspectRatio == LFGridViewAspectRatioType_Circle;
-    BOOL isCircle = NO;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        CIContext *context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer: @(NO)}];
         /** 创建方法 */
         UIImage *(^ClipEditImage)(UIImage *) = ^UIImage * (UIImage *image) {
-            /** 剪裁图片 */
-            CIImage *ciimage = [CIImage imageWithCGImage:image.CGImage];
-            ciimage = [ciimage imageByCroppingToRect:clipRect];
-            if (rotate > 0) {
-                /** 调整角度 */
-                CGAffineTransform t = CGAffineTransformMakeRotation(-1 * rotate);
-                ciimage = [ciimage imageByApplyingTransform:t];
-            }
-            if (otherImage) {
-                /** 与其它图层合并 */
-                CIImage *ciOtherImage = [CIImage imageWithCGImage:otherImage.CGImage];
-                float verticalRadio = ciimage.extent.size.height*1.0/ciOtherImage.extent.size.height;
-                float horizontalRadio = ciimage.extent.size.width*1.0/ciOtherImage.extent.size.width;
-                float radio = 1;
-                if(verticalRadio>1 && horizontalRadio>1)
-                {
-                    radio = verticalRadio > horizontalRadio ? horizontalRadio : verticalRadio;
-                }
-                else
-                {
-                    radio = verticalRadio < horizontalRadio ? verticalRadio : horizontalRadio;
-                }
-                CGAffineTransform t = CGAffineTransformMakeScale(radio, radio);
-                ciOtherImage = [ciOtherImage imageByApplyingTransform:t];
-                t = CGAffineTransformMakeTranslation(ciimage.extent.origin.x-ciOtherImage.extent.origin.x, ciimage.extent.origin.y-ciOtherImage.extent.origin.y);
-                ciOtherImage = [ciOtherImage imageByApplyingTransform:t];
-                /** 合并图层 */
-                ciimage = [ciOtherImage imageByCompositingOverImage:ciimage];
-            }
-            
-            
-            if (isCircle)
-            {
-                /** 画圆 */
-                CGFloat radius = ciimage.extent.size.width / 2;
-                NSDictionary *maskParas = @{@"inputCenter"  : [CIVector vectorWithX:radius Y:radius],
-                                            @"inputRadius0" : @(radius),
-                                            @"inputRadius1" : @(radius),
-                                            @"inputColor0" : [CIColor colorWithRed:1 green:1 blue:1 alpha:1],
-                                            @"inputColor1" : [CIColor colorWithRed:0 green:0 blue:0 alpha:1]};
-                CIImage *circle = [CIFilter filterWithName:@"CIRadialGradient"
-                                       withInputParameters:maskParas].outputImage;
-                
-                /** 生成圆形 mask */
-                CIImage *mask = [CIFilter filterWithName:@"CIMaskToAlpha"
-                                     withInputParameters:@{kCIInputImageKey : circle}].outputImage;
-                
-                CGAffineTransform t = CGAffineTransformMakeTranslation(ciimage.extent.origin.x, ciimage.extent.origin.y);
-                mask = [mask imageByApplyingTransform:t];
-                
-                /** 生成新的圆角的图片 */
-                ciimage = [CIFilter filterWithName:@"CIBlendWithAlphaMask"
-                              withInputParameters:@{kCIInputMaskImageKey : mask,
-                                                    kCIInputImageKey : ciimage}].outputImage;
-            }
-            
             UIImage *returnedImage = nil;
-            CGImageRef imageRef = [context createCGImage:ciimage fromRect:ciimage.extent];
-            if (imageRef != nil) {
-                returnedImage = [UIImage imageWithCGImage:imageRef];
-                CGImageRelease(imageRef);
+            @autoreleasepool {
+                /** 剪裁图片 */
+                returnedImage = [image LFME_cropInRect:clipRect];
+                if (rotate > 0) {
+                    /** 调整角度 */
+                    returnedImage = [returnedImage LFME_imageRotatedByRadians:rotate];
+                }
+                if (otherImage) {
+                    /** 缩放至原图尺寸，因为尺寸已经被多次取整，如果通过LFME_scaleToFitSize计算大小会出现误差，直接拉伸图片即可 */
+                    UIImage *scaleOtherImage = [otherImage LFME_scaleToFillSize:returnedImage.size];
+                    if (scaleOtherImage) {
+                        /** 合并图层 */
+                        returnedImage = [returnedImage LFME_mergeimages:@[scaleOtherImage]];
+                    }
+                }
             }
+            
             return returnedImage;
         };
         

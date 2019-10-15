@@ -138,10 +138,16 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     return _isWork;
 }
 
+/** 图层数量 */
+- (NSUInteger)count
+{
+    return self.brushData.count;
+}
+
 /** 是否可撤销 */
 - (BOOL)canUndo
 {
-    return self.brushData.count;
+    return self.count > 0;
 }
 
 //撤销

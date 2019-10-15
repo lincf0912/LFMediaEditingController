@@ -15,6 +15,8 @@
 @property (nonatomic, strong) LFBrush *brush;
 /** 正在绘画 */
 @property (nonatomic, readonly) BOOL isDrawing;
+/** 图层数量 */
+@property (nonatomic, readonly) NSUInteger count;
 
 @property (nonatomic, copy) void(^drawBegan)(void);
 @property (nonatomic, copy) void(^drawEnded)(void);

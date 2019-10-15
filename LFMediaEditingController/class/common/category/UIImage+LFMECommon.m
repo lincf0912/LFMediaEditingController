@@ -146,7 +146,7 @@
     return CGSizeMake(ceilf(scaledWidth), ceilf(scaledHeight));
 }
 
-- (UIImage*)LFME_scaleToSize:(CGSize)size
+- (UIImage*)LFME_scaleToFitSize:(CGSize)size
 {
     if (CGSizeEqualToSize(self.size, size)) {
         return self;
@@ -190,10 +190,60 @@
     return scaledImage;
 }
 
+- (UIImage*)LFME_scaleToFillSize:(CGSize)size
+{
+    if (CGSizeEqualToSize(self.size, size)) {
+        return self;
+    }
+    
+    // 创建一个context
+    // 并把它设置成为当前正在使用的context
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    
+    // 绘制改变大小的图片
+    [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    
+    // 从当前context中创建一个改变大小后的图片
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // 使当前的context出堆栈
+    UIGraphicsEndImageContext();
+    
+    // 返回新的改变大小后的图片
+    return scaledImage;
+}
+
+//截取部分图像
+- (UIImage *)LFME_cropInRect:(CGRect)rect
+{
+    UIImage *smallImage = nil;
+    CGImageRef sourceImageRef = [self CGImage];
+    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);
+    if (newImageRef) {
+        smallImage = [UIImage imageWithCGImage:newImageRef scale:self.scale orientation:self.imageOrientation];
+        CGImageRelease(newImageRef);
+    }
+
+    return smallImage;
+}
+
+/** 合并图片（图片大小一致） */
 - (UIImage *)LFME_mergeimages:(NSArray <UIImage *>*)images
 {
     UIGraphicsBeginImageContextWithOptions(self.size ,NO, 0);
     [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
+    for (UIImage *image in images) {
+        [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
+    }
+    UIImage *mergeImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return mergeImage;
+}
+
+/** 合并图片(图片大小以第一张为准) */
++ (UIImage *)LFME_mergeimages:(NSArray <UIImage *>*)images
+{
+    UIGraphicsBeginImageContextWithOptions(images.firstObject.size ,NO, 0);
     for (UIImage *image in images) {
         [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
     }

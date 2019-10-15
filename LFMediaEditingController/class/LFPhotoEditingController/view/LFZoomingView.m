@@ -125,14 +125,40 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     [self.imageView setImageByUIImage:image durations:durations];
 }
 
-- (void)setImageViewHidden:(BOOL)imageViewHidden
+/** 获取除图片以外的编辑图层 */
+- (UIImage *)editOtherImagesInRect:(CGRect)rect rotate:(CGFloat)rotate
 {
-    self.imageView.hidden = imageViewHidden;
-}
-
-- (BOOL)isImageViewHidden
-{
-    return self.imageView.isHidden;
+    UIImage *image = nil;
+    NSMutableArray *array = nil;
+    
+    for (UIView *subView in self.subviews) {
+        
+        if (subView == self.imageView) {
+            continue;
+        } else if ([subView isKindOfClass:[LFDrawView class]]) {
+            if (((LFDrawView *)subView).count  == 0) {
+                continue;
+            }
+        } else if ([subView isKindOfClass:[LFStickerView class]]) {
+            if (((LFStickerView *)subView).count  == 0) {
+                continue;
+            }
+        }
+        if (array == nil) {
+            array = [NSMutableArray arrayWithCapacity:3];
+        }
+        [array addObject:[subView LFME_captureImageAtFrame:rect]];
+        
+    }
+    
+    if (array.count) {
+        image = [UIImage LFME_mergeimages:array];
+        if (rotate) {
+            image = [image LFME_imageRotatedByRadians:rotate];
+        }
+    }
+    
+    return image;
 }
 
 - (void)setMoveCenter:(BOOL (^)(CGRect))moveCenter

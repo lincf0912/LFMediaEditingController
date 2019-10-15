@@ -130,22 +130,16 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     [self.zoomingView setImage:image durations:durations];
 }
 
-- (BOOL)hasZoomingViewData
+/** 获取除图片以外的编辑图层 */
+- (UIImage *)editOtherImagesInRect:(CGRect)rect rotate:(CGFloat)rotate
 {
-    if (self.zoomingView.photoEditData) {
-        return YES;
-    }
-    return NO;
-}
-
-- (void)setImageViewHidden:(BOOL)imageViewHidden
-{
-    self.zoomingView.imageViewHidden = imageViewHidden;
-}
-
-- (BOOL)isImageViewHidden
-{
-    return self.zoomingView.imageViewHidden;
+    CGRect inRect = [self.superview convertRect:rect toView:self.zoomingView];
+    /** 参数取整，否则可能会出现1像素偏差 */
+    inRect.origin.x = ((int)(inRect.origin.x+0.5)*1.f);
+    inRect.origin.y = ((int)(inRect.origin.y+0.5)*1.f);
+    inRect.size.width = ((int)(inRect.size.width+0.5)*1.f);
+    inRect.size.height = ((int)(inRect.size.height+0.5)*1.f);
+    return [self.zoomingView editOtherImagesInRect:inRect rotate:rotate];
 }
 
 - (void)setCropRect:(CGRect)cropRect

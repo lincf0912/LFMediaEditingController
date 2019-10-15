@@ -43,14 +43,14 @@
     CGSize size = [UIImage LFME_scaleImageSizeBySize:editPreviewImage.size targetSize:CGSizeMake(width, width) isBoth:NO];
     NSData *editPreviewData = nil;
     if (editPreviewImage.images.count) {
-        _editPosterImage = [editPreviewImage.images.firstObject LFME_scaleToSize:size];
+        _editPosterImage = [editPreviewImage.images.firstObject LFME_scaleToFitSize:size];
         if (durations && durations.count == editPreviewImage.images.count) {
             editPreviewData = LFME_UIImageGIFRepresentation(editPreviewImage, durations, 0, nil);
         } else {
             editPreviewData = LFME_UIImageGIFRepresentation(editPreviewImage);
         }
     } else {
-        _editPosterImage = [editPreviewImage LFME_scaleToSize:size];
+        _editPosterImage = [editPreviewImage LFME_scaleToFitSize:size];
         editPreviewData = LFME_UIImageJPEGRepresentation(editPreviewImage);
     }
     _editPreviewData = editPreviewData;

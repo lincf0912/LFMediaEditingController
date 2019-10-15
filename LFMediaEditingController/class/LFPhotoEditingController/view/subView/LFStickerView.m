@@ -178,6 +178,11 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     movingView.screenScale = self.screenScale;
 }
 
+/** 贴图数量 */
+- (NSUInteger)count
+{
+    return self.subviews.count;
+}
 
 - (void)setScreenScale:(CGFloat)screenScale
 {

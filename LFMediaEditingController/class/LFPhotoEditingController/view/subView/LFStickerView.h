@@ -33,6 +33,8 @@
 @property (nonatomic, assign) CGFloat minScale;
 /** 最大缩放率 默认3.0 */
 @property (nonatomic, assign) CGFloat maxScale;
+/** 贴图数量 */
+@property (nonatomic, readonly) NSUInteger count;
 
 /** 显示界面的缩放率，例如在UIScrollView上显示，scrollView放大了5倍，movingView的视图控件会显得较大，这个属性是适配当前屏幕的比例调整控件大小 */
 @property (nonatomic, assign) CGFloat screenScale;
