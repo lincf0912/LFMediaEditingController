@@ -90,9 +90,10 @@ LFEasyNoticeBarConfig LFEasyNoticeBarConfigDefault(void) {
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = _config.title;
     titleLabel.textColor = _config.textColor;
-    titleLabel.minimumScaleFactor = 0.55;
+//    titleLabel.minimumScaleFactor = 0.55;
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.font = [UIFont systemFontOfSize:18];
+    titleLabel.numberOfLines = 3;
     [self addSubview:titleLabel];
     _titleLabel = titleLabel;
     
@@ -193,7 +194,7 @@ LFEasyNoticeBarConfig LFEasyNoticeBarConfigDefault(void) {
     CGFloat navigationBarHeight = isVerticalScreen ? 44.0 : 34.0;
     CGFloat statusBarHeight = isVerticalScreen ? 20.0 : 0.0;
     
-    CGFloat imageWidth = 21.0;
+    CGFloat imageWidth = 30.0;
     CGFloat imageOriginX = _config.margin + 10.0 + LFEasyNoticeBarWidenSize;
     if (@available(iOS 11.0, *)) {
         statusBarHeight = self.safeAreaInsets.top;
