@@ -1188,7 +1188,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 
 - (void)showTextBarController:(LFText *)text
 {
-    static NSInteger LFTextBarTag = 32795812735;
+    static NSInteger LFTextBarTag = 32735;
     if ([self.view viewWithTag:LFTextBarTag]) {
         return;
     }

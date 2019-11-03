@@ -630,7 +630,7 @@
 				6F359B271F1CB662009F2035 /* LFVideoEditingView.m */,
 				6F359B291F1CBB3F009F2035 /* LFVideoClippingView.h */,
 				6F359B2A1F1CBB3F009F2035 /* LFVideoClippingView.m */,
-				6F359B381F1DE98A009F2035 /* subview */,
+				6F359B381F1DE98A009F2035 /* subView */,
 				6F359B341F1DDE5B009F2035 /* toolBar */,
 			);
 			path = view;
@@ -656,7 +656,7 @@
 			path = toolBar;
 			sourceTree = "<group>";
 		};
-		6F359B381F1DE98A009F2035 /* subview */ = {
+		6F359B381F1DE98A009F2035 /* subView */ = {
 			isa = PBXGroup;
 			children = (
 				6F359B391F1DE99F009F2035 /* LFVideoTrimmerView.h */,
@@ -668,7 +668,7 @@
 				C73F4CB82230FE1800ED40B7 /* LFDataFilterVideoView.h */,
 				C73F4CB92230FE1800ED40B7 /* LFDataFilterVideoView.m */,
 			);
-			path = subview;
+			path = subView;
 			sourceTree = "<group>";
 		};
 		6F384D3C1EE69FFC0077D207 /* LFVideoEditingController */ = {
