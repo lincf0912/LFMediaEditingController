@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'LFMediaEditingController'
-s.version      = '1.3.8'
+s.version      = '1.3.9'
 s.summary      = 'Media Editor (edit photo、edit video)'
 s.homepage     = 'https://github.com/lincf0912/LFMediaEditingController'
 s.license      = 'MIT'
@@ -22,6 +22,9 @@ ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
 ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
+ss.dependency 'LFMediaEditingController/LFImageCoder'
+ss.dependency 'LFMediaEditingController/LFPresentationCategory'
+ss.dependency 'LFMediaEditingController/DropDownMenu'
 end
 
 # LFVideoEditingController模块
@@ -34,6 +37,8 @@ ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
 ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
+ss.dependency 'LFMediaEditingController/LFPresentationCategory'
+ss.dependency 'LFMediaEditingController/DropDownMenu'
 end
 
 # JRPickColorView模块
@@ -65,6 +70,24 @@ s.subspec 'LFMediaDisplayView' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/*.{h,m}','LFMediaEditingController/class/vendors/LFMediaDisplayView/**/*.{h,m}'
 ss.public_header_files = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/*.h'
 ss.resources = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/resource/*.bundle'
+end
+
+# LFImageCoder模块
+s.subspec 'LFImageCoder' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/LFImageCoder/*.{h,m}','LFMediaEditingController/class/vendors/LFImageCoder/**/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/LFImageCoder/*.h'
+end
+
+# LFPresentationCategory模块
+s.subspec 'LFPresentationCategory' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/LFPresentationCategory/*.{h,m}','LFMediaEditingController/class/vendors/LFPresentationCategory/**/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/LFPresentationCategory/*.h'
+end
+
+# DropDownMenu模块
+s.subspec 'DropDownMenu' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/DropDownMenu/*.{h,m}','LFMediaEditingController/class/vendors/DropDownMenu/**/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/DropDownMenu/*.h'
 end
 
 end
