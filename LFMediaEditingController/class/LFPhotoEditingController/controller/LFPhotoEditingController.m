@@ -215,29 +215,31 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         self.editData = nil;
     } else {
         /** 设置默认滤镜 */
-        if (self.operationType&LFPhotoEditOperationType_filter) {
-            LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditFilterAttributeName];
-            NSInteger index = 0;
-            switch (subType) {
-                case LFPhotoEditOperationSubTypeLinearCurveFilter:
-                case LFPhotoEditOperationSubTypeChromeFilter:
-                case LFPhotoEditOperationSubTypeFadeFilter:
-                case LFPhotoEditOperationSubTypeInstantFilter:
-                case LFPhotoEditOperationSubTypeMonoFilter:
-                case LFPhotoEditOperationSubTypeNoirFilter:
-                case LFPhotoEditOperationSubTypeProcessFilter:
-                case LFPhotoEditOperationSubTypeTonalFilter:
-                case LFPhotoEditOperationSubTypeTransferFilter:
-                case LFPhotoEditOperationSubTypeCurveLinearFilter:
-                case LFPhotoEditOperationSubTypeInvertFilter:
-                case LFPhotoEditOperationSubTypeMonochromeFilter:
-                    index = subType % 400 + 1;
-                default:
-                    break;
-            }
-            
-            if (index > 0) {
-                [_EditingView changeFilterType:index];
+        if (@available(iOS 9.0, *)) {
+            if (self.operationType&LFPhotoEditOperationType_filter) {
+                LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditFilterAttributeName];
+                NSInteger index = 0;
+                switch (subType) {
+                    case LFPhotoEditOperationSubTypeLinearCurveFilter:
+                    case LFPhotoEditOperationSubTypeChromeFilter:
+                    case LFPhotoEditOperationSubTypeFadeFilter:
+                    case LFPhotoEditOperationSubTypeInstantFilter:
+                    case LFPhotoEditOperationSubTypeMonoFilter:
+                    case LFPhotoEditOperationSubTypeNoirFilter:
+                    case LFPhotoEditOperationSubTypeProcessFilter:
+                    case LFPhotoEditOperationSubTypeTonalFilter:
+                    case LFPhotoEditOperationSubTypeTransferFilter:
+                    case LFPhotoEditOperationSubTypeCurveLinearFilter:
+                    case LFPhotoEditOperationSubTypeInvertFilter:
+                    case LFPhotoEditOperationSubTypeMonochromeFilter:
+                        index = subType % 400 + 1;
+                    default:
+                        break;
+                }
+                
+                if (index > 0) {
+                    [_EditingView changeFilterType:index];
+                }
             }
         }
         
@@ -324,8 +326,10 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if (self.operationType&LFPhotoEditOperationType_crop) {
         toolbarType |= LFEditToolbarType_crop;
     }
-    if (self.operationType&LFPhotoEditOperationType_filter) {
-        toolbarType |= LFEditToolbarType_filter;
+    if (@available(iOS 9.0, *)) {
+        if (self.operationType&LFPhotoEditOperationType_filter) {
+            toolbarType |= LFEditToolbarType_filter;
+        }
     }
     
     _edit_toolBar = [[LFEditToolbar alloc] initWithType:toolbarType];
@@ -459,8 +463,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_text];
             } else if (containOperation(LFPhotoEditOperationType_splash)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_splash];
-            } else if (containOperation(LFPhotoEditOperationType_filter)) {
-                [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+            } else {
+                if (@available(iOS 9.0, *)) {
+                    if (containOperation(LFPhotoEditOperationType_filter)) {
+                        [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+                    }
+                }
             }
             self.initSelectedOperationType = 0;
         }
@@ -1244,6 +1252,9 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if ([obj isKindOfClass:[NSNumber class]]) {
         return (LFPhotoEditOperationSubType)[obj integerValue];
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFPhotoEditDrawColorAttributeName]
         || [key isEqualToString:LFPhotoEditDrawBrushAttributeName]
         || [key isEqualToString:LFPhotoEditTextColorAttributeName]
@@ -1251,6 +1262,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         || [key isEqualToString:LFPhotoEditFilterAttributeName]
         || [key isEqualToString:LFPhotoEditCropAspectRatioAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is LFPhotoEditOperationSubType", key);
+        #pragma clang diagnostic pop
     }
     return 0;
 }
@@ -1261,8 +1273,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if ([obj isKindOfClass:[NSString class]]) {
         return (NSString *)obj;
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFPhotoEditStickerAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+        #pragma clang diagnostic pop
     }
     return nil;
 }
@@ -1273,9 +1289,13 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if ([obj isKindOfClass:[NSNumber class]]) {
         return [obj boolValue];
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFPhotoEditCropCanRotateAttributeName]
         || [key isEqualToString:LFPhotoEditCropCanAspectRatioAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+        #pragma clang diagnostic pop
     } else {
         if ([key isEqualToString:LFPhotoEditCropCanRotateAttributeName]) {
             return YES;

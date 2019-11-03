@@ -230,30 +230,32 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         }
         
         /** 设置默认滤镜 */
-        if (self.operationType&LFVideoEditOperationType_filter) {
-            LFVideoEditOperationSubType subType = [self operationSubTypeForKey:LFVideoEditFilterAttributeName];
-            NSInteger index = 0;
-            switch (subType) {
-                case LFVideoEditOperationSubTypeLinearCurveFilter:
-                case LFVideoEditOperationSubTypeChromeFilter:
-                case LFVideoEditOperationSubTypeFadeFilter:
-                case LFVideoEditOperationSubTypeInstantFilter:
-                case LFVideoEditOperationSubTypeMonoFilter:
-                case LFVideoEditOperationSubTypeNoirFilter:
-                case LFVideoEditOperationSubTypeProcessFilter:
-                case LFVideoEditOperationSubTypeTonalFilter:
-                case LFVideoEditOperationSubTypeTransferFilter:
-                case LFVideoEditOperationSubTypeCurveLinearFilter:
-                case LFVideoEditOperationSubTypeInvertFilter:
-                case LFVideoEditOperationSubTypeMonochromeFilter:
-                    index = subType % 400 + 1;
-                    break;
-                default:
-                    break;
-            }
-            
-            if (index > 0) {
-                [_EditingView changeFilterType:index];
+        if (@available(iOS 9.0, *)) {
+            if (self.operationType&LFVideoEditOperationType_filter) {
+                LFVideoEditOperationSubType subType = [self operationSubTypeForKey:LFVideoEditFilterAttributeName];
+                NSInteger index = 0;
+                switch (subType) {
+                    case LFVideoEditOperationSubTypeLinearCurveFilter:
+                    case LFVideoEditOperationSubTypeChromeFilter:
+                    case LFVideoEditOperationSubTypeFadeFilter:
+                    case LFVideoEditOperationSubTypeInstantFilter:
+                    case LFVideoEditOperationSubTypeMonoFilter:
+                    case LFVideoEditOperationSubTypeNoirFilter:
+                    case LFVideoEditOperationSubTypeProcessFilter:
+                    case LFVideoEditOperationSubTypeTonalFilter:
+                    case LFVideoEditOperationSubTypeTransferFilter:
+                    case LFVideoEditOperationSubTypeCurveLinearFilter:
+                    case LFVideoEditOperationSubTypeInvertFilter:
+                    case LFVideoEditOperationSubTypeMonochromeFilter:
+                        index = subType % 400 + 1;
+                        break;
+                    default:
+                        break;
+                }
+                
+                if (index > 0) {
+                    [_EditingView changeFilterType:index];
+                }
             }
         }
     }
@@ -423,18 +425,20 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_text];
             } else if (containOperation(LFVideoEditOperationType_audio)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_audio];
-            } else
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-                if (containOperation(LFVideoEditOperationType_filter)) {
-                    if (@available(iOS 9.0, *)) {
+            } else {
+                BOOL isDoIt = YES;
+                if (@available(iOS 9.0, *)) {
+                    if (containOperation(LFVideoEditOperationType_filter)) {
                         [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_filter];
+                        isDoIt = NO;
                     }
                 }
-#pragma clang diagnostic pop
-                else if (containOperation(LFVideoEditOperationType_rate)) {
-                    [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_rate];
+                if (isDoIt) {
+                    if (containOperation(LFVideoEditOperationType_rate)) {
+                        [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_rate];
+                    }
                 }
+            }
             self.initSelectedOperationType = 0;
         }
     }
@@ -1150,11 +1154,15 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     if ([obj isKindOfClass:[NSNumber class]]) {
         return (LFVideoEditOperationSubType)[obj integerValue];
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFVideoEditDrawColorAttributeName]
         || [key isEqualToString:LFVideoEditDrawBrushAttributeName]
         || [key isEqualToString:LFVideoEditTextColorAttributeName]
         || [key isEqualToString:LFVideoEditFilterAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is LFVideoEditOperationSubType", key);
+        #pragma clang diagnostic pop
     }
     return 0;
 }
@@ -1165,8 +1173,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     if ([obj isKindOfClass:[NSNumber class]]) {
         return [obj boolValue];
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFVideoEditAudioMuteAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is BOOL", key);
+        #pragma clang diagnostic pop
     } else {
         if ([key isEqualToString:LFVideoEditAudioMuteAttributeName]) {
             return NO;
@@ -1190,10 +1202,14 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             return value;
         }
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFVideoEditRateAttributeName]
         || [key isEqualToString:LFVideoEditClipMinDurationAttributeName]
         || [key isEqualToString:LFVideoEditClipMaxDurationAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is double", key);
+        #pragma clang diagnostic pop
     } else {
         if ([key isEqualToString:LFVideoEditRateAttributeName]) {
             return 1.f;
@@ -1212,8 +1228,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     if ([obj isKindOfClass:[NSString class]]) {
         return (NSString *)obj;
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFVideoEditStickerAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+        #pragma clang diagnostic pop
     }
     return nil;
 }
@@ -1223,15 +1243,23 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     id obj = [self.operationAttrs objectForKey:key];
     if ([obj isKindOfClass:[NSArray class]]) {
         NSArray *identifiers = (NSArray *)obj;
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         NSPredicate *p = [NSPredicate predicateWithFormat:@"self isKindOfClass: %@",
                           [NSURL class]];
         NSArray *filtered = [identifiers filteredArrayUsingPredicate:p];
         NSAssert(filtered.count == identifiers.count,
                  @"The value of key %@ can only contain NSURL.", key);
+        #pragma clang diagnostic pop
         return identifiers;
     } else if (obj) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wunused-variable"
+                
         BOOL isContain = [key isEqualToString:LFVideoEditAudioUrlsAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is NSArray<NSURL *>*", key);
+        #pragma clang diagnostic pop
     }
     return nil;
 }
