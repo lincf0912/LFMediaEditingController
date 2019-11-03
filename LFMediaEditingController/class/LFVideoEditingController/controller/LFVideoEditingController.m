@@ -26,6 +26,8 @@
 /************************ Attributes ************************/
 /** NSNumber containing LFVideoEditOperationSubType, default 0 */
 LFVideoEditOperationStringKey const LFVideoEditDrawColorAttributeName = @"LFVideoEditDrawColorAttributeName";
+/** NSNumber containing LFVideoEditOperationSubType, default 0 */
+LFVideoEditOperationStringKey const LFVideoEditDrawBrushAttributeName = @"LFVideoEditDrawBrushAttributeName";
 /** NSString containing string path, default nil. sticker resource path. */
 LFVideoEditOperationStringKey const LFVideoEditStickerAttributeName = @"LFVideoEditStickerAttributeName";
 /** NSNumber containing LFVideoEditOperationSubType, default 0 */
@@ -354,11 +356,37 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             default:
                 break;
         }
+        [_edit_toolBar setDrawSliderColorAtIndex:index];
+        
+        subType = [self operationSubTypeForKey:LFVideoEditDrawBrushAttributeName];
+
+        EditToolbarBrushType brushType = 0;
+        EditToolbarStampBrushType stampBrushType = 0;
+        switch (subType) {
+            case LFVideoEditOperationSubTypeDrawPaintBrush:
+            case LFVideoEditOperationSubTypeDrawHighlightBrush:
+            case LFVideoEditOperationSubTypeDrawChalkBrush:
+            case LFVideoEditOperationSubTypeDrawFluorescentBrush:
+                brushType = subType % 50;
+                break;
+            case LFVideoEditOperationSubTypeDrawStampAnimalBrush:
+                brushType = EditToolbarBrushTypeStamp;
+                stampBrushType = EditToolbarStampBrushTypeAnimal;
+                break;
+            case LFVideoEditOperationSubTypeDrawStampFruitBrush:
+                brushType = EditToolbarBrushTypeStamp;
+                stampBrushType = EditToolbarStampBrushTypeFruit;
+                break;
+            case LFVideoEditOperationSubTypeDrawStampHeartBrush:
+                brushType = EditToolbarBrushTypeStamp;
+                stampBrushType = EditToolbarStampBrushTypeHeart;
+                break;
+            default:
+                break;
+        }
+        [_edit_toolBar setDrawBrushAtIndex:brushType subIndex:stampBrushType];
     }
     
-    [_edit_toolBar setDrawSliderColorAtIndex:index];
-    /** 绘画颜色一致 */
-    [_EditingView setDrawColor:[_edit_toolBar drawSliderCurrentColor]];
     
     /** 设置默认速率 */
     if (self.operationType&LFVideoEditOperationType_rate && _EditingView.rate == 1.f) {
@@ -621,6 +649,11 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar drawColorDidChange:(UIColor *)color
 {
     [_EditingView setDrawColor:color];
+}
+/** 二级菜单笔刷事件-绘画 */
+- (void)lf_editToolbar:(LFEditToolbar *)editToolbar drawBrushDidChange:(LFBrush *)brush
+{
+    [_EditingView setDrawBrush:brush];
 }
 /** 二级菜单滑动事件-速率 */
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar rateDidChange:(float)value
@@ -1118,6 +1151,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         return (LFVideoEditOperationSubType)[obj integerValue];
     } else if (obj) {
         BOOL isContain = [key isEqualToString:LFVideoEditDrawColorAttributeName]
+        || [key isEqualToString:LFVideoEditDrawBrushAttributeName]
         || [key isEqualToString:LFVideoEditTextColorAttributeName]
         || [key isEqualToString:LFVideoEditFilterAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is LFVideoEditOperationSubType", key);

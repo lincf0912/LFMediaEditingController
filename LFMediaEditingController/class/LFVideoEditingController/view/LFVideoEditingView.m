@@ -115,6 +115,11 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     {
         self.lf_protocolxecutor = self.clippingView;
     }
+    
+    /** 默认绘画线粗 */
+    [self setDrawLineWidth:5.0];
+    /** 屏幕缩放率 */
+    [self setScreenScale:1.0];
 }
 
 - (UIEdgeInsets)refer_clippingInsets
@@ -247,6 +252,26 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     }
     
     return view;
+}
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    /** 解决部分机型在编辑期间会触发滑动导致无法编辑的情况 */
+    if (self.isClipping) {
+        /** 自身手势被触发、响应视图非自身、被触发手势为滑动手势 */
+        return NO;
+    } else if ([self drawEnable] && ![gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
+        /** 绘画时候，禁用滑动手势 */
+        return NO;
+    } else if ([self splashEnable] && ![gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
+        /** 模糊时候，禁用滑动手势 */
+        return NO;
+    } else if ([self stickerEnable] && ![gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
+        /** 贴图移动时候，禁用滑动手势 */
+        return NO;
+    }
+    return YES;
 }
 
 - (float)rate

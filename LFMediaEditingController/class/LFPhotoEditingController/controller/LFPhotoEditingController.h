@@ -41,6 +41,13 @@ typedef NSString * LFPhotoEditOperationStringKey NS_EXTENSIBLE_STRING_ENUM;
  */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditDrawColorAttributeName;
 /**
+ 绘画的默认笔刷
+ The default brush of the painting.
+ 
+ NSNumber containing LFPhotoEditOperationSubType, default 0
+ */
+UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditDrawBrushAttributeName;
+/**
  自定义贴图资源路径，完整的资源路径目录file://...。将该目录下的所有后缀为@"png", @"jpg", @"jpeg", @"gif"的文件作为可选贴图，它完全代替了项目资源贴图。
  The sticker are customizable. This path must be a full path directory (for example: file://... ). All files with the suffix @"png", @"jpg", @"jpeg", @"gif" in the directory as stickers.
  
@@ -111,6 +118,15 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
     LFPhotoEditOperationSubTypeDrawVioletRedColor,
     LFPhotoEditOperationSubTypeDrawPinkColor,
     
+    /** LFPhotoEditOperationType_draw && LFPhotoEditDrawBrushAttributeName */
+    LFPhotoEditOperationSubTypeDrawPaintBrush = 50,
+    LFPhotoEditOperationSubTypeDrawHighlightBrush,
+    LFPhotoEditOperationSubTypeDrawChalkBrush,
+    LFPhotoEditOperationSubTypeDrawFluorescentBrush,
+    LFPhotoEditOperationSubTypeDrawStampAnimalBrush,
+    LFPhotoEditOperationSubTypeDrawStampFruitBrush,
+    LFPhotoEditOperationSubTypeDrawStampHeartBrush,
+    
     /** LFPhotoEditOperationType_text && LFPhotoEditTextColorAttributeName */
     
     LFPhotoEditOperationSubTypeTextWhiteColor = 100,
@@ -131,7 +147,8 @@ typedef NS_ENUM(NSUInteger, LFPhotoEditOperationSubType) {
     /** LFPhotoEditOperationType_splash && LFPhotoEditSplashAttributeName */
     
     LFPhotoEditOperationSubTypeSplashMosaic = 300,
-    LFPhotoEditOperationSubTypeSplashPaintbrush = 301,
+    LFPhotoEditOperationSubTypeSplashBlurry,
+    LFPhotoEditOperationSubTypeSplashPaintbrush,
     
     /** LFPhotoEditOperationType_filter && LFPhotoEditFilterAttributeName */
     

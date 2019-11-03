@@ -63,6 +63,10 @@
 		C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C70FDAB020E46CF50053A02C /* longImage.jpg */; };
 		C7269FBB20996DAE00A88CA7 /* 4.gif in Resources */ = {isa = PBXBuildFile; fileRef = C7269FBA20996DAE00A88CA7 /* 4.gif */; };
 		C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */ = {isa = PBXBuildFile; fileRef = C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */; };
+		C72C395E236ACB04008C55B1 /* SPDropMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = C72C394E236ACB04008C55B1 /* SPDropMenu.m */; };
+		C72C395F236ACB04008C55B1 /* SPDropItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C72C3954236ACB04008C55B1 /* SPDropItem.m */; };
+		C72C3960236ACB04008C55B1 /* SPBaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C72C3957236ACB04008C55B1 /* SPBaseCollectionViewCell.m */; };
+		C72C3961236ACB04008C55B1 /* SPDropMainMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = C72C395B236ACB04008C55B1 /* SPDropMainMenu.m */; };
 		C73F4CB12230C99C00ED40B7 /* JRFilterBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CAB2230C99C00ED40B7 /* JRFilterBarCell.m */; };
 		C73F4CB22230C99C00ED40B7 /* JRFilterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CAF2230C99C00ED40B7 /* JRFilterModel.m */; };
 		C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C73F4CB02230C99C00ED40B7 /* JRFilterBar.m */; };
@@ -225,6 +229,16 @@
 		C7269FBA20996DAE00A88CA7 /* 4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 4.gif; sourceTree = "<group>"; };
 		C7269FBC20999FC900A88CA7 /* UIImage+LF_Format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+LF_Format.h"; sourceTree = "<group>"; };
 		C7269FBD20999FC900A88CA7 /* UIImage+LF_Format.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+LF_Format.m"; sourceTree = "<group>"; };
+		C72C394E236ACB04008C55B1 /* SPDropMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDropMenu.m; sourceTree = "<group>"; };
+		C72C3950236ACB04008C55B1 /* SPDropItemProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDropItemProtocol.h; sourceTree = "<group>"; };
+		C72C3951236ACB04008C55B1 /* SPDropMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDropMenu.h; sourceTree = "<group>"; };
+		C72C3953236ACB04008C55B1 /* SPDropItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDropItem.h; sourceTree = "<group>"; };
+		C72C3954236ACB04008C55B1 /* SPDropItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDropItem.m; sourceTree = "<group>"; };
+		C72C3956236ACB04008C55B1 /* SPBaseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPBaseCollectionViewCell.h; sourceTree = "<group>"; };
+		C72C3957236ACB04008C55B1 /* SPBaseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPBaseCollectionViewCell.m; sourceTree = "<group>"; };
+		C72C3959236ACB04008C55B1 /* SPDropMainMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDropMainMenu.h; sourceTree = "<group>"; };
+		C72C395B236ACB04008C55B1 /* SPDropMainMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDropMainMenu.m; sourceTree = "<group>"; };
+		C72C395D236ACB04008C55B1 /* SPDropMainMenuHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDropMainMenuHeader.h; sourceTree = "<group>"; };
 		C73F4CA92230C99C00ED40B7 /* JRFilterBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRFilterBar.h; sourceTree = "<group>"; };
 		C73F4CAB2230C99C00ED40B7 /* JRFilterBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JRFilterBarCell.m; sourceTree = "<group>"; };
 		C73F4CAC2230C99C00ED40B7 /* JRFilterBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JRFilterBarCell.h; sourceTree = "<group>"; };
@@ -545,6 +559,7 @@
 		6F14E6391EE6439E0049AE56 /* vendors */ = {
 			isa = PBXGroup;
 			children = (
+				C72C394D236ACB04008C55B1 /* DropDownMenu */,
 				C783DED223545C5E0083EDBD /* LFPresentationCategory */,
 				C763E82C233476840004ED6C /* LFImageCoder */,
 				C786A5682325F4B200546B8C /* LFEasyNoticeBar */,
@@ -696,6 +711,71 @@
 				C73F4CBD223110EB00ED40B7 /* AVAsset+LFMECommon.m */,
 			);
 			path = category;
+			sourceTree = "<group>";
+		};
+		C72C394D236ACB04008C55B1 /* DropDownMenu */ = {
+			isa = PBXGroup;
+			children = (
+				C72C394E236ACB04008C55B1 /* SPDropMenu.m */,
+				C72C394F236ACB04008C55B1 /* protocol */,
+				C72C3951236ACB04008C55B1 /* SPDropMenu.h */,
+				C72C3952236ACB04008C55B1 /* model */,
+				C72C3955236ACB04008C55B1 /* subView */,
+				C72C3958236ACB04008C55B1 /* main */,
+				C72C395C236ACB04008C55B1 /* Header */,
+			);
+			path = DropDownMenu;
+			sourceTree = "<group>";
+		};
+		C72C394F236ACB04008C55B1 /* protocol */ = {
+			isa = PBXGroup;
+			children = (
+				C72C3950236ACB04008C55B1 /* SPDropItemProtocol.h */,
+			);
+			path = protocol;
+			sourceTree = "<group>";
+		};
+		C72C3952236ACB04008C55B1 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				C72C3953236ACB04008C55B1 /* SPDropItem.h */,
+				C72C3954236ACB04008C55B1 /* SPDropItem.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		C72C3955236ACB04008C55B1 /* subView */ = {
+			isa = PBXGroup;
+			children = (
+				C72C3956236ACB04008C55B1 /* SPBaseCollectionViewCell.h */,
+				C72C3957236ACB04008C55B1 /* SPBaseCollectionViewCell.m */,
+			);
+			path = subView;
+			sourceTree = "<group>";
+		};
+		C72C3958236ACB04008C55B1 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				C72C3959236ACB04008C55B1 /* SPDropMainMenu.h */,
+				C72C395A236ACB04008C55B1 /* subView */,
+				C72C395B236ACB04008C55B1 /* SPDropMainMenu.m */,
+			);
+			path = main;
+			sourceTree = "<group>";
+		};
+		C72C395A236ACB04008C55B1 /* subView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = subView;
+			sourceTree = "<group>";
+		};
+		C72C395C236ACB04008C55B1 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				C72C395D236ACB04008C55B1 /* SPDropMainMenuHeader.h */,
+			);
+			path = Header;
 			sourceTree = "<group>";
 		};
 		C73F4CA82230C99C00ED40B7 /* JRFilterBar */ = {
@@ -1097,6 +1177,7 @@
 				C7C5807422AFA812003BD4F7 /* LFMutableFilter.m in Sources */,
 				6F359B441F1E0A8D009F2035 /* LFVideoTrimmerGridLayer.m in Sources */,
 				6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */,
+				C72C3961236ACB04008C55B1 /* SPDropMainMenu.m in Sources */,
 				6F14E6551EE6439E0049AE56 /* LFStickerView.m in Sources */,
 				6F359B371F1DDE6D009F2035 /* LFVideoClipToolbar.m in Sources */,
 				C73F4CBA2230FE1800ED40B7 /* LFDataFilterVideoView.m in Sources */,
@@ -1129,11 +1210,13 @@
 				C7E750F92119294F00022FCF /* LFColorMatrixType.m in Sources */,
 				6F14E5D51EE6438A0049AE56 /* main.m in Sources */,
 				C7C5807B22AFA812003BD4F7 /* LFFilterImageView.m in Sources */,
+				C72C395E236ACB04008C55B1 /* SPDropMenu.m in Sources */,
 				C70890932329F27B00ABF2FB /* LFMosaicBrush.m in Sources */,
 				6F359B281F1CB662009F2035 /* LFVideoEditingView.m in Sources */,
 				C786A5392322000A00546B8C /* LFBrushCache.m in Sources */,
 				C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */,
 				C786A5362321ECD600546B8C /* LFChalkBrush.m in Sources */,
+				C72C3960236ACB04008C55B1 /* SPBaseCollectionViewCell.m in Sources */,
 				C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */,
 				C708908223288B2800ABF2FB /* LFBlurryBrush.m in Sources */,
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,
@@ -1144,6 +1227,7 @@
 				6FAB0D371F27345600C1BCFD /* LFScrollView.m in Sources */,
 				C73F4CB22230C99C00ED40B7 /* JRFilterModel.m in Sources */,
 				C703CD9122B7973400561AAC /* LFLView.m in Sources */,
+				C72C395F236ACB04008C55B1 /* SPDropItem.m in Sources */,
 				6F14E6461EE6439E0049AE56 /* LFClippingView.m in Sources */,
 				C7D76C1922F163C300D632D3 /* LFMediaEditingHeader.m in Sources */,
 				C7D28F4A22DC0ECB00AB83FE /* LFMEGifView.m in Sources */,

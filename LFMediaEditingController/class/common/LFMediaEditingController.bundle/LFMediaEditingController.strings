@@ -38,3 +38,9 @@
 "_LFME_filter_Invert" = "Invert";
 "_LFME_filter_Monochrome" = "Monochrome";
 
+/* -------- LFBrushMenu  -------*/
+"_LFME_brush_Paint" = "画笔";
+"_LFME_brush_Highlight" = "双色笔";
+"_LFME_brush_Chalk" = "粉笔";
+"_LFME_brush_Fluorescent" = "荧光笔";
+"_LFME_brush_Stamp" = "图章";

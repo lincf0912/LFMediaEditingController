@@ -31,6 +31,7 @@ static const char * LFEditingProtocolStickerViewEnableKey = "LFEditingProtocolSt
 static const char * LFEditingProtocolSplashViewEnableKey = "LFEditingProtocolSplashViewEnableKey";
 
 static const char * LFEditingProtocolDrawLineWidthKey = "LFEditingProtocolDrawLineWidthKey";
+static const char * LFEditingProtocolDrawLineColorKey = "LFEditingProtocolDrawLineColorKey";
 static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSplashLineWidthKey";
 
 @interface UIView (LFEditingProtocolPrivate)
@@ -154,6 +155,15 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
 - (void)setLf_drawLineWidth:(CGFloat)lf_drawLineWidth
 {
     objc_setAssociatedObject(self, LFEditingProtocolDrawLineWidthKey, @(lf_drawLineWidth), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIColor *)lf_drawLineColor
+{
+    return objc_getAssociatedObject(self, LFEditingProtocolDrawLineColorKey);
+}
+- (void)setLf_drawLineColor:(UIColor *)lf_drawLineColor
+{
+    objc_setAssociatedObject(self, LFEditingProtocolDrawLineColorKey, lf_drawLineColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CGFloat)lf_splashLineWidth
@@ -337,6 +347,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     if (brush) {
         self.lf_drawView.brush = brush;
         [self setDrawLineWidth:self.lf_drawLineWidth];
+        [self setDrawColor:self.lf_drawLineColor];
     }
 }
 /** 设置绘画颜色 */
@@ -346,6 +357,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
         [self.lf_protocolxecutor setDrawColor:color];
         return;
     }
+    self.lf_drawLineColor = color;
     if ([self.lf_drawView.brush isKindOfClass:[LFBlurryBrush class]]) {
         // LFBlurryBrush 不因颜色而改变效果。
     } else if ([self.lf_drawView.brush isKindOfClass:[LFMosaicBrush class]]) {

@@ -18,6 +18,7 @@
 #define bundleEditImageNamed(name) [NSBundle LFME_imageNamed:name]
 #define bundleStickerImageNamed(name) [NSBundle LFME_stickersImageNamed:name]
 #define bundleAudioTrackImageNamed(name) [NSBundle LFME_audioTrackImageNamed:name]
+#define bundleBrushImageNamed(name) [NSBundle LFME_brushImageNamed:name]
 
 #define kCustomTopbarHeight CGRectGetHeight(self.navigationController.navigationBar.frame) + CGRectGetHeight([UIApplication sharedApplication].statusBarFrame)
 #define kCustomTopbarHeight_iOS11 CGRectGetHeight(self.navigationController.navigationBar.frame) + self.navigationController.view.safeAreaInsets.top

@@ -87,18 +87,18 @@
     LFVideoEditingController *lfVideoEditVC = [[LFVideoEditingController alloc] init];
     lfVideoEditVC.delegate = self;
 //    lfVideoEditVC.operationType = LFVideoEditOperationType_draw | LFVideoEditOperationType_clip;
-//    lfVideoEditVC.minClippingDuration = 3;
-//    lfVideoEditVC.defaultOperationType = LFVideoEditOperationType_clip;
+//    lfVideoEditVC.defaultOperationType = LFVideoEditOperationType_clip; // 默认剪辑
 //    lfVideoEditVC.operationAttrs = @{
-//                                     LFVideoEditDrawColorAttributeName:@(LFVideoEditOperationSubTypeDrawVioletRedColor),
+//                                     LFVideoEditDrawColorAttributeName:@(LFVideoEditOperationSubTypeDrawVioletRedColor), // 绘画紫罗兰红色
+//                                     LFVideoEditDrawBrushAttributeName:@(LFVideoEditOperationSubTypeDrawHighlightBrush), // 绘画笔刷
 ////                                     LFVideoEditStickerAttributeName:@"描述（贴图路径）",
-//                                     LFVideoEditTextColorAttributeName:@(LFVideoEditOperationSubTypeTextAzureColor),
-//                                     LFVideoEditFilterAttributeName:@(LFVideoEditOperationSubTypeProcessFilter),
-//                                     LFVideoEditAudioMuteAttributeName:@(true),
+//                                     LFVideoEditTextColorAttributeName:@(LFVideoEditOperationSubTypeTextAzureColor), // 字体天蓝色
+//                                     LFVideoEditFilterAttributeName:@(LFVideoEditOperationSubTypeProcessFilter), //滤镜效果
+//                                     LFVideoEditAudioMuteAttributeName:@(true), //关闭原音
 ////                                     LFVideoEditAudioUrlsAttributeName:@"描述（音频路径）",
-//                                     LFVideoEditRateAttributeName:@(0.5),
-//                                     LFVideoEditClipMinDurationAttributeName:@(2),
-//                                     LFVideoEditClipMaxDurationAttributeName:@(5)
+//                                     LFVideoEditRateAttributeName:@(0.5), //播放速率
+//                                     LFVideoEditClipMinDurationAttributeName:@(2), //剪辑最小时间
+//                                     LFVideoEditClipMaxDurationAttributeName:@(5) // 剪辑最大时间
 //                                     };
     if (self.videoEdit) {
         lfVideoEditVC.videoEdit = self.videoEdit;

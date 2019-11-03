@@ -31,7 +31,31 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
     LFEditToolbarType_All = ~0UL,
 };
 
+typedef NS_ENUM(NSUInteger, EditToolbarBrushType) {
+    /** 画笔 */
+    EditToolbarBrushTypePaint = 0,
+    /** 双色笔 */
+    EditToolbarBrushTypeHighlight,
+    /** 粉笔 */
+    EditToolbarBrushTypeChalk,
+    /** 荧光笔 */
+    EditToolbarBrushTypeFluorescent,
+    /** 图章 */
+    EditToolbarBrushTypeStamp,
+};
+
+typedef NS_ENUM(NSUInteger, EditToolbarStampBrushType) {
+    /** 动物 */
+    EditToolbarStampBrushTypeAnimal,
+    /** 水果 */
+    EditToolbarStampBrushTypeFruit,
+    /** 心 */
+    EditToolbarStampBrushTypeHeart,
+};
+
 @protocol LFEditToolbarDelegate;
+
+@class LFBrush;
 
 @interface LFEditToolbar : UIView
 
@@ -48,12 +72,10 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
 /** 允许撤销 */
 - (void)setRevokeAtIndex:(NSUInteger)index;
 
-/** 获取拾色器的颜色 */
-- (NSArray <UIColor *>*)drawSliderColors;
-- (UIColor *)drawSliderCurrentColor;
-/** 设置绘画拾色器默认颜色 */
-- (void)setDrawSliderColor:(UIColor *)color;
+/** 设置绘画拾色器默认颜色（会触发代理） */
 - (void)setDrawSliderColorAtIndex:(NSUInteger)index;
+/** 设置绘画拾色器默认笔刷（会触发代理） */
+- (void)setDrawBrushAtIndex:(EditToolbarBrushType)index subIndex:(EditToolbarStampBrushType)subIndex;
 /** 设置默认模糊类型（会触发代理） */
 - (void)setSplashIndex:(NSUInteger)index;
 /** 设置模糊等待状态 */
@@ -82,6 +104,8 @@ typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
 - (BOOL)lf_editToolbar:(LFEditToolbar *)editToolbar canRevokeAtIndex:(NSUInteger)index;
 /** 二级菜单滑动事件-绘画 */
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar drawColorDidChange:(UIColor *)color;
+/** 二级菜单笔刷事件-绘画 */
+- (void)lf_editToolbar:(LFEditToolbar *)editToolbar drawBrushDidChange:(LFBrush *)brush;
 @optional
 /** 二级菜单滑动事件-速率 */
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar rateDidChange:(float)value;

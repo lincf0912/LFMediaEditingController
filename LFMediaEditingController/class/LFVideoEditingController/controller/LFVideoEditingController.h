@@ -32,17 +32,24 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
 typedef NSString * LFVideoEditOperationStringKey NS_EXTENSIBLE_STRING_ENUM;
 /************************ Attributes ************************/
 /**
- * 以下属性仅对未编辑过对象生效，若是已经编辑过的对象（LFPhotoEdit）忽略该属性。
- * The following properties are only valid for unedited objects. If the object has been edited (LFPhotoEdit), the attribute is ignored.
+ * 以下属性仅对未编辑过对象生效，若是已经编辑过的对象（LFVideoEdit）忽略该属性。
+ * The following properties are only valid for unedited objects. If the object has been edited (LFVideoEdit), the attribute is ignored.
  */
 
 /**
  绘画的默认颜色
  The default color of the painting.
  
- NSNumber containing LFPhotoEditOperationSubType, default 0
+ NSNumber containing LFVideoEditOperationSubType, default 0
  */
 UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditDrawColorAttributeName;
+/**
+ 绘画的默认笔刷
+ The default brush of the painting.
+ 
+ NSNumber containing LFVideoEditOperationSubType, default 0
+ */
+UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditDrawBrushAttributeName;
 /**
  自定义贴图资源路径，完整的资源路径目录file://...。将该目录下的所有后缀为@"png", @"jpg", @"jpeg", @"gif"的文件作为可选贴图，它完全代替了项目资源贴图。
  The sticker are customizable. This path must be a full path directory (for example: file://... ). All files with the suffix @"png", @"jpg", @"jpeg", @"gif" in the directory as stickers.
@@ -54,7 +61,7 @@ UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditStickerAttributeName
  文字的默认颜色
  The default color of the text.
  
- NSNumber containing LFPhotoEditOperationSubType, default 0
+ NSNumber containing LFVideoEditOperationSubType, default 0
  */
 UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditTextColorAttributeName;
 /**
@@ -75,7 +82,7 @@ UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditAudioUrlsAttributeNa
  滤镜的默认类型
  The default type of the filter.
  
- NSNumber containing LFPhotoEditOperationSubType, default 0
+ NSNumber containing LFVideoEditOperationSubType, default 0
  */
 UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditFilterAttributeName;
 /**
@@ -119,6 +126,15 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationSubType) {
     LFVideoEditOperationSubTypeDrawLightPinkColor,
     LFVideoEditOperationSubTypeDrawVioletRedColor,
     LFVideoEditOperationSubTypeDrawPinkColor,
+    
+    /** LFVideoEditOperationType_draw && LFVideoEditDrawBrushAttributeName */
+    LFVideoEditOperationSubTypeDrawPaintBrush = 50,
+    LFVideoEditOperationSubTypeDrawHighlightBrush,
+    LFVideoEditOperationSubTypeDrawChalkBrush,
+    LFVideoEditOperationSubTypeDrawFluorescentBrush,
+    LFVideoEditOperationSubTypeDrawStampAnimalBrush,
+    LFVideoEditOperationSubTypeDrawStampFruitBrush,
+    LFVideoEditOperationSubTypeDrawStampHeartBrush,
     
     /** LFVideoEditOperationType_text && LFVideoEditTextColorAttributeName */
     
@@ -176,7 +192,7 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationSubType) {
 /**
  设置操作类型
  The type of operation.
- default is LFPhotoEditOperationType_All
+ default is LFVideoEditOperationType_All
  */
 @property (nonatomic, assign) LFVideoEditOperationType operationType;
 /**

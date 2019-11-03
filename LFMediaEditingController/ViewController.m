@@ -27,14 +27,26 @@
     // Dispose of any resources that can be recreated.
 }
 
+//#define iOS13PageSheet
 - (IBAction)photoClick:(id)sender {
     PhotoViewController *photoVC = [PhotoViewController new];
+
+#ifdef iOS13PageSheet
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:photoVC];
+    [self presentViewController:navi animated:YES completion:nil];
+#else
     [self.navigationController pushViewController:photoVC animated:YES];
+#endif
 }
 
 - (IBAction)videoClick:(id)sender {
     VideoViewController *videoVC = [VideoViewController new];
+#ifdef iOS13PageSheet
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:videoVC];
+    [self presentViewController:navi animated:YES completion:nil];
+#else
     [self.navigationController pushViewController:videoVC animated:YES];
+#endif
 }
 
 @end

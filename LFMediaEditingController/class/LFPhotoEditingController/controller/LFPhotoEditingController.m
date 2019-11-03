@@ -27,6 +27,8 @@
 /************************ Attributes ************************/
 /** 绘画颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditDrawColorAttributeName = @"LFPhotoEditDrawColorAttributeName";
+/** 绘画笔刷 NSNumber containing LFPhotoEditOperationSubType, default 0 */
+LFPhotoEditOperationStringKey const LFPhotoEditDrawBrushAttributeName = @"LFPhotoEditDrawBrushAttributeName";
 /** 自定义贴图资源路径 NSString containing string path, default nil. sticker resource path. */
 LFPhotoEditOperationStringKey const LFPhotoEditStickerAttributeName = @"LFPhotoEditStickerAttributeName";
 /** 文字颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
@@ -330,28 +332,30 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
     
-    __weak typeof(_edit_toolBar) weakToolBar = _edit_toolBar;
-    /** 加载涂抹相关画笔 */
-    if (![LFMosaicBrush mosaicBrushCache]) {
-        [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Mosaic];
-        CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
-        [LFMosaicBrush loadBrushImage:self.editImage scale:15.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
-            [weakToolBar setSplashWait:NO index:LFSplashStateType_Mosaic];
-        }];
-    }
-    if (![LFBlurryBrush blurryBrushCache]) {
-        [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Blurry];
-        CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
-        [LFBlurryBrush loadBrushImage:self.editImage radius:5.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
-            [weakToolBar setSplashWait:NO index:LFSplashStateType_Blurry];
-        }];
-    }
-    if (![LFSmearBrush smearBrushCache]) {
-        [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Smear];
-        CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
-        [LFSmearBrush loadBrushImage:self.editImage canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
-            [weakToolBar setSplashWait:NO index:LFSplashStateType_Smear];
-        }];
+    if (self.operationType&LFPhotoEditOperationType_splash) {
+        __weak typeof(_edit_toolBar) weakToolBar = _edit_toolBar;
+        /** 加载涂抹相关画笔 */
+        if (![LFMosaicBrush mosaicBrushCache]) {
+            [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Mosaic];
+            CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+            [LFMosaicBrush loadBrushImage:self.editImage scale:15.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+                [weakToolBar setSplashWait:NO index:LFSplashStateType_Mosaic];
+            }];
+        }
+        if (![LFBlurryBrush blurryBrushCache]) {
+            [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Blurry];
+            CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+            [LFBlurryBrush loadBrushImage:self.editImage radius:5.0 canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+                [weakToolBar setSplashWait:NO index:LFSplashStateType_Blurry];
+            }];
+        }
+        if (![LFSmearBrush smearBrushCache]) {
+            [_edit_toolBar setSplashWait:YES index:LFSplashStateType_Smear];
+            CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+            [LFSmearBrush loadBrushImage:self.editImage canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+                [weakToolBar setSplashWait:NO index:LFSplashStateType_Smear];
+            }];
+        }
     }
     
     NSInteger index = 2; /** 红色 */
@@ -379,11 +383,36 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             default:
                 break;
         }
+        [_edit_toolBar setDrawSliderColorAtIndex:index];
+        
+        subType = [self operationSubTypeForKey:LFPhotoEditDrawBrushAttributeName];
+
+        EditToolbarBrushType brushType = 0;
+        EditToolbarStampBrushType stampBrushType = 0;
+        switch (subType) {
+            case LFPhotoEditOperationSubTypeDrawPaintBrush:
+            case LFPhotoEditOperationSubTypeDrawHighlightBrush:
+            case LFPhotoEditOperationSubTypeDrawChalkBrush:
+            case LFPhotoEditOperationSubTypeDrawFluorescentBrush:
+                brushType = subType % 50;
+                break;
+            case LFPhotoEditOperationSubTypeDrawStampAnimalBrush:
+                brushType = EditToolbarBrushTypeStamp;
+                stampBrushType = EditToolbarStampBrushTypeAnimal;
+                break;
+            case LFPhotoEditOperationSubTypeDrawStampFruitBrush:
+                brushType = EditToolbarBrushTypeStamp;
+                stampBrushType = EditToolbarStampBrushTypeFruit;
+                break;
+            case LFPhotoEditOperationSubTypeDrawStampHeartBrush:
+                brushType = EditToolbarBrushTypeStamp;
+                stampBrushType = EditToolbarStampBrushTypeHeart;
+                break;
+            default:
+                break;
+        }
+        [_edit_toolBar setDrawBrushAtIndex:brushType subIndex:stampBrushType];
     }
-    
-    [_edit_toolBar setDrawSliderColorAtIndex:index];
-    /** 绘画颜色一致 */
-    [_EditingView setDrawColor:[_edit_toolBar drawSliderCurrentColor]];
     
     /** 设置默认模糊 */
     if (self.operationType&LFPhotoEditOperationType_splash) {
@@ -392,6 +421,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditSplashAttributeName];
         switch (subType) {
             case LFPhotoEditOperationSubTypeSplashMosaic:
+            case LFPhotoEditOperationSubTypeSplashBlurry:
             case LFPhotoEditOperationSubTypeSplashPaintbrush:
                 index = subType % 300;
                 break;
@@ -627,6 +657,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 - (void)lf_editToolbar:(LFEditToolbar *)editToolbar drawColorDidChange:(UIColor *)color
 {
     [_EditingView setDrawColor:color];
+}
+
+/** 二级菜单笔刷事件-绘画 */
+- (void)lf_editToolbar:(LFEditToolbar *)editToolbar drawBrushDidChange:(LFBrush *)brush
+{
+    [_EditingView setDrawBrush:brush];
 }
 
 #pragma mark - 剪切底部栏（懒加载）
@@ -1209,6 +1245,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         return (LFPhotoEditOperationSubType)[obj integerValue];
     } else if (obj) {
         BOOL isContain = [key isEqualToString:LFPhotoEditDrawColorAttributeName]
+        || [key isEqualToString:LFPhotoEditDrawBrushAttributeName]
         || [key isEqualToString:LFPhotoEditTextColorAttributeName]
         || [key isEqualToString:LFPhotoEditSplashAttributeName]
         || [key isEqualToString:LFPhotoEditFilterAttributeName]

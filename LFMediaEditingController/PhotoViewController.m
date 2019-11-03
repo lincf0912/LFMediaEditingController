@@ -114,16 +114,17 @@
 {
     LFPhotoEditingController *lfPhotoEditVC = [[LFPhotoEditingController alloc] init];
 //    lfPhotoEditVC.operationType = LFPhotoEditOperationType_draw | LFPhotoEditOperationType_splash;
-//    lfPhotoEditVC.defaultOperationType = LFPhotoEditOperationType_crop;
+//    lfPhotoEditVC.defaultOperationType = LFPhotoEditOperationType_crop; // 默认剪裁
 //    lfPhotoEditVC.operationAttrs = @{
-//                                     LFPhotoEditDrawColorAttributeName:@(LFPhotoEditOperationSubTypeDrawVioletRedColor),
+//                                     LFPhotoEditDrawColorAttributeName:@(LFPhotoEditOperationSubTypeDrawVioletRedColor), // 绘画紫罗兰红色
+//                                     LFPhotoEditDrawBrushAttributeName:@(LFPhotoEditOperationSubTypeDrawStampFruitBrush), // 绘画笔刷
 ////                                     LFPhotoEditStickerAttributeName:@"描述（贴图路径）",
-//                                     LFPhotoEditTextColorAttributeName:@(LFPhotoEditOperationSubTypeTextAzureColor),
-//                                     LFPhotoEditSplashAttributeName:@(LFPhotoEditOperationSubTypeSplashPaintbrush),
-//                                     LFPhotoEditFilterAttributeName:@(LFPhotoEditOperationSubTypeProcessFilter),
-//                                     LFPhotoEditCropAspectRatioAttributeName:@(LFPhotoEditOperationSubTypeCropAspectRatio1x1),
-//                                     LFPhotoEditCropCanRotateAttributeName:@(NO),
-//                                     LFPhotoEditCropCanAspectRatioAttributeName:@(NO),
+//                                     LFPhotoEditTextColorAttributeName:@(LFPhotoEditOperationSubTypeTextAzureColor), // 字体天蓝色
+//                                     LFPhotoEditSplashAttributeName:@(LFPhotoEditOperationSubTypeSplashPaintbrush), //涂抹效果
+//                                     LFPhotoEditFilterAttributeName:@(LFPhotoEditOperationSubTypeProcessFilter), //滤镜效果
+//                                     LFPhotoEditCropAspectRatioAttributeName:@(LFPhotoEditOperationSubTypeCropAspectRatio1x1), //剪裁尺寸
+//                                     LFPhotoEditCropCanRotateAttributeName:@(NO), //不允许剪切旋转
+//                                     LFPhotoEditCropCanAspectRatioAttributeName:@(NO), //不允许剪切比例调整
 //                                     };
     
     lfPhotoEditVC.delegate = self;
