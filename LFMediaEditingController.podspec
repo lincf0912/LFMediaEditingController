@@ -15,8 +15,8 @@ s.public_header_files = 'LFMediaEditingController/class/*.h'
 # LFPhotoEditingController模块
 s.subspec 'LFPhotoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/class/common/*.bundle'
-ss.source_files = 'LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/class/LFPhotoEditingController/**/*.{h,m}','LFMediaEditingController/class/common/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/class/LFPhotoEditingController/model/*.h'
+ss.source_files = 'LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/class/LFPhotoEditingController/**/*.{h,m}','LFMediaEditingController/class/common/**/*.{h,m}','LFMediaEditingController/class/LFVideoEditingController/view/subView/LFDataFilterVideoView.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/class/LFPhotoEditingController/model/*.h','LFMediaEditingController/class/LFPhotoEditingController/view/subView/LFDataFilterImageView.h','LFMediaEditingController/class/LFVideoEditingController/view/subView/LFDataFilterVideoView.h','LFMediaEditingController/class/common/utils/FilterSuiteUtils/*.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
@@ -24,6 +24,7 @@ ss.dependency 'LFMediaEditingController/LFFilterSuite'
 ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
 ss.dependency 'LFMediaEditingController/LFImageCoder'
 ss.dependency 'LFMediaEditingController/LFPresentationCategory'
+ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
 ss.dependency 'LFMediaEditingController/DropDownMenu'
 end
 
@@ -31,13 +32,14 @@ end
 s.subspec 'LFVideoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/class/common/*.bundle'
 ss.source_files = 'LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/class/LFVideoEditingController/**/*.{h,m}','LFMediaEditingController/class/common/**/*.{h,m}','LFMediaEditingController/class/LFPhotoEditingController/view/model/*.{h,m}','LFMediaEditingController/class/LFPhotoEditingController/view/other/**/*.{h,m}','LFMediaEditingController/class/LFPhotoEditingController/view/subView/*.{h,m}','LFMediaEditingController/class/LFPhotoEditingController/view/toolBar/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFVideoEditingController/controller/*.h','LFMediaEditingController/class/LFVideoEditingController/model/*.h'
+ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFVideoEditingController/controller/*.h','LFMediaEditingController/class/LFVideoEditingController/model/*.h','LFMediaEditingController/class/LFPhotoEditingController/view/subView/LFDataFilterImageView.h','LFMediaEditingController/class/LFVideoEditingController/view/subView/LFDataFilterVideoView.h','LFMediaEditingController/class/common/utils/FilterSuiteUtils/*.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
 ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
 ss.dependency 'LFMediaEditingController/LFPresentationCategory'
+ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
 ss.dependency 'LFMediaEditingController/DropDownMenu'
 end
 
@@ -84,10 +86,17 @@ ss.source_files = 'LFMediaEditingController/class/vendors/LFPresentationCategory
 ss.public_header_files = 'LFMediaEditingController/class/vendors/LFPresentationCategory/*.h'
 end
 
+# LFEasyNoticeBar模块
+s.subspec 'LFEasyNoticeBar' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/LFEasyNoticeBar/*.{h,m}','LFMediaEditingController/class/vendors/LFEasyNoticeBar/**/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/LFEasyNoticeBar/*.h'
+ss.resources = 'LFMediaEditingController/class/vendors/LFEasyNoticeBar/*.bundle'
+end
+
 # DropDownMenu模块
 s.subspec 'DropDownMenu' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/DropDownMenu/*.{h,m}','LFMediaEditingController/class/vendors/DropDownMenu/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/class/vendors/DropDownMenu/*.h'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/DropDownMenu/*.h','LFMediaEditingController/class/vendors/DropDownMenu/Header/*.h','LFMediaEditingController/class/vendors/DropDownMenu/protocol/*.h','LFMediaEditingController/class/vendors/DropDownMenu/model/*.h'
 end
 
 end
