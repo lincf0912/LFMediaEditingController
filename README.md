@@ -1,5 +1,7 @@
 # LFMediaEditingController
 
+[English](https://github.com/lincf0912/LFMediaEditingController/blob/master/README_EN.md)
+
 * 图片编辑 (详细使用见LFPhotoEditingController.h 的初始化方法)
 `绘画、贴图、文本、模糊、滤镜（iOS9）、修剪`
 
