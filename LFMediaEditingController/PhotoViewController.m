@@ -13,6 +13,9 @@
 #import "LFPhotoEditingController.h"
 #import "UIImage+LFMECommon.h"
 
+// 测试UIModalPresentationPageSheet模式
+//#define PresentationPageSheet
+
 @interface PhotoViewController () <LFPhotoEditingControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) UIImage *image;
@@ -134,8 +137,15 @@
     } else {
         [lfPhotoEditVC setEditImage:self.image durations:self.durations];
     }
+    
+#ifdef PresentationPageSheet
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:lfPhotoEditVC];
+    [navi setNavigationBarHidden:YES];
+    [self presentViewController:navi animated:YES completion:nil];
+#else
     [self.navigationController setNavigationBarHidden:YES];
     [self.navigationController pushViewController:lfPhotoEditVC animated:NO];
+#endif
     
 }
 
@@ -147,13 +157,21 @@
 #pragma mark - LFPhotoEditingControllerDelegate
 - (void)lf_PhotoEditingControllerDidCancel:(LFPhotoEditingController *)photoEditingVC
 {
+#ifdef PresentationPageSheet
+    [self dismissViewControllerAnimated:YES completion:nil];
+#else
     [self.navigationController popViewControllerAnimated:NO];
     [self.navigationController setNavigationBarHidden:NO];
+#endif
 }
 - (void)lf_PhotoEditingController:(LFPhotoEditingController *)photoEditingVC didFinishPhotoEdit:(LFPhotoEdit *)photoEdit
 {
+#ifdef PresentationPageSheet
+    [self dismissViewControllerAnimated:YES completion:nil];
+#else
     [self.navigationController popViewControllerAnimated:NO];
     [self.navigationController setNavigationBarHidden:NO];
+#endif
     if (photoEdit) {
         self.imageView.image = photoEdit.editPreviewImage;
     } else {
