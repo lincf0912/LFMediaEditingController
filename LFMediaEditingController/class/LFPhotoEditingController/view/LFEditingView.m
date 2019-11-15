@@ -637,8 +637,8 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     clipRect.size.width = ((int)(clipRect.size.width+0.5)*1.f);
     clipRect.size.height = ((int)(clipRect.size.height+0.5)*1.f);
     
-    // CIImage 的原始坐标在左下角，y值需要重新计算。
-    clipRect.origin.y = (int)((contentSize.height/clipScale - clipRect.size.height - clipRect.origin.y)+0.5)*1.f;
+    // CIImage 的原始坐标在左下角，y值需要重新计算。（注：因使用CIImage的截取方式会出现模糊情况。改为使用CGImage的方法。）
+//    clipRect.origin.y = (int)((contentSize.height/clipScale - clipRect.size.height - clipRect.origin.y)+0.5)*1.f;
     
     /** 滤镜图片 */
     UIImage *showImage = [self getFilterImage];
