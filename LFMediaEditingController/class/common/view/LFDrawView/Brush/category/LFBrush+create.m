@@ -72,7 +72,7 @@
     }
     CIImage *midImage = [CIImage imageWithCGImage:self.CGImage];
     midImage = [midImage imageByApplyingTransform:[self LFBB_preferredTransform]];
-    midImage = [midImage imageByApplyingTransform:CGAffineTransformMakeScale(size.width/self.size.width, size.height/self.size.height)];
+    midImage = [midImage imageByApplyingTransform:CGAffineTransformMakeScale(size.width/midImage.extent.size.width, size.height/midImage.extent.size.height)];
     
     if (orientation > 0 && orientation < 9) {
         midImage = [midImage imageByApplyingOrientation:orientation];
@@ -98,23 +98,23 @@
         return CGAffineTransformIdentity;
     }
     CGAffineTransform transform = CGAffineTransformIdentity;
-    
+    CGSize imageSize = CGSizeMake(self.size.width*self.scale, self.size.height*self.scale);
     switch (self.imageOrientation) {
         case UIImageOrientationDown:
         case UIImageOrientationDownMirrored:
-            transform = CGAffineTransformTranslate(transform, self.size.width, self.size.height);
+            transform = CGAffineTransformTranslate(transform, imageSize.width, imageSize.height);
             transform = CGAffineTransformRotate(transform, M_PI);
             break;
             
         case UIImageOrientationLeft:
         case UIImageOrientationLeftMirrored:
-            transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+            transform = CGAffineTransformTranslate(transform, imageSize.width, 0);
             transform = CGAffineTransformRotate(transform, M_PI_2);
             break;
             
         case UIImageOrientationRight:
         case UIImageOrientationRightMirrored:
-            transform = CGAffineTransformTranslate(transform, 0, self.size.height);
+            transform = CGAffineTransformTranslate(transform, 0, imageSize.height);
             transform = CGAffineTransformRotate(transform, -M_PI_2);
             break;
         case UIImageOrientationUp:
@@ -125,13 +125,13 @@
     switch (self.imageOrientation) {
         case UIImageOrientationUpMirrored:
         case UIImageOrientationDownMirrored:
-            transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+            transform = CGAffineTransformTranslate(transform, imageSize.width, 0);
             transform = CGAffineTransformScale(transform, -1, 1);
             break;
             
         case UIImageOrientationLeftMirrored:
         case UIImageOrientationRightMirrored:
-            transform = CGAffineTransformTranslate(transform, self.size.height, 0);
+            transform = CGAffineTransformTranslate(transform, imageSize.height, 0);
             transform = CGAffineTransformScale(transform, -1, 1);
             break;
         case UIImageOrientationUp:
