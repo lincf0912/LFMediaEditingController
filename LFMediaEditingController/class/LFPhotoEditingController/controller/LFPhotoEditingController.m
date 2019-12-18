@@ -899,7 +899,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 - (LFStickerBar *)edit_sticker_toolBar
 {
     if (_edit_sticker_toolBar == nil) {
-        CGFloat row = 2;
+        CGFloat row = 4;
         CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
