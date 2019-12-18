@@ -12,9 +12,33 @@
 
 #define LFMovingView_margin 22
 
+@interface LFMovingContentView : UIView <UIGestureRecognizerDelegate>
+
+@end
+
+@implementation LFMovingContentView
+
+- (void)addGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+{
+    gestureRecognizer.delegate = self;
+    [super addGestureRecognizer:gestureRecognizer];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (gestureRecognizer.view == self && otherGestureRecognizer.view == self) {
+        return YES;
+    }
+    return NO;
+}
+
+
+@end
+
 @interface LFMovingView ()
 {
-    UIView *_contentView;
+    LFMovingContentView *_contentView;
     UIButton *_deleteButton;
     UIImageView *_circleView;
     
@@ -80,7 +104,7 @@
         _deactivatedDelay = 4.f;
         _view = view;
         _item = item;
-        _contentView = [[UIView alloc] initWithFrame:view.bounds];
+        _contentView = [[LFMovingContentView alloc] initWithFrame:view.bounds];
         _contentView.layer.borderColor = [[UIColor colorWithWhite:1.f alpha:0.8] CGColor];
         {
             // shadow
@@ -200,6 +224,10 @@
     [_contentView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewDidTap:)]];
     [_contentView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(viewDidPan:)]];
     [_circleView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(circleViewDidPan:)]];
+    
+    /** Add two finger pinching and rotating gestures */
+    [_contentView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(viewDidPinch:)]];
+    [_contentView addGestureRecognizer:[[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(viewDidRotation:)]];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
@@ -323,11 +351,11 @@
 
 - (void)viewDidPan:(UIPanGestureRecognizer*)sender
 {
-    [[self class] setActiveEmoticonView:self];
     
     CGPoint p = [sender translationInView:self.superview];
     
     if(sender.state == UIGestureRecognizerStateBegan){
+        [[self class] setActiveEmoticonView:self];
         _initialPoint = self.center;
         [self cancelDeactivated];
     }
@@ -350,6 +378,38 @@
         [self autoDeactivated];
     }
 }
+
+- (void)viewDidPinch:(UIPinchGestureRecognizer*)sender
+{
+    if(sender.state == UIGestureRecognizerStateBegan){
+        [[self class] setActiveEmoticonView:self];
+        [self cancelDeactivated];
+        _initialScale = _scale;
+    } else if (sender.state == UIGestureRecognizerStateEnded) {
+        [self autoDeactivated];
+    }
+    [self setScale:(_initialScale * sender.scale)];
+    if(sender.state == UIGestureRecognizerStateBegan && sender.state == UIGestureRecognizerStateChanged){
+        sender.scale = 1.0;
+    }
+}
+
+- (void)viewDidRotation:(UIRotationGestureRecognizer*)sender
+{
+    if(sender.state == UIGestureRecognizerStateBegan){
+        [[self class] setActiveEmoticonView:self];
+        [self cancelDeactivated];
+        _initialArg = _arg;
+    } else if (sender.state == UIGestureRecognizerStateEnded) {
+        [self autoDeactivated];
+    }
+    _arg = _initialArg + sender.rotation;
+    [self setScale:_scale];
+    if(sender.state == UIGestureRecognizerStateBegan && sender.state == UIGestureRecognizerStateChanged){
+        sender.rotation = 0.0;
+    }
+}
+
 
 - (void)circleViewDidPan:(UIPanGestureRecognizer*)sender
 {
