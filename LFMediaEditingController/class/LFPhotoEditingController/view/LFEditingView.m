@@ -597,7 +597,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     CGFloat scale = self.clippingView.zoomScale;
     CGAffineTransform trans = self.clippingView.transform;
     CGPoint contentOffset = self.clippingView.contentOffset;
-    CGSize contentSize = self.clippingView.contentSize;
+//    CGSize contentSize = self.clippingView.contentSize;
     CGRect clippingRect = self.clippingView.frame;
     
     /** 参数取整，否则可能会出现1像素偏差 */

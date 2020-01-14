@@ -137,7 +137,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 
 - (void)dealloc
 {
-    [self.videoPlayer pause];
+    [self pauseVideo];
     self.videoPlayer.delegate = nil;
     self.videoPlayer = nil;
 }
@@ -205,12 +205,18 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 {
     [self.videoPlayer play];
     [self seekToTime:self.startTime];
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingViewPlay:)]) {
+        [self.clipDelegate lf_videoClippingViewPlay:self];
+    }
 }
 
 /** 暂停 */
 - (void)pauseVideo
 {
     [self.videoPlayer pause];
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingViewPause:)]) {
+        [self.clipDelegate lf_videoClippingViewPause:self];
+    }
 }
 
 /** 静音原音 */
@@ -242,9 +248,10 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
 {
     [self.videoPlayer resetDisplay];
     if (![self.videoPlayer isPlaying]) {
-        [self.videoPlayer play];
+        [self playVideo];
+    } else {
+        [self seekToTime:self.startTime];
     }
-    [self seekToTime:self.startTime];
 }
 
 /** 重置视频 */
@@ -253,6 +260,9 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     [self.videoPlayer pause];
     [self.videoPlayer resetDisplay];
     [self seekToTime:self.startTime];
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingViewPause:)]) {
+        [self.clipDelegate lf_videoClippingViewPause:self];
+    }
 }
 
 /** 增加音效 */
@@ -343,28 +353,25 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     _totalDuration = duration;
     self.videoPlayer.muteOriginalSound = self.muteOriginal;
     [self playVideo];
-    if ([self.clipDelegate respondsToSelector:@selector(lf_videLClippingViewReadyToPlay:)]) {
-        [self.clipDelegate lf_videLClippingViewReadyToPlay:self];
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingViewReadyToPlay:)]) {
+        [self.clipDelegate lf_videoClippingViewReadyToPlay:self];
     }
 }
 
 /** 播放结束 */
 - (void)LFVideoPlayerPlayDidReachEnd:(LFVideoPlayer *)player
 {
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingViewPlayToEndTime:)]) {
+        [self.clipDelegate lf_videoClippingViewPlayToEndTime:self];
+    }
     [self playVideo];
 }
 /** 错误回调 */
 - (void)LFVideoPlayerFailedToPrepare:(LFVideoPlayer *)player error:(NSError *)error
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"LFVideoPlayer_Error", nil)
-                                message:error.localizedDescription
-                               delegate:nil
-                      cancelButtonTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_alertViewCancelTitle"]
-                      otherButtonTitles:nil]
-     show];
-#pragma clang diagnostic pop
+    if ([self.clipDelegate respondsToSelector:@selector(lf_videoClippingViewFailedToPrepare:error:)]) {
+        [self.clipDelegate lf_videoClippingViewFailedToPrepare:self error:error];
+    }
 }
 
 /** 进度回调2-手动实现 */

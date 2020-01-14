@@ -46,7 +46,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMinDurationAttributeName = @"
 LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"LFVideoEditClipMaxDurationAttributeName";
 /************************ Attributes ************************/
 
-@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate, UIGestureRecognizerDelegate>
+@interface LFVideoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, LFTextBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFAudioTrackBarDelegate, LFVideoClipToolbarDelegate, LFPhotoEditDelegate, UIGestureRecognizerDelegate, LFVideoEditingPlayerDelegate>
 {
     /** 编辑模式 */
     LFVideoEditingView *_EditingView;
@@ -76,6 +76,8 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 /** 滤镜缩略图 */
 @property (nonatomic, strong) UIImage *filterSmallImage;
 
+@property (nonatomic, strong, nullable) NSDictionary *editData;
+
 @end
 
 @implementation LFVideoEditingController
@@ -92,16 +94,20 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 
 - (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
 {
-    _asset = [AVURLAsset assetWithURL:url];
-    _placeholderImage = image;
-    [self setVideoAsset:_asset placeholderImage:image];
+    AVAsset *asset = [AVURLAsset assetWithURL:url];
+    [self setVideoAsset:asset placeholderImage:image];
 }
 
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image
 {
     _asset = asset;
     _placeholderImage = image;
-    [_EditingView setVideoAsset:asset placeholderImage:image];
+}
+
+- (void)setVideoEdit:(LFVideoEdit *)videoEdit
+{
+    [self setVideoAsset:videoEdit.editAsset placeholderImage:videoEdit.editPreviewImage];
+    _editData = videoEdit.editData;
 }
 
 - (void)setMinClippingDuration:(double)minClippingDuration
@@ -185,6 +191,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     _EditingView = [[LFVideoEditingView alloc] initWithFrame:editRect];
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
+    _EditingView.playerDelegate = self;
     
     /** 单击的 Recognizer */
     singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singlePressed)];
@@ -200,11 +207,14 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     double maxClippingDuration = [self operationDoubleForKey:LFVideoEditClipMaxDurationAttributeName];
     _EditingView.minClippingDuration = minClippingDuration;
     _EditingView.maxClippingDuration = maxClippingDuration;
-    if (_videoEdit) {
-        _EditingView.photoEditData = _videoEdit.editData;
-        [self setVideoAsset:_videoEdit.editAsset placeholderImage:_videoEdit.editPreviewImage];
+    
+    [_EditingView setVideoAsset:_asset placeholderImage:_placeholderImage];
+    if (self.editData) {
+        // 设置编辑数据
+        _EditingView.photoEditData = self.editData;
+        // 释放销毁
+        self.editData = nil;
     } else {
-        [self setVideoAsset:_asset placeholderImage:_placeholderImage];
         
         /** default audio urls */
         NSMutableArray *m_audioUrls = [_EditingView.audioUrls mutableCopy];
@@ -459,9 +469,16 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 - (void)cancelButtonClick
 {
     [_EditingView pauseVideo];
-    if ([self.delegate respondsToSelector:@selector(lf_VideoEditingController:didCancelPhotoEdit:)]) {
-        [self.delegate lf_VideoEditingController:self didCancelPhotoEdit:self.videoEdit];
+    if ([self.delegate respondsToSelector:@selector(lf_VideoEditingControllerDidCancel:)]) {
+        [self.delegate lf_VideoEditingControllerDidCancel:self];
     }
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    else if ([self.delegate respondsToSelector:@selector(lf_VideoEditingController:didCancelPhotoEdit:)]) {
+        [self.delegate lf_VideoEditingController:self didCancelPhotoEdit:nil];
+    }
+    #pragma clang diagnostic pop
+    
 }
 
 - (void)finishButtonClick
@@ -824,6 +841,13 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         weakSelf.isHideNaviBar = NO;
         [weakSelf changedBarState];
     });
+}
+
+#pragma mark - LFVideoEditingPlayerDelegate
+/** 错误回调 */
+- (void)lf_videoEditingViewFailedToPrepare:(LFVideoEditingView *)editingView error:(NSError *)error
+{
+    [self showErrorMessage:error.localizedDescription];
 }
 
 #pragma mark - private

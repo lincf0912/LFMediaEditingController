@@ -492,6 +492,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if ([self.delegate respondsToSelector:@selector(lf_PhotoEditingControllerDidCancel:)]) {
         [self.delegate lf_PhotoEditingControllerDidCancel:self];
     }
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    else if ([self.delegate respondsToSelector:@selector(lf_PhotoEditingController:didCancelPhotoEdit:)]) {
+        [self.delegate lf_PhotoEditingController:self didCancelPhotoEdit:nil];
+    }
+    #pragma clang diagnostic pop
 }
 
 - (void)finishButtonClick

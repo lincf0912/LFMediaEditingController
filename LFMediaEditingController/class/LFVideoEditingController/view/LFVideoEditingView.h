@@ -11,8 +11,12 @@
 #import "LFEditingProtocol.h"
 
 @class LFAudioItem;
+@protocol LFVideoEditingPlayerDelegate;
 
 @interface LFVideoEditingView : UIView <LFEditingProtocol>
+
+/** 代理 */
+@property (nonatomic, weak) id<LFVideoEditingPlayerDelegate> playerDelegate;
 
 /** 音频数据 */
 @property (nonatomic, strong) NSArray <LFAudioItem *>*audioUrls;
@@ -46,3 +50,18 @@
 - (void)resetVideoDisplay;
 
 @end
+
+@protocol LFVideoEditingPlayerDelegate <NSObject>
+
+@optional
+/** 错误回调 */
+- (void)lf_videoEditingViewFailedToPrepare:(LFVideoEditingView *)editingView error:(NSError *)error;
+/** 播放视频 */
+- (void)lf_videoEditingViewPlay:(LFVideoEditingView *)editingView;
+/** 暂停视频 */
+- (void)lf_videoEditingViewPause:(LFVideoEditingView *)editingView;
+/** 播放完毕 */
+- (void)lf_videoEditingViewPlayToEndTime:(LFVideoEditingView *)editingView;
+
+@end
+

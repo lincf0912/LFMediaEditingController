@@ -74,10 +74,20 @@
 @protocol LFVideoClippingViewDelegate <NSObject>
 
 /** 视频准备完毕，可以获取相关属性与操作 */
-- (void)lf_videLClippingViewReadyToPlay:(LFVideoClippingView *_Nonnull)clippingView;
+- (void)lf_videoClippingViewReadyToPlay:(LFVideoClippingView *_Nonnull)clippingView;
+/** 错误回调 */
+- (void)lf_videoClippingViewFailedToPrepare:(LFVideoClippingView *_Nonnull)clippingView error:(NSError *_Nullable)error;
 /** 进度回调 */
 - (void)lf_videoClippingView:(LFVideoClippingView *_Nonnull)clippingView duration:(double)duration;
 /** 进度长度 */
 - (CGFloat)lf_videoClippingViewProgressWidth:(LFVideoClippingView *_Nonnull)clippingView;
+
+@optional
+/** 播放视频 */
+- (void)lf_videoClippingViewPlay:(LFVideoClippingView *_Nonnull)clippingView;
+/** 暂停视频 */
+- (void)lf_videoClippingViewPause:(LFVideoClippingView *_Nonnull)clippingView;
+/** 播放完毕 */
+- (void)lf_videoClippingViewPlayToEndTime:(LFVideoClippingView *_Nonnull)clippingView;
 
 @end

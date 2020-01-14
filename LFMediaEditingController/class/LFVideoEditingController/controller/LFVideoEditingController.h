@@ -187,7 +187,7 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationSubType) {
  设置编辑对象->重新编辑
  Set edit object -> re-edit
  */
-@property (nonatomic, strong) LFVideoEdit *videoEdit;
+- (void)setVideoEdit:(LFVideoEdit *)videoEdit;
 
 /**
  设置操作类型
@@ -229,7 +229,9 @@ typedef NS_ENUM(NSUInteger, LFVideoEditOperationSubType) {
 
 @protocol LFVideoEditingControllerDelegate <NSObject>
 
-- (void)lf_VideoEditingController:(LFVideoEditingController *)videoEditingVC didCancelPhotoEdit:(LFVideoEdit *)videoEdit;
+- (void)lf_VideoEditingControllerDidCancel:(LFVideoEditingController *)videoEditingVC;
 - (void)lf_VideoEditingController:(LFVideoEditingController *)videoEditingVC didFinishPhotoEdit:(LFVideoEdit *)videoEdit;
+@optional
+- (void)lf_VideoEditingController:(LFVideoEditingController *)videoEditingVC didCancelPhotoEdit:(LFVideoEdit *)videoEdit __deprecated_msg("delete deprecated. Use `lf_VideoEditingControllerDidCancel:`");
 
 @end

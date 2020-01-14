@@ -126,7 +126,7 @@
 */
 
 #pragma mark - LFVideoEditingControllerDelegate
-- (void)lf_VideoEditingController:(LFVideoEditingController *)videoEditingVC didCancelPhotoEdit:(LFVideoEdit *)videoEdit
+- (void)lf_VideoEditingControllerDidCancel:(LFVideoEditingController *)videoEditingVC
 {
     [self.navigationController popViewControllerAnimated:NO];
     [self.navigationController setNavigationBarHidden:NO];
