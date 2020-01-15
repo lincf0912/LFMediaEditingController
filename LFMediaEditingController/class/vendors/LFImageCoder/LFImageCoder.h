@@ -19,14 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param image 图片
  @return 返回解码后的图片，如果失败，则返回NULL
  */
-CG_EXTERN CGImageRef _Nullable newCGImageDecodedCopy(UIImage *image);
+CG_EXTERN CGImageRef _Nullable LFIC_CGImageDecodedCopy(UIImage *image);
 
 /**
  图片解码
 
  @param image 图片
- @return 返回解码后的图片，如果失败，则返回nil
+ @return 返回解码后的图片，如果失败，则返回自身
  */
-UIKIT_EXTERN UIImage * _Nullable newUIImageDecodedCopy(UIImage *image);
+UIKIT_EXTERN UIImage * LFIC_UIImageDecodedCopy(UIImage *image);
 
 NS_ASSUME_NONNULL_END

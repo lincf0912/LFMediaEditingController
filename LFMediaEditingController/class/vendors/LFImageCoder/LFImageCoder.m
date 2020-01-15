@@ -9,7 +9,7 @@
 #import "LFImageCoder.h"
 #import <QuartzCore/QuartzCore.h>
 
-CGImageRef newCGImageDecodedFromCopy(CGImageRef imageRef)
+CGImageRef LFIC_CGImageDecodedFromCopy(CGImageRef imageRef)
 {
     if (!imageRef) return NULL;
     size_t width = CGImageGetWidth(imageRef);
@@ -39,20 +39,23 @@ CGImageRef newCGImageDecodedFromCopy(CGImageRef imageRef)
 
 
 #pragma mark - public
-CGImageRef newCGImageDecodedCopy(UIImage *image)
+CGImageRef LFIC_CGImageDecodedCopy(UIImage *image)
 {
     if (!image) return NULL;
+    if (image.images.count > 1) {
+        return NULL;
+    }
     CGImageRef imageRef = image.CGImage;
     if (!imageRef) return NULL;
-    CGImageRef newImageRef = newCGImageDecodedFromCopy(imageRef);
+    CGImageRef newImageRef = LFIC_CGImageDecodedFromCopy(imageRef);
     
     return newImageRef;
 }
 
-UIImage *newUIImageDecodedCopy(UIImage *image)
+UIImage *LFIC_UIImageDecodedCopy(UIImage *image)
 {
-    CGImageRef imageRef = newCGImageDecodedCopy(image);
-    if (!imageRef) return nil;
+    CGImageRef imageRef = LFIC_CGImageDecodedCopy(image);
+    if (!imageRef) return image;
     UIImage *newImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
     CGImageRelease(imageRef);
     

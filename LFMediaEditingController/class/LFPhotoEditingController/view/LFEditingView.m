@@ -680,6 +680,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             /** 若数量不一致，解析gif失败，生成静态图片 */
             if (images.count == showImage.images.count) {
                 editImage = [UIImage animatedImageWithImages:images duration:showImage.duration];
+                [images removeAllObjects];
             }
         } else {
             editImage = ClipEditImage(showImage);
