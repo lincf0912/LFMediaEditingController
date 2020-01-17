@@ -177,7 +177,7 @@
                 view.transform = CGAffineTransformMakeScale(normalSizeScale, normalSizeScale);
                 view.contentScaleFactor = self.contentScaleFactor;
                 //按照屏幕大小截取图片
-                view.tileSize = CGSizeMake(self.CIImage.extent.size.width, self.bounds.size.height);
+                view.tileSize = CGSizeMake(self.bounds.size.width, self.bounds.size.height);
                 [self insertSubview:view atIndex:0];
                 _LFLView = view;
             }
