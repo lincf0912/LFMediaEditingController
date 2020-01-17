@@ -175,7 +175,7 @@
     
     // 创建一个context
     // 并把它设置成为当前正在使用的context
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
     
     // 绘制改变大小的图片
     [self drawInRect:CGRectMake(xPos, yPos, width, height)];
@@ -198,7 +198,7 @@
     
     // 创建一个context
     // 并把它设置成为当前正在使用的context
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
     
     // 绘制改变大小的图片
     [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
@@ -230,7 +230,7 @@
 /** 合并图片（图片大小一致） */
 - (UIImage *)LFME_mergeimages:(NSArray <UIImage *>*)images
 {
-    UIGraphicsBeginImageContextWithOptions(self.size ,NO, 0);
+    UIGraphicsBeginImageContextWithOptions(self.size ,NO, self.scale);
     [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
     for (UIImage *image in images) {
         [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
@@ -243,7 +243,7 @@
 /** 合并图片(图片大小以第一张为准) */
 + (UIImage *)LFME_mergeimages:(NSArray <UIImage *>*)images
 {
-    UIGraphicsBeginImageContextWithOptions(images.firstObject.size ,NO, 0);
+    UIGraphicsBeginImageContextWithOptions(images.firstObject.size ,NO, images.firstObject.scale);
     for (UIImage *image in images) {
         [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
     }
@@ -441,7 +441,7 @@
     BOOL hasSaturationChange = fabs(saturationDeltaFactor - 1.) > __FLT_EPSILON__;
     if (hasBlur || hasSaturationChange) {
         
-        UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
+        UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
         CGContextRef effectInContext = UIGraphicsGetCurrentContext();
         CGContextScaleCTM(effectInContext, 1.0, -1.0);
         CGContextTranslateCTM(effectInContext, 0, -self.size.height);
@@ -453,7 +453,7 @@
         effectInBuffer.height   = CGBitmapContextGetHeight(effectInContext);
         effectInBuffer.rowBytes = CGBitmapContextGetBytesPerRow(effectInContext);
         
-        UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
+        UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
         CGContextRef effectOutContext = UIGraphicsGetCurrentContext();
         vImage_Buffer effectOutBuffer;
         effectOutBuffer.data     = CGBitmapContextGetData(effectOutContext);
@@ -533,7 +533,7 @@
     }
     
     // Set up output context.
-    UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
     CGContextRef outputContext = UIGraphicsGetCurrentContext();
     CGContextScaleCTM(outputContext, 1.0, -1.0);
     CGContextTranslateCTM(outputContext, 0, -self.size.height);
