@@ -988,7 +988,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     CGFloat scale = self.clippingView.zoomScale/self.clippingView.first_minimumZoomScale;
     CGSize realSize = CGSizeMake(CGRectGetWidth(self.gridView.gridRect)/scale, CGRectGetHeight(self.gridView.gridRect)/scale);
-    CGFloat screenScale = [UIScreen mainScreen].scale;
+    CGFloat screenScale = self.image.scale;
     int pixelW = (int)((self.imageSize.width*screenScale)/self.referenceSize.width*realSize.width+0.5);
     int pixelH = (int)((self.imageSize.height*screenScale)/self.referenceSize.height*realSize.height+0.5);
     self.imagePixel.text = [NSString stringWithFormat:@"%dx%d", pixelW, pixelH];
