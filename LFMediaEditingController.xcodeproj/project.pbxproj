@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B8B0C5223E7B66A00148D0B /* Voice.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3B8B0C5123E7B66900148D0B /* Voice.mp3 */; };
 		6F14E5D51EE6438A0049AE56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D41EE6438A0049AE56 /* main.m */; };
 		6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D71EE6438A0049AE56 /* AppDelegate.m */; };
 		6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5DA1EE6438A0049AE56 /* ViewController.m */; };
@@ -123,6 +124,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B8B0C5123E7B66900148D0B /* Voice.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Voice.mp3; sourceTree = "<group>"; };
 		6F14E5D01EE6438A0049AE56 /* LFMediaEditingController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LFMediaEditingController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F14E5D41EE6438A0049AE56 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6F14E5D61EE6438A0049AE56 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -925,6 +927,7 @@
 		C7AB8254230E7F3100833516 /* videoResource */ = {
 			isa = PBXGroup;
 			children = (
+				3B8B0C5123E7B66900148D0B /* Voice.mp3 */,
 				6F61BC1C1F298BEE005A1E63 /* 2.mp4 */,
 				6F61BC1E1F29B880005A1E63 /* 3.m4v */,
 				C73F4CC62232540300ED40B7 /* 4.MOV */,
@@ -1136,6 +1139,7 @@
 				C70FDAB120E46CF50053A02C /* longImage.jpg in Resources */,
 				C7D28F4922DC0ECB00AB83FE /* LFMediaDisplayView.bundle in Resources */,
 				C7CFB2F823166F860085836F /* LFMediaEditingController.bundle in Resources */,
+				3B8B0C5223E7B66A00148D0B /* Voice.mp3 in Resources */,
 				6F14E5E31EE6438A0049AE56 /* LaunchScreen.storyboard in Resources */,
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				C73F4CC72232540400ED40B7 /* 4.MOV in Resources */,

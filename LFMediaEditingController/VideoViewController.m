@@ -11,7 +11,7 @@
 #import "LFVideoEditingController.h"
 #import "AVAsset+LFMECommon.h"
 
-@interface VideoViewController () <LFVideoEditingControllerDelegate>
+@interface VideoViewController () <LFVideoEditingControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, weak) AVPlayerLayer *playerLayer;
@@ -46,7 +46,11 @@
     [self.view.layer addSublayer:playerLayer];
     _playerLayer = playerLayer;
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(videoEditing)];
+    UIBarButtonItem *editItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(videoEditing)];
+    UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+    UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(videoadd)];
+    
+    self.navigationItem.rightBarButtonItems = @[editItem, fixedSpace, addItem];
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -57,6 +61,38 @@
         self.playerLayer.frame = CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y+top, self.view.bounds.size.width, self.view.bounds.size.height-top-self.view.safeAreaInsets.bottom);
     }
 }
+
+- (void)videoadd
+{
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//指定数据来源是相册
+    picker.mediaTypes = @[@"public.movie"];
+    picker.delegate = self;
+    
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
+    
+    NSLog(@"%@",info);//是个字典
+    
+    //通过字典的key值来找到url
+    
+    self.url = [info objectForKey:UIImagePickerControllerMediaURL];
+    
+    //并且赋值给声明好的imageView
+    [self.player removeObserver:self forKeyPath:@"status"];
+    self.player = [AVPlayer playerWithURL:self.url];
+    [self.player addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    _playerLayer.player = self.player;
+    self.videoEdit = nil;
+    //最后模态返回 最初的 控制器
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+}
+
 
 - (void)dealloc
 {
@@ -89,17 +125,18 @@
 //    lfVideoEditVC.operationType = LFVideoEditOperationType_draw | LFVideoEditOperationType_clip;
 //    lfVideoEditVC.defaultOperationType = LFVideoEditOperationType_clip; // 默认剪辑
 //    lfVideoEditVC.operationAttrs = @{
-//                                     LFVideoEditDrawColorAttributeName:@(LFVideoEditOperationSubTypeDrawVioletRedColor), // 绘画紫罗兰红色
-//                                     LFVideoEditDrawBrushAttributeName:@(LFVideoEditOperationSubTypeDrawHighlightBrush), // 绘画笔刷
-////                                     LFVideoEditStickerAttributeName:@"描述（贴图路径）",
-//                                     LFVideoEditTextColorAttributeName:@(LFVideoEditOperationSubTypeTextAzureColor), // 字体天蓝色
-//                                     LFVideoEditFilterAttributeName:@(LFVideoEditOperationSubTypeProcessFilter), //滤镜效果
-//                                     LFVideoEditAudioMuteAttributeName:@(true), //关闭原音
-////                                     LFVideoEditAudioUrlsAttributeName:@"描述（音频路径）",
-//                                     LFVideoEditRateAttributeName:@(0.5), //播放速率
-//                                     LFVideoEditClipMinDurationAttributeName:@(2), //剪辑最小时间
-//                                     LFVideoEditClipMaxDurationAttributeName:@(5) // 剪辑最大时间
-//                                     };
+//        LFVideoEditDrawColorAttributeName:@(LFVideoEditOperationSubTypeDrawVioletRedColor), // 绘画紫罗兰红色
+//        LFVideoEditDrawBrushAttributeName:@(LFVideoEditOperationSubTypeDrawHighlightBrush), // 绘画笔刷
+//        //                                     LFVideoEditStickerAttributeName:@"描述（贴图路径）",
+//        LFVideoEditTextColorAttributeName:@(LFVideoEditOperationSubTypeTextAzureColor), // 字体天蓝色
+//        LFVideoEditFilterAttributeName:@(LFVideoEditOperationSubTypeProcessFilter), //滤镜效果
+//        LFVideoEditAudioMuteAttributeName:@(true), //关闭原音
+//        //                                     LFVideoEditAudioUrlsAttributeName:@"描述（音频路径）",
+//        LFVideoEditRateAttributeName:@(0.5), //播放速率
+//        LFVideoEditClipMinDurationAttributeName:@(2), //剪辑最小时间
+//        LFVideoEditClipMaxDurationAttributeName:@(5), // 剪辑最大时间
+//        LFVideoEditAudioUrlsAttributeName:@[[[NSBundle mainBundle] URLForResource:@"Voice.mp3" withExtension:nil]] // 额外音频
+//    };
     if (self.videoEdit) {
         lfVideoEditVC.videoEdit = self.videoEdit;
     } else {

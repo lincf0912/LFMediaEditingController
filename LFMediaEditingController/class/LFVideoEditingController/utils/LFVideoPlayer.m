@@ -225,16 +225,40 @@ static void *LFPlayerCurrentItemObservationContext = &LFPlayerCurrentItemObserva
         AVURLAsset *audioAsset =[[AVURLAsset alloc]initWithURL:audioUrl options:nil];
         AVAssetTrack *additional_assetAudioTrack = nil;
         /** 检查是否有效音轨 */
+        CMTimeRange audio_timeRange = CMTimeRangeMake(kCMTimeZero, audioAsset.duration);
         if ([[audioAsset tracksWithMediaType:AVMediaTypeAudio] count] != 0) {
             additional_assetAudioTrack = [audioAsset tracksWithMediaType:AVMediaTypeAudio][0];
         }
         if (additional_assetAudioTrack) {
+            
+            NSInteger times = 0;
+            
+            if (CMTIME_COMPARE_INLINE(audioAsset.duration, >, duration)) {
+                audio_timeRange = CMTimeRangeMake(kCMTimeZero, duration);
+            }
+            
+            if (CMTIME_COMPARE_INLINE(audio_timeRange.duration, <, duration)) {
+                times = ceil(CMTimeGetSeconds(duration)/CMTimeGetSeconds(audioAsset.duration))-1;
+            }
+            
             AVMutableCompositionTrack *additional_compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             [additional_compositionAudioTrack setPreferredTransform:additional_assetAudioTrack.preferredTransform];
-            [additional_compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, duration) ofTrack:additional_assetAudioTrack atTime:insertionPoint error:nil];
+            [additional_compositionAudioTrack insertTimeRange:audio_timeRange ofTrack:additional_assetAudioTrack atTime:insertionPoint error:nil];
+            
+            
+            CMTime atTime = insertionPoint;
+            for (NSInteger t=0; t<times; t++) {
+                atTime = CMTimeAdd(atTime, audio_timeRange.duration);
+                if (t == times-1) {
+                    [additional_compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, CMTimeSubtract(duration, atTime)) ofTrack:additional_assetAudioTrack atTime:atTime error:nil];
+                } else {
+                    [additional_compositionAudioTrack insertTimeRange:audio_timeRange ofTrack:additional_assetAudioTrack atTime:atTime error:nil];
+                }
+            }
+            
             AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:additional_compositionAudioTrack];
             mixParameters.audioTimePitchAlgorithm = self.audioTimePitchAlgorithm;
-            [mixParameters setVolumeRampFromStartVolume:1.f toEndVolume:0.3 timeRange:CMTimeRangeMake(kCMTimeZero, duration)];
+//            [mixParameters setVolumeRampFromStartVolume:1.f toEndVolume:0.3 timeRange:CMTimeRangeMake(kCMTimeZero, duration)];
             [inputParameters addObject:mixParameters];
         }
     }

@@ -233,6 +233,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
                     LFAudioItem *item = [LFAudioItem new];
                     item.title = [url.lastPathComponent stringByDeletingPathExtension];;
                     item.url = url;
+                    item.isEnable = YES;
                     [m_audioUrls addObject:item];
                 }
             }

@@ -425,6 +425,8 @@
         UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(tipsButton.frame)+margin, (edit_rateMenu.frame.size.height-sliderHeight)/2, sliderWidth, sliderHeight)];
         slider.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [slider addTarget:self action:@selector(sliderDidChange:) forControlEvents:UIControlEventValueChanged];
+        [slider addTarget:self action:@selector(sliderDidChangeEnd:) forControlEvents:UIControlEventTouchUpInside];
+        [slider addTarget:self action:@selector(sliderDidChangeEnd:) forControlEvents:UIControlEventTouchUpOutside];
 //        slider.continuous = NO;
         slider.maximumValue = LFMediaEditMaxRate;
         slider.minimumValue = LFMediaEditMinRate;
@@ -451,10 +453,15 @@
 - (void)sliderDidChange:(UISlider *)slider
 {
     [_edit_rateMenu_tipsButton setTitle:kToolbar_RateTips(slider.value) forState:UIControlStateNormal];
+}
+
+- (void)sliderDidChangeEnd:(UISlider *)slider
+{
+    float value = [[NSString stringWithFormat:@"%.1f", slider.value] floatValue];
     if ([self.delegate respondsToSelector:@selector(lf_editToolbar:rateDidChange:)]) {
-        float value = [[NSString stringWithFormat:@"%.1f", slider.value] floatValue];
         [self.delegate lf_editToolbar:self rateDidChange:value];
     }
+    slider.value = value;
 }
 
 #pragma mark - 一级菜单事件(action)

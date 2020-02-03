@@ -113,6 +113,8 @@
     
     self.composition = [[AVMutableComposition alloc] init];
     
+    CMTime totalTime = CMTimeMake(self.timeRange.duration.value/self.rate, self.timeRange.duration.timescale);
+    
     // Insert the video and audio tracks from AVAsset
     if (assetVideoTrack != nil) {
         // 视频通道  工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材
@@ -121,13 +123,13 @@
         [compositionVideoTrack setPreferredTransform:assetVideoTrack.preferredTransform];
         // 把视频轨道数据加入到可变轨道中 这部分可以做视频裁剪TimeRange
         [compositionVideoTrack insertTimeRange:self.timeRange ofTrack:assetVideoTrack atTime:insertionPoint error:&error];
-        [compositionVideoTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration) toDuration:CMTimeMake(self.timeRange.duration.value/self.rate, self.timeRange.duration.timescale)];
+        [compositionVideoTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration) toDuration:totalTime];
     }
     if (assetAudioTrack != nil && self.isOrignalSound) {
         AVMutableCompositionTrack *compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
         compositionAudioTrack.preferredTransform = assetAudioTrack.preferredTransform;
         [compositionAudioTrack insertTimeRange:self.timeRange ofTrack:assetAudioTrack atTime:insertionPoint error:&error];
-        [compositionAudioTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration) toDuration:CMTimeMake(self.timeRange.duration.value/self.rate, self.timeRange.duration.timescale)];
+        [compositionAudioTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration) toDuration:totalTime];
     }
     
     /** 创建额外音轨特效 */
@@ -139,21 +141,41 @@
     /** 添加其他音频 */
     for (NSURL *audioUrl in self.audioUrls) {
         /** 声音采集 */
-        AVURLAsset *audioAsset = [[AVURLAsset alloc]initWithURL:audioUrl options:nil];
-        AVAssetTrack *additional_assetAudioTrack = nil;
-        /** 检查是否有效音轨 */
-        if ([[audioAsset tracksWithMediaType:AVMediaTypeAudio] count] != 0) {
-            additional_assetAudioTrack = [audioAsset tracksWithMediaType:AVMediaTypeAudio][0];
-        }
-        if (additional_assetAudioTrack) {
+        AVURLAsset *audioAsset = [[AVURLAsset alloc] initWithURL:audioUrl options:nil];
+        
+        NSArray *additional_audios = [audioAsset tracksWithMediaType:AVMediaTypeAudio];
+        
+        if (additional_audios.count) {
+            CMTimeRange audio_timeRange = CMTimeRangeMake(kCMTimeZero, audioAsset.duration);
+            if (CMTIME_COMPARE_INLINE(audioAsset.duration, >, self.timeRange.duration)) {
+                audio_timeRange = CMTimeRangeMake(kCMTimeZero, self.timeRange.duration);
+            }
+            
+            NSInteger times = 0;
+            if (CMTIME_COMPARE_INLINE(audio_timeRange.duration, <, self.timeRange.duration)) {
+                times = ceil(CMTimeGetSeconds(self.timeRange.duration)/CMTimeGetSeconds(audioAsset.duration))-1;
+            }
+            
+            AVAssetTrack *additional_assetAudioTrack = [audioAsset tracksWithMediaType:AVMediaTypeAudio].firstObject;
+            
             AVMutableCompositionTrack *additional_compositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             additional_compositionAudioTrack.preferredTransform = additional_assetAudioTrack.preferredTransform;
-            [additional_compositionAudioTrack insertTimeRange:self.timeRange ofTrack:additional_assetAudioTrack atTime:insertionPoint error:&error];
-            [additional_compositionAudioTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration) toDuration:CMTimeMake(self.timeRange.duration.value/self.rate, self.timeRange.duration.timescale)];
+            [additional_compositionAudioTrack insertTimeRange:audio_timeRange ofTrack:additional_assetAudioTrack atTime:insertionPoint error:&error];
+            
+            CMTime atTime = insertionPoint;
+            for (NSInteger t=0; t<times; t++) {
+                atTime = CMTimeAdd(atTime, audio_timeRange.duration);
+                if (t == times-1) {
+                    [additional_compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, CMTimeSubtract(self.timeRange.duration, atTime)) ofTrack:additional_assetAudioTrack atTime:atTime error:&error];
+                } else {
+                    [additional_compositionAudioTrack insertTimeRange:audio_timeRange ofTrack:additional_assetAudioTrack atTime:atTime error:&error];
+                }
+            }
+            [additional_compositionAudioTrack scaleTimeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration) toDuration:totalTime];
             
             AVMutableAudioMixInputParameters *mixParameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:additional_compositionAudioTrack];
             mixParameters.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
-            [mixParameters setVolumeRampFromStartVolume:1 toEndVolume:0.3 timeRange:CMTimeRangeMake(kCMTimeZero, self.timeRange.duration)];
+            [mixParameters setVolumeRampFromStartVolume:1 toEndVolume:0.3 timeRange:CMTimeRangeMake(kCMTimeZero, totalTime)];
             [inputParameters addObject:mixParameters];
         }
     }
