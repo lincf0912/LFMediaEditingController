@@ -7,11 +7,11 @@
 //
 
 #import "LFFilterSuiteHeader.h"
-#import "FilterSuiteUtils.h"
+#import "LFFilterDataProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LFDataFilterImageView : LFFilterGifView
+@interface LFDataFilterImageView : LFFilterGifView <LFFilterDataProtocol>
 
 @property (nonatomic, assign) LFFilterNameType type;
 

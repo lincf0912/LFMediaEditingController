@@ -85,7 +85,7 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     
     // 实现LFEditingProtocol协议
     {
-        self.lf_imageView = self.imageView;
+        self.lf_displayView = self.imageView;
         self.lf_drawView = self.drawView;
         self.lf_stickerView = self.stickerView;
         self.lf_splashView = self.splashView;

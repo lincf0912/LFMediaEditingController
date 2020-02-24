@@ -23,7 +23,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class LFBrush, LFDrawView, LFStickerView, LFDataFilterImageView, LFDataFilterVideoView;
-@protocol LFEditingProtocol;
+@protocol LFEditingProtocol, LFFilterDataProtocol;
 
 // 实现LFEditingProtocol的所有非必要方法。
 @interface UIView (LFEditingProtocol)
@@ -38,10 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** 模糊（马赛克、高斯模糊、涂抹） */
 @property (nonatomic, weak) LFDrawView *lf_splashView;
 
-/** 图片展示 */
-@property (nonatomic, weak) LFDataFilterImageView *lf_imageView;
-/** 视频展示 */
-@property (nonatomic, weak) LFDataFilterVideoView *lf_playerView;
+/** 展示 */
+@property (nonatomic, weak) id<LFFilterDataProtocol> lf_displayView;
 
 @end
 

@@ -129,7 +129,7 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     
     // 实现LFEditingProtocol协议
     {
-        self.lf_playerView = self.playerView;
+        self.lf_displayView = self.playerView;
         self.lf_drawView = self.drawView;
         self.lf_stickerView = self.stickerView;
     }

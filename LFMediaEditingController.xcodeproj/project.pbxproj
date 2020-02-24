@@ -128,6 +128,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B897EF42403A0D300A3E854 /* LFFilterDataProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFFilterDataProtocol.h; sourceTree = "<group>"; };
 		3B8B0C5123E7B66900148D0B /* Voice.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Voice.mp3; sourceTree = "<group>"; };
 		3B8B0C5523E7C78500148D0B /* LFClipToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFClipToolbar.m; sourceTree = "<group>"; };
 		3B8B0C5623E7C78500148D0B /* LFEditToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFEditToolbar.h; sourceTree = "<group>"; };
@@ -642,6 +643,7 @@
 				6FAB0D3C1F27357A00C1BCFD /* LFEditingProtocol.h */,
 				C763E8272331D4D90004ED6C /* LFEditingProtocol.m */,
 				6FAB0D3D1F27357A00C1BCFD /* LFPhotoEditDelegate.h */,
+				3B897EF42403A0D300A3E854 /* LFFilterDataProtocol.h */,
 			);
 			path = define;
 			sourceTree = "<group>";
@@ -1041,12 +1043,12 @@
 		C7D28F3D22DC0ECB00AB83FE /* LFMediaDisplayView */ = {
 			isa = PBXGroup;
 			children = (
-				C7D28F3E22DC0ECB00AB83FE /* LFMEVideoView.m */,
 				C7D28F4222DC0ECB00AB83FE /* LFMEGifView.h */,
-				C7D28F4322DC0ECB00AB83FE /* LFMEVideoView.h */,
 				C7D28F4622DC0ECB00AB83FE /* LFMEGifView.m */,
-				C7D28F3F22DC0ECB00AB83FE /* util */,
+				C7D28F4322DC0ECB00AB83FE /* LFMEVideoView.h */,
+				C7D28F3E22DC0ECB00AB83FE /* LFMEVideoView.m */,
 				C7D28F4422DC0ECB00AB83FE /* resource */,
+				C7D28F3F22DC0ECB00AB83FE /* util */,
 			);
 			path = LFMediaDisplayView;
 			sourceTree = "<group>";

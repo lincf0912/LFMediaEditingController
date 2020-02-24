@@ -12,8 +12,9 @@
 #import "LFDrawView.h"
 #import "LFStickerView.h"
 
-#import "LFDataFilterImageView.h"
-#import "LFDataFilterVideoView.h"
+#import "LFFilterGifView.h"
+
+#import "LFFilterDataProtocol.h"
 
 static const char * LFEditingProtocolProtocolxecutorKey = "LFEditingProtocolProtocolxecutorKey";
 static const char * LFEditingProtocolEditDelegateKey = "LFEditingProtocolEditDelegateKey";
@@ -22,8 +23,7 @@ static const char * LFEditingProtocolDrawViewKey = "LFEditingProtocolDrawViewKey
 static const char * LFEditingProtocolStickerViewKey = "LFEditingProtocolStickerViewKey";
 static const char * LFEditingProtocolSplashViewKey = "LFEditingProtocolSplashViewKey";
 
-static const char * LFEditingProtocolImageViewKey = "LFEditingProtocolImageViewKey";
-static const char * LFEditingProtocolPlayerViewKey = "LFEditingProtocolPlayerViewKey";
+static const char * LFEditingProtocolDisplayViewKey = "LFEditingProtocolDisplayViewKey";
 
 static const char * LFEditingProtocolEditEnableKey = "LFEditingProtocolEditEnableKey";
 static const char * LFEditingProtocolDrawViewEnableKey = "LFEditingProtocolDrawViewEnableKey";
@@ -87,22 +87,13 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     objc_setAssociatedObject(self, LFEditingProtocolSplashViewKey, splashView, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (LFDataFilterImageView *)lf_imageView
+- (id<LFFilterDataProtocol>)lf_displayView
 {
-    return objc_getAssociatedObject(self, LFEditingProtocolImageViewKey);
+    return objc_getAssociatedObject(self, LFEditingProtocolDisplayViewKey);
 }
-- (void)setLf_imageView:(LFDataFilterImageView *)imageView
+- (void)setLf_displayView:(id<LFFilterDataProtocol>)lf_displayView
 {
-    objc_setAssociatedObject(self, LFEditingProtocolImageViewKey, imageView, OBJC_ASSOCIATION_ASSIGN);
-}
-
-- (LFDataFilterVideoView *)lf_playerView
-{
-    return objc_getAssociatedObject(self, LFEditingProtocolPlayerViewKey);
-}
-- (void)setLf_playerView:(LFDataFilterVideoView *)playerView
-{
-    objc_setAssociatedObject(self, LFEditingProtocolPlayerViewKey, playerView, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, LFEditingProtocolDisplayViewKey, lf_displayView, OBJC_ASSOCIATION_ASSIGN);
 }
 
 
@@ -270,8 +261,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
         [self.lf_protocolxecutor changeFilterType:cmType];
         return;
     }
-    self.lf_imageView.type = cmType;
-    self.lf_playerView.type = cmType;
+    self.lf_displayView.type = cmType;
 }
 /** 当前使用滤镜类型 */
 - (NSInteger)getFilterType
@@ -279,10 +269,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     if (self.lf_protocolxecutor) {
         return [self.lf_protocolxecutor getFilterType];
     }
-    if (self.lf_imageView) {
-        return self.lf_imageView.type;
-    }
-    return self.lf_playerView.type;
+    return self.lf_displayView.type;
 }
 /** 获取滤镜图片 */
 - (UIImage *)getFilterImage
@@ -290,10 +277,12 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     if (self.lf_protocolxecutor) {
         return [self.lf_protocolxecutor getFilterImage];
     }
-    if (self.lf_imageView) {
-        return [self.lf_imageView renderedAnimatedUIImage];
+    if ([self.lf_displayView isKindOfClass:[LFFilterGifView class]]) {
+        return [(LFFilterGifView *)self.lf_displayView renderedAnimatedUIImage];
+    } else if ([self.lf_displayView isKindOfClass:[LFContextImageView class]]) {
+        return [(LFContextImageView *)self.lf_displayView renderedUIImage];
     }
-    return [self.lf_playerView renderedUIImage];
+    return nil;
 }
 
 #pragma mark - 绘画功能
