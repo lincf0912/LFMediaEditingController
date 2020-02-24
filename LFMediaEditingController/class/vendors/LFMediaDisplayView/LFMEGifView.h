@@ -12,7 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LFMEGifView : UIView
 
-@property (nonatomic, strong, nullable) UIImage *gifImage;
+@property (nonatomic, strong, nullable) UIImage *image;
+@property (nonatomic, strong, nullable) NSData *data;
 
 /**
  Whether this instance is auto play.

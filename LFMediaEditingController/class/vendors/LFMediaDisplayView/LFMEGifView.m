@@ -9,6 +9,26 @@
 #import "LFMEGifView.h"
 #import "LFMEWeakSelectorTarget.h"
 
+inline static NSTimeInterval LFMEGifView_CGImageSourceGetGifFrameDelay(CGImageSourceRef imageSource, NSUInteger index)
+{
+    NSTimeInterval frameDuration = 0;
+    
+    CFDictionaryRef dictRef = CGImageSourceCopyPropertiesAtIndex(imageSource, index, NULL);
+    NSDictionary *dict = (__bridge NSDictionary *)dictRef;
+    NSDictionary *gifDict = (dict[(NSString *)kCGImagePropertyGIFDictionary]);
+    NSNumber *unclampedDelayTime = gifDict[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
+    NSNumber *delayTime = gifDict[(NSString *)kCGImagePropertyGIFDelayTime];
+    if (dictRef) CFRelease(dictRef);
+    if (unclampedDelayTime.floatValue) {
+        frameDuration = unclampedDelayTime.floatValue;
+    }else if (delayTime.floatValue) {
+        frameDuration = delayTime.floatValue;
+    }else{
+        frameDuration = .1;
+    }
+    return frameDuration;
+}
+
 @interface LFMEGifView ()
 {
     CADisplayLink *_displayLink;
@@ -18,12 +38,18 @@
     CGFloat _timestamp;
     NSUInteger _loopTimes;
     
+    CGImageSourceRef _gifSourceRef;
+    
     NSTimeInterval _duration;
 }
+
+@property (readonly, nonatomic, nullable) NSArray<NSNumber *> * durations;
 
 @end
 
 @implementation LFMEGifView
+
+@synthesize image = _image;
 
 - (id)init {
     self = [super init];
@@ -69,22 +95,86 @@
 
 - (void)freeData
 {
+    [self unsetupDisplayLink];
+    _image = nil;
+    _data = nil;
     _frameCount = 0;
     _duration = 0.1f;
     _loopTimes = 0;
+    if (_gifSourceRef) {
+        CFRelease(_gifSourceRef);
+    }
+    _durations = nil;
 }
 
-- (void)setGifImage:(UIImage *)gifImage
+- (void)setImage:(UIImage *)image
 {
-    [self freeData];
-    _gifImage = gifImage;
-    if (gifImage.images.count) {
-        _frameCount = gifImage.images.count;
-        _duration = gifImage.duration / gifImage.images.count;
-        [self setupDisplayLink];
-    } else {
-        [self unsetupDisplayLink];
-        self.layer.contents = (__bridge id _Nullable)(gifImage.CGImage);
+    if (_image != image) {
+        [self freeData];
+        _image = image;
+        if (_image.images.count) {
+            _frameCount = _image.images.count;
+            _duration = _image.duration / _image.images.count;
+            [self setupDisplayLink];
+        } else {
+            [self unsetupDisplayLink];
+            self.layer.contents = (__bridge id _Nullable)(_image.CGImage);
+        }
+    }
+}
+
+- (UIImage *)image
+{
+    if (_image == nil) {
+        NSMutableArray *images = [NSMutableArray array];
+        
+        NSTimeInterval duration = 0.0f;
+        
+        for (size_t i = 0; i < _frameCount; i++) {
+            CGImageRef image = CGImageSourceCreateImageAtIndex(_gifSourceRef, i, NULL);
+            if (!image) {
+                continue;
+            }
+            
+            duration += [_durations[i] floatValue];
+            
+            [images addObject:[UIImage imageWithCGImage:image scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp]];
+            
+            CGImageRelease(image);
+        }
+        
+        if (!duration) {
+            duration = (1.0f / 10.0f) * _frameCount;
+        }
+        
+        return [UIImage animatedImageWithImages:images duration:duration];
+    }
+    return _image;
+}
+
+- (void)setData:(NSData *)data
+{
+    if (_data != data) {
+        [self freeData];
+        _data = data;
+        if (data) {
+            _gifSourceRef = CGImageSourceCreateWithData((__bridge CFDataRef)(data), NULL);
+            _frameCount = CGImageSourceGetCount(_gifSourceRef);
+            
+            if (_frameCount) {
+                NSInteger index = 0;
+                NSMutableArray *durations = [NSMutableArray array];
+                while (index < _frameCount) {
+                    [durations addObject:@(LFMEGifView_CGImageSourceGetGifFrameDelay(_gifSourceRef, index))];
+                    index ++;
+                }
+                _durations = [durations copy];
+            }
+            
+            [self setupDisplayLink];
+        } else {
+            [self unsetupDisplayLink];
+        }
     }
 }
 
@@ -146,16 +236,21 @@
     
     _timestamp += fmin(_displayLink.duration, 1);
     
-    while (_timestamp >= _duration) {
-        _timestamp -= _duration;
+    while (_timestamp >= [self frameDurationAtIndex:_index]) {
+        _timestamp -= [self frameDurationAtIndex:_index];
         
-        UIImage *image = nil;
-        if (_gifImage) {
-            image = [_gifImage.images objectAtIndex:_index];
+        CGImageRef imageRef = nil;
+        if (_gifSourceRef) {
+            imageRef = CGImageSourceCreateImageAtIndex(_gifSourceRef, _index, NULL);
+        } else if (_image) {
+            imageRef = [[_image.images objectAtIndex:_index] CGImage];
         }
         
-        if (image.CGImage) {
-            self.layer.contents = (__bridge id _Nullable)(image.CGImage);
+        if (imageRef) {
+            self.layer.contents = (__bridge id _Nullable)(imageRef);
+        }
+        if (_gifSourceRef && imageRef) {
+            CGImageRelease(imageRef);
         }
         
         _index += 1;
@@ -166,6 +261,15 @@
                 return;
             }
         }
+    }
+}
+
+- (float)frameDurationAtIndex:(NSUInteger)index
+{
+    if (_durations) {
+        return _durations[index%_durations.count].floatValue;
+    } else {
+        return _duration;
     }
 }
 

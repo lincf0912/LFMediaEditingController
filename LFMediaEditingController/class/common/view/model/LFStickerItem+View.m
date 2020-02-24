@@ -16,7 +16,7 @@
 {
     if (self.image) {
         LFMEGifView *view = [[LFMEGifView alloc] initWithFrame:(CGRect){CGPointZero, self.displayImage.size}];
-        view.gifImage = self.displayImage;
+        view.image = self.displayImage;
         return view;
     } else if (self.asset) {
         CGSize videoSize = CGSizeZero;
