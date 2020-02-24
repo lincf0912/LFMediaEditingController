@@ -32,8 +32,9 @@
 
 #define EditToolbarStampBrushImageNormals @[@"EditImageStampBrushAnimal.png", @"EditImageStampBrushFruit.png", @"EditImageStampBrushHeart.png"]
 
-#define kToolbar_MainHeight 44
-#define kToolbar_SubHeight 55
+CGFloat kToolbar_MainHeight = 44;
+CGFloat kToolbar_SubHeight = 55;
+NSUInteger kToolbar_MaxItems = 6;
 
 #define kToolbar_RateTips(r) [NSString stringWithFormat:@"x %.1f", r]
 
@@ -138,7 +139,7 @@
 
 @end
 
-@interface LFEditToolbar () <JRPickColorViewDelegate, LFToolCollectionViewCellDelegate>
+@interface LFEditToolbar () <JRPickColorViewDelegate, LFToolCollectionViewCellDelegate, LFEditCollectionViewDelegate>
 
 /** 一级菜单 */
 @property (nonatomic, weak) UIView *edit_menu;
@@ -221,7 +222,6 @@
     _mainImageHighlighted = EditToolbarButtonImageHighlighted;
     [self mainBar];
     [self subBar];
-    [self newUserGuide];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
@@ -294,6 +294,7 @@
         [_selectIndexs addObject:@(LFEditToolbarType_clip)];
         buttonCount ++;
     }
+    _items = buttonCount;
     
     
     if (buttonCount > 0) {
@@ -307,10 +308,12 @@
             [dataSource addObject:item];
         }
         
-        CGFloat width = CGRectGetWidth(self.frame)/(MIN(buttonCount, 6));
+        CGFloat width = CGRectGetWidth(self.frame)/(MIN(buttonCount, kToolbar_MaxItems));
   
         LFEditCollectionView *edit_scrollMenu = [[LFEditCollectionView alloc] initWithFrame:edit_menu.bounds];
         edit_scrollMenu.bounces = NO;
+        edit_scrollMenu.showsVerticalScrollIndicator = NO;
+        edit_scrollMenu.showsHorizontalScrollIndicator = NO;
         edit_scrollMenu.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         [edit_scrollMenu setBackgroundColor:[UIColor clearColor]];
         edit_scrollMenu.itemSize = CGSizeMake(width, kToolbar_MainHeight);
@@ -321,6 +324,7 @@
         [edit_scrollMenu registerClass:[LFToolCollectionViewCell class] forCellWithReuseIdentifier:[LFToolCollectionViewCell identifier]];
         
         edit_scrollMenu.dataSources = @[dataSource];
+        edit_scrollMenu.delegate = self;
         
         __weak typeof(self) weakSelf = self;
         [edit_scrollMenu callbackCellIdentifier:^NSString * _Nonnull(NSIndexPath * _Nonnull indexPath) {
@@ -879,6 +883,21 @@
     [self edit_toolBar_buttonClick:cell.lf_button];
 }
 
+#pragma mark - LFEditCollectionViewDelegate
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self scrollViewDidEndDecelerating:scrollView];
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (self.edit_scrollMenu == (LFEditCollectionView *)scrollView.superview) {
+        CGFloat contentOffsetX = scrollView.contentOffset.x;
+        CGFloat multiple = roundf(contentOffsetX/self.edit_scrollMenu.itemSize.width);
+        CGFloat newContentOffsetX = multiple*self.edit_scrollMenu.itemSize.width;
+        [scrollView setContentOffset:CGPointMake(newContentOffsetX, 0) animated:YES];
+    }
+}
+
 #pragma mark - public对外
 - (void)selectMainMenuIndex:(NSUInteger)index
 {
@@ -936,50 +955,4 @@
         }
     }
 }
-
-#pragma mark - 新手引导
-- (void)newUserGuide
-{
-    // 这里创建指引在这个视图在window上(蒙版、手势)
-    CGRect frame = [UIScreen mainScreen].bounds;
-    UIView * bgView = [[UIView alloc]initWithFrame:frame];
-    bgView.backgroundColor = [UIColor colorWithRed:(50)/255.0 green:(50)/255.0 blue:(50)/255.0 alpha:0.8];
-    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sureTapClick:)];
-    [bgView addGestureRecognizer:tap];
-    
-    //添加子视图控件
-    UILabel *textLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 320, frame.size.width-10, 50)];
-    textLabel.backgroundColor = [UIColor clearColor];
-    textLabel.text = @"“点击直接聊天，向左侧滑看报告、删除”";
-    textLabel.textColor = [UIColor whiteColor];
-    textLabel.textAlignment = NSTextAlignmentCenter;
-    textLabel.font = [UIFont systemFontOfSize:16.0];
-    [bgView addSubview:textLabel];
-    UIImageView * imageView = [[UIImageView alloc]initWithFrame:CGRectMake(frame.size.width/2-30,115,100, 200)];;
-    imageView.image = [UIImage imageNamed:@"CouponBoard_guid"];
-    [bgView addSubview:imageView];
-    [[UIApplication sharedApplication].keyWindow addSubview:bgView];
-    
-    //create path 重点来了（这里需要添加第一个路径）
-    UIBezierPath *path = [UIBezierPath bezierPathWithRect:frame];
-    // 这里添加第二个路径  （这个是矩形）
-    [path appendPath:[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(5, 64, frame.size.width-10, 50) cornerRadius:8] bezierPathByReversingPath]];
-    
-    //渲染
-    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-    shapeLayer.path = path.CGPath;
-    [bgView.layer setMask:shapeLayer];
-    
-}
-/**
- *   新手指引确定
- */
-- (void)sureTapClick:(UITapGestureRecognizer *)tap
-{
-    UIView *guidevView = tap.view;
-    [guidevView removeFromSuperview]; //移除蒙版
-    [guidevView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];//移除所有子视图
-    [guidevView removeGestureRecognizer:tap]; //移除手势
-}
-
 @end

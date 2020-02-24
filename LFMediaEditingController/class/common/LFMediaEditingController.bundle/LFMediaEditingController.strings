@@ -44,3 +44,6 @@
 "_LFME_brush_Chalk" = "粉笔";
 "_LFME_brush_Fluorescent" = "荧光笔";
 "_LFME_brush_Stamp" = "图章";
+
+/* -------- UserGuide  -------*/
+"_LFME_UserGuide_ToolBar_Scroll" = "向左👈滚动会发现更多功能噢。";

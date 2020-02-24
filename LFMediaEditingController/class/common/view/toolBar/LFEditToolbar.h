@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+UIKIT_EXTERN CGFloat kToolbar_MainHeight;
+UIKIT_EXTERN CGFloat kToolbar_SubHeight;
+UIKIT_EXTERN NSUInteger kToolbar_MaxItems;
+
 typedef NS_ENUM(NSUInteger, LFEditToolbarType) {
     /** 绘画 */
     LFEditToolbarType_draw = 1 << 0,
@@ -62,6 +66,8 @@ typedef NS_ENUM(NSUInteger, EditToolbarStampBrushType) {
 - (instancetype)initWithType:(LFEditToolbarType)type;
 
 @property (nonatomic, weak) id<LFEditToolbarDelegate> delegate;
+
+@property (nonatomic, readonly) NSUInteger items;
 
 /** 播放速率 */
 @property (nonatomic, assign) float rate;

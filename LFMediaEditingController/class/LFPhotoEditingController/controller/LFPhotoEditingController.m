@@ -134,7 +134,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     
     /** 为了适配iOS13的UIModalPresentationPageSheet模态，它会在viewDidLoad之后对self.view的大小调整，迫不得已暂时只能在viewWillAppear加载视图 */
     if (@available(iOS 13.0, *)) {
-        if (isiPhone && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
+        if (isiPhone && self.presentingViewController && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
             return;
         }
     }

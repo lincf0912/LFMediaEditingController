@@ -23,6 +23,8 @@
 #import "FilterSuiteUtils.h"
 #import "AVAsset+LFMECommon.h"
 
+#import "NSObject+LFTipsGuideView.h"
+
 /************************ Attributes ************************/
 /** NSNumber containing LFVideoEditOperationSubType, default 0 */
 LFVideoEditOperationStringKey const LFVideoEditDrawColorAttributeName = @"LFVideoEditDrawColorAttributeName";
@@ -130,7 +132,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     
     /** 为了适配iOS13的UIModalPresentationPageSheet模态，它会在viewDidLoad之后对self.view的大小调整，迫不得已暂时只能在viewWillAppear加载视图 */
     if (@available(iOS 13.0, *)) {
-        if (isiPhone && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
+        if (isiPhone && self.presentingViewController && self.navigationController.modalPresentationStyle == UIModalPresentationPageSheet) {
             return;
         }
     }
@@ -161,6 +163,14 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     } else {
         _edit_naviBar.height = kCustomTopbarHeight;
     }
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    // 部分视图需要获取安全区域。统一在这里执行用户指引；
+    [self configUserGuide];
 }
 
 - (void)dealloc
@@ -452,6 +462,26 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
                 }
             }
             self.initSelectedOperationType = 0;
+        }
+    }
+}
+
+- (void)configUserGuide
+{
+    // 设置首次启动其他功能，需要返回后再提示
+    if (self.defaultOperationType&LFVideoEditOperationType_clip && _EditingView.isClipping) {
+        return;
+    }
+    
+    UIView *mainView = self.navigationController.view;
+    {
+        if (_edit_toolBar.items > kToolbar_MaxItems) {
+            CGFloat height = kToolbar_MainHeight;
+            if (@available(iOS 11.0, *)) {
+                height += self.view.safeAreaInsets.bottom;
+            }
+            CGRect toolbarFrame = CGRectMake(0, CGRectGetHeight(self.view.frame)-height, CGRectGetWidth(self.view.frame), height);
+            [self lf_showInView:mainView maskRects:@[[NSValue valueWithCGRect:toolbarFrame]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_ToolBar_Scroll"]]];
         }
     }
 }
@@ -774,6 +804,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         [_EditingView cancelClipping:YES];
         [self changeClipMenu:NO];
         [self configDefaultOperation];
+        [self configUserGuide];
     }
 }
 /** 完成 */
@@ -785,6 +816,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         [_EditingView setIsClipping:NO animated:YES];
         [self changeClipMenu:NO];
         [self configDefaultOperation];
+        [self configUserGuide];
     }
 }
 

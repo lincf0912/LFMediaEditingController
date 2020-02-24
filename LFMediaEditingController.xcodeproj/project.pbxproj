@@ -24,6 +24,10 @@
 		3BC5BD4A24035BED00675877 /* LFText.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD3D24035BED00675877 /* LFText.m */; };
 		3BC5BD4B24035BED00675877 /* LFStickerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD3E24035BED00675877 /* LFStickerItem.m */; };
 		3BC5BD4C24035BED00675877 /* LFStickerItem+View.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD4224035BED00675877 /* LFStickerItem+View.m */; };
+		3BC5BD552403659D00675877 /* LFTipsGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD4F2403659D00675877 /* LFTipsGuideView.m */; };
+		3BC5BD562403659D00675877 /* LFTipsGuideManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD502403659D00675877 /* LFTipsGuideManager.m */; };
+		3BC5BD572403659D00675877 /* NSObject+LFTipsGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD512403659D00675877 /* NSObject+LFTipsGuideView.m */; };
+		3BC5BD582403659D00675877 /* LFTipsGuideView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3BC5BD542403659D00675877 /* LFTipsGuideView.bundle */; };
 		6F14E5D51EE6438A0049AE56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D41EE6438A0049AE56 /* main.m */; };
 		6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D71EE6438A0049AE56 /* AppDelegate.m */; };
 		6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5DA1EE6438A0049AE56 /* ViewController.m */; };
@@ -158,6 +162,13 @@
 		3BC5BD4024035BED00675877 /* LFStickerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFStickerItem.h; sourceTree = "<group>"; };
 		3BC5BD4124035BED00675877 /* LFText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFText.h; sourceTree = "<group>"; };
 		3BC5BD4224035BED00675877 /* LFStickerItem+View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "LFStickerItem+View.m"; sourceTree = "<group>"; };
+		3BC5BD4E2403659D00675877 /* NSObject+LFTipsGuideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+LFTipsGuideView.h"; sourceTree = "<group>"; };
+		3BC5BD4F2403659D00675877 /* LFTipsGuideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFTipsGuideView.m; sourceTree = "<group>"; };
+		3BC5BD502403659D00675877 /* LFTipsGuideManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFTipsGuideManager.m; sourceTree = "<group>"; };
+		3BC5BD512403659D00675877 /* NSObject+LFTipsGuideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+LFTipsGuideView.m"; sourceTree = "<group>"; };
+		3BC5BD522403659D00675877 /* LFTipsGuideManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFTipsGuideManager.h; sourceTree = "<group>"; };
+		3BC5BD532403659D00675877 /* LFTipsGuideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFTipsGuideView.h; sourceTree = "<group>"; };
+		3BC5BD542403659D00675877 /* LFTipsGuideView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LFTipsGuideView.bundle; sourceTree = "<group>"; };
 		6F14E5D01EE6438A0049AE56 /* LFMediaEditingController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LFMediaEditingController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F14E5D41EE6438A0049AE56 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6F14E5D61EE6438A0049AE56 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -436,6 +447,20 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		3BC5BD4D2403659D00675877 /* LFTipsGuideView */ = {
+			isa = PBXGroup;
+			children = (
+				3BC5BD4E2403659D00675877 /* NSObject+LFTipsGuideView.h */,
+				3BC5BD4F2403659D00675877 /* LFTipsGuideView.m */,
+				3BC5BD502403659D00675877 /* LFTipsGuideManager.m */,
+				3BC5BD512403659D00675877 /* NSObject+LFTipsGuideView.m */,
+				3BC5BD522403659D00675877 /* LFTipsGuideManager.h */,
+				3BC5BD532403659D00675877 /* LFTipsGuideView.h */,
+				3BC5BD542403659D00675877 /* LFTipsGuideView.bundle */,
+			);
+			path = LFTipsGuideView;
+			sourceTree = "<group>";
+		};
 		6F14E5C71EE643890049AE56 = {
 			isa = PBXGroup;
 			children = (
@@ -564,6 +589,7 @@
 		6F14E6391EE6439E0049AE56 /* vendors */ = {
 			isa = PBXGroup;
 			children = (
+				3BC5BD4D2403659D00675877 /* LFTipsGuideView */,
 				C72C394D236ACB04008C55B1 /* SPDropMenu */,
 				C783DED223545C5E0083EDBD /* LFPresentationCategory */,
 				C763E82C233476840004ED6C /* LFImageCoder */,
@@ -1149,6 +1175,7 @@
 				C7CFB2F823166F860085836F /* LFMediaEditingController.bundle in Resources */,
 				3B8B0C5223E7B66A00148D0B /* Voice.mp3 in Resources */,
 				6F14E5E31EE6438A0049AE56 /* LaunchScreen.storyboard in Resources */,
+				3BC5BD582403659D00675877 /* LFTipsGuideView.bundle in Resources */,
 				6F14E5E01EE6438A0049AE56 /* Assets.xcassets in Resources */,
 				C73F4CC72232540400ED40B7 /* 4.MOV in Resources */,
 				6F307D281F3AF6A700A48B49 /* 3.jpg in Resources */,
@@ -1204,6 +1231,7 @@
 				C79A0114222F9BED0091EB4C /* FilterSuiteUtils.m in Sources */,
 				C73F4CBE223110EB00ED40B7 /* AVAsset+LFMECommon.m in Sources */,
 				C73E5647236EAA5D00AA0410 /* LFBrush+create.m in Sources */,
+				3BC5BD572403659D00675877 /* NSObject+LFTipsGuideView.m in Sources */,
 				3B8B0C6223E7C78500148D0B /* LFSafeAreaMaskView.m in Sources */,
 				C7C5807522AFA812003BD4F7 /* LFFilter+UIImage.m in Sources */,
 				C7C5807A22AFA812003BD4F7 /* LFContext.m in Sources */,
@@ -1214,8 +1242,10 @@
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
 				6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */,
 				6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */,
+				3BC5BD562403659D00675877 /* LFTipsGuideManager.m in Sources */,
 				C7C5807E22AFA812003BD4F7 /* LFSampleBufferHolder.m in Sources */,
 				C7269FBE20999FCA00A88CA7 /* UIImage+LF_Format.m in Sources */,
+				3BC5BD552403659D00675877 /* LFTipsGuideView.m in Sources */,
 				6F359B3B1F1DE99F009F2035 /* LFVideoTrimmerView.m in Sources */,
 				3BC5BD4524035BED00675877 /* LFGridView.m in Sources */,
 				3BC5BD4324035BED00675877 /* LFGridMaskLayer.m in Sources */,
