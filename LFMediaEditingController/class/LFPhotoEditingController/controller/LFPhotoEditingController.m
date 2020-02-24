@@ -452,8 +452,9 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         };
         
         if (containOperation(LFPhotoEditOperationType_crop)) {
-            [_EditingView setClipping:YES animated:NO];
-            [self changeClipMenu:YES animated:NO];
+//            [_EditingView setClipping:YES animated:NO];
+//            [self changeClipMenu:YES animated:NO];
+            [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_crop];
         } else {
             if (containOperation(LFPhotoEditOperationType_draw)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_draw];

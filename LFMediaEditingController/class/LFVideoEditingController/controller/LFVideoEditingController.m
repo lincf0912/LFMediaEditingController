@@ -425,8 +425,9 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         };
         
         if (containOperation(LFVideoEditOperationType_clip)) {
-            [_EditingView setIsClipping:YES animated:NO];
-            [self changeClipMenu:YES animated:NO];
+//            [_EditingView setIsClipping:YES animated:NO];
+//            [self changeClipMenu:YES animated:NO];
+            [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_clip];
         } else {
             if (containOperation(LFVideoEditOperationType_draw)) {
                 [_edit_toolBar selectMainMenuIndex:LFEditToolbarType_draw];

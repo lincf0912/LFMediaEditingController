@@ -81,7 +81,7 @@ typedef NS_ENUM(NSUInteger, EditToolbarStampBrushType) {
 /** 设置模糊等待状态 */
 - (void)setSplashWait:(BOOL)isWait index:(NSUInteger)index;
 
-/** 选择主菜单的功能类型（会触发代理） */
+/** 选择主菜单的功能类型（会触发代理）LFEditToolbarType */
 - (void)selectMainMenuIndex:(NSUInteger)index;
 
 @end

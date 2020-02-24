@@ -18,6 +18,8 @@
 #import "LFChalkBrush.h"
 #import "LFFluorescentBrush.h"
 
+#import "LFEditCollectionView.h"
+
 #define EditToolbarButtonImageNormals @[@"EditImagePenToolBtn.png", @"EditImageEmotionToolBtn.png", @"EditImageTextToolBtn.png", @"EditImageMosaicToolBtn.png", @"EditImageCropToolBtn.png", @"EditImageAudioToolBtn.png", @"EditVideoCropToolBtn.png", @"EditImageFilterToolBtn.png", @"EditImageRateToolBtn.png"]
 #define EditToolbarButtonImageHighlighted @[@"EditImagePenToolBtn_HL.png", @"EditImageEmotionToolBtn_HL.png", @"EditImageTextToolBtn_HL.png", @"EditImageMosaicToolBtn_HL.png", @"EditImageCropToolBtn_HL.png", @"EditImageAudioToolBtn_HL.png", @"EditVideoCropToolBtn_HL.png", @"EditImageFilterToolBtn_HL.png", @"EditImageRateToolBtn_HL.png"]
 
@@ -38,10 +40,109 @@
 #define kToolbar_SelectedColor [UIColor colorWithRed:(26/255.0) green:(173/255.0) blue:(25/255.0) alpha:1.0]
 #define kToolbar_NormalsColor [UIColor whiteColor]
 
-@interface LFEditToolbar () <JRPickColorViewDelegate>
+#pragma mark - LFToolCollectionItem
+@interface LFToolCollectionItem : NSObject
+
+@property (nonatomic, assign) NSInteger tag;
+@property (nonatomic, assign) int index;
+@property(nonatomic,getter=isSelected) BOOL selected;
+
+@end
+
+@implementation LFToolCollectionItem
+
+@end
+
+#pragma mark - LFToolCollectionViewCell
+@class LFToolCollectionViewCell;
+@protocol LFToolCollectionViewCellDelegate <NSObject>
+
+- (void)lf_edit_toolBar_buttonClick:(LFToolCollectionViewCell *)cell;
+
+@end
+
+@interface LFToolCollectionViewCell : UICollectionViewCell
+
+@property (nonatomic, strong) LFToolCollectionItem *item;
+@property (nonatomic, weak) UIButton *lf_button;
+@property (nonatomic, weak) id<LFToolCollectionViewCellDelegate> delegate;
+
++ (NSString *)identifier;
+@end
+
+@implementation LFToolCollectionViewCell
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGFloat width = self.contentView.frame.size.width;
+    CGFloat height = self.contentView.frame.size.height;
+    self.lf_button.frame = CGRectMake(0, 0, width, height);
+}
+
+- (void)customInit
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self action:@selector(lf_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:button];
+    self.lf_button = button;
+}
+
++ (NSString *)identifier
+{
+    return NSStringFromClass([self class]);
+}
+
+- (void)setItem:(LFToolCollectionItem *)item
+{
+    _item = item;
+    self.lf_button.tag = item.tag;
+    self.lf_button.selected = item.isSelected;
+}
+
+- (void)lf_buttonClick:(UIButton *)button
+{
+    if ([self.delegate respondsToSelector:@selector(lf_edit_toolBar_buttonClick:)]) {
+        [self.delegate lf_edit_toolBar_buttonClick:self];
+    }
+    self.item.selected = button.isSelected;
+}
+
+@end
+
+@interface LFEditToolbar () <JRPickColorViewDelegate, LFToolCollectionViewCellDelegate>
 
 /** 一级菜单 */
 @property (nonatomic, weak) UIView *edit_menu;
+@property (nonatomic, weak) LFEditCollectionView *edit_scrollMenu;
 
 /** 二级菜单 */
 @property (nonatomic, weak) UIView *edit_drawMenu;
@@ -120,6 +221,7 @@
     _mainImageHighlighted = EditToolbarButtonImageHighlighted;
     [self mainBar];
     [self subBar];
+    [self newUserGuide];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
@@ -195,21 +297,51 @@
     
     
     if (buttonCount > 0) {
-        CGFloat width = CGRectGetWidth(self.frame)/buttonCount;
-        UIFont *font = [UIFont systemFontOfSize:14];
+        
+        NSMutableArray *dataSource = [NSMutableArray arrayWithCapacity:buttonCount];
+        
         for (NSInteger i=0; i<buttonCount; i++) {
-            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(width*i, 0, width, kToolbar_MainHeight);
-            button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-            button.titleLabel.font = font;
-            button.tag = [_selectIndexs[i] integerValue];
-            int index = [_imageIndexs[i] intValue];
-            [button setImage:bundleEditImageNamed(_mainImageNormals[index]) forState:UIControlStateNormal];
-            [button setImage:bundleEditImageNamed(_mainImageHighlighted[index]) forState:UIControlStateHighlighted];
-            [button setImage:bundleEditImageNamed(_mainImageHighlighted[index]) forState:UIControlStateSelected];
-            [button addTarget:self action:@selector(edit_toolBar_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-            [edit_menu addSubview:button];
+            LFToolCollectionItem *item = [LFToolCollectionItem new];
+            item.tag = [_selectIndexs[i] integerValue];
+            item.index = [_imageIndexs[i] intValue];
+            [dataSource addObject:item];
         }
+        
+        CGFloat width = CGRectGetWidth(self.frame)/(MIN(buttonCount, 6));
+  
+        LFEditCollectionView *edit_scrollMenu = [[LFEditCollectionView alloc] initWithFrame:edit_menu.bounds];
+        edit_scrollMenu.bounces = NO;
+        edit_scrollMenu.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        [edit_scrollMenu setBackgroundColor:[UIColor clearColor]];
+        edit_scrollMenu.itemSize = CGSizeMake(width, kToolbar_MainHeight);
+        edit_scrollMenu.sectionInset = UIEdgeInsetsZero;
+        edit_scrollMenu.minimumInteritemSpacing = 0;
+        edit_scrollMenu.minimumLineSpacing = 0;
+        
+        [edit_scrollMenu registerClass:[LFToolCollectionViewCell class] forCellWithReuseIdentifier:[LFToolCollectionViewCell identifier]];
+        
+        edit_scrollMenu.dataSources = @[dataSource];
+        
+        __weak typeof(self) weakSelf = self;
+        [edit_scrollMenu callbackCellIdentifier:^NSString * _Nonnull(NSIndexPath * _Nonnull indexPath) {
+            return [LFToolCollectionViewCell identifier];
+        } configureCell:^(NSIndexPath * _Nonnull indexPath, LFToolCollectionItem * _Nonnull item, UICollectionViewCell * _Nonnull cell) {
+            
+            ((LFToolCollectionViewCell *)cell).item = item;
+            ((LFToolCollectionViewCell *)cell).delegate = self;
+            int index = item.index;
+            [((LFToolCollectionViewCell *)cell).lf_button setImage:bundleEditImageNamed(weakSelf.mainImageNormals[index]) forState:UIControlStateNormal];
+            [((LFToolCollectionViewCell *)cell).lf_button setImage:bundleEditImageNamed(weakSelf.mainImageHighlighted[index]) forState:UIControlStateHighlighted];
+            [((LFToolCollectionViewCell *)cell).lf_button setImage:bundleEditImageNamed(weakSelf.mainImageHighlighted[index]) forState:UIControlStateSelected];
+//            [((LFToolCollectionViewCell *)cell).lf_button addTarget:weakSelf action:@selector(edit_toolBar_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+            
+        } didSelectItemAtIndexPath:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item) {
+            
+        }];
+        
+        [edit_menu addSubview:edit_scrollMenu];
+        self.edit_scrollMenu = edit_scrollMenu;
+        
     }
     
     UIView *divide = [[UIView alloc] init];
@@ -299,7 +431,7 @@
             } else {
                 button.layer.borderColor = kToolbar_NormalsColor.CGColor;
             }
-            button.layer.borderWidth = 1.0;
+            button.layer.borderWidth = 2.0;
             [draw_stampView addSubview:button];
         }
         
@@ -741,12 +873,35 @@
     }
 }
 
+#pragma mark - LFToolCollectionViewCellDelegate
+- (void)lf_edit_toolBar_buttonClick:(LFToolCollectionViewCell *)cell
+{
+    [self edit_toolBar_buttonClick:cell.lf_button];
+}
+
 #pragma mark - public对外
 - (void)selectMainMenuIndex:(NSUInteger)index
 {
-    UIButton *button = [self.edit_menu viewWithTag:index];
-    if ([button isKindOfClass:[UIButton class]]) {
-        [self edit_toolBar_buttonClick:button];
+    __block NSInteger tag = -1;
+    [self.edit_scrollMenu.dataSources.firstObject enumerateObjectsUsingBlock:^(LFToolCollectionItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.tag == index) {
+            tag = idx;
+            *stop = YES;
+        }
+    }];
+    if (tag == -1) {
+        return;
+    }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:tag inSection:0];
+    [self.edit_scrollMenu scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    LFToolCollectionViewCell *cell = (LFToolCollectionViewCell *)[self.edit_scrollMenu cellForItemAtIndexPath:indexPath];
+    if (cell == nil) {
+        // 滚动后没有立即刷新。导致获取不到cell。手动刷新。
+        [self.edit_scrollMenu layoutIfNeeded];
+        cell = (LFToolCollectionViewCell *)[self.edit_scrollMenu cellForItemAtIndexPath:indexPath];
+    }
+    if ([cell isKindOfClass:[LFToolCollectionViewCell class]]) {
+        [self edit_toolBar_buttonClick:cell.lf_button];
     }
 }
 
@@ -780,6 +935,51 @@
             view.hidden = NO;
         }
     }
+}
+
+#pragma mark - 新手引导
+- (void)newUserGuide
+{
+    // 这里创建指引在这个视图在window上(蒙版、手势)
+    CGRect frame = [UIScreen mainScreen].bounds;
+    UIView * bgView = [[UIView alloc]initWithFrame:frame];
+    bgView.backgroundColor = [UIColor colorWithRed:(50)/255.0 green:(50)/255.0 blue:(50)/255.0 alpha:0.8];
+    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sureTapClick:)];
+    [bgView addGestureRecognizer:tap];
+    
+    //添加子视图控件
+    UILabel *textLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 320, frame.size.width-10, 50)];
+    textLabel.backgroundColor = [UIColor clearColor];
+    textLabel.text = @"“点击直接聊天，向左侧滑看报告、删除”";
+    textLabel.textColor = [UIColor whiteColor];
+    textLabel.textAlignment = NSTextAlignmentCenter;
+    textLabel.font = [UIFont systemFontOfSize:16.0];
+    [bgView addSubview:textLabel];
+    UIImageView * imageView = [[UIImageView alloc]initWithFrame:CGRectMake(frame.size.width/2-30,115,100, 200)];;
+    imageView.image = [UIImage imageNamed:@"CouponBoard_guid"];
+    [bgView addSubview:imageView];
+    [[UIApplication sharedApplication].keyWindow addSubview:bgView];
+    
+    //create path 重点来了（这里需要添加第一个路径）
+    UIBezierPath *path = [UIBezierPath bezierPathWithRect:frame];
+    // 这里添加第二个路径  （这个是矩形）
+    [path appendPath:[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(5, 64, frame.size.width-10, 50) cornerRadius:8] bezierPathByReversingPath]];
+    
+    //渲染
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.path = path.CGPath;
+    [bgView.layer setMask:shapeLayer];
+    
+}
+/**
+ *   新手指引确定
+ */
+- (void)sureTapClick:(UITapGestureRecognizer *)tap
+{
+    UIView *guidevView = tap.view;
+    [guidevView removeFromSuperview]; //移除蒙版
+    [guidevView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];//移除所有子视图
+    [guidevView removeGestureRecognizer:tap]; //移除手势
 }
 
 @end

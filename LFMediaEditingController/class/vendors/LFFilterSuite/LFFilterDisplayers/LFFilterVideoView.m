@@ -37,6 +37,7 @@ static char* LFItemChanged = "CurrentItemContext";
 - (void)setPlayer:(AVPlayer *)player
 {
     if (_player != player) {
+        [self suspendDisplay];
         [_player removeObserver:self forKeyPath:@"currentItem"];
         _player = player;
         [_player addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew context:LFItemChanged];
