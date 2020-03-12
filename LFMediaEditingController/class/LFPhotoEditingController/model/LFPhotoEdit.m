@@ -39,8 +39,8 @@
     _editPreviewImage = editPreviewImage;
     _durations = durations;
     /** 设置编辑封面 */
-    CGFloat width = 80.f * 2.f;
-    CGSize size = [UIImage LFME_scaleImageSizeBySize:editPreviewImage.size targetSize:CGSizeMake(width, width) isBoth:NO];
+    CGFloat width = MIN(80.f * 2.f, MIN(editPreviewImage.size.width, editPreviewImage.size.height));
+    CGSize size = [UIImage LFME_scaleImageSizeBySize:editPreviewImage.size targetSize:CGSizeMake(width, width) isBoth:YES];
     NSData *editPreviewData = nil;
     if (editPreviewImage.images.count) {
         _editPosterImage = [editPreviewImage.images.firstObject LFME_scaleToFitSize:size];

@@ -38,7 +38,7 @@
     
     _editPreviewImage = [asset lf_firstImage:nil];
     CGFloat width = 80.f * 2.f;
-    CGSize size = [UIImage LFME_scaleImageSizeBySize:_editPreviewImage.size targetSize:CGSizeMake(width, width) isBoth:NO];
+    CGSize size = [UIImage LFME_scaleImageSizeBySize:_editPreviewImage.size targetSize:CGSizeMake(width, width) isBoth:YES];
     _editPosterImage = [_editPreviewImage LFME_scaleToFitSize:size];
     
 }
