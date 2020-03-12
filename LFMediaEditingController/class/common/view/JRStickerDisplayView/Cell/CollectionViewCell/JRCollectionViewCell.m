@@ -70,7 +70,7 @@
     [self.collectionView performBatchUpdates:^{
         [weakSelf.collectionView reloadData];
     } completion:^(BOOL finished) {
-        UICollectionViewCell *cell = [weakSelf.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+        UICollectionViewCell *cell = [weakSelf.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
         if (cell) {
             [self lf_showInView:[UIApplication sharedApplication].keyWindow maskRects:@[[NSValue valueWithCGRect:[cell.superview convertRect:cell.frame toView:nil]]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_StickerView_DisplayView_LongPress"]]];
         }
