@@ -31,6 +31,8 @@ LFPhotoEditOperationStringKey const LFPhotoEditDrawColorAttributeName = @"LFPhot
 LFPhotoEditOperationStringKey const LFPhotoEditDrawBrushAttributeName = @"LFPhotoEditDrawBrushAttributeName";
 /** 自定义贴图资源路径 NSString containing string path, default nil. sticker resource path. */
 LFPhotoEditOperationStringKey const LFPhotoEditStickerAttributeName = @"LFPhotoEditStickerAttributeName";
+/** NSArray containing NSArray<LFStickerContent *>, default @[[LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]]]. */
+LFPhotoEditOperationStringKey const LFPhotoEditStickerContentsAttributeName = @"LFPhotoEditStickerContentsAttributeName";
 /** 文字颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditTextColorAttributeName = @"LFPhotoEditTextColorAttributeName";
 /** 模糊类型 NSNumber containing LFPhotoEditOperationSubType, default 0 */
@@ -44,7 +46,6 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanRotateAttributeName = @"LF
 /** 允许剪切比例 NSNumber containing LFPhotoEditOperationSubType, default YES */
 LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName = @"LFPhotoEditCropCanAspectRatioAttributeName";
 /************************ Attributes ************************/
-
 
 @interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFClipToolbarDelegate, LFEditToolbarDataSource, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
@@ -84,6 +85,8 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 @property (nonatomic, strong) NSArray<NSNumber *> *durations;
 
 @property (nonatomic, strong, nullable) NSDictionary *editData;
+
+@property (nonatomic, strong, nullable) id stickerBarCacheResource;
 
 @end
 
@@ -911,11 +914,24 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
+        CGRect frame = CGRectMake(0, self.view.height, w, h);
         
-        /** 设置默认贴图资源路径 */
-        NSString *stickerPath = [self operationStringForKey:LFPhotoEditStickerAttributeName];
+        if (self.stickerBarCacheResource) {
+            _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:frame cacheResources:self.stickerBarCacheResource];
+        } else {
+            /** 设置默认贴图资源路径 */
+            NSArray <LFStickerContent *>*stickerContents = [self operationArrayForKey:LFPhotoEditStickerContentsAttributeName];
+            
+            if (stickerContents == nil) {
+                stickerContents = @[
+                    [LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]],
+                    [LFStickerContent stickerContentWithTitle:@"相册" contents:@[LFStickerContentAllAlbum]]
+                ];
+            }
+            
+            _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:frame resources:stickerContents];
+        }
         
-        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:stickerPath];
         _edit_sticker_toolBar.delegate = self;
     }
     return _edit_sticker_toolBar;
@@ -1151,10 +1167,12 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_sticker_toolBar.frame = frame;
             } completion:^(BOOL finished) {
+                self.stickerBarCacheResource = self->_edit_sticker_toolBar.cacheResources;
                 [self->_edit_sticker_toolBar removeFromSuperview];
                 self->_edit_sticker_toolBar = nil;
             }];
         } else {
+            self.stickerBarCacheResource = _edit_sticker_toolBar.cacheResources;
             [_edit_sticker_toolBar removeFromSuperview];
             _edit_sticker_toolBar = nil;
         }
@@ -1274,17 +1292,33 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     return 0;
 }
 
-- (NSString *)operationStringForKey:(LFPhotoEditOperationStringKey)key
+//- (NSString *)operationStringForKey:(LFPhotoEditOperationStringKey)key
+//{
+//    id obj = [self.operationAttrs objectForKey:key];
+//    if ([obj isKindOfClass:[NSString class]]) {
+//        return (NSString *)obj;
+//    } else if (obj) {
+//        #pragma clang diagnostic push
+//        #pragma clang diagnostic ignored "-Wunused-variable"
+//
+//        BOOL isContain = [key isEqualToString:LFPhotoEditStickerAttributeName];
+//        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+//        #pragma clang diagnostic pop
+//    }
+//    return nil;
+//}
+
+- (NSArray *)operationArrayForKey:(LFPhotoEditOperationStringKey)key
 {
     id obj = [self.operationAttrs objectForKey:key];
-    if ([obj isKindOfClass:[NSString class]]) {
-        return (NSString *)obj;
+    if ([obj isKindOfClass:[NSArray class]]) {
+        return (NSArray *)obj;
     } else if (obj) {
         #pragma clang diagnostic push
         #pragma clang diagnostic ignored "-Wunused-variable"
                 
-        BOOL isContain = [key isEqualToString:LFPhotoEditStickerAttributeName];
-        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+        BOOL isContain = [key isEqualToString:LFPhotoEditStickerContentsAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is NSArray", key);
         #pragma clang diagnostic pop
     }
     return nil;

@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "LFBaseEditingController.h"
+#import "LFStickerContent.h"
 #import "LFVideoEdit.h"
 
 typedef NS_ENUM(NSUInteger, LFVideoEditOperationType) {
@@ -56,7 +57,31 @@ UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditDrawBrushAttributeNa
  
  NSString containing string path, default nil. sticker resource path.
  */
-UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditStickerAttributeName;
+UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditStickerAttributeName __deprecated_msg("LFVideoEditOperationStringKey deprecated. Use `LFVideoEditStickerContentsAttributeName`");
+/**
+ 详细请看LFStickerContent.h。
+ 所有资源不适宜过大。开发者需要把控数据大小。防止内存崩溃。
+ 
+ See LFStickerContent.h for details.
+ All resources should not be too large. Developers need to control the size of the data. Prevent memory crash.
+ 
+ @{LFVideoEditStickerContentsAttributeName:@[
+    // 第一个标签的数据。
+    // Data for the first tab.
+    [LFStickerContent stickerContentWithTitle:@"Tab Name" contents:@[@"Tab Datas"]],
+    // 第二个标签的数据。
+    // Data for the second tab.
+    [LFStickerContent stickerContentWithTitle:@"Tab Name" contents:@[@"Tab Datas"]],
+    ......
+ ]}
+ 
+ NSArray containing NSArray<LFStickerContent *>, default
+ @[
+    [LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]],
+    [LFStickerContent stickerContentWithTitle:@"相册" contents:@[LFStickerContentAllAlbum]]
+ ].
+ */
+UIKIT_EXTERN LFVideoEditOperationStringKey const LFVideoEditStickerContentsAttributeName;
 /**
  文字的默认颜色
  The default color of the text.

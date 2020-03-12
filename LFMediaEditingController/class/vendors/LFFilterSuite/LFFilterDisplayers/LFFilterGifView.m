@@ -66,7 +66,10 @@ inline static NSTimeInterval LFFilterGifView_CGImageSourceGetGifFrameDelay(CGIma
 {
     if (_gifSourceRef) {
         CFRelease(_gifSourceRef);
+        _gifSourceRef = NULL;
     }
+    _index = 0;
+    _timestamp = 0;
     _gifData = nil;
     _frameCount = 0;
     _duration = 0.1f;

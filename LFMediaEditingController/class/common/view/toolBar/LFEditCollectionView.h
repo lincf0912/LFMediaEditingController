@@ -30,12 +30,26 @@ typedef void (^LFEditCollectionViewDidSelectItemAtIndexPathBlock)(NSIndexPath * 
 @property(nonatomic,getter=isPagingEnabled) BOOL          pagingEnabled __TVOS_PROHIBITED;// default NO. if YES, stop on multiples of view bounds
 @property(nonatomic)         BOOL                         showsHorizontalScrollIndicator; // default YES. show indicator while we are tracking. fades out after tracking
 @property(nonatomic)         BOOL                         showsVerticalScrollIndicator;   // default YES. show indicator while we are tracking. fades out after tracking
+@property (nonatomic, getter=isPrefetchingEnabled) BOOL prefetchingEnabled API_AVAILABLE(ios(10.0));
+
 - (void)registerClass:(nullable Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
 - (void)registerNib:(nullable UINib *)nib forCellWithReuseIdentifier:(NSString *)identifier;
 
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
 
 - (nullable UICollectionViewCell *)cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)reloadData;
+
+- (void)performBatchUpdates:(void (NS_NOESCAPE ^ _Nullable)(void))updates completion:(void (^ _Nullable)(BOOL finished))completion; // allows multiple insert/delete/reload/move calls to be animated simultaneously. Nestable.
+
+- (void)reloadItemsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths;
+
+- (NSArray <UICollectionViewCell *>*)visibleCells;
+
+- (NSArray <NSIndexPath *>*)indexPathsForVisibleItems;
+
+- (nullable NSIndexPath *)indexPathForItemAtPoint:(CGPoint)point;
 
 #pragma mark - UICollectionViewFlowLayout
 @property (nonatomic) CGFloat minimumLineSpacing;
@@ -49,14 +63,17 @@ typedef void (^LFEditCollectionViewDidSelectItemAtIndexPathBlock)(NSIndexPath * 
 
 #pragma mark - UIScrollView
 @property(nonatomic)         BOOL                         bounces;                        // default YES. if YES, bounces past edge of content and back again
+@property(nonatomic)         CGPoint                      contentOffset;                  // default CGPointZero
+@property(nonatomic)         CGSize                       contentSize;                    // default CGSizeZero
+@property(nonatomic)         UIEdgeInsets                 contentInset;                   // default UIEdgeInsetsZero. add
+
 @property(nullable,nonatomic,weak) id<LFEditCollectionViewDelegate>        delegate;                       // default nil. weak reference
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;  // animate at constant velocity to new offset
 - (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated;         // scroll so rect is just visible (nearest edges). nothing if rect completely visible
 
 @end
 
-@protocol LFEditCollectionViewDelegate<NSObject>
-
+@protocol LFEditCollectionViewScrollDelegate<NSObject>
 @optional
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;                                               // any offset changes
 
@@ -69,6 +86,21 @@ typedef void (^LFEditCollectionViewDidSelectItemAtIndexPathBlock)(NSIndexPath * 
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView;   // called on finger up as we are moving
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;      // called when scroll view grinds to a halt
+@end
+
+@protocol LFEditCollectionViewDelegate<LFEditCollectionViewScrollDelegate>
+@optional
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
+@end
+
+@protocol LFEditCollectionViewDelegateFlowLayout<LFEditCollectionViewDelegate>
+@optional
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
 @end
 
 NS_ASSUME_NONNULL_END

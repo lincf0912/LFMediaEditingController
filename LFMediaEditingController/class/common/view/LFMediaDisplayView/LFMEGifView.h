@@ -16,16 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSData *data;
 
 /**
- Whether this instance is auto play.
- */
-@property (assign, nonatomic) BOOL autoPlay;
-
-/**
- Number of times gif played.
- */
-@property (assign, nonatomic) NSUInteger loopCount;
-
-/**
  Whether this instance play gif.
  */
 - (void)playGif;

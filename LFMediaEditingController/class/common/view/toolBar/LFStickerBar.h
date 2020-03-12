@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LFStickerContent.h"
 
 extern CGFloat const lf_stickerSize;
 extern CGFloat const lf_stickerMargin;
@@ -22,10 +23,10 @@ extern CGFloat const lf_stickerMargin;
  初始化 指定贴图资源目录
 
  @param frame 位置
- @param resourcePath 资源目录
+ @param resources 贴图资源
  @return self
  */
-- (instancetype)initWithFrame:(CGRect)frame resourcePath:(NSString *)resourcePath;
+- (instancetype)initWithFrame:(CGRect)frame resources:(NSArray <LFStickerContent *>*)resources;
 
 @end
 

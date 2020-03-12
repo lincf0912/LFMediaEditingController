@@ -7,7 +7,6 @@
 //
 
 #import "LFMEVideoView.h"
-#import "NSBundle+LFMediaDisplayView.h"
 
 static char* CSVideoStatusChanged = "VideoStatusChanged";
 
@@ -15,8 +14,6 @@ static char* CSVideoStatusChanged = "VideoStatusChanged";
 {
     AVPlayerItem *_oldItem;
 }
-@property (nonatomic, weak) UIButton *playButton;
-@property (nonatomic, strong) UIImage *playImage;
 
 @end
 
@@ -60,47 +57,26 @@ static char* CSVideoStatusChanged = "VideoStatusChanged";
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    _playButton.frame = self.bounds;
 }
 
 - (void)dealloc
 {
+    [_player pause];
     [self unsetupAVPlay];
 }
 
 - (void)commonInit {
     self.backgroundColor = [UIColor clearColor];
     ((AVPlayerLayer *)self.layer).videoGravity = AVLayerVideoGravityResizeAspect;
-    _playImage = [NSBundle LFMD_imageNamed:@"CSVideoPlay.png"];
-    {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [button setImage:self.playImage forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(playAction:) forControlEvents:UIControlEventTouchUpInside];
-        button.layer.shadowOpacity = .8;
-        button.layer.shadowRadius = 3.0;
-        button.layer.shadowColor = [UIColor whiteColor].CGColor;
-        button.layer.shadowOffset = CGSizeMake(1, 1);
-        [self addSubview:button];
-        _playButton = button;
-    }
-}
-
-- (void)playAction:(UIButton *)sender
-{
-    if (self.isPlaying) {
-        [self.player pause];
-        [sender setImage:self.playImage forState:UIControlStateNormal];
-    } else {
-        [self.player play];
-        [sender setImage:nil forState:UIControlStateNormal];
-    }
-    
 }
 
 - (void)setAsset:(AVAsset *)asset
 {
-    _asset = asset;
-    [self setupAVPlay];
+    if (_asset != asset) {
+        [self unsetupAVPlay];
+        _asset = asset;
+        [self setupAVPlay];
+    }
 }
 
 #pragma mark - KVO
@@ -111,6 +87,7 @@ static char* CSVideoStatusChanged = "VideoStatusChanged";
                 case AVPlayerStatusReadyToPlay:
                 {
                     ((AVPlayerLayer *)self.layer).player = self.player;
+                    [self.player play];
                 }
                     break;
                 case AVPlayerStatusFailed:
@@ -137,18 +114,20 @@ static char* CSVideoStatusChanged = "VideoStatusChanged";
 - (void)setupAVPlay {
     [self unsetupAVPlay];
     
+    _oldItem = [AVPlayerItem playerItemWithAsset:self.asset];
+    [_oldItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:CSVideoStatusChanged];
     if (_player == nil) {
-        _oldItem = [AVPlayerItem playerItemWithAsset:self.asset];
-        [_oldItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:CSVideoStatusChanged];
         _player = [[AVPlayer alloc] initWithPlayerItem:_oldItem];
-        
-        /* When the player item has played to its end time we'll toggle
-         the movie controller Pause button to be the Play button */
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playerItemDidReachEnd:)
-                                                     name:AVPlayerItemDidPlayToEndTimeNotification
-                                                   object:_oldItem];
+    } else {
+        [_player pause];
+        [_player replaceCurrentItemWithPlayerItem:_oldItem];
     }
+    /* When the player item has played to its end time we'll toggle
+     the movie controller Pause button to be the Play button */
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:_oldItem];
 }
 
 - (void)unsetupAVPlay {
@@ -166,7 +145,6 @@ static char* CSVideoStatusChanged = "VideoStatusChanged";
 - (void)playerItemDidReachEnd:(NSNotification *)notification
 {
     [self.player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-    [self.playButton setImage:self.playImage forState:UIControlStateNormal];
 }
 
 #pragma mark - public

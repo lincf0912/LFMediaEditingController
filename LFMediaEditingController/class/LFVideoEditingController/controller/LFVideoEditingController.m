@@ -32,6 +32,8 @@ LFVideoEditOperationStringKey const LFVideoEditDrawColorAttributeName = @"LFVide
 LFVideoEditOperationStringKey const LFVideoEditDrawBrushAttributeName = @"LFVideoEditDrawBrushAttributeName";
 /** NSString containing string path, default nil. sticker resource path. */
 LFVideoEditOperationStringKey const LFVideoEditStickerAttributeName = @"LFVideoEditStickerAttributeName";
+/** NSArray containing NSArray<LFStickerContent *>, default @[[LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]]]. */
+LFVideoEditOperationStringKey const LFVideoEditStickerContentsAttributeName = @"LFVideoEditStickerContentsAttributeName";
 /** NSNumber containing LFVideoEditOperationSubType, default 0 */
 LFVideoEditOperationStringKey const LFVideoEditTextColorAttributeName = @"LFVideoEditTextColorAttributeName";
 /** NSNumber containing BOOL, default false: default audioTrack ,true: mute. */
@@ -79,6 +81,8 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 @property (nonatomic, strong) UIImage *filterSmallImage;
 
 @property (nonatomic, strong, nullable) NSDictionary *editData;
+
+@property (nonatomic, strong, nullable) id stickerBarCacheResource;
 
 @end
 
@@ -974,10 +978,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_sticker_toolBar.frame = frame;
             } completion:^(BOOL finished) {
+                self.stickerBarCacheResource = self->_edit_sticker_toolBar.cacheResources;
                 [self->_edit_sticker_toolBar removeFromSuperview];
                 self->_edit_sticker_toolBar = nil;
             }];
         } else {
+            self.stickerBarCacheResource = self->_edit_sticker_toolBar.cacheResources;
             [_edit_sticker_toolBar removeFromSuperview];
             _edit_sticker_toolBar = nil;
         }
@@ -1117,11 +1123,24 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
+        CGRect frame = CGRectMake(0, self.view.height, w, h);
         
-        /** 设置默认贴图资源路径 */
-        NSString *stickerPath = [self operationStringForKey:LFVideoEditStickerAttributeName];
+        if (self.stickerBarCacheResource) {
+            _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:frame cacheResources:self.stickerBarCacheResource];
+        } else {
+            /** 设置默认贴图资源路径 */
+            NSArray <LFStickerContent *>*stickerContents = [self operationArrayForKey:LFVideoEditStickerContentsAttributeName];
+            
+            if (stickerContents == nil) {
+                stickerContents = @[
+                    [LFStickerContent stickerContentWithTitle:@"默认" contents:@[LFStickerContentDefaultSticker]],
+                    [LFStickerContent stickerContentWithTitle:@"相册" contents:@[LFStickerContentAllAlbum]]
+                ];
+            }
+            
+            _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:frame resources:stickerContents];
+        }
         
-        _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) resourcePath:stickerPath];
         _edit_sticker_toolBar.delegate = self;
     }
     return _edit_sticker_toolBar;
@@ -1280,17 +1299,33 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     return 0;
 }
 
-- (NSString *)operationStringForKey:(LFVideoEditOperationStringKey)key
+//- (NSString *)operationStringForKey:(LFVideoEditOperationStringKey)key
+//{
+//    id obj = [self.operationAttrs objectForKey:key];
+//    if ([obj isKindOfClass:[NSString class]]) {
+//        return (NSString *)obj;
+//    } else if (obj) {
+//        #pragma clang diagnostic push
+//        #pragma clang diagnostic ignored "-Wunused-variable"
+//
+//        BOOL isContain = [key isEqualToString:LFVideoEditStickerContentsAttributeName];
+//        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+//        #pragma clang diagnostic pop
+//    }
+//    return nil;
+//}
+
+- (NSArray *)operationArrayForKey:(LFVideoEditOperationStringKey)key
 {
     id obj = [self.operationAttrs objectForKey:key];
-    if ([obj isKindOfClass:[NSString class]]) {
-        return (NSString *)obj;
+    if ([obj isKindOfClass:[NSArray class]]) {
+        return (NSArray *)obj;
     } else if (obj) {
         #pragma clang diagnostic push
         #pragma clang diagnostic ignored "-Wunused-variable"
                 
-        BOOL isContain = [key isEqualToString:LFVideoEditStickerAttributeName];
-        NSAssert(!isContain, @"The type corresponding to this key %@ is NSString", key);
+        BOOL isContain = [key isEqualToString:LFVideoEditStickerContentsAttributeName];
+        NSAssert(!isContain, @"The type corresponding to this key %@ is NSArray", key);
         #pragma clang diagnostic pop
     }
     return nil;

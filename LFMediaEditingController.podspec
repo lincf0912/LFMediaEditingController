@@ -21,7 +21,6 @@ ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
-ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
 ss.dependency 'LFMediaEditingController/LFImageCoder'
 ss.dependency 'LFMediaEditingController/LFPresentationCategory'
 ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
@@ -38,7 +37,6 @@ ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
-ss.dependency 'LFMediaEditingController/LFMediaDisplayView'
 ss.dependency 'LFMediaEditingController/LFPresentationCategory'
 ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
 ss.dependency 'LFMediaEditingController/SPDropMenu'
@@ -67,13 +65,6 @@ end
 s.subspec 'LFFilterSuite' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/LFFilterSuite/*.{h,m}','LFMediaEditingController/class/vendors/LFFilterSuite/**/*.{h,m}'
 ss.public_header_files = 'LFMediaEditingController/class/vendors/LFFilterSuite/*.h','LFMediaEditingController/class/vendors/LFFilterSuite/**/*.h'
-end
-
-# LFMediaDisplayView模块
-s.subspec 'LFMediaDisplayView' do |ss|
-ss.source_files = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/*.{h,m}','LFMediaEditingController/class/vendors/LFMediaDisplayView/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/*.h'
-ss.resources = 'LFMediaEditingController/class/vendors/LFMediaDisplayView/resource/*.bundle'
 end
 
 # LFImageCoder模块
@@ -106,6 +97,12 @@ s.subspec 'LFTipsGuideView' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/LFTipsGuideView/*.{h,m}','LFMediaEditingController/class/vendors/LFTipsGuideView/**/*.{h,m}'
 ss.public_header_files = 'LFMediaEditingController/class/vendors/LFTipsGuideView/*.h'
 ss.resources = 'LFMediaEditingController/class/vendors/LFTipsGuideView/*.bundle'
+end
+
+# LFDownloadManager模块
+s.subspec 'LFDownloadManager' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/LFDownloadManager/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/LFDownloadManager/*.h'
 end
 
 end
