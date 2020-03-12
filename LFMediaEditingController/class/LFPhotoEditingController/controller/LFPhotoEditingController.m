@@ -24,6 +24,8 @@
 #import "FilterSuiteUtils.h"
 #import "LFImageCoder.h"
 
+#import "NSObject+LFTipsGuideView.h"
+
 /************************ Attributes ************************/
 /** 绘画颜色 NSNumber containing LFPhotoEditOperationSubType, default 0 */
 LFPhotoEditOperationStringKey const LFPhotoEditDrawColorAttributeName = @"LFPhotoEditDrawColorAttributeName";
@@ -172,6 +174,14 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     } else {
         _edit_naviBar.height = kCustomTopbarHeight;
     }
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    // 部分视图需要获取安全区域。统一在这里执行用户指引；
+    [self configUserGuide];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -479,6 +489,26 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     }
 }
 
+- (void)configUserGuide
+{
+    // 设置首次启动其他功能，需要返回后再提示
+    if (self.defaultOperationType&LFPhotoEditOperationType_crop && _EditingView.isClipping) {
+        return;
+    }
+    
+    UIView *mainView = self.navigationController.view;
+    {
+        if (_edit_toolBar.items > kToolbar_MaxItems) {
+            CGFloat height = kToolbar_MainHeight;
+            if (@available(iOS 11.0, *)) {
+                height += self.view.safeAreaInsets.bottom;
+            }
+            CGRect toolbarFrame = CGRectMake(0, CGRectGetHeight(self.view.frame)-height, CGRectGetWidth(self.view.frame), height);
+            [self lf_showInView:mainView maskRects:@[[NSValue valueWithCGRect:toolbarFrame]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_ToolBar_Scroll"]]];
+        }
+    }
+}
+
 #pragma mark - 顶部栏(action)
 - (void)singlePressed
 {
@@ -735,6 +765,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         [self changeClipMenu:NO];
         _edit_clipping_toolBar.selectAspectRatio = [_EditingView aspectRatioIndex] > 0;
         [self configDefaultOperation];
+        [self configUserGuide];
     }
 }
 /** 完成 */
@@ -748,6 +779,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         [self changeClipMenu:NO];
         _edit_clipping_toolBar.selectAspectRatio = [_EditingView aspectRatioIndex] > 0;
         [self configDefaultOperation];
+        [self configUserGuide];
     }
 }
 /** 重置 */
