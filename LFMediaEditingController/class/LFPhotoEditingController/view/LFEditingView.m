@@ -24,8 +24,6 @@
 
 CGFloat const lf_editingView_drawLineWidth = 5.f;
 CGFloat const lf_editingView_splashWidth = 25.f;
-CGFloat const lf_editingView_stickMinScale = .2f;
-CGFloat const lf_editingView_stickMaxScale = 3.f;
 
 typedef NS_ENUM(NSUInteger, LFEditingViewOperation) {
     LFEditingViewOperationNone = 0,
@@ -195,11 +193,6 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
                 self.defaultMaximumZoomScale = self.frame.size.height * kMaxZoomScale / cropRect.size.height;
             }
             self.maximumZoomScale = self.defaultMaximumZoomScale;
-            
-            /** 调整贴图的缩放比例 */
-            CGFloat diffScale = kMaxZoomScale / self.defaultMaximumZoomScale;
-            [self setStickerMinScale:(lf_editingView_stickMinScale * diffScale)];
-            [self setStickerMaxScale:(lf_editingView_stickMaxScale * diffScale)];
         }
         self.clippingView.frame = cropRect;
     }
