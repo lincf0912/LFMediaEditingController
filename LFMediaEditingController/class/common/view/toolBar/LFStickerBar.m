@@ -9,8 +9,9 @@
 #import "LFStickerBar.h"
 #import "LFMediaEditingHeader.h"
 #import "UIView+LFMEFrame.h"
-#import "LFEditCollectionView.h"
+#import "JRStickerDisplayView.h"
 #import <Photos/Photos.h>
+#import "LFImageCoder.h"
 
 extern LFStickerContentStringKey const LFStickerContentCustomAlbum;
 
@@ -94,7 +95,7 @@ CGFloat const lf_stickerMargin = 10;
 @property (nonatomic, strong) NSArray<NSString *> *allStickerTitles;
 @property (nonatomic, strong) NSArray<NSArray<id /* NSURL * / PHAsset * */>*> *allStickers;
 
-@property (nonatomic, weak) LFEditCollectionView *lf_collectionViewSticker;
+@property (nonatomic, weak) JRStickerDisplayView *stickerDisplayView;
 
 @property (strong, nonatomic) dispatch_queue_t concurrentQueue;
 
@@ -138,11 +139,22 @@ CGFloat const lf_stickerMargin = 10;
     return self;
 }
 
+- (instancetype)initWithFrame:(CGRect)frame cacheResources:(id)cacheResources
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _myHeight = frame.size.height;
+        _cacheResources = cacheResources;
+        [self customInit];
+    }
+    return self;
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     if (@available(iOS 11.0, *)) {
-        self.lf_collectionViewSticker.height = self.height - self.safeAreaInsets.bottom;
+        self.stickerDisplayView.height = self.height - self.safeAreaInsets.bottom;
     }
 }
 
@@ -165,7 +177,11 @@ CGFloat const lf_stickerMargin = 10;
     bgButton.frame = self.bounds;
     [self addSubview:bgButton];
     
-    if (self.allStickerTitles == nil && self.allStickers == nil) {
+    if (_cacheResources) {
+        
+        [self setupStickerDisplayView];
+        
+    } else if (self.allStickerTitles == nil && self.allStickers == nil) {
         
         if (@available(iOS 8.0, *)){
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined && [self hasAlbumData]) {
@@ -189,55 +205,45 @@ CGFloat const lf_stickerMargin = 10;
     [self setupStickerData:^(NSArray<NSString *> *allStickerTitles, NSArray<NSArray<id> *> *allStickers) {
         weakSelf.allStickerTitles = allStickerTitles;
         weakSelf.allStickers = allStickers;
+        
+        [weakSelf setupStickerDisplayView];
     }];
 }
 
-- (void)setupCollectionView
+- (void)setupStickerDisplayView
 {
-    LFEditCollectionView *lf_collectionViewSticker = [[LFEditCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
-    [lf_collectionViewSticker setBackgroundColor:[UIColor clearColor]];
+    JRStickerDisplayView *stickerDisplayView = [[JRStickerDisplayView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+    [stickerDisplayView setBackgroundColor:[UIColor clearColor]];
     
-    lf_collectionViewSticker.itemSize = CGSizeMake(lf_stickerSize, lf_stickerSize);
-    lf_collectionViewSticker.sectionInset = UIEdgeInsetsMake(lf_stickerMargin, lf_stickerMargin, lf_stickerMargin, lf_stickerMargin);
-    lf_collectionViewSticker.minimumInteritemSpacing = lf_stickerMargin;
-    lf_collectionViewSticker.minimumLineSpacing = lf_stickerMargin;
-    
-    [lf_collectionViewSticker registerClass:[LFStickerCollectionViewCell class] forCellWithReuseIdentifier:[LFStickerCollectionViewCell identifier]];
-    
-//    if (self.files.count) {
-//        lf_collectionViewSticker.dataSources = @[self.files];
-//    }
+    stickerDisplayView.itemSize = CGSizeMake(lf_stickerSize, lf_stickerSize);
+    stickerDisplayView.itemMargin = lf_stickerMargin;
+    stickerDisplayView.normalTitleColor = [UIColor whiteColor];
+    stickerDisplayView.selectTitleColor = [UIColor colorWithRed:52/255.0 green:230/255.0 blue:92/255.0 alpha:1.0];
+    stickerDisplayView.normalImage = [NSBundle LFME_imageNamed:@"StickerDisplayPlaceholder.png"];
+    stickerDisplayView.failureImage = [NSBundle LFME_imageNamed:@"StickerDisplayFail.png"];
     
     __weak typeof(self) weakSelf = self;
-    __weak typeof(lf_collectionViewSticker) weakCollectionViewSticker = lf_collectionViewSticker;
-    [lf_collectionViewSticker callbackCellIdentifier:^NSString * _Nonnull(NSIndexPath * _Nonnull indexPath) {
-        return [LFStickerCollectionViewCell identifier];
-    } configureCell:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item, UICollectionViewCell * _Nonnull cell) {
-        ((LFStickerCollectionViewCell *)cell).lf_imageView.image = nil;
-        ((LFStickerCollectionViewCell *)cell).lf_tagStr = item;
-        dispatch_async(weakSelf.concurrentQueue, ^{
-            UIImage * backImage = nil;
-//            if (weakSelf.external) {
-//                backImage = [UIImage imageWithContentsOfFile:[weakSelf.resourcePath stringByAppendingPathComponent:item]];
-//            } else {
-//                backImage = bundleStickerImageNamed(item);
-//            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([((LFStickerCollectionViewCell *)cell).lf_tagStr isEqualToString: item]) {
-                    ((LFStickerCollectionViewCell *)cell).lf_imageView.image = backImage;
-                }
-            });
-        });
-    } didSelectItemAtIndexPath:^(NSIndexPath * _Nonnull indexPath, id  _Nonnull item) {
+    stickerDisplayView.didSelectBlock = ^(NSData * _Nonnull data, UIImage * _Nonnull thumbnailImage) {
         if ([weakSelf.delegate respondsToSelector:@selector(lf_stickerBar:didSelectImage:)]) {
-            LFStickerCollectionViewCell *cell = (LFStickerCollectionViewCell *)[weakCollectionViewSticker cellForItemAtIndexPath:indexPath];
-            UIImage * backImage = cell.lf_imageView.image;
-            [weakSelf.delegate lf_stickerBar:weakSelf didSelectImage:backImage];
+            [weakSelf.delegate lf_stickerBar:weakSelf didSelectImage:thumbnailImage];
         }
-    }];
+    };
     
-    [self addSubview:lf_collectionViewSticker];
-    self.lf_collectionViewSticker = lf_collectionViewSticker;
+    if (_cacheResources) {
+        stickerDisplayView.cacheData = _cacheResources;
+    } else {
+        [stickerDisplayView setTitles:self.allStickerTitles contents:self.allStickers];
+    }
+    
+    [self addSubview:stickerDisplayView];
+    self.stickerDisplayView = stickerDisplayView;
+}
+
+#pragma mark - public
+
+- (id)cacheResources
+{
+    return self.stickerDisplayView.cacheData;
 }
 
 #pragma mark - private
@@ -246,19 +252,21 @@ CGFloat const lf_stickerMargin = 10;
 {
     if (@available(iOS 8.0, *)){
         for (LFStickerContent *content in self.resources) {
-            if ([content isKindOfClass:[LFStickerContent class]]) {
-                if (content.title.length) {
-                    for (id resource in content.contents) {
-                        if ([resource isKindOfClass:[NSString class]]) { // 相册
-                            if ([resource hasPrefix:LFStickerContentCustomAlbum]) { // 自定义相册
-                                return YES;
-                            } else if ([resource isEqualToString:LFStickerContentAllAlbum]) { // 全部相册
-                                return YES;
-                            }
-                        } else if ([resource isKindOfClass:[PHAsset class]]) { // PHAsset
-                            return YES;
-                        }
+            if (![content isKindOfClass:[LFStickerContent class]]) {
+                continue;
+            }
+            if (content.title.length == 0) {
+                continue;
+            }
+            for (id resource in content.contents) {
+                if ([resource isKindOfClass:[NSString class]]) { // 相册
+                    if ([resource hasPrefix:LFStickerContentCustomAlbum]) { // 自定义相册
+                        return YES;
+                    } else if ([resource isEqualToString:LFStickerContentAllAlbum]) { // 全部相册
+                        return YES;
                     }
+                } else if ([resource isKindOfClass:[PHAsset class]]) { // PHAsset
+                    return YES;
                 }
             }
         }
@@ -275,127 +283,127 @@ CGFloat const lf_stickerMargin = 10;
     
     dispatch_async(self.concurrentQueue, ^{
         for (LFStickerContent *content in self.resources) {
-            if ([content isKindOfClass:[LFStickerContent class]]) {
-                if (content.title.length) {
-                    [allStickerTitles addObject:content.title];
-                    NSMutableArray *stickers = [@[] mutableCopy];
-                    for (id resource in content.contents) {
-                        if ([resource isKindOfClass:[NSString class]]) { // 相册
-                            if ([resource hasPrefix:LFStickerContentCustomAlbum]) { // 自定义相册
-                                if (@available(iOS 8.0, *)){
-                                    NSString *albumName = [resource substringToIndex:LFStickerContentCustomAlbum.length];
-                                    PHFetchOptions *option = [[PHFetchOptions alloc] init];
-                                    option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
-                                    option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-                                    
-                                    PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
-                                    PHFetchResult *myPhotoStreamAlbum = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumMyPhotoStream options:nil];
-                                    PHFetchResult *syncedAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumSyncedAlbum options:nil];
-                                    PHFetchResult *sharedAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumCloudShared options:nil];
-                                    PHFetchResult *regularAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-                                    PHFetchResult *customAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-                                    
-                                    NSArray *allAlbums = @[userAlbums, myPhotoStreamAlbum,syncedAlbums,sharedAlbums,regularAlbums,customAlbums];
-                                    
-                                    PHFetchResult *fetchResult = nil;
-                                    for (PHFetchResult *result in allAlbums) {
-                                        for (PHAssetCollection *collection in result) {
-                                            // 有可能是PHCollectionList类的的对象，过滤掉
-                                            if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
-                                            if ([collection.localizedTitle isEqualToString:albumName]) {
-                                                fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
-                                                break;
-                                            }
-                                        }
-                                        if (fetchResult) {
-                                            break;
-                                        }
-                                    }
-                                    
-                                    if (fetchResult) {
-                                        for (PHAsset *asset in fetchResult) {
-                                            [stickers addObject:asset];
-                                        }
-                                        continue;
-                                    }
-                                }
-                            }
-                            if ([resource isEqualToString:LFStickerContentDefaultSticker]) { // 默认贴图
-                                NSString *path = [NSBundle LFME_stickersPath];
-                                NSArray <NSURL *>*files = [fileManager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:path] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsSubdirectoryDescendants|NSDirectoryEnumerationSkipsPackageDescendants|NSDirectoryEnumerationSkipsHiddenFiles error:nil];
-                                // sort
-                                files = [files sortedArrayUsingComparator:^NSComparisonResult(NSURL * _Nonnull obj1, NSURL *  _Nonnull obj2) {
-                                    return [obj1.lastPathComponent compare:obj2.lastPathComponent options:NSNumericSearch] == NSOrderedDescending;
-                                }];
-                                [stickers addObjectsFromArray:files];
-                            } else if ([resource isEqualToString:LFStickerContentAllAlbum]) { // 全部相册
-                                if (@available(iOS 8.0, *)){
-                                    PHFetchOptions *option = [[PHFetchOptions alloc] init];
-                                    option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
-                                    option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-                                    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
-                                    
-                                    PHFetchResult *fetchResult = nil;
-                                    for (PHAssetCollection *collection in smartAlbums) {
-                                        // 有可能是PHCollectionList类的的对象，过滤掉
-                                        if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
+            if (![content isKindOfClass:[LFStickerContent class]]) {
+                continue;
+            }
+            if (content.title.length == 0) {
+                continue;
+            }
+            [allStickerTitles addObject:content.title];
+            NSMutableArray *stickers = [@[] mutableCopy];
+            for (id resource in content.contents) {
+                if ([resource isKindOfClass:[NSString class]]) { // 相册
+                    if ([resource hasPrefix:LFStickerContentCustomAlbum]) { // 自定义相册
+                        if (@available(iOS 8.0, *)){
+                            NSString *albumName = [resource substringToIndex:LFStickerContentCustomAlbum.length];
+                            PHFetchOptions *option = [[PHFetchOptions alloc] init];
+                            option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
+                            option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+                            
+                            PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+                            PHFetchResult *myPhotoStreamAlbum = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumMyPhotoStream options:nil];
+                            PHFetchResult *syncedAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumSyncedAlbum options:nil];
+                            PHFetchResult *sharedAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumCloudShared options:nil];
+                            PHFetchResult *regularAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+                            PHFetchResult *customAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+                            
+                            NSArray *allAlbums = @[userAlbums, myPhotoStreamAlbum,syncedAlbums,sharedAlbums,regularAlbums,customAlbums];
+                            
+                            PHFetchResult *fetchResult = nil;
+                            for (PHFetchResult *result in allAlbums) {
+                                for (PHAssetCollection *collection in result) {
+                                    // 有可能是PHCollectionList类的的对象，过滤掉
+                                    if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
+                                    if ([collection.localizedTitle isEqualToString:albumName]) {
                                         fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
                                         break;
                                     }
-                                    
-                                    for (PHAsset *asset in fetchResult) {
-                                        [stickers addObject:asset];
-                                    }
-                                    
+                                }
+                                if (fetchResult) {
+                                    break;
                                 }
                             }
                             
-                        } else if ([resource isKindOfClass:[NSURL class]]) { // 目录路径或文件或URL
-                            if ([[[resource scheme] lowercaseString] hasPrefix:@"file"]) { // 目录路径或文件
-                                BOOL isDir = NO;
-                                BOOL isExists = [fileManager fileExistsAtPath:[resource resourceSpecifier] isDirectory:&isDir];
-                                if (isExists) {
-                                    if (isDir) {
-                                        NSMutableArray *filters = [NSMutableArray arrayWithCapacity:5];
-                                        NSArray <NSURL *>*files = [fileManager contentsOfDirectoryAtURL:resource includingPropertiesForKeys:@[NSURLNameKey] options:NSDirectoryEnumerationSkipsSubdirectoryDescendants|NSDirectoryEnumerationSkipsPackageDescendants|NSDirectoryEnumerationSkipsHiddenFiles error:nil];
-                                        for (NSURL *fileUrl in files) { // filters
-                                            NSString *name;
-                                            [fileUrl getResourceValue:&name forKey:NSURLNameKey error:nil];
-                                            if (name.length && [kImageExtensions containsObject:[name.pathExtension lowercaseString]]) {
-                                                [filters addObject:fileUrl];
-                                            }
-                                        }
-                                        
-                                        // sort
-                                        [filters sortUsingComparator:^NSComparisonResult(NSURL * _Nonnull obj1, NSURL *  _Nonnull obj2) {
-                                            return [obj1.lastPathComponent compare:obj2.lastPathComponent options:NSNumericSearch] == NSOrderedDescending;
-                                        }];
-                                        
-                                        [stickers addObjectsFromArray:filters];
-                                        [filters removeAllObjects];
-                                        
-                                    } else {
-                                        [stickers addObject:resource];
-                                    }
-                                }
-                                
-                            } else { // URL
-                                [stickers addObject:resource];
-                            }
-
-                        } else {
-                            if (@available(iOS 8.0, *)){
-                                if ([resource isKindOfClass:[PHAsset class]]) { // PHAsset
-                                    if (((PHAsset *)resource).mediaType == PHAssetMediaTypeImage) {
-                                        [stickers addObject:resource];
-                                    }
+                            if (fetchResult) {
+                                for (PHAsset *asset in fetchResult) {
+                                    [stickers addObject:asset];
                                 }
                             }
                         }
+                    } else if ([resource isEqualToString:LFStickerContentDefaultSticker]) { // 默认贴图
+                        NSString *path = [NSBundle LFME_stickersPath];
+                        NSArray <NSURL *>*files = [fileManager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:path] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsSubdirectoryDescendants|NSDirectoryEnumerationSkipsPackageDescendants|NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+                        // sort
+                        files = [files sortedArrayUsingComparator:^NSComparisonResult(NSURL * _Nonnull obj1, NSURL *  _Nonnull obj2) {
+                            return [obj1.lastPathComponent compare:obj2.lastPathComponent options:NSNumericSearch] == NSOrderedDescending;
+                        }];
+                        [stickers addObjectsFromArray:files];
+                    } else if ([resource isEqualToString:LFStickerContentAllAlbum]) { // 全部相册
+                        if (@available(iOS 8.0, *)){
+                            PHFetchOptions *option = [[PHFetchOptions alloc] init];
+                            option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
+                            option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+                            PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+                            
+                            PHFetchResult *fetchResult = nil;
+                            for (PHAssetCollection *collection in smartAlbums) {
+                                // 有可能是PHCollectionList类的的对象，过滤掉
+                                if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
+                                fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
+                                break;
+                            }
+                            
+                            for (PHAsset *asset in fetchResult) {
+                                [stickers addObject:asset];
+                            }
+                            
+                        }
                     }
-                    [allStickers addObject:[stickers copy]];
+                    
+                } else if ([resource isKindOfClass:[NSURL class]]) { // 目录路径或文件或URL
+                    if ([[[resource scheme] lowercaseString] hasPrefix:@"file"]) { // 目录路径或文件
+                        BOOL isDir = NO;
+                        BOOL isExists = [fileManager fileExistsAtPath:[resource resourceSpecifier] isDirectory:&isDir];
+                        if (isExists) {
+                            if (isDir) {
+                                NSMutableArray *filters = [NSMutableArray arrayWithCapacity:5];
+                                NSArray <NSURL *>*files = [fileManager contentsOfDirectoryAtURL:resource includingPropertiesForKeys:@[NSURLNameKey] options:NSDirectoryEnumerationSkipsSubdirectoryDescendants|NSDirectoryEnumerationSkipsPackageDescendants|NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+                                for (NSURL *fileUrl in files) { // filters
+                                    NSString *name;
+                                    [fileUrl getResourceValue:&name forKey:NSURLNameKey error:nil];
+                                    if (name.length && [kImageExtensions containsObject:[name.pathExtension lowercaseString]]) {
+                                        [filters addObject:fileUrl];
+                                    }
+                                }
+                                
+                                // sort
+                                [filters sortUsingComparator:^NSComparisonResult(NSURL * _Nonnull obj1, NSURL *  _Nonnull obj2) {
+                                    return [obj1.lastPathComponent compare:obj2.lastPathComponent options:NSNumericSearch] == NSOrderedDescending;
+                                }];
+                                
+                                [stickers addObjectsFromArray:filters];
+                                [filters removeAllObjects];
+                                
+                            } else {
+                                [stickers addObject:resource];
+                            }
+                        }
+                        
+                    } else { // URL
+                        [stickers addObject:resource];
+                    }
+                    
+                } else {
+                    if (@available(iOS 8.0, *)){
+                        if ([resource isKindOfClass:[PHAsset class]]) { // PHAsset
+                            if (((PHAsset *)resource).mediaType == PHAssetMediaTypeImage) {
+                                [stickers addObject:resource];
+                            }
+                        }
+                    }
                 }
             }
+            [allStickers addObject:[stickers copy]];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{

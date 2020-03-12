@@ -37,8 +37,14 @@
     self = [super init];
     if (self) {
         _enable = YES;
-        NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-        _dataPath = [documentPath stringByAppendingPathComponent:@"LFTipsGuide.plist"];
+        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:NSStringFromClass([self class])];
+        BOOL isDirectory = NO;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        BOOL isExists = [fileManager fileExistsAtPath:path isDirectory:&isDirectory];
+        if (!isExists || !isDirectory) {
+            [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        _dataPath = [path stringByAppendingPathComponent:@"LFTipsGuide.plist"];
         _serialQueue = dispatch_queue_create("LFTipsGuideManager.SerialQueue", DISPATCH_QUEUE_SERIAL);
         [self readData];
     }
@@ -215,7 +221,8 @@
 //    for (NSValue *value in rects) {
 //        [subKey appendString:NSStringFromCGRect([value CGRectValue])];
 //    }
-    [subKey appendFormat:@"%@|%@", [rects componentsJoinedByString:@","], [tipsArr componentsJoinedByString:@","]];
+//    [subKey appendFormat:@"%@|%@", [rects componentsJoinedByString:@","], [tipsArr componentsJoinedByString:@","]];
+    [subKey appendString:[tipsArr componentsJoinedByString:@","]];
     
     NSData *data = [subKey dataUsingEncoding:NSUTF8StringEncoding];
     return [data base64EncodedStringWithOptions:0];

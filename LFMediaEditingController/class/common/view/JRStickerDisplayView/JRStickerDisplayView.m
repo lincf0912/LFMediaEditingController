@@ -379,7 +379,7 @@ JRStickerDisplayView_bind_var(UIImage *, failureImage, setFailureImage);
         imageCell.delegate = self;
         imageCell.backgroundColor = [UIColor clearColor];
         if (self.contents.count > indexPath.row) {
-            [imageCell setCellData:[self.contents objectAtIndex:indexPath.row] index:indexPath.row];
+            [imageCell setCellData:[self.contents objectAtIndex:indexPath.row]];
         } else {
             [imageCell setCellData:nil];
         }

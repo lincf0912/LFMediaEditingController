@@ -58,7 +58,7 @@
 }
 
 #pragma mark - Public Methods
-- (void)setCellData:(id)data index:(NSInteger)index
+- (void)setCellData:(id)data
 {
     [super setCellData:data];
     self.collectionView.dataSources = @[];
@@ -70,18 +70,11 @@
     [self.collectionView performBatchUpdates:^{
         [weakSelf.collectionView reloadData];
     } completion:^(BOOL finished) {
-        if (index == 0) {
-            UICollectionViewCell *cell = [weakSelf.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-            if (cell) {
-                [self lf_showInView:[UIApplication sharedApplication].keyWindow maskRects:@[[NSValue valueWithCGRect:[cell.superview convertRect:cell.frame toView:nil]]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_StickerView_DisplayView_LongPress"]]];
-            }
+        UICollectionViewCell *cell = [weakSelf.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+        if (cell) {
+            [self lf_showInView:[UIApplication sharedApplication].keyWindow maskRects:@[[NSValue valueWithCGRect:[cell.superview convertRect:cell.frame toView:nil]]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_StickerView_DisplayView_LongPress"]]];
         }
     }];
-}
-
-- (void)setCellData:(id)data
-{
-    [self setCellData:data index:NSNotFound];
 }
 
 #pragma mark - Private Methods

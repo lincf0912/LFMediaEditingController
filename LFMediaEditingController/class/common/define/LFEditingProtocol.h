@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 删除选中贴图 */
 - (void)removeSelectStickerView;
 /** 屏幕缩放率 */
-- (void)setScreenScale:(CGFloat)scale;
+@property (nonatomic, assign) CGFloat screenScale;
 /** 最小缩放率 默认0.2 */
 @property (nonatomic, assign) CGFloat stickerMinScale;
 /** 最大缩放率 默认3.0 */

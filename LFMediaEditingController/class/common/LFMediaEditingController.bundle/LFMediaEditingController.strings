@@ -47,3 +47,5 @@
 
 /* -------- UserGuide  -------*/
 "_LFME_UserGuide_ToolBar_Scroll" = "向左👈滚动会发现更多功能噢。";
+"_LFME_UserGuide_StickerView_MovingView_Pinch" = "双指同样可以实现缩放和旋转。";
+"_LFME_UserGuide_StickerView_DisplayView_LongPress" = "长按可以预览图片。";

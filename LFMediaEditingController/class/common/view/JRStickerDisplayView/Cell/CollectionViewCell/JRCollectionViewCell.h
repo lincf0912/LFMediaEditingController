@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JRCollectionViewCell : JRBaseCollectionViewCell
 
-- (void)setCellData:(id)data index:(NSInteger)index;
 @property (weak, nonatomic) id<JRCollectionViewDelegate>delegate;
 
 @end

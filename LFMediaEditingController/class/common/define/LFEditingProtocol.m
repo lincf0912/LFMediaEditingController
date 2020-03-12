@@ -438,6 +438,14 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     }
     self.lf_stickerView.screenScale = scale;
 }
+- (CGFloat)screenScale
+{
+    if (self.lf_protocolxecutor) {
+        return [self.lf_protocolxecutor screenScale];
+    }
+    return self.lf_stickerView.screenScale;
+}
+
 /** 最小缩放率 默认0.2 */
 - (void)setStickerMinScale:(CGFloat)stickerMinScale
 {

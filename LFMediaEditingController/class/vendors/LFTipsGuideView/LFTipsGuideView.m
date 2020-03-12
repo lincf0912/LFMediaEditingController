@@ -374,7 +374,7 @@
         tipsLabel.text = @"";
         tipsLabel.numberOfLines = 0;
         tipsLabel.textColor = [UIColor whiteColor];
-        tipsLabel.font = [UIFont systemFontOfSize:14];
+        tipsLabel.font = [UIFont boldSystemFontOfSize:15.0];
         [tipsLabel sizeToFit];
         _tipsLabel = tipsLabel;
         

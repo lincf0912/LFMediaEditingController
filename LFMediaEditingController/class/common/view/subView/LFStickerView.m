@@ -8,7 +8,8 @@
 
 #import "LFStickerView.h"
 #import "LFMovingView.h"
-#import "UIView+LFMEFrame.h"
+#import "NSObject+LFTipsGuideView.h"
+#import "NSBundle+LFMediaEditing.h"
 
 NSString *const kLFStickerViewData_movingView = @"LFStickerViewData_movingView";
 
@@ -16,6 +17,8 @@ NSString *const kLFStickerViewData_movingView_content = @"LFStickerViewData_movi
 
 NSString *const kLFStickerViewData_movingView_center = @"LFStickerViewData_movingView_center";
 NSString *const kLFStickerViewData_movingView_scale = @"LFStickerViewData_movingView_scale";
+NSString *const kLFStickerViewData_movingView_minScale = @"LFStickerViewData_movingView_minScale";
+NSString *const kLFStickerViewData_movingView_maxScale = @"LFStickerViewData_movingView_maxScale";
 NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_movingView_rotation";
 
 
@@ -131,8 +134,6 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     /** 屏幕中心 */
     movingView.center = [self convertPoint:[UIApplication sharedApplication].keyWindow.center fromView:(UIView *)[UIApplication sharedApplication].keyWindow];
     
-    [self updateMovingView:movingView];
-    
     [self addSubview:movingView];
     
     if (active) {
@@ -160,22 +161,23 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 - (void)createStickerItem:(LFStickerItem *)item
 {
     LFMovingView *movingView = [self createBaseMovingView:item active:YES];
-    CGFloat ratio = 0.5;
+    
+    /** 屏幕缩放率 */
+    movingView.screenScale = self.screenScale;
+    /** 最小缩放率 */
+    CGFloat ratio = self.minScale;
+    movingView.minScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height)/self.screenScale;
+    /** 最大缩放率 */
+    ratio = self.maxScale;
+    movingView.maxScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height)/self.screenScale;
+    ratio = 0.5f;
     CGFloat scale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height);
     [movingView setScale:scale/self.screenScale];
 //    NSLog(@"minScale:%f, maxScale:%f, scale:%f", movingView.minScale, movingView.maxScale, movingView.scale);
     
     self.selectMovingView = movingView;
-}
-
-- (void)updateMovingView:(LFMovingView *)movingView
-{
-    /** 最小缩放率 */
-    movingView.minScale = self.minScale;
-    /** 最大缩放率 */
-    movingView.maxScale = self.maxScale;
-    /** 屏幕缩放率 */
-    movingView.screenScale = self.screenScale;
+    
+    [self lf_showInView:[UIApplication sharedApplication].keyWindow maskRects:@[[NSValue valueWithCGRect:[self convertRect:movingView.frame toView:nil]]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_StickerView_MovingView_Pinch"]]];
 }
 
 /** 贴图数量 */
@@ -205,6 +207,8 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 
             [movingDatas addObject:@{kLFStickerViewData_movingView_content:view.item
                                      , kLFStickerViewData_movingView_scale:@(view.scale)
+                                     , kLFStickerViewData_movingView_minScale:@(view.minScale)
+                                     , kLFStickerViewData_movingView_maxScale:@(view.maxScale)
                                      , kLFStickerViewData_movingView_rotation:@(view.rotation)
                                      , kLFStickerViewData_movingView_center:[NSValue valueWithCGPoint:view.center]
                                      }];
@@ -225,10 +229,14 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
             
             LFStickerItem *item = movingData[kLFStickerViewData_movingView_content];
             CGFloat scale = [movingData[kLFStickerViewData_movingView_scale] floatValue];
+            CGFloat minScale = [movingData[kLFStickerViewData_movingView_minScale] floatValue];
+            CGFloat maxScale = [movingData[kLFStickerViewData_movingView_maxScale] floatValue];
             CGFloat rotation = [movingData[kLFStickerViewData_movingView_rotation] floatValue];
             CGPoint center = [movingData[kLFStickerViewData_movingView_center] CGPointValue];
             
             LFMovingView *view = [self createBaseMovingView:item active:NO];
+            view.minScale = minScale;
+            view.maxScale = maxScale;
             [view setScale:scale rotation:rotation];
             view.center = center;
         }

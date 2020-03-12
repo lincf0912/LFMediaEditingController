@@ -18,6 +18,8 @@ extern CGFloat const lf_stickerMargin;
 
 @property (nonatomic, weak) id <LFStickerBarDelegate> delegate;
 
+/** 缓存数据，可避免下次重新加载时触发的网络处理 */
+@property (nonatomic, strong) id cacheResources;
 
 /**
  初始化 指定贴图资源目录
@@ -27,6 +29,11 @@ extern CGFloat const lf_stickerMargin;
  @return self
  */
 - (instancetype)initWithFrame:(CGRect)frame resources:(NSArray <LFStickerContent *>*)resources;
+
+/// 初始化 缓存贴图资源
+/// @param frame 位置
+/// @param cacheResources 缓存数据
+- (instancetype)initWithFrame:(CGRect)frame cacheResources:(id)cacheResources;
 
 @end
 
