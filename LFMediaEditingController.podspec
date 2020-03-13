@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'LFMediaEditingController'
-s.version      = '1.4.1'
+s.version      = '1.4.2'
 s.summary      = 'Media Editor (edit photo、edit video)'
 s.homepage     = 'https://github.com/lincf0912/LFMediaEditingController'
 s.license      = 'MIT'
@@ -16,7 +16,7 @@ s.public_header_files = 'LFMediaEditingController/class/*.h'
 s.subspec 'LFPhotoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/class/common/*.bundle'
 ss.source_files = 'LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/class/LFPhotoEditingController/**/*.{h,m}','LFMediaEditingController/class/common/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/class/LFPhotoEditingController/model/*.h','LFMediaEditingController/class/LFPhotoEditingController/view/subView/LFDataFilterImageView.h','LFMediaEditingController/class/common/define/LFFilterDataProtocol.h','LFMediaEditingController/class/common/utils/FilterSuiteUtils/*.h'
+ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/class/LFPhotoEditingController/model/*.h','LFMediaEditingController/class/common/view/model/LFStickerContent.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
@@ -26,21 +26,24 @@ ss.dependency 'LFMediaEditingController/LFPresentationCategory'
 ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
 ss.dependency 'LFMediaEditingController/SPDropMenu'
 ss.dependency 'LFMediaEditingController/LFTipsGuideView'
+ss.dependency 'LFMediaEditingController/LFDownloadManager'
 end
 
 # LFVideoEditingController模块
 s.subspec 'LFVideoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/class/common/*.bundle'
 ss.source_files = 'LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/class/LFVideoEditingController/**/*.{h,m}','LFMediaEditingController/class/common/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFVideoEditingController/controller/*.h','LFMediaEditingController/class/LFVideoEditingController/model/*.h','LFMediaEditingController/class/LFVideoEditingController/view/subView/LFDataFilterVideoView.h','LFMediaEditingController/class/common/define/LFFilterDataProtocol.h','LFMediaEditingController/class/common/utils/FilterSuiteUtils/*.h'
+ss.public_header_files = 'LFMediaEditingController/class/*.h','LFMediaEditingController/class/LFVideoEditingController/controller/*.h','LFMediaEditingController/class/LFVideoEditingController/model/*.h','LFMediaEditingController/class/common/view/model/LFStickerContent.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
 ss.dependency 'LFMediaEditingController/LFFilterSuite'
+ss.dependency 'LFMediaEditingController/LFImageCoder'
 ss.dependency 'LFMediaEditingController/LFPresentationCategory'
 ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
 ss.dependency 'LFMediaEditingController/SPDropMenu'
 ss.dependency 'LFMediaEditingController/LFTipsGuideView'
+ss.dependency 'LFMediaEditingController/LFDownloadManager'
 end
 
 # JRPickColorView模块
