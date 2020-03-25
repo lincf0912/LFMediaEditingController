@@ -27,6 +27,7 @@ ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
 ss.dependency 'LFMediaEditingController/SPDropMenu'
 ss.dependency 'LFMediaEditingController/LFTipsGuideView'
 ss.dependency 'LFMediaEditingController/LFDownloadManager'
+ss.dependency 'LFMediaEditingController/LFDrawView'
 end
 
 # LFVideoEditingController模块
@@ -44,6 +45,7 @@ ss.dependency 'LFMediaEditingController/LFEasyNoticeBar'
 ss.dependency 'LFMediaEditingController/SPDropMenu'
 ss.dependency 'LFMediaEditingController/LFTipsGuideView'
 ss.dependency 'LFMediaEditingController/LFDownloadManager'
+ss.dependency 'LFMediaEditingController/LFDrawView'
 end
 
 # JRPickColorView模块
@@ -106,6 +108,12 @@ end
 s.subspec 'LFDownloadManager' do |ss|
 ss.source_files = 'LFMediaEditingController/class/vendors/LFDownloadManager/*.{h,m}'
 ss.public_header_files = 'LFMediaEditingController/class/vendors/LFDownloadManager/*.h'
+end
+
+# LFDrawView模块
+s.subspec 'LFDrawView' do |ss|
+ss.source_files = 'LFMediaEditingController/class/vendors/LFDrawView/*.{h,m}','LFMediaEditingController/class/vendors/LFDrawView/**/*.{h,m}'
+ss.public_header_files = 'LFMediaEditingController/class/vendors/LFDrawView/*.h','LFMediaEditingController/class/vendors/LFDrawView/**/*.h'
 end
 
 end
