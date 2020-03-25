@@ -10,7 +10,7 @@
 
 @interface NSBundle (LFMediaEditing)
 
-+ (instancetype)LFME_imagePickerBundle;
++ (instancetype)LF_mediaEditingBundle;
 
 + (UIImage *)LFME_imageNamed:(NSString *)name;
 + (UIImage *)LFME_stickersImageNamed:(NSString *)name;

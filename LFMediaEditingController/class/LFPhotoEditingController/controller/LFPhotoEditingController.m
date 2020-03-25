@@ -349,6 +349,17 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     _edit_toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     _edit_toolBar.delegate = self;
     
+//    if (self.operationType&LFPhotoEditOperationType_draw) {
+//        __weak typeof(_edit_toolBar) weakToolBar = _edit_toolBar;
+//        if (![LFEraserBrush eraserBrushCache]) {
+//            [_edit_toolBar setDrawBrushWait:YES];
+//            CGSize canvasSize = AVMakeRectWithAspectRatioInsideRect(self.editImage.size, _EditingView.bounds).size;
+//            [LFEraserBrush loadEraserImage:self.editImage canvasSize:canvasSize useCache:YES complete:^(BOOL success) {
+//                [weakToolBar setDrawBrushWait:NO];
+//            }];
+//        }
+//    }
+    
     if (self.operationType&LFPhotoEditOperationType_splash) {
         __weak typeof(_edit_toolBar) weakToolBar = _edit_toolBar;
         /** 加载涂抹相关画笔 */

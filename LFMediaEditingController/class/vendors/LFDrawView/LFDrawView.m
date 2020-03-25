@@ -33,6 +33,15 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
     return self;
 }
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self customInit];
+    }
+    return self;
+}
+
 - (void)customInit
 {
     _layerArray = [@[] mutableCopy];
@@ -153,9 +162,11 @@ NSString *const kLFDrawViewData = @"LFDrawViewData";
 //撤销
 - (void)undo
 {
-    [self.layerArray.lastObject removeFromSuperlayer];
+    CALayer *layer = self.layerArray.lastObject;
+    [layer removeFromSuperlayer];
     [self.layerArray removeLastObject];
     [self.brushData removeLastObject];
+    layer = nil;
 }
 
 #pragma mark  - 数据

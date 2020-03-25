@@ -8,6 +8,7 @@
 
 #import "LFEditingProtocol.h"
 #import <objc/runtime.h>
+#import "NSBundle+LFMediaEditing.h"
 
 #import "LFDrawView.h"
 #import "LFStickerView.h"
@@ -351,7 +352,9 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
         // LFBlurryBrush 不因颜色而改变效果。
     } else if ([self.lf_drawView.brush isKindOfClass:[LFMosaicBrush class]]) {
         // LFMosaicBrush 不因颜色而改变效果。
-    }  else if ([self.lf_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
+    } else if ([self.lf_drawView.brush isKindOfClass:[LFEraserBrush class]]) {
+        // LFEraserBrush 不因颜色而改变效果。
+    } else if ([self.lf_drawView.brush isKindOfClass:[LFFluorescentBrush class]]) {
         ((LFFluorescentBrush *)self.lf_drawView.brush).lineColor = color;
     } else if ([self.lf_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {
         ((LFHighlightBrush *)self.lf_drawView.brush).outerLineColor = color;
@@ -384,6 +387,9 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     } else if ([self.lf_drawView.brush isKindOfClass:[LFMosaicBrush class]]) {
         // 对马赛克笔的线粗相对调整
         self.lf_drawView.brush.lineWidth = lineWidth*5;
+    } else if ([self.lf_drawView.brush isKindOfClass:[LFEraserBrush class]]) {
+        // 对橡皮擦笔的线粗相对调整
+        self.lf_drawView.brush.lineWidth = lineWidth+4;
     } else {
         self.lf_drawView.brush.lineWidth = lineWidth;
         if ([self.lf_drawView.brush isKindOfClass:[LFHighlightBrush class]]) {
@@ -583,11 +589,12 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
             break;
         case LFSplashStateType_Smear:
         {
-            brush = [[LFSmearBrush alloc] init];
+            brush = [[LFSmearBrush alloc] initWithImageName:@"brush/EditImageSmearBrush@2x.png"];
         }
             break;
     }
     if (brush) {
+        brush.bundle = [NSBundle LF_mediaEditingBundle];
         [self.lf_splashView setBrush:brush];
         [self setSplashLineWidth:self.lf_splashLineWidth];
     }

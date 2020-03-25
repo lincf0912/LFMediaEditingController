@@ -33,15 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)mosaicBrushCache;
 
 /**
- 创建马赛克画笔
- 
- @param image 图层展示的图片
- @param scale 马赛克大小系数。建议15.0
- @param canvasSize 画布大小
- @param useCache 是否使用缓存。如果image与canvasSize固定，建议使用缓存。
- @return 返回对象后，画笔为异步加载会有延迟。
+ 创建马赛克画笔，创建前必须调用“异步加载马赛克画笔”👆
  */
-- (instancetype)initWithImage:(UIImage *)image scale:(CGFloat)scale canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache;
+- (instancetype)init;
 
 @end
 

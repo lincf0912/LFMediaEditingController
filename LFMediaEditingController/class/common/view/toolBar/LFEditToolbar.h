@@ -46,6 +46,8 @@ typedef NS_ENUM(NSUInteger, EditToolbarBrushType) {
     EditToolbarBrushTypeFluorescent,
     /** 图章 */
     EditToolbarBrushTypeStamp,
+    /** 橡皮擦 */
+    EditToolbarBrushTypeEraser,
 };
 
 typedef NS_ENUM(NSUInteger, EditToolbarStampBrushType) {
@@ -84,6 +86,8 @@ typedef NS_ENUM(NSUInteger, EditToolbarStampBrushType) {
 - (void)setDrawBrushAtIndex:(EditToolbarBrushType)index subIndex:(EditToolbarStampBrushType)subIndex;
 /** 设置默认模糊类型（会触发代理） */
 - (void)setSplashIndex:(NSUInteger)index;
+/** 设置画笔等待状态 */
+- (void)setDrawBrushWait:(BOOL)isWait;
 /** 设置模糊等待状态 */
 - (void)setSplashWait:(BOOL)isWait index:(NSUInteger)index;
 

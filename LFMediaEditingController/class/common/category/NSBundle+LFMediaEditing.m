@@ -13,7 +13,7 @@ NSString *const LFMediaEditingStrings = @"LFMediaEditingController";
 
 @implementation NSBundle (LFMediaEditing)
 
-+ (instancetype)LFME_imagePickerBundle
++ (instancetype)LF_mediaEditingBundle
 {
     static NSBundle *lfMediaEditingBundle = nil;
     if (lfMediaEditingBundle == nil) {
@@ -35,9 +35,9 @@ NSString *const LFMediaEditingStrings = @"LFMediaEditingController";
     //    } else {
     //        bundleName = [name stringByAppendingString:@"@2x"];
     //    }
-    UIImage *image = [UIImage imageWithContentsOfFile:[[self LFME_imagePickerBundle] pathForResource:bundleName ofType:extension inDirectory:subpath]];
+    UIImage *image = [UIImage imageWithContentsOfFile:[[self LF_mediaEditingBundle] pathForResource:bundleName ofType:extension inDirectory:subpath]];
     if (image == nil) {
-        image = [UIImage imageWithContentsOfFile:[[self LFME_imagePickerBundle] pathForResource:defaultName ofType:extension inDirectory:subpath]];
+        image = [UIImage imageWithContentsOfFile:[[self LF_mediaEditingBundle] pathForResource:defaultName ofType:extension inDirectory:subpath]];
     }
     if (image == nil) {
         image = [UIImage imageNamed:name];
@@ -67,7 +67,7 @@ NSString *const LFMediaEditingStrings = @"LFMediaEditingController";
 
 + (NSString *)LFME_stickersPath
 {
-    return [[self LFME_imagePickerBundle] pathForResource:@"stickers" ofType:nil];
+    return [[self LF_mediaEditingBundle] pathForResource:@"stickers" ofType:nil];
 }
 
 + (NSString *)LFME_localizedStringForKey:(NSString *)key
@@ -76,7 +76,7 @@ NSString *const LFMediaEditingStrings = @"LFMediaEditingController";
 }
 + (NSString *)LFME_localizedStringForKey:(NSString *)key value:(NSString *)value
 {
-    value = [[self LFME_imagePickerBundle] localizedStringForKey:key value:value table:LFMediaEditingStrings];
+    value = [[self LF_mediaEditingBundle] localizedStringForKey:key value:value table:LFMediaEditingStrings];
     return [[NSBundle mainBundle] localizedStringForKey:key value:value table:LFMediaEditingStrings];
 }
 

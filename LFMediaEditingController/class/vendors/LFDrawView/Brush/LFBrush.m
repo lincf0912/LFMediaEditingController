@@ -12,6 +12,7 @@ NSString *const LFBrushClassName = @"LFBrushClassName";
 NSString *const LFBrushAllPoints = @"LFBrushAllPoints";
 NSString *const LFBrushLineWidth = @"LFBrushLineWidth";
 NSString *const LFBrushLevel = @"LFBrushLevel";
+NSString *const LFBrushBundle = @"LFBrushBundle";
 
 const CGPoint LFBrushPointNull = {INFINITY, INFINITY};
 
@@ -66,6 +67,9 @@ CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1) {
 
 @property (nonatomic, strong) NSMutableArray <NSString /*CGPoint*/*>*allPoints;
 
+/** NSBundle 资源 */
+@property (nonatomic, strong) NSBundle *bundle;
+
 @end
 
 @implementation LFBrush
@@ -117,11 +121,16 @@ CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1) {
 - (NSDictionary *)allTracks
 {
     if (self.allPoints.count) {
-        return @{LFBrushClassName:NSStringFromClass(self.class),
-                 LFBrushAllPoints:self.allPoints,
-                 LFBrushLineWidth:@(self.lineWidth),
-                 LFBrushLevel:@(self.level)
-                 };
+        NSMutableDictionary *trackDict = [NSMutableDictionary dictionaryWithDictionary:@{
+            LFBrushClassName:NSStringFromClass(self.class),
+            LFBrushAllPoints:self.allPoints,
+            LFBrushLineWidth:@(self.lineWidth),
+            LFBrushLevel:@(self.level)
+        }];
+        if (self.bundle) {
+            [trackDict setObject:self.bundle forKey:LFBrushBundle];
+        }
+        return trackDict;
     }
     return nil;
 }
@@ -131,7 +140,7 @@ CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1) {
     NSString *className = trackDict[LFBrushClassName];
     NSInteger level = [trackDict[LFBrushLevel] integerValue];
     Class class = NSClassFromString(className);
-    if (class) {
+    if (class && ![class isMemberOfClass:[self class]]) {
         CALayer *layer = [class drawLayerWithTrackDict:trackDict];
         layer.lf_level = level;
         return layer;

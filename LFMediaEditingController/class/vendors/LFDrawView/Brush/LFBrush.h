@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 OBJC_EXTERN NSString *const LFBrushClassName;
 OBJC_EXTERN NSString *const LFBrushAllPoints;
 OBJC_EXTERN NSString *const LFBrushLineWidth;
+OBJC_EXTERN NSString *const LFBrushBundle;
 
 // 为CGPoint{inf, inf}
 OBJC_EXTERN const CGPoint LFBrushPointNull;
@@ -30,7 +31,7 @@ OBJC_EXTERN CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1);
 
 /** 线粗 默认5 */
 @property (nonatomic, assign) CGFloat lineWidth;
-/** 绘画图层的层级 默认0 */
+/** 绘画图层的层级 默认0, 层级越大, 图层越低 */
 @property (nonatomic, assign) NSInteger level;
 
 /**
@@ -60,6 +61,13 @@ OBJC_EXTERN CGFloat LFBrushAngleBetweenPoint(CGPoint p0, CGPoint p1);
  使用轨迹数据恢复绘画层，持有所有轨迹数据，轻松实现undo、redo操作。
  */
 + (CALayer *__nullable)drawLayerWithTrackDict:(NSDictionary *)trackDict;
+
+@end
+
+@interface LFBrush (NSBundle)
+
+/** NSBundle 资源 */
+@property (nonatomic, strong) NSBundle *bundle;
 
 @end
 

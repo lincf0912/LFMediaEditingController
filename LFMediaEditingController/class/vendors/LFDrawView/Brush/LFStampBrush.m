@@ -8,36 +8,11 @@
 
 #import "LFStampBrush.h"
 #import "LFBrush+create.h"
-#import "NSBundle+LFMediaEditing.h"
 #import "LFBrushCache.h"
 
 NSString *const LFStampBrushPatterns = @"LFStampBrushPatterns";
 NSString *const LFStampBrushSpacing = @"LFStampBrushSpacing";
 NSString *const LFStampBrushScale = @"LFStampBrushScale";
-
-inline LFStampBrush *LFStampBrushAnimal(void)
-{
-    LFStampBrush *brush = [LFStampBrush new];
-    brush.patterns = @[@"animal/1", @"animal/2", @"animal/3", @"animal/4", @"animal/5"];
-    brush.scale = 10.0;
-    return brush;
-}
-
-inline LFStampBrush *LFStampBrushFruit(void)
-{
-    LFStampBrush *brush = [LFStampBrush new];
-    brush.patterns = @[@"fruit/1", @"fruit/2", @"fruit/3", @"fruit/4", @"fruit/5", @"fruit/6"];
-    brush.scale = 8.0;
-    return brush;
-}
-
-inline LFStampBrush *LFStampBrushHeart(void)
-{
-    LFStampBrush *brush = [LFStampBrush new];
-    brush.patterns = @[@"heart/1", @"heart/2", @"heart/3", @"heart/4", @"heart/5"];
-    brush.scale = 4.0;
-    return brush;
-}
 
 @interface LFStampBrush ()
 
@@ -113,6 +88,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
 //    CGFloat spacing = [trackDict[LFStampBrushSpacing] floatValue];
     CGFloat scale = [trackDict[LFStampBrushScale] floatValue];
     NSArray <NSString /*CGPoint*/*>*allPoints = trackDict[LFBrushAllPoints];
+    NSBundle *bundle = trackDict[LFBrushBundle];
     
     if (allPoints) {
         CGFloat width = lineWidth*scale;
@@ -121,7 +97,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
         for (NSString *pointStr in allPoints) {
             CGPoint point = CGPointFromString(pointStr);
             
-            UIImage *image = [[self class] cacheImageIndex:index patterns:patterns imageCache:[LFBrushCache share]];
+            UIImage *image = [[self class] cacheImageIndex:index patterns:patterns bundle:bundle];
             if (image == nil) continue;
             
             CGRect rect = CGRectMake(point.x-width/2, point.y-width/2, width, width);
@@ -138,34 +114,39 @@ inline LFStampBrush *LFStampBrushHeart(void)
 }
 
 #pragma mark - private
-+ (UIImage *)cacheImageIndex:(NSInteger)index patterns:(NSArray <NSString *>*)patterns imageCache:(NSCache *)imageCache
++ (UIImage *)cacheImageIndex:(NSInteger)index patterns:(NSArray <NSString *>*)patterns bundle:(NSBundle *)bundle
 {
+    LFBrushCache *imageCache = [LFBrushCache share];
     NSInteger count = patterns.count;
-    NSString *imageName = patterns[index%count];
-    if (0==imageName.length) return nil;
+    NSString *name = patterns[index%count];
+    if (0==name.length) return nil;
     
     UIImage *image = nil;
     
     if (imageCache) {
-        image = [imageCache objectForKey:imageName];
+        image = [imageCache objectForKey:name];
         if (image) {
             return image;
         }
     }
     
     if (image == nil) {
-        /**
-         framework内部加载
-         */
-        image = [NSBundle LFME_brushImageNamed:imageName];
+        NSAssert(name!=nil, @"LFSmearBrush name is nil.");
+        
+        if (bundle) {
+            /**
+             framework内部加载
+             */
+            image = [UIImage imageWithContentsOfFile:[bundle pathForResource:name ofType:nil]];
+        } else {
+            /**
+             framework外部加载
+             */
+            image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:nil]];
+        }
     }
-    if (image == nil) {
-        /**
-         framework外部加载
-         */
-        image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageName ofType:nil]];
-    }
-    if (image && imageCache) {
+    
+    if (image) {
         @autoreleasepool {
             //redraw image using device context
             UIGraphicsBeginImageContextWithOptions(image.size, NO, 0);
@@ -173,7 +154,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
             image = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
         }
-        [imageCache setObject:image forKey:imageName];
+        [imageCache setObject:image forKey:name];
     }
     
     return image;
@@ -201,7 +182,7 @@ inline LFStampBrush *LFStampBrushHeart(void)
 
 - (BOOL)drawSubLayerInLayerAtRect:(CGRect)rect
 {
-    UIImage *image = [[self class] cacheImageIndex:self.index patterns:self.patterns imageCache:[LFBrushCache share]];
+    UIImage *image = [[self class] cacheImageIndex:self.index patterns:self.patterns bundle:self.bundle];
     
     if (image == nil) return NO;
     

@@ -33,14 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- 创建涂抹画笔
+ 创建涂抹画笔，创建前必须调用“异步加载涂抹画笔”👆
 
- @param image 图层展示的图片
- @param canvasSize 画布大小
- @param useCache 是否使用缓存。如果image与canvasSize固定，建议使用缓存。
- @return 返回对象后，画笔为异步加载会有延迟。
+ @param name 涂抹图片
  */
-- (instancetype)initWithImage:(UIImage *)image canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache;
+- (instancetype)initWithImageName:(NSString *)name;
 
 @end
 

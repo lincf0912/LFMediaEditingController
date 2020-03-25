@@ -66,10 +66,11 @@
 
 - (UIImage *)LFBB_patternGaussianImageWithSize:(CGSize)size orientation:(CGImagePropertyOrientation)orientation filterHandler:(CIFilter *(^ _Nullable )(CIImage *ciimage))filterHandler
 {
-    static CIContext *context = nil;
-    if (context == nil) {
+    static dispatch_once_t onceToken;
+    static CIContext *context;
+    dispatch_once(&onceToken, ^{
         context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer: @(NO)}];
-    }
+    });
     CIImage *midImage = [CIImage imageWithCGImage:self.CGImage];
     midImage = [midImage imageByApplyingTransform:[self LFBB_preferredTransform]];
     midImage = [midImage imageByApplyingTransform:CGAffineTransformMakeScale(size.width/midImage.extent.size.width, size.height/midImage.extent.size.height)];

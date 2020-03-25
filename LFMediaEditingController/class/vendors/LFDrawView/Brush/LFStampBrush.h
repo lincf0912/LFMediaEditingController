@@ -14,11 +14,6 @@ OBJC_EXTERN NSString *const LFStampBrushPatterns;
 OBJC_EXTERN NSString *const LFStampBrushSpacing;
 OBJC_EXTERN NSString *const LFStampBrushScale;
 
-@class LFStampBrush;
-OBJC_EXTERN LFStampBrush *LFStampBrushAnimal(void);
-OBJC_EXTERN LFStampBrush *LFStampBrushFruit(void);
-OBJC_EXTERN LFStampBrush *LFStampBrushHeart(void);
-
 @interface LFStampBrush : LFBrush
 
 /** 图案间隔 默认1 */

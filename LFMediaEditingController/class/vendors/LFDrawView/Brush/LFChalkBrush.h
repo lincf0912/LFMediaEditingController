@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LFChalkBrush : LFPaintBrush
 
+
+/// 创建粉笔画笔
+/// @param name 粉笔图片
+- (instancetype)initWithImageName:(NSString *)name;
+
 @end
 
 NS_ASSUME_NONNULL_END

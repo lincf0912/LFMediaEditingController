@@ -11,14 +11,7 @@
 #import "LFStickerItem.h"
 #import "LFMediaEditingType.h"
 
-#import "LFPaintBrush.h"
-#import "LFStampBrush.h"
-#import "LFHighlightBrush.h"
-#import "LFChalkBrush.h"
-#import "LFFluorescentBrush.h"
-#import "LFBlurryBrush.h"
-#import "LFMosaicBrush.h"
-#import "LFSmearBrush.h"
+#import "LFDrawViewHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -33,15 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)blurryBrushCache;
 
 /**
- 创建模糊画笔
-
- @param image 图层展示的图片
- @param radius 模糊范围系数，越大越模糊。建议5.0
- @param canvasSize 画布大小
- @param useCache 是否使用缓存。如果image与canvasSize固定，建议使用缓存。
- @return 返回对象后，画笔的加载会有延迟。
+ 创建模糊画笔，创建前必须调用“异步加载模糊画笔”👆
  */
-- (instancetype)initWithImage:(UIImage *)image radius:(CGFloat)radius canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache;
+- (instancetype)init;
 
 @end
 

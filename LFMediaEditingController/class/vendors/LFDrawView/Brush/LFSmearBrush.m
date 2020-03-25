@@ -7,13 +7,11 @@
 //
 
 #import "LFSmearBrush.h"
-#import "NSBundle+LFMediaEditing.h"
 #import "LFBrush+create.h"
 #import "LFBrushCache.h"
 
 NSString *const LFSmearBrushImage = @"LFSmearBrushImage";
-
-NSString *const LFSmearBrushName = @"EditImageSmearBrush";
+NSString *const LFSmearBrushName = @"LFSmearBrushName";
 
 NSString *const LFSmearBrushPoints = @"LFSmearBrushPoints";
 
@@ -32,6 +30,9 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 - (UIColor *)colorOfPoint:(CGPoint)point
 {
     UIImage *cacheImage = [[LFBrushCache share] objectForKey:LFSmearBrushImage];
+    
+    NSAssert(cacheImage!=nil, @"call LFSmearBrush loadBrushImage:canvasSize:useCache:complete: method.");
+    
     if (!CGRectContainsPoint(CGRectMake(0.0f, 0.0f, cacheImage.size.width, cacheImage.size.height), point)) {
         return nil;
     }
@@ -65,6 +66,8 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 
 @interface LFSmearBrush ()
 
+@property (nonatomic, copy) NSString *name;
+
 @property (nonatomic, weak) CALayer *layer;
 
 @property (nonatomic, strong) NSMutableArray <NSDictionary *>*points;
@@ -83,15 +86,11 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
     return self;
 }
 
-- (instancetype)initWithImage:(UIImage *)image canvasSize:(CGSize)canvasSize useCache:(BOOL)useCache
+- (instancetype)initWithImageName:(NSString *)name;
 {
-    self = [super init];
+    self = [self init];
     if (self) {
-        if (image) {
-            [LFSmearBrush loadBrushImage:image canvasSize:canvasSize useCache:useCache complete:nil];
-        } else {
-            NSAssert(image!=nil, @"LFBlurryBrush image is nil.");
-        }
+        _name = name;
     }
     return self;
 }
@@ -140,7 +139,7 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 {
     [super addPoint:point];
     
-    UIImage *image = [[self class] cacheImageWithName:LFSmearBrushName];
+    UIImage *image = [[self class] cacheImageWithName:self.name bundle:self.bundle];
     
     CGFloat angle = LFBrushAngleBetweenPoint(self.previousPoint, point);
     // 调整角度，顺着绘画方向。
@@ -174,16 +173,13 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 
 - (CALayer *)createDrawLayerWithPoint:(CGPoint)point
 {
-    if ([LFSmearBrush smearBrushCache]) {
-        [super createDrawLayerWithPoint:point];
-        _points = [NSMutableArray array];
-        
-        CALayer *layer = [[self class] createLayer];
-        layer.lf_level = self.level;
-        self.layer = layer;
-        return layer;
-    }
-    return nil;
+    [super createDrawLayerWithPoint:point];
+    _points = [NSMutableArray array];
+    
+    CALayer *layer = [[self class] createLayer];
+    layer.lf_level = self.level;
+    self.layer = layer;
+    return layer;
 }
 
 - (NSDictionary *)allTracks
@@ -195,7 +191,8 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
         myAllTracks = [NSMutableDictionary dictionary];
         [myAllTracks addEntriesFromDictionary:superAllTracks];
         [myAllTracks addEntriesFromDictionary:@{
-                                                LFSmearBrushPoints:self.points
+                                                LFSmearBrushPoints:self.points,
+                                                LFSmearBrushName:self.name
                                                 }];
     }
     return myAllTracks;
@@ -206,10 +203,12 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
     CGFloat lineWidth = [trackDict[LFBrushLineWidth] floatValue];
 //    NSArray <NSString /*CGPoint*/*>*allPoints = trackDict[LFBrushAllPoints];
     NSArray <NSDictionary *>*points = trackDict[LFSmearBrushPoints];
+    NSString *name = trackDict[LFSmearBrushName];
+    NSBundle *bundle = trackDict[LFBrushBundle];
     
     if (points.count > 0) {
         CALayer *layer = [[self class] createLayer];
-        UIImage *image = [[self class] cacheImageWithName:LFSmearBrushName];
+        UIImage *image = [[self class] cacheImageWithName:name bundle:bundle];
         NSDictionary *pointDict = nil;
         for (NSInteger i=0; i<points.count; i++) {
             
@@ -231,7 +230,7 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
 }
 
 #pragma mark - private
-+ (UIImage *)cacheImageWithName:(NSString *)name
++ (UIImage *)cacheImageWithName:(NSString *)name bundle:(NSBundle *)bundle
 {
     if (0==name.length) return nil;
     
@@ -242,10 +241,19 @@ NSString *const LFSmearBrushColor = @"LFSmearBrushColor";
     }
     
     if (image == nil) {
-        /**
-         framework内部加载
-         */
-        image = [NSBundle LFME_brushImageNamed:name];
+        NSAssert(name!=nil, @"LFSmearBrush name is nil.");
+        
+        if (bundle) {
+            /**
+             framework内部加载
+             */
+            image = [UIImage imageWithContentsOfFile:[bundle pathForResource:name ofType:nil]];
+        } else {
+            /**
+             framework外部加载
+             */
+            image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:nil]];
+        }
     }
     
     if (image) {

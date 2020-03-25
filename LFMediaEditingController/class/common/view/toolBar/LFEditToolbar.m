@@ -12,11 +12,7 @@
 #import "JRPickColorView.h"
 #import "SPDropMenu.h"
 
-#import "LFPaintBrush.h"
-#import "LFStampBrush.h"
-#import "LFHighlightBrush.h"
-#import "LFChalkBrush.h"
-#import "LFFluorescentBrush.h"
+#import "LFDrawViewHeader.h"
 
 #import "LFEditCollectionView.h"
 
@@ -25,12 +21,36 @@
 
 
 
-#define EditToolbarBrushTitles @[@"_LFME_brush_Paint", @"_LFME_brush_Highlight", @"_LFME_brush_Chalk", @"_LFME_brush_Fluorescent", @"_LFME_brush_Stamp"]
+#define EditToolbarBrushTitles @[@"_LFME_brush_Paint", @"_LFME_brush_Highlight", @"_LFME_brush_Chalk", @"_LFME_brush_Fluorescent", @"_LFME_brush_Stamp", @"_LFME_brush_Eraser"]
 
-#define EditToolbarBrushImageNormals @[@"EditImagePenTool_Paint.png", @"EditImagePenTool_Highlight.png", @"EditImagePenTool_Chalk.png", @"EditImagePenTool_Fluorescent.png", @"EditImagePenTool_Stamp.png"]
-#define EditToolbarBrushImageHighlighted @[@"EditImagePenTool_Paint_HL.png", @"EditImagePenTool_Highlight_HL.png", @"EditImagePenTool_Chalk_HL.png", @"EditImagePenTool_Fluorescent_HL.png", @"EditImagePenTool_Stamp_HL.png"]
+#define EditToolbarBrushImageNormals @[@"EditImagePenTool_Paint.png", @"EditImagePenTool_Highlight.png", @"EditImagePenTool_Chalk.png", @"EditImagePenTool_Fluorescent.png", @"EditImagePenTool_Stamp.png", @"EditImagePenTool_Eraser.png"]
+#define EditToolbarBrushImageHighlighted @[@"EditImagePenTool_Paint_HL.png", @"EditImagePenTool_Highlight_HL.png", @"EditImagePenTool_Chalk_HL.png", @"EditImagePenTool_Fluorescent_HL.png", @"EditImagePenTool_Stamp_HL.png", @"EditImagePenTool_Eraser_HL.png"]
 
 #define EditToolbarStampBrushImageNormals @[@"EditImageStampBrushAnimal.png", @"EditImageStampBrushFruit.png", @"EditImageStampBrushHeart.png"]
+
+inline static LFStampBrush *LFStampBrushAnimal(void)
+{
+    LFStampBrush *brush = [LFStampBrush new];
+    brush.patterns = @[@"brush/animal/1@2x.png", @"brush/animal/2@2x.png", @"brush/animal/3@2x.png", @"brush/animal/4@2x.png", @"brush/animal/5@2x.png"];
+    brush.scale = 10.0;
+    return brush;
+}
+
+inline static LFStampBrush *LFStampBrushFruit(void)
+{
+    LFStampBrush *brush = [LFStampBrush new];
+    brush.patterns = @[@"brush/fruit/1@2x.png", @"brush/fruit/2@2x.png", @"brush/fruit/3@2x.png", @"brush/fruit/4@2x.png", @"brush/fruit/5@2x.png", @"brush/fruit/6@2x.png"];
+    brush.scale = 8.0;
+    return brush;
+}
+
+inline static LFStampBrush *LFStampBrushHeart(void)
+{
+    LFStampBrush *brush = [LFStampBrush new];
+    brush.patterns = @[@"brush/heart/1@2x.png", @"brush/heart/2@2x.png", @"brush/heart/3@2x.png", @"brush/heart/4@2x.png", @"brush/heart/5@2x.png"];
+    brush.scale = 4.0;
+    return brush;
+}
 
 CGFloat kToolbar_MainHeight = 44;
 CGFloat kToolbar_SubHeight = 55;
@@ -661,8 +681,12 @@ NSUInteger kToolbar_MaxItems = 6;
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:4];
     __weak typeof(self) weakSelf = self;
     for (NSInteger i=0; i<titles.count; i++) {
+        NSString *title = titles[i];
+        if ([title isEqualToString:@"_LFME_brush_Eraser"]) {
+            continue;
+        }
         SPDropItem *item = [[SPDropItem alloc] init];
-        item.title = [NSBundle LFME_localizedStringForKey:titles[i]];
+        item.title = [NSBundle LFME_localizedStringForKey:title];
         [item setImage:bundleEditImageNamed(normals[i]) forState:SPDropItemStateNormal];
         [item setImage:bundleEditImageNamed(highlighted[i]) forState:SPDropItemStateSelected];
         [item setTitleColor:kToolbar_NormalsColor forState:SPDropItemStateNormal];
@@ -833,7 +857,7 @@ NSUInteger kToolbar_MaxItems = 6;
             brush = [LFHighlightBrush new];
             break;
         case EditToolbarBrushTypeChalk:
-            brush = [LFChalkBrush new];
+            brush = [[LFChalkBrush alloc] initWithImageName:@"brush/EditImageChalkBrush@2x.png"];
             break;
         case EditToolbarBrushTypeFluorescent:
             brush = [LFFluorescentBrush new];
@@ -853,6 +877,9 @@ NSUInteger kToolbar_MaxItems = 6;
             }
         }
             break;
+        case EditToolbarBrushTypeEraser:
+            brush = [LFEraserBrush new];
+            break;
         default:
             break;
     }
@@ -860,7 +887,10 @@ NSUInteger kToolbar_MaxItems = 6;
     if (brush == nil) {
         /** 超出定制范围，默认使用画笔 */
         self.edit_drawMenu_brushType = EditToolbarBrushTypePaint;
+        return;
     }
+    brush.bundle = [NSBundle LF_mediaEditingBundle];
+    
     [self.edit_drawMenu_brush setImage:bundleEditImageNamed(EditToolbarBrushImageNormals[self.edit_drawMenu_brushType]) forState:UIControlStateNormal];
     
     // callback
@@ -931,6 +961,12 @@ NSUInteger kToolbar_MaxItems = 6;
     if ([view isKindOfClass:[UIButton class]]) {
         [self splashMenu_buttonClick:(UIButton *)view];
     }
+}
+
+/** 设置画笔等待状态 */
+- (void)setDrawBrushWait:(BOOL)isWait
+{
+    self.edit_drawMenu_brush.enabled = !isWait;
 }
 
 /** 设置模糊等待状态 */
