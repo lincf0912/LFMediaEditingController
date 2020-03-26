@@ -45,6 +45,23 @@
 
 @end
 
+@interface LFBrush (CIContext)
+
+@end
+
+static CIContext *LFBrush_CIContext = nil;
+@implementation LFBrush (CIContext)
+
++ (void)initialize
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        LFBrush_CIContext = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer: @(NO)}];
+    });
+}
+
+@end
+
 @implementation UIImage (LFBlurryBrush)
 
 /**
@@ -66,11 +83,8 @@
 
 - (UIImage *)LFBB_patternGaussianImageWithSize:(CGSize)size orientation:(CGImagePropertyOrientation)orientation filterHandler:(CIFilter *(^ _Nullable )(CIImage *ciimage))filterHandler
 {
-    static dispatch_once_t onceToken;
-    static CIContext *context;
-    dispatch_once(&onceToken, ^{
-        context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer: @(NO)}];
-    });
+    CIContext *context = LFBrush_CIContext;
+    NSAssert(context != nil, @"This method must be called using the LFBrush class.");
     CIImage *midImage = [CIImage imageWithCGImage:self.CGImage];
     midImage = [midImage imageByApplyingTransform:[self LFBB_preferredTransform]];
     midImage = [midImage imageByApplyingTransform:CGAffineTransformMakeScale(size.width/midImage.extent.size.width, size.height/midImage.extent.size.height)];
