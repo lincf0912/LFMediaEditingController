@@ -11,11 +11,12 @@
 * 视频编辑 需要访问音乐库 需要在info.plist 添加 NSAppleMusicUsageDescription
 * 支持国际化配置（复制LFMediaEditingController.bundle\LFMediaEditingController.strings到项目中，修改对应的值即可；详情见DEMO；注意：不跟随系统语言切换显示）
 * （因数据可以多次重复编辑，暂时未能处理横竖屏切换。）
+* [关于绘画功能是否能新增橡皮擦](https://github.com/lincf0912/LFMediaEditingController/blob/master/README_DrawView.md)
 
 ## Installation 安装
 
-* CocoaPods：pod 'LFMediaEditingController'
-* 手动导入：将LFMediaEditingController\class文件夹拽入项目中，导入头文件：#import "LFPhotoEditingController.h" #import "LFVideoEditingController.h"
+* CocoaPods：`pod 'LFMediaEditingController'`
+* 手动导入：将LFMediaEditingController\class文件夹拽入项目中，导入头文件：`#import "LFPhotoEditingController.h"` `#import "LFVideoEditingController.h"`
 
 ## 调用代码
 

@@ -17,9 +17,9 @@
 
 ## Installation
 
-* CocoaPods：pod 'LFMediaEditingController'
-* #import "LFPhotoEditingController.h"
-* #import "LFVideoEditingController.h"
+* CocoaPods：`pod 'LFMediaEditingController'`
+* `#import "LFPhotoEditingController.h"`
+* `#import "LFVideoEditingController.h"`
 
 ## Photo Demonstration
 
