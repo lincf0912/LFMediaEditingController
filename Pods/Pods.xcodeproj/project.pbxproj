@@ -1,0 +1,899 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01B42E19EBA7604B2E75960A9D1837F1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5898FA41418967398CE13AE418D1D751 /* Foundation.framework */; };
+		027CDD0F92C2501BE41A78C1B62706D7 /* LFFilterGifView.h in Headers */ = {isa = PBXBuildFile; fileRef = 65BDD3679B5BBB47B4C09F51C6DCA2D4 /* LFFilterGifView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		037910F7DA16A56301C1434187DD82B4 /* LFFilter+save.h in Headers */ = {isa = PBXBuildFile; fileRef = DE4F8D2329A601108ACA1CD375869E2E /* LFFilter+save.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		057664A1B025E6D0423151A36BDE6904 /* LFMutableFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2D2C4AD798C44EF8A499D410D67CC8 /* LFMutableFilter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		09FDB2752F8057A24D2FDC89E64E8010 /* LFFilterVideoExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F542C9827BBCEB81DF86855A28DA6F7 /* LFFilterVideoExportSession.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		0EA4FB6E0216AF86D80E4D84DA94824D /* LFFilterSuite-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0789303C47BEA985A8C0ED8C4EC4B8C6 /* LFFilterSuite-dummy.m */; };
+		120208D764D5495047610583773FEE7A /* LFFilter+save.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B1F17C0BCF12E2C0A1155113531327B /* LFFilter+save.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		15ECCE109AA85CCA276D20320B731573 /* LFSampleBufferHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 561C4B7F1842E9755226411FA156F791 /* LFSampleBufferHolder.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		16044D714864C929F9328D31E9060DF7 /* LFLView.m in Sources */ = {isa = PBXBuildFile; fileRef = A5ABB03B49D0BF4745D8C69E42C653C9 /* LFLView.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		2263952056DC10DB7D9697B8AA817082 /* LFMutableFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 63F9C7B5719D6415B7D14DDEEDFE6D90 /* LFMutableFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		28A5163598507129E19F5C8BC331F982 /* LFContextImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 068D43470634685EB760BEA591D474F8 /* LFContextImageView.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		2FA97C75364FD66F933AEE377D70704D /* LFContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 02A748DB416BE92F40FB7A7BCB9677EC /* LFContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		397CFB60F22C7CB4357DD4C56D5EEEA0 /* LFContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 47DCF407395369DB323982E37CC0CFEB /* LFContext.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		3A4FC9A0617411647EF11BB389A36F1B /* LFAssetExportSession-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 45FCC6E9E869A6263E39772C2F12947F /* LFAssetExportSession-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4645C459533F84B490105DCD34E2D086 /* LFFilter+Initialize.h in Headers */ = {isa = PBXBuildFile; fileRef = EB54D4476B75FBB782FDA610B2EC1EF7 /* LFFilter+Initialize.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		55C61CA774B01872E525D1057A4E48E8 /* LFFilterImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 20C1A3A290557D3D1DB50FA0466992B2 /* LFFilterImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5B5F47D0E15DA6E506B80CE94795B82D /* LFFilterImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E2BD3B85DD7741C9D3284E541DE569 /* LFFilterImageView.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		6D3A949921A80FAD5CC13F3521710654 /* LFContextImageView+private.h in Headers */ = {isa = PBXBuildFile; fileRef = A63CE73B2CD3024FD4CF5DB0CC2B0F0C /* LFContextImageView+private.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6EDB01E1822DD3A710270D76A08A16CC /* LFAssetExportSession.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D36DFFA348D8DB8119F9B38AB2E6D4 /* LFAssetExportSession.framework */; };
+		719F445ABEC7AD1CADF249E2C6334814 /* LFFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7B9C5C798990F4EF823FCA90577334 /* LFFilter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		752AA0600E5E024BA6D923892F6E32F8 /* LFAssetExportSession-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = CB5ECA4FD33D0CE1BA01303EDE871C5B /* LFAssetExportSession-dummy.m */; };
+		75AC555E06EA0FCB51963AB9A1B8C754 /* LFContextImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D9536D59B96BB660E3E81FA15E86CB /* LFContextImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		782217A063324A171FF31C7220D8FA0B /* LFMutableFilter+Initialize.h in Headers */ = {isa = PBXBuildFile; fileRef = F6963220DE132CFB619F91E0F1B27C2D /* LFMutableFilter+Initialize.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		78A4DEB60FA113B7A60EAC2E0D0D206D /* LFWeakSelectorTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 02586C9D85C687D0F337D6CBB252B435 /* LFWeakSelectorTarget.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		8106B40DE86062BD9B906B41E3FA7DAC /* LFSampleBufferHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = E0FF9D58832C42FBAC8E68F6D18B2DDC /* LFSampleBufferHolder.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		958D4B232C67044EEE56947713CC436D /* LFFilter+UIImage.h in Headers */ = {isa = PBXBuildFile; fileRef = A2570D5C28A51DE4919CA5CF161A42BC /* LFFilter+UIImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		99A36E4E2270AB21535B6267D7B6781D /* LFLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 16B5267D12EE95B4B473C39B51B51FE3 /* LFLView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		9FAA5D57A950CD6B3D4D8F755A993FDD /* Pods-LFMediaEditingController-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D237DF9A3277D3145698A8328AC7EFD /* Pods-LFMediaEditingController-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A005BDE287E88E05E9DB75BAD6335BBD /* LFAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E6DDF9B00C2FC2482D432B8A0614A8E /* LFAssetExportSession.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		A64108B32D643BA3A58EEF20C45E02CB /* Pods-LFMediaEditingController-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = CFB77C4FCE3081F24B43FD98ABE88EF7 /* Pods-LFMediaEditingController-dummy.m */; };
+		BFD43041B45534BD19B2FE425205DD86 /* LFFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C07CC9DEA633E5D423E90E7C347BB /* LFFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C3B5B0C641EAC69EF57A251A32D40135 /* LFFilterSuiteHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 359FB882BDF4F111000FC785A4906155 /* LFFilterSuiteHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C5E40AF2E63F34F02810A0680CB2D075 /* LFFilterGifView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE0DF0E54DCD36ABAF9D3101B934F20 /* LFFilterGifView.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		CBBD4DCA1CF1F935976765D21A337FA4 /* LFFilterVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = C66D0E835EA1FE4204A5193DBD8459CE /* LFFilterVideoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D3A595A921CC357271035077FFCC1C1D /* LFFilterSuite-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DFB256F40201DF71B6A7B45EAF797A3 /* LFFilterSuite-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D3CEAFE36951CE2D3B2E1F3955EF2EEF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5898FA41418967398CE13AE418D1D751 /* Foundation.framework */; };
+		EAAB7CDFA9127F90E2FEFEC3BC90714D /* LFFilterVideoExportSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 4A85354D123B3A094B8BD7D6D349C60F /* LFFilterVideoExportSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED91DCF06EE464499F86393E25AA48D6 /* LFWeakSelectorTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 92D7404A41CD87147834BC889F3B9C2A /* LFWeakSelectorTarget.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		EE6CF70E5CF8D43B34A5BAC8567B38C8 /* LFFilter+UIImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D6DEE2DF1CF58F2C96137BD14DBB6D20 /* LFFilter+UIImage.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		F26B605683B388AF223BBF24B0C0C5BF /* LFAssetExportSession.h in Headers */ = {isa = PBXBuildFile; fileRef = A09E445175E3D4453399A39771D95BF5 /* LFAssetExportSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F444505EEF4E87854112F079A22A17F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5898FA41418967398CE13AE418D1D751 /* Foundation.framework */; };
+		FFB5CAED5EA55FD9BCDF0592D2472EF1 /* LFFilterVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FAC9FE862286F2A732F1A37A996427E /* LFFilterVideoView.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		59D6AE4F289DA0622369A0EBC5E86242 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 173B4BE046648F8CAE6DD4FCD3C25AEF;
+			remoteInfo = LFAssetExportSession;
+		};
+		80A0FCCE9074A3733034E43B6C33CC9A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 173B4BE046648F8CAE6DD4FCD3C25AEF;
+			remoteInfo = LFAssetExportSession;
+		};
+		DF71883C06DA7A643F41A7F10347B162 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A76EB75C76F8FE5A66D530B9277D2A5;
+			remoteInfo = LFFilterSuite;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02586C9D85C687D0F337D6CBB252B435 /* LFWeakSelectorTarget.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFWeakSelectorTarget.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterUtils/LFWeakSelectorTarget.m; sourceTree = "<group>"; };
+		02A748DB416BE92F40FB7A7BCB9677EC /* LFContext.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFContext.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFContext.h; sourceTree = "<group>"; };
+		050C07CC9DEA633E5D423E90E7C347BB /* LFFilter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFFilter.h; path = LFFilterSuite/LFFilterSuite/class/LFFilter/LFFilter.h; sourceTree = "<group>"; };
+		068D43470634685EB760BEA591D474F8 /* LFContextImageView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFContextImageView.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFContextImageView.m; sourceTree = "<group>"; };
+		0789303C47BEA985A8C0ED8C4EC4B8C6 /* LFFilterSuite-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LFFilterSuite-dummy.m"; sourceTree = "<group>"; };
+		087AC271D3085A0B3EDE59DAB2575E7A /* LFAssetExportSession.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LFAssetExportSession.debug.xcconfig; sourceTree = "<group>"; };
+		0DFB256F40201DF71B6A7B45EAF797A3 /* LFFilterSuite-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LFFilterSuite-umbrella.h"; sourceTree = "<group>"; };
+		16B5267D12EE95B4B473C39B51B51FE3 /* LFLView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFLView.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterUtils/LFLView/LFLView.h; sourceTree = "<group>"; };
+		1775F1832DBF7D60F1C970896A5817C4 /* Pods-LFMediaEditingController-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-LFMediaEditingController-acknowledgements.plist"; sourceTree = "<group>"; };
+		1BE0DF0E54DCD36ABAF9D3101B934F20 /* LFFilterGifView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFFilterGifView.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFFilterGifView.m; sourceTree = "<group>"; };
+		1F542C9827BBCEB81DF86855A28DA6F7 /* LFFilterVideoExportSession.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFFilterVideoExportSession.m; path = LFFilterSuite/LFFilterSuite/class/LFExportSession/LFFilterVideoExportSession.m; sourceTree = "<group>"; };
+		20C1A3A290557D3D1DB50FA0466992B2 /* LFFilterImageView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFFilterImageView.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFFilterImageView.h; sourceTree = "<group>"; };
+		2440CAEA2DE5F9883401E0FDA92D70C3 /* Pods-LFMediaEditingController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LFMediaEditingController.debug.xcconfig"; sourceTree = "<group>"; };
+		2764F7C5C6F3FF5AD9F186AD3364A6FF /* Pods_LFMediaEditingController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_LFMediaEditingController.framework; path = "Pods-LFMediaEditingController.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		359FB882BDF4F111000FC785A4906155 /* LFFilterSuiteHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFFilterSuiteHeader.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterSuiteHeader.h; sourceTree = "<group>"; };
+		38CBADC1A3EAD5E246BB671FC5A3ED35 /* LFFilterSuite.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LFFilterSuite.release.xcconfig; sourceTree = "<group>"; };
+		41E2BD3B85DD7741C9D3284E541DE569 /* LFFilterImageView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFFilterImageView.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFFilterImageView.m; sourceTree = "<group>"; };
+		45FCC6E9E869A6263E39772C2F12947F /* LFAssetExportSession-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LFAssetExportSession-umbrella.h"; sourceTree = "<group>"; };
+		47DCF407395369DB323982E37CC0CFEB /* LFContext.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFContext.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFContext.m; sourceTree = "<group>"; };
+		48058168D112BEDC2DFF768DD68DCEDD /* LFAssetExportSession.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = LFAssetExportSession.modulemap; sourceTree = "<group>"; };
+		4A85354D123B3A094B8BD7D6D349C60F /* LFFilterVideoExportSession.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFFilterVideoExportSession.h; path = LFFilterSuite/LFFilterSuite/class/LFExportSession/LFFilterVideoExportSession.h; sourceTree = "<group>"; };
+		51E48915FA7FF7B3AEAFA1B86084FED9 /* LFFilterSuite.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = LFFilterSuite.modulemap; sourceTree = "<group>"; };
+		561C4B7F1842E9755226411FA156F791 /* LFSampleBufferHolder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFSampleBufferHolder.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterUtils/LFSampleBufferHolder.m; sourceTree = "<group>"; };
+		58359661E06A9DBE249293479E630B87 /* Pods-LFMediaEditingController-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-LFMediaEditingController-frameworks.sh"; sourceTree = "<group>"; };
+		5898FA41418967398CE13AE418D1D751 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		5D237DF9A3277D3145698A8328AC7EFD /* Pods-LFMediaEditingController-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-LFMediaEditingController-umbrella.h"; sourceTree = "<group>"; };
+		5E6DDF9B00C2FC2482D432B8A0614A8E /* LFAssetExportSession.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFAssetExportSession.m; path = LFAssetExportSession/LFAssetExportSession/class/LFAssetExportSession.m; sourceTree = "<group>"; };
+		62F4B88507145836903F9E7E6E6B0010 /* LFAssetExportSession-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "LFAssetExportSession-Info.plist"; sourceTree = "<group>"; };
+		63F9C7B5719D6415B7D14DDEEDFE6D90 /* LFMutableFilter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFMutableFilter.h; path = LFFilterSuite/LFFilterSuite/class/LFFilter/LFMutableFilter.h; sourceTree = "<group>"; };
+		65BDD3679B5BBB47B4C09F51C6DCA2D4 /* LFFilterGifView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFFilterGifView.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFFilterGifView.h; sourceTree = "<group>"; };
+		6BD214BFE3D2820C454FDDD38F51F491 /* LFFilterSuite-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "LFFilterSuite-Info.plist"; sourceTree = "<group>"; };
+		6E7B9C5C798990F4EF823FCA90577334 /* LFFilter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFFilter.m; path = LFFilterSuite/LFFilterSuite/class/LFFilter/LFFilter.m; sourceTree = "<group>"; };
+		89D36DFFA348D8DB8119F9B38AB2E6D4 /* LFAssetExportSession.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LFAssetExportSession.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C4F341419C0E3EB0F36A5DDD746BF45 /* LFFilterSuite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = LFFilterSuite.framework; path = LFFilterSuite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		91D9536D59B96BB660E3E81FA15E86CB /* LFContextImageView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFContextImageView.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFContextImageView.h; sourceTree = "<group>"; };
+		92D7404A41CD87147834BC889F3B9C2A /* LFWeakSelectorTarget.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFWeakSelectorTarget.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterUtils/LFWeakSelectorTarget.h; sourceTree = "<group>"; };
+		9AD39F95D277BA4C0AEEF09ED55CCED2 /* Pods-LFMediaEditingController-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-LFMediaEditingController-Info.plist"; sourceTree = "<group>"; };
+		9B1F17C0BCF12E2C0A1155113531327B /* LFFilter+save.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "LFFilter+save.m"; path = "LFFilterSuite/LFFilterSuite/class/LFFilter/LFFilter+save.m"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9FAC9FE862286F2A732F1A37A996427E /* LFFilterVideoView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFFilterVideoView.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFFilterVideoView.m; sourceTree = "<group>"; };
+		A09E445175E3D4453399A39771D95BF5 /* LFAssetExportSession.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFAssetExportSession.h; path = LFAssetExportSession/LFAssetExportSession/class/LFAssetExportSession.h; sourceTree = "<group>"; };
+		A2570D5C28A51DE4919CA5CF161A42BC /* LFFilter+UIImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "LFFilter+UIImage.h"; path = "LFFilterSuite/LFFilterSuite/class/LFFilter/LFFilter+UIImage.h"; sourceTree = "<group>"; };
+		A5ABB03B49D0BF4745D8C69E42C653C9 /* LFLView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFLView.m; path = LFFilterSuite/LFFilterSuite/class/LFFilterUtils/LFLView/LFLView.m; sourceTree = "<group>"; };
+		A63CE73B2CD3024FD4CF5DB0CC2B0F0C /* LFContextImageView+private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "LFContextImageView+private.h"; path = "LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFContextImageView+private.h"; sourceTree = "<group>"; };
+		A735B5B417D59D04AA758E945BE56E0F /* LFAssetExportSession.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LFAssetExportSession.release.xcconfig; sourceTree = "<group>"; };
+		B4BEA61D66C3A48697EE04D516AC8F70 /* Pods-LFMediaEditingController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LFMediaEditingController.release.xcconfig"; sourceTree = "<group>"; };
+		C66D0E835EA1FE4204A5193DBD8459CE /* LFFilterVideoView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFFilterVideoView.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterDisplayers/LFFilterVideoView.h; sourceTree = "<group>"; };
+		CB5ECA4FD33D0CE1BA01303EDE871C5B /* LFAssetExportSession-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LFAssetExportSession-dummy.m"; sourceTree = "<group>"; };
+		CFB77C4FCE3081F24B43FD98ABE88EF7 /* Pods-LFMediaEditingController-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-LFMediaEditingController-dummy.m"; sourceTree = "<group>"; };
+		D230D5A951695AB4C48732B43572D160 /* Pods-LFMediaEditingController-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-LFMediaEditingController-acknowledgements.markdown"; sourceTree = "<group>"; };
+		D6DEE2DF1CF58F2C96137BD14DBB6D20 /* LFFilter+UIImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "LFFilter+UIImage.m"; path = "LFFilterSuite/LFFilterSuite/class/LFFilter/LFFilter+UIImage.m"; sourceTree = "<group>"; };
+		DE4F8D2329A601108ACA1CD375869E2E /* LFFilter+save.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "LFFilter+save.h"; path = "LFFilterSuite/LFFilterSuite/class/LFFilter/LFFilter+save.h"; sourceTree = "<group>"; };
+		E0FF9D58832C42FBAC8E68F6D18B2DDC /* LFSampleBufferHolder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LFSampleBufferHolder.h; path = LFFilterSuite/LFFilterSuite/class/LFFilterUtils/LFSampleBufferHolder.h; sourceTree = "<group>"; };
+		E3007A67B5A656C901D2D517F9FA238C /* LFAssetExportSession-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LFAssetExportSession-prefix.pch"; sourceTree = "<group>"; };
+		E9AEEF980DEB745BD90A3349ADF727AA /* LFFilterSuite-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LFFilterSuite-prefix.pch"; sourceTree = "<group>"; };
+		EB54D4476B75FBB782FDA610B2EC1EF7 /* LFFilter+Initialize.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "LFFilter+Initialize.h"; path = "LFFilterSuite/LFFilterSuite/class/LFFilter/LFFilter+Initialize.h"; sourceTree = "<group>"; };
+		EF09B8254011CB752DF642090E75C9DB /* LFFilterSuite.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LFFilterSuite.debug.xcconfig; sourceTree = "<group>"; };
+		F1526D95863EDA1CE5C925E3E026058A /* Pods-LFMediaEditingController.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-LFMediaEditingController.modulemap"; sourceTree = "<group>"; };
+		F2A05E9B3BFAFADB03094F9FEB7B3878 /* LFAssetExportSession.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = LFAssetExportSession.framework; path = LFAssetExportSession.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6963220DE132CFB619F91E0F1B27C2D /* LFMutableFilter+Initialize.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "LFMutableFilter+Initialize.h"; path = "LFFilterSuite/LFFilterSuite/class/LFFilter/LFMutableFilter+Initialize.h"; sourceTree = "<group>"; };
+		FA2D2C4AD798C44EF8A499D410D67CC8 /* LFMutableFilter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LFMutableFilter.m; path = LFFilterSuite/LFFilterSuite/class/LFFilter/LFMutableFilter.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		12CCA2792182019D99050678E6D6B95B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F444505EEF4E87854112F079A22A17F9 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8EDCBAA7FE58B0D963ED07A270A8F6EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01B42E19EBA7604B2E75960A9D1837F1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2CB45824A77E0482B2EC58CE8EF4475 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3CEAFE36951CE2D3B2E1F3955EF2EEF /* Foundation.framework in Frameworks */,
+				6EDB01E1822DD3A710270D76A08A16CC /* LFAssetExportSession.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0BC4DB2B25C7DE8CAFA757AFB6C4B83C /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				5898FA41418967398CE13AE418D1D751 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		12CA8BFD2D218A18DF7A209979D9AD18 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				51E48915FA7FF7B3AEAFA1B86084FED9 /* LFFilterSuite.modulemap */,
+				0789303C47BEA985A8C0ED8C4EC4B8C6 /* LFFilterSuite-dummy.m */,
+				6BD214BFE3D2820C454FDDD38F51F491 /* LFFilterSuite-Info.plist */,
+				E9AEEF980DEB745BD90A3349ADF727AA /* LFFilterSuite-prefix.pch */,
+				0DFB256F40201DF71B6A7B45EAF797A3 /* LFFilterSuite-umbrella.h */,
+				EF09B8254011CB752DF642090E75C9DB /* LFFilterSuite.debug.xcconfig */,
+				38CBADC1A3EAD5E246BB671FC5A3ED35 /* LFFilterSuite.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/LFFilterSuite";
+			sourceTree = "<group>";
+		};
+		274250305CA50EEC25C67F64AD64E5C0 /* Pods-LFMediaEditingController */ = {
+			isa = PBXGroup;
+			children = (
+				F1526D95863EDA1CE5C925E3E026058A /* Pods-LFMediaEditingController.modulemap */,
+				D230D5A951695AB4C48732B43572D160 /* Pods-LFMediaEditingController-acknowledgements.markdown */,
+				1775F1832DBF7D60F1C970896A5817C4 /* Pods-LFMediaEditingController-acknowledgements.plist */,
+				CFB77C4FCE3081F24B43FD98ABE88EF7 /* Pods-LFMediaEditingController-dummy.m */,
+				58359661E06A9DBE249293479E630B87 /* Pods-LFMediaEditingController-frameworks.sh */,
+				9AD39F95D277BA4C0AEEF09ED55CCED2 /* Pods-LFMediaEditingController-Info.plist */,
+				5D237DF9A3277D3145698A8328AC7EFD /* Pods-LFMediaEditingController-umbrella.h */,
+				2440CAEA2DE5F9883401E0FDA92D70C3 /* Pods-LFMediaEditingController.debug.xcconfig */,
+				B4BEA61D66C3A48697EE04D516AC8F70 /* Pods-LFMediaEditingController.release.xcconfig */,
+			);
+			name = "Pods-LFMediaEditingController";
+			path = "Target Support Files/Pods-LFMediaEditingController";
+			sourceTree = "<group>";
+		};
+		75B257664E95174EACFCC9BCE5FE07B7 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				48058168D112BEDC2DFF768DD68DCEDD /* LFAssetExportSession.modulemap */,
+				CB5ECA4FD33D0CE1BA01303EDE871C5B /* LFAssetExportSession-dummy.m */,
+				62F4B88507145836903F9E7E6E6B0010 /* LFAssetExportSession-Info.plist */,
+				E3007A67B5A656C901D2D517F9FA238C /* LFAssetExportSession-prefix.pch */,
+				45FCC6E9E869A6263E39772C2F12947F /* LFAssetExportSession-umbrella.h */,
+				087AC271D3085A0B3EDE59DAB2575E7A /* LFAssetExportSession.debug.xcconfig */,
+				A735B5B417D59D04AA758E945BE56E0F /* LFAssetExportSession.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/LFAssetExportSession";
+			sourceTree = "<group>";
+		};
+		8206B7C221AD874A84579ADD113538CA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F2A05E9B3BFAFADB03094F9FEB7B3878 /* LFAssetExportSession.framework */,
+				8C4F341419C0E3EB0F36A5DDD746BF45 /* LFFilterSuite.framework */,
+				2764F7C5C6F3FF5AD9F186AD3364A6FF /* Pods_LFMediaEditingController.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9691CCD6A5ACADF8BD4D75675DB6A99C /* LFAssetExportSession */ = {
+			isa = PBXGroup;
+			children = (
+				A09E445175E3D4453399A39771D95BF5 /* LFAssetExportSession.h */,
+				5E6DDF9B00C2FC2482D432B8A0614A8E /* LFAssetExportSession.m */,
+				75B257664E95174EACFCC9BCE5FE07B7 /* Support Files */,
+			);
+			name = LFAssetExportSession;
+			path = LFAssetExportSession;
+			sourceTree = "<group>";
+		};
+		A0B1BAC5C5E883BB1FF77A45D25D8750 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9691CCD6A5ACADF8BD4D75675DB6A99C /* LFAssetExportSession */,
+				D9516953EB966ABD26FF8A941B1DE053 /* LFFilterSuite */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				DDEA6D61AC9B17B276C705E58DEB19D2 /* Frameworks */,
+				A0B1BAC5C5E883BB1FF77A45D25D8750 /* Pods */,
+				8206B7C221AD874A84579ADD113538CA /* Products */,
+				E6EB0B2DA2715534125EEADB9BB2C1F4 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D9516953EB966ABD26FF8A941B1DE053 /* LFFilterSuite */ = {
+			isa = PBXGroup;
+			children = (
+				02A748DB416BE92F40FB7A7BCB9677EC /* LFContext.h */,
+				47DCF407395369DB323982E37CC0CFEB /* LFContext.m */,
+				91D9536D59B96BB660E3E81FA15E86CB /* LFContextImageView.h */,
+				068D43470634685EB760BEA591D474F8 /* LFContextImageView.m */,
+				A63CE73B2CD3024FD4CF5DB0CC2B0F0C /* LFContextImageView+private.h */,
+				050C07CC9DEA633E5D423E90E7C347BB /* LFFilter.h */,
+				6E7B9C5C798990F4EF823FCA90577334 /* LFFilter.m */,
+				EB54D4476B75FBB782FDA610B2EC1EF7 /* LFFilter+Initialize.h */,
+				DE4F8D2329A601108ACA1CD375869E2E /* LFFilter+save.h */,
+				9B1F17C0BCF12E2C0A1155113531327B /* LFFilter+save.m */,
+				A2570D5C28A51DE4919CA5CF161A42BC /* LFFilter+UIImage.h */,
+				D6DEE2DF1CF58F2C96137BD14DBB6D20 /* LFFilter+UIImage.m */,
+				65BDD3679B5BBB47B4C09F51C6DCA2D4 /* LFFilterGifView.h */,
+				1BE0DF0E54DCD36ABAF9D3101B934F20 /* LFFilterGifView.m */,
+				20C1A3A290557D3D1DB50FA0466992B2 /* LFFilterImageView.h */,
+				41E2BD3B85DD7741C9D3284E541DE569 /* LFFilterImageView.m */,
+				359FB882BDF4F111000FC785A4906155 /* LFFilterSuiteHeader.h */,
+				4A85354D123B3A094B8BD7D6D349C60F /* LFFilterVideoExportSession.h */,
+				1F542C9827BBCEB81DF86855A28DA6F7 /* LFFilterVideoExportSession.m */,
+				C66D0E835EA1FE4204A5193DBD8459CE /* LFFilterVideoView.h */,
+				9FAC9FE862286F2A732F1A37A996427E /* LFFilterVideoView.m */,
+				16B5267D12EE95B4B473C39B51B51FE3 /* LFLView.h */,
+				A5ABB03B49D0BF4745D8C69E42C653C9 /* LFLView.m */,
+				63F9C7B5719D6415B7D14DDEEDFE6D90 /* LFMutableFilter.h */,
+				FA2D2C4AD798C44EF8A499D410D67CC8 /* LFMutableFilter.m */,
+				F6963220DE132CFB619F91E0F1B27C2D /* LFMutableFilter+Initialize.h */,
+				E0FF9D58832C42FBAC8E68F6D18B2DDC /* LFSampleBufferHolder.h */,
+				561C4B7F1842E9755226411FA156F791 /* LFSampleBufferHolder.m */,
+				92D7404A41CD87147834BC889F3B9C2A /* LFWeakSelectorTarget.h */,
+				02586C9D85C687D0F337D6CBB252B435 /* LFWeakSelectorTarget.m */,
+				12CA8BFD2D218A18DF7A209979D9AD18 /* Support Files */,
+			);
+			name = LFFilterSuite;
+			path = LFFilterSuite;
+			sourceTree = "<group>";
+		};
+		DDEA6D61AC9B17B276C705E58DEB19D2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				89D36DFFA348D8DB8119F9B38AB2E6D4 /* LFAssetExportSession.framework */,
+				0BC4DB2B25C7DE8CAFA757AFB6C4B83C /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6EB0B2DA2715534125EEADB9BB2C1F4 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				274250305CA50EEC25C67F64AD64E5C0 /* Pods-LFMediaEditingController */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A1B3CE4201735AC8DAE05EF2B8CE2B36 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2FA97C75364FD66F933AEE377D70704D /* LFContext.h in Headers */,
+				6D3A949921A80FAD5CC13F3521710654 /* LFContextImageView+private.h in Headers */,
+				75AC555E06EA0FCB51963AB9A1B8C754 /* LFContextImageView.h in Headers */,
+				4645C459533F84B490105DCD34E2D086 /* LFFilter+Initialize.h in Headers */,
+				037910F7DA16A56301C1434187DD82B4 /* LFFilter+save.h in Headers */,
+				958D4B232C67044EEE56947713CC436D /* LFFilter+UIImage.h in Headers */,
+				BFD43041B45534BD19B2FE425205DD86 /* LFFilter.h in Headers */,
+				027CDD0F92C2501BE41A78C1B62706D7 /* LFFilterGifView.h in Headers */,
+				55C61CA774B01872E525D1057A4E48E8 /* LFFilterImageView.h in Headers */,
+				D3A595A921CC357271035077FFCC1C1D /* LFFilterSuite-umbrella.h in Headers */,
+				C3B5B0C641EAC69EF57A251A32D40135 /* LFFilterSuiteHeader.h in Headers */,
+				EAAB7CDFA9127F90E2FEFEC3BC90714D /* LFFilterVideoExportSession.h in Headers */,
+				CBBD4DCA1CF1F935976765D21A337FA4 /* LFFilterVideoView.h in Headers */,
+				99A36E4E2270AB21535B6267D7B6781D /* LFLView.h in Headers */,
+				782217A063324A171FF31C7220D8FA0B /* LFMutableFilter+Initialize.h in Headers */,
+				2263952056DC10DB7D9697B8AA817082 /* LFMutableFilter.h in Headers */,
+				8106B40DE86062BD9B906B41E3FA7DAC /* LFSampleBufferHolder.h in Headers */,
+				ED91DCF06EE464499F86393E25AA48D6 /* LFWeakSelectorTarget.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B05D237357768EA8B8B19778E746CF3E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9FAA5D57A950CD6B3D4D8F755A993FDD /* Pods-LFMediaEditingController-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B427B0BD0F3D920FD8270D2C39B2A5C4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A4FC9A0617411647EF11BB389A36F1B /* LFAssetExportSession-umbrella.h in Headers */,
+				F26B605683B388AF223BBF24B0C0C5BF /* LFAssetExportSession.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		173B4BE046648F8CAE6DD4FCD3C25AEF /* LFAssetExportSession */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 41762BF76963283B69FFC0A115FD1A0F /* Build configuration list for PBXNativeTarget "LFAssetExportSession" */;
+			buildPhases = (
+				B427B0BD0F3D920FD8270D2C39B2A5C4 /* Headers */,
+				430DD70363722C8ECD538C8959232FE6 /* Sources */,
+				12CCA2792182019D99050678E6D6B95B /* Frameworks */,
+				1E5171E1B8943834D2E07EB94274A8CE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LFAssetExportSession;
+			productName = LFAssetExportSession;
+			productReference = F2A05E9B3BFAFADB03094F9FEB7B3878 /* LFAssetExportSession.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		746FA6E17267B80AF0DBB86EA0606E6B /* Pods-LFMediaEditingController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4E101DCCBCD1A33A6501721D6AF2884 /* Build configuration list for PBXNativeTarget "Pods-LFMediaEditingController" */;
+			buildPhases = (
+				B05D237357768EA8B8B19778E746CF3E /* Headers */,
+				FC598B239DF9816D3373F3D5A4CEFB1C /* Sources */,
+				8EDCBAA7FE58B0D963ED07A270A8F6EF /* Frameworks */,
+				FE2633C92DA2C7A988CBE13785F2A264 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				57D2D406BF1EDBED928F363D3464F5DE /* PBXTargetDependency */,
+				0FAA4893E8AC89B771E651298443B6DE /* PBXTargetDependency */,
+			);
+			name = "Pods-LFMediaEditingController";
+			productName = "Pods-LFMediaEditingController";
+			productReference = 2764F7C5C6F3FF5AD9F186AD3364A6FF /* Pods_LFMediaEditingController.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		8A76EB75C76F8FE5A66D530B9277D2A5 /* LFFilterSuite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49770595264FBF2A69DB3B98DB33E028 /* Build configuration list for PBXNativeTarget "LFFilterSuite" */;
+			buildPhases = (
+				A1B3CE4201735AC8DAE05EF2B8CE2B36 /* Headers */,
+				A6BA2B92A022E6D337B690917AD5871C /* Sources */,
+				D2CB45824A77E0482B2EC58CE8EF4475 /* Frameworks */,
+				A916D4F38CCAEFB9A867A31CA500FACA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2D47885B8E06AF9158EAE196AEA52693 /* PBXTargetDependency */,
+			);
+			name = LFFilterSuite;
+			productName = LFFilterSuite;
+			productReference = 8C4F341419C0E3EB0F36A5DDD746BF45 /* LFFilterSuite.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = 8206B7C221AD874A84579ADD113538CA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				173B4BE046648F8CAE6DD4FCD3C25AEF /* LFAssetExportSession */,
+				8A76EB75C76F8FE5A66D530B9277D2A5 /* LFFilterSuite */,
+				746FA6E17267B80AF0DBB86EA0606E6B /* Pods-LFMediaEditingController */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1E5171E1B8943834D2E07EB94274A8CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A916D4F38CCAEFB9A867A31CA500FACA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE2633C92DA2C7A988CBE13785F2A264 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		430DD70363722C8ECD538C8959232FE6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				752AA0600E5E024BA6D923892F6E32F8 /* LFAssetExportSession-dummy.m in Sources */,
+				A005BDE287E88E05E9DB75BAD6335BBD /* LFAssetExportSession.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6BA2B92A022E6D337B690917AD5871C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				397CFB60F22C7CB4357DD4C56D5EEEA0 /* LFContext.m in Sources */,
+				28A5163598507129E19F5C8BC331F982 /* LFContextImageView.m in Sources */,
+				120208D764D5495047610583773FEE7A /* LFFilter+save.m in Sources */,
+				EE6CF70E5CF8D43B34A5BAC8567B38C8 /* LFFilter+UIImage.m in Sources */,
+				719F445ABEC7AD1CADF249E2C6334814 /* LFFilter.m in Sources */,
+				C5E40AF2E63F34F02810A0680CB2D075 /* LFFilterGifView.m in Sources */,
+				5B5F47D0E15DA6E506B80CE94795B82D /* LFFilterImageView.m in Sources */,
+				0EA4FB6E0216AF86D80E4D84DA94824D /* LFFilterSuite-dummy.m in Sources */,
+				09FDB2752F8057A24D2FDC89E64E8010 /* LFFilterVideoExportSession.m in Sources */,
+				FFB5CAED5EA55FD9BCDF0592D2472EF1 /* LFFilterVideoView.m in Sources */,
+				16044D714864C929F9328D31E9060DF7 /* LFLView.m in Sources */,
+				057664A1B025E6D0423151A36BDE6904 /* LFMutableFilter.m in Sources */,
+				15ECCE109AA85CCA276D20320B731573 /* LFSampleBufferHolder.m in Sources */,
+				78A4DEB60FA113B7A60EAC2E0D0D206D /* LFWeakSelectorTarget.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC598B239DF9816D3373F3D5A4CEFB1C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A64108B32D643BA3A58EEF20C45E02CB /* Pods-LFMediaEditingController-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0FAA4893E8AC89B771E651298443B6DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LFFilterSuite;
+			target = 8A76EB75C76F8FE5A66D530B9277D2A5 /* LFFilterSuite */;
+			targetProxy = DF71883C06DA7A643F41A7F10347B162 /* PBXContainerItemProxy */;
+		};
+		2D47885B8E06AF9158EAE196AEA52693 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LFAssetExportSession;
+			target = 173B4BE046648F8CAE6DD4FCD3C25AEF /* LFAssetExportSession */;
+			targetProxy = 59D6AE4F289DA0622369A0EBC5E86242 /* PBXContainerItemProxy */;
+		};
+		57D2D406BF1EDBED928F363D3464F5DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LFAssetExportSession;
+			target = 173B4BE046648F8CAE6DD4FCD3C25AEF /* LFAssetExportSession */;
+			targetProxy = 80A0FCCE9074A3733034E43B6C33CC9A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		154058ECAAEE168B61F38E4D46D96544 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4BEA61D66C3A48697EE04D516AC8F70 /* Pods-LFMediaEditingController.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-LFMediaEditingController/Pods-LFMediaEditingController-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-LFMediaEditingController/Pods-LFMediaEditingController.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		6D095894763C4A278D08B974609DBA82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 38CBADC1A3EAD5E246BB671FC5A3ED35 /* LFFilterSuite.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/LFFilterSuite/LFFilterSuite-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/LFFilterSuite/LFFilterSuite-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/LFFilterSuite/LFFilterSuite.modulemap";
+				PRODUCT_MODULE_NAME = LFFilterSuite;
+				PRODUCT_NAME = LFFilterSuite;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		7DBCCC543EB10B5F8BDDA42003F16AAF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		E30D25CB3F9F59C23284E2C2D63CB539 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2440CAEA2DE5F9883401E0FDA92D70C3 /* Pods-LFMediaEditingController.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-LFMediaEditingController/Pods-LFMediaEditingController-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-LFMediaEditingController/Pods-LFMediaEditingController.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E7818A6D226CC23A15D561F4F5519E0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		E92AAD0E03A2C928FEA301207123CBBF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EF09B8254011CB752DF642090E75C9DB /* LFFilterSuite.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/LFFilterSuite/LFFilterSuite-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/LFFilterSuite/LFFilterSuite-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/LFFilterSuite/LFFilterSuite.modulemap";
+				PRODUCT_MODULE_NAME = LFFilterSuite;
+				PRODUCT_NAME = LFFilterSuite;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F07EA2BEB3413D61FE29B79825C3BB1B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 087AC271D3085A0B3EDE59DAB2575E7A /* LFAssetExportSession.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/LFAssetExportSession/LFAssetExportSession-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/LFAssetExportSession/LFAssetExportSession-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/LFAssetExportSession/LFAssetExportSession.modulemap";
+				PRODUCT_MODULE_NAME = LFAssetExportSession;
+				PRODUCT_NAME = LFAssetExportSession;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F33DF1C0E020C734E45B7AE15E2273A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A735B5B417D59D04AA758E945BE56E0F /* LFAssetExportSession.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/LFAssetExportSession/LFAssetExportSession-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/LFAssetExportSession/LFAssetExportSession-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/LFAssetExportSession/LFAssetExportSession.modulemap";
+				PRODUCT_MODULE_NAME = LFAssetExportSession;
+				PRODUCT_NAME = LFAssetExportSession;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		41762BF76963283B69FFC0A115FD1A0F /* Build configuration list for PBXNativeTarget "LFAssetExportSession" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F07EA2BEB3413D61FE29B79825C3BB1B /* Debug */,
+				F33DF1C0E020C734E45B7AE15E2273A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E7818A6D226CC23A15D561F4F5519E0B /* Debug */,
+				7DBCCC543EB10B5F8BDDA42003F16AAF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49770595264FBF2A69DB3B98DB33E028 /* Build configuration list for PBXNativeTarget "LFFilterSuite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E92AAD0E03A2C928FEA301207123CBBF /* Debug */,
+				6D095894763C4A278D08B974609DBA82 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4E101DCCBCD1A33A6501721D6AF2884 /* Build configuration list for PBXNativeTarget "Pods-LFMediaEditingController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E30D25CB3F9F59C23284E2C2D63CB539 /* Debug */,
+				154058ECAAEE168B61F38E4D46D96544 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

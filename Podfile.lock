@@ -1,0 +1,20 @@
+PODS:
+  - LFAssetExportSession (1.0.0)
+  - LFFilterSuite (1.0.0):
+    - LFAssetExportSession
+
+DEPENDENCIES:
+  - LFFilterSuite
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - LFAssetExportSession
+    - LFFilterSuite
+
+SPEC CHECKSUMS:
+  LFAssetExportSession: b15b0e37fae4c7cc79c67dd225dbf39daf187863
+  LFFilterSuite: 942eadbd04fa21db10b1c5e964efd862a4d47b3a
+
+PODFILE CHECKSUM: 985587071e33ab9504608bc8e89ffaea41428acf
+
+COCOAPODS: 1.9.1
