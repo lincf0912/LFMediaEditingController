@@ -37,7 +37,40 @@
         return nil;
     }
     
-    
+    { // fixed black background
+        size_t width = CGImageGetWidth(imageRef);
+        size_t height = CGImageGetHeight(imageRef);
+        CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(imageRef);
+        BOOL hasAlpha = !(alphaInfo == kCGImageAlphaNone ||
+                          alphaInfo == kCGImageAlphaNoneSkipFirst ||
+                          alphaInfo == kCGImageAlphaNoneSkipLast);
+        CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Host;
+        bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;
+        
+        static CGColorSpaceRef colorSpace;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            if (@available(iOS 9.0, tvOS 9.0, *)) {
+                colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
+            } else {
+                colorSpace = CGColorSpaceCreateDeviceRGB();
+            }
+        });
+        
+        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, colorSpace, bitmapInfo);
+        if (context) {
+            CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef); // The rect is bounding box of CGImage, don't swap width & height
+            CGImageRelease(imageRef);
+            
+            CGImageRef newImageRef = CGBitmapContextCreateImage(context);
+            CGContextRelease(context);
+            
+            UIImage *image = [UIImage imageWithCGImage:newImageRef];
+            CGImageRelease(newImageRef);
+            
+            return image;
+        }
+    }
     
     UIImage *image = nil;
     if (imageRef) {
