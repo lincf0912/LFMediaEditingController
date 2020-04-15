@@ -34,6 +34,7 @@ typedef NS_ENUM(NSUInteger, LFAssetExportSessionPreset) {
     LFAssetExportSessionPreset240P,
     LFAssetExportSessionPreset360P,
     LFAssetExportSessionPreset480P,
+    LFAssetExportSessionPreset540P,
     LFAssetExportSessionPreset720P,
     LFAssetExportSessionPreset1080P,
     LFAssetExportSessionPreset2K, // 1440P
@@ -158,6 +159,11 @@ typedef NS_ENUM(NSUInteger, LFAssetExportSessionPreset) {
  * You can observe this property using key-value observing. (TODO)
  */
 @property (nonatomic, assign, readonly) AVAssetExportSessionStatus status;
+
+/**
+ * The estimated size(KB) of the export session.
+ */
+@property (nonatomic, assign, readonly) float estimatedExportSize;
 
 /**
  * Returns an asset export session configured with a specified asset.
