@@ -148,6 +148,12 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     
 }
 
+- (void)dealloc
+{
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
+}
+
 - (UIEdgeInsets)refer_clippingInsets
 {
     CGFloat top = kClipZoom_margin;

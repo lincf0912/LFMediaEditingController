@@ -107,6 +107,12 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     }
 }
 
+- (void)dealloc
+{
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
+}
+
 - (void)setImage:(UIImage *)image
 {
     [self setImage:image durations:nil];

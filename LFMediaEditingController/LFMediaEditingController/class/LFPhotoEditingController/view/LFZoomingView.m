@@ -92,6 +92,12 @@ NSString *const kLFZoomingViewData_filter = @"LFZoomingViewData_filter";
     }
 }
 
+- (void)dealloc
+{
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];

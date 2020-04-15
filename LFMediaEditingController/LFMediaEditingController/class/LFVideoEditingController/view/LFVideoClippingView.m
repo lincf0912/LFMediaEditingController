@@ -140,6 +140,9 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     [self pauseVideo];
     self.videoPlayer.delegate = nil;
     self.videoPlayer = nil;
+    self.playerView = nil;
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
 }
 
 - (void)setVideoAsset:(AVAsset *)asset placeholderImage:(UIImage *)image

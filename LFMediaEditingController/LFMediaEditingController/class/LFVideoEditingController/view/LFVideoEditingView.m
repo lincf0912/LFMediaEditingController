@@ -79,6 +79,8 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 - (void)dealloc
 {
     [self.exportSession cancelExport];
+    // 释放LFEditingProtocol协议
+    [self clearProtocolxecutor];
 }
 
 - (void)layoutSubviews

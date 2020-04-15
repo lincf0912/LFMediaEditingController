@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** 展示 */
 @property (nonatomic, weak) id<LFFilterDataProtocol> lf_displayView;
 
+- (void)clearProtocolxecutor;
+
 @end
 
 @protocol LFEditingProtocol <NSObject>

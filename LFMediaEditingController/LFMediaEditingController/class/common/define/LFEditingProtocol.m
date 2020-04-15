@@ -97,6 +97,10 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     objc_setAssociatedObject(self, LFEditingProtocolDisplayViewKey, lf_displayView, OBJC_ASSOCIATION_ASSIGN);
 }
 
+- (void)clearProtocolxecutor
+{
+    objc_removeAssociatedObjects(self);
+}
 
 
 #pragma mark - LFEditingProtocolPrivate property
