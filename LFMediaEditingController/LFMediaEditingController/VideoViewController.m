@@ -53,6 +53,12 @@
     self.navigationItem.rightBarButtonItems = @[editItem, fixedSpace, addItem];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.player pause];
+}
+
 - (void)viewSafeAreaInsetsDidChange
 {
     [super viewSafeAreaInsetsDidChange];
@@ -100,6 +106,7 @@
 - (void)dealloc
 {
     [self.player removeObserver:self forKeyPath:@"status"];
+    [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
 }
 
 - (void)viewWillLayoutSubviews
@@ -147,7 +154,6 @@
     }
     [self.navigationController setNavigationBarHidden:YES];
     [self.navigationController pushViewController:lfVideoEditVC animated:NO];
-    [self.player pause];
 }
 
 - (void)didReceiveMemoryWarning {
