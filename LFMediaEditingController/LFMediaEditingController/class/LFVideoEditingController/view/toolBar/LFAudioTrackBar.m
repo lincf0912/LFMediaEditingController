@@ -117,13 +117,13 @@
     /** 顶部栏 */
     CGFloat margin = 8;
     CGFloat size = _naviHeight;
-    UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, _customTopbarHeight)];
+    UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.lfme_width, _customTopbarHeight)];
     topbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     topbar.backgroundColor = [UIColor clearColor];
     
     UIFont *font = [UIFont systemFontOfSize:15];
     CGFloat editCancelWidth = [self.cancelButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, size) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
-    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, topbar.height-size, editCancelWidth, size)];
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, topbar.lfme_height-size, editCancelWidth, size)];
     cancelButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [cancelButton setTitle:self.cancelButtonTitle forState:UIControlStateNormal];
     cancelButton.titleLabel.font = font;
@@ -131,7 +131,7 @@
     [cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, size) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
-    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - editOkWidth - margin, topbar.height-size, editOkWidth, size)];
+    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.lfme_width - editOkWidth - margin, topbar.lfme_height-size, editOkWidth, size)];
     finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     finishButton.titleLabel.font = font;
@@ -146,7 +146,7 @@
 
 - (void)configTableView
 {
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, _customTopbarHeight, self.width, self.height-_customTopbarHeight-_customToolbarHeight) style:UITableViewStylePlain];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, _customTopbarHeight, self.lfme_width, self.lfme_height-_customTopbarHeight-_customToolbarHeight) style:UITableViewStylePlain];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     tableView.delegate = self;
     tableView.dataSource = self;
@@ -177,7 +177,7 @@
 
 - (void)configToolbar
 {
-    UIView *toolbar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height-_customToolbarHeight, self.width, _customToolbarHeight)];
+    UIView *toolbar = [[UIView alloc] initWithFrame:CGRectMake(0, self.lfme_height-_customToolbarHeight, self.lfme_width, _customToolbarHeight)];
     
     CGFloat rgb = 34 / 255.0;
     toolbar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.7];

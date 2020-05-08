@@ -10,13 +10,13 @@
 
 @interface UIView (LFMEFrame)
 
-@property (nonatomic, assign) CGFloat x;
-@property (nonatomic, assign) CGFloat y;
-@property (nonatomic, assign) CGFloat centerX;
-@property (nonatomic, assign) CGFloat centerY;
-@property (nonatomic, assign) CGFloat width;
-@property (nonatomic, assign) CGFloat height;
-@property (nonatomic, assign) CGSize size;
-@property (nonatomic, assign) CGPoint origin;
+@property (nonatomic, assign) CGFloat lfme_x;
+@property (nonatomic, assign) CGFloat lfme_y;
+@property (nonatomic, assign) CGFloat lfme_centerX;
+@property (nonatomic, assign) CGFloat lfme_centerY;
+@property (nonatomic, assign) CGFloat lfme_width;
+@property (nonatomic, assign) CGFloat lfme_height;
+@property (nonatomic, assign) CGSize lfme_size;
+@property (nonatomic, assign) CGPoint lfme_origin;
 
 @end

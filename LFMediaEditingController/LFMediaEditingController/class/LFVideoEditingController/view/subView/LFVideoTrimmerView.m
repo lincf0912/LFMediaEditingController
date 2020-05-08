@@ -269,8 +269,8 @@ NSTimeInterval lfme_videoDuration(NSTimeInterval duration)
 {
     if (self.totalDuration) {
 
-        double startTime = lfme_videoDuration(MIN(self.gridView.gridRect.origin.x/self.width*self.totalDuration, self.totalDuration));
-        double endTime = lfme_videoDuration(MIN((self.gridView.gridRect.origin.x+self.gridView.gridRect.size.width)/self.width*self.totalDuration, self.totalDuration));
+        double startTime = lfme_videoDuration(MIN(self.gridView.gridRect.origin.x/self.lfme_width*self.totalDuration, self.totalDuration));
+        double endTime = lfme_videoDuration(MIN((self.gridView.gridRect.origin.x+self.gridView.gridRect.size.width)/self.lfme_width*self.totalDuration, self.totalDuration));
         
         _startTime = startTime;
         _endTime = endTime;

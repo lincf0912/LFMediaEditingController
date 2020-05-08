@@ -205,7 +205,7 @@ const CGFloat kVideoTrimmerGridLayerLineWidth = 2.f;
         return;
     }
     _progress = progress;
-    _slider.x = progress*self.width;
+    _slider.lfme_x = progress*self.lfme_width;
 }
 
 - (void)setHiddenProgress:(BOOL)hidden

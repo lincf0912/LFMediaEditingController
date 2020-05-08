@@ -131,7 +131,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     }
     self.normalRect = self.frame;
     self.saveRect = self.frame;
-    self.contentSize = self.size;
+    self.contentSize = self.lfme_size;
     self.zoomingView.frame = self.bounds;
     [self.zoomingView setImage:image durations:durations];
 }
@@ -164,8 +164,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     /** 当前UI位置未改变时，获取contentOffset与contentSize */
     /** 计算未改变前当前视图在contentSize的位置比例 */
     CGPoint contentOffset = self.contentOffset;
-    CGFloat scaleX = MAX(contentOffset.x/(self.contentSize.width-self.width), 0);
-    CGFloat scaleY = MAX(contentOffset.y/(self.contentSize.height-self.height), 0);
+    CGFloat scaleX = MAX(contentOffset.x/(self.contentSize.width-self.lfme_width), 0);
+    CGFloat scaleY = MAX(contentOffset.y/(self.contentSize.height-self.lfme_height), 0);
     /** 获取contentOffset必须在设置contentSize之前，否则重置frame 或 contentSize后contentOffset会发送变化 */
     
     CGRect oldFrame = self.frame;
@@ -189,10 +189,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     }
     
     /** 重设contentSize */
-    self.contentSize = self.zoomingView.size;
+    self.contentSize = self.zoomingView.lfme_size;
     /** 获取当前contentOffset的最大限度，根据之前的位置比例计算实际偏移坐标 */
-    contentOffset.x = isnan(scaleX) ? contentOffset.x : (scaleX > 0 ? (self.contentSize.width-self.width) * scaleX : contentOffset.x);
-    contentOffset.y = isnan(scaleY) ? contentOffset.y : (scaleY > 0 ? (self.contentSize.height-self.height) * scaleY : contentOffset.y);
+    contentOffset.x = isnan(scaleX) ? contentOffset.x : (scaleX > 0 ? (self.contentSize.width-self.lfme_width) * scaleX : contentOffset.x);
+    contentOffset.y = isnan(scaleY) ? contentOffset.y : (scaleY > 0 ? (self.contentSize.height-self.lfme_height) * scaleY : contentOffset.y);
     /** 计算坐标偏移与保底值 */
     CGRect zoomViewRect = self.zoomingView.frame;
     CGRect selfRect = CGRectApplyAffineTransform(self.frame, self.transform);
@@ -233,11 +233,11 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                                  self.angle = 0;
                                  self.minimumZoomScale = self.first_minimumZoomScale;
                                  [self setZoomScale:self.minimumZoomScale];
-                                 self.frame = (CGRect){CGPointZero, self.zoomingView.size};
+                                 self.frame = (CGRect){CGPointZero, self.zoomingView.lfme_size};
                                  self.center = CGPointMake(self.superview.center.x-self.offsetSuperCenter.x/2, self.superview.center.y-self.offsetSuperCenter.y/2);
                                  self.saveRect = self.frame;
                                  /** 重设contentSize */
-                                 self.contentSize = self.zoomingView.size;
+                                 self.contentSize = self.zoomingView.lfme_size;
                                  /** 重置contentOffset */
                                  self.contentOffset = CGPointZero;
                                  if ([self.clippingDelegate respondsToSelector:@selector(lf_clippingViewWillBeginZooming:)]) {
@@ -259,10 +259,10 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                                  self.angle = 0;
                                  self.minimumZoomScale = self.first_minimumZoomScale;
                                  [self setZoomScale:self.minimumZoomScale];
-                                 self.frame = (CGRect){CGPointZero, self.zoomingView.size};
+                                 self.frame = (CGRect){CGPointZero, self.zoomingView.lfme_size};
                                  self.center = CGPointMake(self.superview.center.x-self.offsetSuperCenter.x/2, self.superview.center.y-self.offsetSuperCenter.y/2);
                                  /** 重设contentSize */
-                                 self.contentSize = self.zoomingView.size;
+                                 self.contentSize = self.zoomingView.lfme_size;
                                  /** 重置contentOffset */
                                  self.contentOffset = CGPointZero;
                                  [self zoomInToRect:rect];
@@ -393,7 +393,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
                          self.saveRect = self.frame;
                          [self setZoomScale:zoomScale];
                          /** 重新调整contentSize */
-                         self.contentSize = self.zoomingView.size;
+                         self.contentSize = self.zoomingView.lfme_size;
                          [self setContentOffset:contentOffset];
                          
                          /** 设置完实际大小后再次计算最小缩放系数 */

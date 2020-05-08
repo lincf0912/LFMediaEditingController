@@ -162,11 +162,11 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
     /** 重置编辑UI位置 */
     CGSize videoSize = self.videoPlayer.size;
     if (CGSizeEqualToSize(CGSizeZero, videoSize) || isnan(videoSize.width) || isnan(videoSize.height)) {
-        videoSize = self.zoomingView.size;
+        videoSize = self.zoomingView.lfme_size;
     }
     CGRect editRect = AVMakeRectWithAspectRatioInsideRect(videoSize, self.originalRect);
     self.frame = editRect;
-    _zoomingView.size = editRect.size;
+    _zoomingView.lfme_size = editRect.size;
     
     /** 子控件更新 */
     [[self.zoomingView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

@@ -233,7 +233,7 @@ NSUInteger kToolbar_MaxItems = 6;
     }
     
     self.frame = (CGRect){{0, self.superview.frame.size.height-height}, {self.superview.frame.size.width, height}};
-    self.edit_menu.frame = CGRectMake(0, kToolbar_SubHeight, self.width, height-kToolbar_SubHeight);
+    self.edit_menu.frame = CGRectMake(0, kToolbar_SubHeight, self.lfme_width, height-kToolbar_SubHeight);
 }
 
 - (void)customInit
@@ -260,7 +260,7 @@ NSUInteger kToolbar_MaxItems = 6;
     if (@available(iOS 11.0, *)) {
         height += self.safeAreaInsets.bottom;
     }
-    UIView *edit_menu = [[UIView alloc] initWithFrame:CGRectMake(0, kToolbar_SubHeight, self.width, height)];
+    UIView *edit_menu = [[UIView alloc] initWithFrame:CGRectMake(0, kToolbar_SubHeight, self.lfme_width, height)];
     edit_menu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     CGFloat rgb = 34 / 255.0;
     edit_menu.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.85];
@@ -371,7 +371,7 @@ NSUInteger kToolbar_MaxItems = 6;
     UIView *divide = [[UIView alloc] init];
     CGFloat rgb2 = 40 / 255.0;
     divide.backgroundColor = [UIColor colorWithRed:rgb2 green:rgb2 blue:rgb2 alpha:1.0];
-    divide.frame = CGRectMake(0, 0, self.width, 1);
+    divide.frame = CGRectMake(0, 0, self.lfme_width, 1);
     divide.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     
     [edit_menu addSubview:divide];
@@ -391,7 +391,7 @@ NSUInteger kToolbar_MaxItems = 6;
 - (UIView *)edit_drawMenu
 {
     if (_edit_drawMenu == nil && self.type&LFEditToolbarType_draw) {
-        UIView *edit_drawMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
+        UIView *edit_drawMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.lfme_x, _edit_menu.lfme_y, _edit_menu.lfme_width, kToolbar_SubHeight)];
         edit_drawMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_drawMenu.backgroundColor = _edit_menu.backgroundColor;
         edit_drawMenu.alpha = 0.f;
@@ -475,7 +475,7 @@ NSUInteger kToolbar_MaxItems = 6;
 - (UIView *)edit_splashMenu
 {
     if (_edit_splashMenu == nil && self.type&LFEditToolbarType_splash) {
-        UIView *edit_splashMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
+        UIView *edit_splashMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.lfme_x, _edit_menu.lfme_y, _edit_menu.lfme_width, kToolbar_SubHeight)];
         edit_splashMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_splashMenu.backgroundColor = _edit_menu.backgroundColor;
         edit_splashMenu.alpha = 0.f;
@@ -532,7 +532,7 @@ NSUInteger kToolbar_MaxItems = 6;
 - (UIButton *)revokeButtonWithType:(NSInteger)type
 {
     UIButton *revoke = [UIButton buttonWithType:UIButtonTypeCustom];
-    revoke.frame = CGRectMake(_edit_menu.width-44-5, 0, 44, kToolbar_SubHeight);
+    revoke.frame = CGRectMake(_edit_menu.lfme_width-44-5, 0, 44, kToolbar_SubHeight);
     revoke.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
     [revoke setImage:bundleEditImageNamed(@"EditImageRevokeBtn.png") forState:UIControlStateNormal];
     [revoke setImage:bundleEditImageNamed(@"EditImageRevokeBtn_HL.png") forState:UIControlStateHighlighted];
@@ -552,7 +552,7 @@ NSUInteger kToolbar_MaxItems = 6;
 - (UIView *)edit_rateMenu
 {
     if (_edit_rateMenu == nil && self.type&LFEditToolbarType_rate) {
-        UIView *edit_rateMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.x, _edit_menu.y, _edit_menu.width, kToolbar_SubHeight)];
+        UIView *edit_rateMenu = [[UIView alloc] initWithFrame:CGRectMake(_edit_menu.lfme_x, _edit_menu.lfme_y, _edit_menu.lfme_width, kToolbar_SubHeight)];
         edit_rateMenu.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         edit_rateMenu.backgroundColor = _edit_menu.backgroundColor;
         edit_rateMenu.alpha = 0.f;
@@ -744,7 +744,7 @@ NSUInteger kToolbar_MaxItems = 6;
         /** 显示新菜单 */
         _selectMenu = menu;
         [UIView animateWithDuration:0.25f animations:^{
-            menu.y = 0;
+            menu.lfme_y = 0;
             menu.alpha = 1.f;
         }];
     } else {
@@ -755,7 +755,7 @@ NSUInteger kToolbar_MaxItems = 6;
 {
     [self sendSubviewToBack:_selectMenu];
     [UIView animateWithDuration:0.25f animations:^{
-        self->_selectMenu.y = self->_edit_menu.y;
+        self->_selectMenu.lfme_y = self->_edit_menu.lfme_y;
         self->_selectMenu.alpha = 0.f;
     }];
 }

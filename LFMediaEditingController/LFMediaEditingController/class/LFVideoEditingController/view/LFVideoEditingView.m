@@ -164,8 +164,8 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     if (self.clippingView.totalDuration) {
         [self.clippingView save];
         [self.clippingView replayVideo];
-        CGFloat x = self.clippingView.startTime/self.clippingView.totalDuration*self.trimmerView.width;
-        CGFloat width = self.clippingView.endTime/self.clippingView.totalDuration*self.trimmerView.width-x;
+        CGFloat x = self.clippingView.startTime/self.clippingView.totalDuration*self.trimmerView.lfme_width;
+        CGFloat width = self.clippingView.endTime/self.clippingView.totalDuration*self.trimmerView.lfme_width-x;
         [self.trimmerView setGridRange:NSMakeRange(x, width) animated:NO];
     }
     _isClipping = isClipping;
@@ -174,7 +174,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         if (animated) {
             self.trimmerView.hidden = NO;
             self.trimmerView.alpha = 0.f;
-            CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]);
+            CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, [self refer_clippingRect]);
             [UIView animateWithDuration:0.25f animations:^{
                 self.clippingRect = rect;
                 self.trimmerView.alpha = 1.f;
@@ -184,7 +184,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
                 }
             }];
         } else {
-            CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]);
+            CGRect rect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, [self refer_clippingRect]);
             self.clippingRect = rect;
             self.trimmerView.hidden = NO;
             if (self.trimmerView.asset == nil) {
@@ -195,7 +195,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
         /** 重置最大缩放 */
         if (animated) {
             [UIView animateWithDuration:0.25f animations:^{
-                CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.bounds);
+                CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.bounds);
                 self.clippingRect = cropRect;
                 self.trimmerView.alpha = 0.f;
             } completion:^(BOOL finished) {
@@ -203,7 +203,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
                 self.trimmerView.hidden = YES;
             }];
         } else {
-            CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.bounds);
+            CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.bounds);
             self.clippingRect = cropRect;
             self.trimmerView.hidden = YES;
         }
@@ -389,9 +389,9 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 /** 视频准备完毕，可以获取相关属性与操作 */
 - (void)lf_videoClippingViewReadyToPlay:(LFVideoClippingView *)clippingView
 {
-    self.trimmerView.controlMinWidth = self.trimmerView.width * (self.minClippingDuration / clippingView.totalDuration);
+    self.trimmerView.controlMinWidth = self.trimmerView.lfme_width * (self.minClippingDuration / clippingView.totalDuration);
     if (self.maxClippingDuration > 0) {
-        self.trimmerView.controlMaxWidth = self.trimmerView.width * (self.maxClippingDuration / clippingView.totalDuration);
+        self.trimmerView.controlMaxWidth = self.trimmerView.lfme_width * (self.maxClippingDuration / clippingView.totalDuration);
         /** 处理剪辑时间超出范围的情况 */
         double differ = self.clippingView.endTime - self.clippingView.startTime - self.maxClippingDuration;
         if (differ > 0) {
@@ -401,8 +401,8 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
     }
     if (self.isClipping) {
         [self.clippingView save];
-        CGFloat x = self.clippingView.startTime/self.clippingView.totalDuration*self.trimmerView.width;
-        CGFloat width = self.clippingView.endTime/self.clippingView.totalDuration*self.trimmerView.width-x;
+        CGFloat x = self.clippingView.startTime/self.clippingView.totalDuration*self.trimmerView.lfme_width;
+        CGFloat width = self.clippingView.endTime/self.clippingView.totalDuration*self.trimmerView.lfme_width-x;
         [self.trimmerView setGridRange:NSMakeRange(x, width) animated:NO];
     }
 }
@@ -428,7 +428,7 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 /** 进度长度 */
 - (CGFloat)lf_videoClippingViewProgressWidth:(LFVideoClippingView *)clippingView
 {
-    return self.trimmerView.width;
+    return self.trimmerView.lfme_width;
 }
 
 /** 播放视频 */
@@ -467,8 +467,8 @@ NSString *const kLFVideoEditingViewData_audioEnable = @"LFVideoEditingViewData_a
 //    double startTime = MIN(lfme_videoDuration(gridRange.location/trimmerView.width*self.clippingView.totalDuration), self.clippingView.totalDuration);
 //    double endTime = MIN(lfme_videoDuration((gridRange.location+gridRange.length)/trimmerView.width*self.clippingView.totalDuration), self.clippingView.totalDuration);
 
-    double startTime = gridRange.location/trimmerView.width*self.clippingView.totalDuration;
-    double endTime = (gridRange.location+gridRange.length)/trimmerView.width*self.clippingView.totalDuration;
+    double startTime = gridRange.location/trimmerView.lfme_width*self.clippingView.totalDuration;
+    double endTime = (gridRange.location+gridRange.length)/trimmerView.lfme_width*self.clippingView.totalDuration;
     
     [self.clippingView seekToTime:((self.clippingView.startTime != startTime) ? startTime : endTime)];
     

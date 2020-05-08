@@ -154,7 +154,7 @@ CGFloat const lf_stickerMargin = 10;
 {
     [super layoutSubviews];
     if (@available(iOS 11.0, *)) {
-        self.stickerDisplayView.height = self.height - self.safeAreaInsets.bottom;
+        self.stickerDisplayView.lfme_height = self.lfme_height - self.safeAreaInsets.bottom;
     }
 }
 
@@ -212,7 +212,7 @@ CGFloat const lf_stickerMargin = 10;
 
 - (void)setupStickerDisplayView
 {
-    JRStickerDisplayView *stickerDisplayView = [[JRStickerDisplayView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+    JRStickerDisplayView *stickerDisplayView = [[JRStickerDisplayView alloc] initWithFrame:CGRectMake(0, 0, self.lfme_width, self.lfme_height)];
     [stickerDisplayView setBackgroundColor:[UIColor clearColor]];
     
     stickerDisplayView.itemSize = CGSizeMake(lf_stickerSize, lf_stickerSize);

@@ -124,7 +124,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     self.clippingMaxRect = [self refer_clippingRect];
     
     /** 创建显示图片像素控件 */
-    UILabel *imagePixel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.width-40, 30)];
+    UILabel *imagePixel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.lfme_width-40, 30)];
     imagePixel.numberOfLines = 1;
     imagePixel.textAlignment = NSTextAlignmentCenter;
     imagePixel.font = [UIFont boldSystemFontOfSize:13.f];
@@ -206,7 +206,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     
     
     /** 计算图片像素参照坐标 */
-    self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clippingMaxRect).size;
+    self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.clippingMaxRect).size;
     
     /** 针对长图的展示 */
     [self fixedLongImage];
@@ -255,9 +255,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     if (CGSizeEqualToSize(CGSizeZero, _clippingMinSize) || (clippingMinSize.width < CGRectGetWidth(_clippingMaxRect) && clippingMinSize.height < CGRectGetHeight(_clippingMaxRect))) {
         
-        CGSize normalClippingMinSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]).size;
+        CGSize normalClippingMinSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, [self refer_clippingRect]).size;
         /** 需要考虑到旋转后到尺寸可能会更加小，取最小值 */
-        CGSize rotateClippingMinSize = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(self.clippingView.size.height, self.clippingView.size.width), [self refer_clippingRect]).size;
+        CGSize rotateClippingMinSize = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(self.clippingView.lfme_size.height, self.clippingView.lfme_size.width), [self refer_clippingRect]).size;
         
         CGSize newClippingMinSize = CGSizeMake(MIN(normalClippingMinSize.width, rotateClippingMinSize.width), MIN(normalClippingMinSize.height, rotateClippingMinSize.height));
         {
@@ -297,7 +297,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
         self.gridView.controlMaxRect = clippingMaxRect;
         self.clippingView.editRect = clippingMaxRect;
         /** 计算缩放剪裁尺寸 */
-        self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clippingMaxRect).size;
+        self.referenceSize = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.clippingMaxRect).size;
     }
 }
 
@@ -356,7 +356,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
                 self.gridView.showMaskLayer = NO;
             }
             [UIView animateWithDuration:0.25f animations:^{
-                self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]);
+                self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, [self refer_clippingRect]);
 //                if (isCircle) {
 //                    [self.clippingView LFME_setCornerRadiusWithoutMasks:CGRectGetWidth(self.clippingRect)/2];
 //                }
@@ -389,7 +389,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
                 }];
             }];
         } else {
-            self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, [self refer_clippingRect]);
+            self.clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, [self refer_clippingRect]);
 //            if (isCircle) {
 //                [self.clippingView LFME_setCornerRadiusWithoutMasks:0];
 //            }
@@ -426,7 +426,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
                 self.imagePixel.alpha = 0.f;
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.25f animations:^{
-                    CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.bounds);
+                    CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.bounds);
                     self.clippingRect = cropRect;
 //                    if (isCircle) {
 //                        [self.clippingView LFME_setCornerRadiusWithoutMasks:CGRectGetWidth(cropRect)/2];
@@ -448,7 +448,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             self.clippingView.clipsToBounds = YES;
             self.gridView.alpha = 0.f;
             self.imagePixel.alpha = 0.f;
-            CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.bounds);
+            CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.bounds);
 //            if (isCircle) {
 //                [self.clippingView LFME_setCornerRadius:CGRectGetMidX(cropRect)];
 //            }
@@ -511,7 +511,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 - (void)cancel
 {
     [self.clippingView cancel];
-    _clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.bounds);
+    _clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.bounds);
     self.gridView.gridRect = self.clippingView.frame;
     [self.gridView setAspectRatioWithoutDelegate:self.old_aspectRatio];
     self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
@@ -933,15 +933,15 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 
 #pragma mark - Private
 - (void)refreshImageZoomViewCenter {
-    CGFloat offsetX = (self.width > self.contentSize.width) ? ((self.width - self.contentSize.width) * 0.5) : 0.0;
-    CGFloat offsetY = (self.height > self.contentSize.height) ? ((self.height - self.contentSize.height) * 0.5) : 0.0;
+    CGFloat offsetX = (self.lfme_width > self.contentSize.width) ? ((self.lfme_width - self.contentSize.width) * 0.5) : 0.0;
+    CGFloat offsetY = (self.lfme_height > self.contentSize.height) ? ((self.lfme_height - self.contentSize.height) * 0.5) : 0.0;
     self.clipZoomView.center = CGPointMake(self.contentSize.width * 0.5 + offsetX, self.contentSize.height * 0.5 + offsetY);
 }
 
 - (void)resetContentSize
 {
     /** 重置contentSize */
-    CGRect realClipZoomRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.size, self.clipZoomView.frame);
+    CGRect realClipZoomRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.clipZoomView.frame);
     CGFloat width = MAX(self.frame.size.width, realClipZoomRect.size.width);
     CGFloat height = MAX(self.frame.size.height, realClipZoomRect.size.height);
     CGFloat diffWidth = (width-self.clipZoomView.frame.size.width)/2;

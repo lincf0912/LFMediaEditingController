@@ -131,7 +131,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
     CGFloat topbarHeight = _customTopbarHeight;
     CGFloat topSubViewY = topbarHeight - size;
     
-    UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, topbarHeight)];
+    UIView *topbar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.lfme_width, topbarHeight)];
     topbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     topbar.backgroundColor = [UIColor clearColor];
     
@@ -145,7 +145,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
     [cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
     CGFloat editOkWidth = [self.oKButtonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, _customTopbarHeight) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
-    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.width - editOkWidth - margin, topSubViewY, editOkWidth, size)];
+    UIButton *finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.lfme_width - editOkWidth - margin, topSubViewY, editOkWidth, size)];
     finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     [finishButton setTitle:self.oKButtonTitle forState:UIControlStateNormal];
     finishButton.titleLabel.font = font;
@@ -161,7 +161,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
 
 - (void)configTextView
 {
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_topbar.frame), self.width, self.height-CGRectGetHeight(_topbar.frame))];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_topbar.frame), self.lfme_width, self.lfme_height-CGRectGetHeight(_topbar.frame))];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor];
@@ -177,7 +177,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
 - (void)configKeyBoardBar
 {
     CGFloat margin = isiPad ? 40.f : 10.f;
-    UIView *keyboardBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.height-margin, self.width, 44)];
+    UIView *keyboardBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.lfme_height-margin, self.lfme_width, 44)];
     keyboardBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     keyboardBar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.8];
     
@@ -357,8 +357,8 @@ CGFloat const LFTextBarAlignmentTag = 221;
     double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
     [UIView animateWithDuration:duration animations:^{
-        self.lf_keyboardBar.y = self.height-CGRectGetHeight(keyboardRect)-CGRectGetHeight(self.lf_keyboardBar.frame);
-        self.lf_textView.height = self.height-self.lf_keyboardBar.y;
+        self.lf_keyboardBar.lfme_y = self.lfme_height-CGRectGetHeight(keyboardRect)-CGRectGetHeight(self.lf_keyboardBar.frame);
+        self.lf_textView.lfme_height = self.lfme_height-self.lf_keyboardBar.lfme_y;
     }];
 }
 
@@ -368,8 +368,8 @@ CGFloat const LFTextBarAlignmentTag = 221;
     double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
     [UIView animateWithDuration:duration animations:^{
-        self.lf_keyboardBar.y = self.height-CGRectGetHeight(keyboardRect)-CGRectGetHeight(self.lf_keyboardBar.frame);
-        self.lf_textView.height = self.height-self.lf_keyboardBar.y;
+        self.lf_keyboardBar.lfme_y = self.lfme_height-CGRectGetHeight(keyboardRect)-CGRectGetHeight(self.lf_keyboardBar.frame);
+        self.lf_textView.lfme_height = self.lfme_height-self.lf_keyboardBar.lfme_y;
     }];
 }
 

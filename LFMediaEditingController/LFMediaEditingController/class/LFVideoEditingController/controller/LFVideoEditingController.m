@@ -163,9 +163,9 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     [super viewWillLayoutSubviews];
     
     if (@available(iOS 11.0, *)) {
-        _edit_naviBar.height = kCustomTopbarHeight_iOS11;
+        _edit_naviBar.lfme_height = kCustomTopbarHeight_iOS11;
     } else {
-        _edit_naviBar.height = kCustomTopbarHeight;
+        _edit_naviBar.lfme_height = kCustomTopbarHeight;
     }
 }
 
@@ -297,7 +297,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     }
     CGFloat naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
     
-    _edit_naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, topbarHeight)];
+    _edit_naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.lfme_width, topbarHeight)];
     _edit_naviBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     _edit_naviBar.backgroundColor = [UIColor colorWithRed:(34/255.0) green:(34/255.0)  blue:(34/255.0) alpha:0.7];
     
@@ -317,7 +317,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     
     CGFloat editOkWidth = [[NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"] boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:font} context:nil].size.width + 30;
     
-    UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.width - editOkWidth-margin, 0, editOkWidth, naviHeight)];
+    UIButton *_edit_finishButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.lfme_width - editOkWidth-margin, 0, editOkWidth, naviHeight)];
     _edit_finishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [_edit_finishButton setTitle:[NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"] forState:UIControlStateNormal];
     _edit_finishButton.titleLabel.font = font;
@@ -769,7 +769,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     [textBar resignFirstResponder];
     
     [UIView animateWithDuration:0.25f delay:0.f options:UIViewAnimationOptionCurveLinear animations:^{
-        textBar.y = self.view.height;
+        textBar.lfme_y = self.view.lfme_height;
     } completion:^(BOOL finished) {
         [textBar removeFromSuperview];
     }];
@@ -797,7 +797,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     [self changedBarState];
     
     [UIView animateWithDuration:0.25f delay:0.f options:UIViewAnimationOptionCurveLinear animations:^{
-        audioTrackBar.y = self.view.height;
+        audioTrackBar.lfme_y = self.view.lfme_height;
     } completion:^(BOOL finished) {
         [audioTrackBar removeFromSuperview];
         
@@ -968,7 +968,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     if (isChanged) {
         [self.view addSubview:self.edit_sticker_toolBar];
         CGRect frame = self.edit_sticker_toolBar.frame;
-        frame.origin.y = self.view.height-frame.size.height;
+        frame.origin.y = self.view.lfme_height-frame.size.height;
         if (animated) {
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_sticker_toolBar.frame = frame;
@@ -980,7 +980,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         if (_edit_sticker_toolBar.superview == nil) return;
         
         CGRect frame = self.edit_sticker_toolBar.frame;
-        frame.origin.y = self.view.height;
+        frame.origin.y = self.view.lfme_height;
         if (animated) {
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_sticker_toolBar.frame = frame;
@@ -1004,12 +1004,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         return;
     }
     
-    LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFTextBar *textBar) {
+    LFTextBar *textBar = [[LFTextBar alloc] initWithFrame:CGRectMake(0, self.view.lfme_height, self.view.lfme_width, self.view.lfme_height) layout:^(LFTextBar *textBar) {
         textBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
         textBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
         textBar.oKButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"];
         textBar.cancelButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"];
-        textBar.customTopbarHeight = self->_edit_naviBar.height;
+        textBar.customTopbarHeight = self->_edit_naviBar.lfme_height;
         textBar.naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
     }];
     textBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -1047,7 +1047,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     
     [textBar becomeFirstResponder];
     [UIView animateWithDuration:0.25f animations:^{
-        textBar.y = 0;
+        textBar.lfme_y = 0;
     } completion:^(BOOL finished) {
         /** 隐藏顶部栏 */
         self->_isHideNaviBar = YES;
@@ -1058,12 +1058,12 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 #pragma mark - 音轨菜单
 - (void)showAudioTrackBar
 {
-    LFAudioTrackBar *audioTrackBar = [[LFAudioTrackBar alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.view.height) layout:^(LFAudioTrackBar *audioTrackBar) {
+    LFAudioTrackBar *audioTrackBar = [[LFAudioTrackBar alloc] initWithFrame:CGRectMake(0, self.view.lfme_height, self.view.lfme_width, self.view.lfme_height) layout:^(LFAudioTrackBar *audioTrackBar) {
         audioTrackBar.oKButtonTitleColorNormal = self.oKButtonTitleColorNormal;
         audioTrackBar.cancelButtonTitleColorNormal = self.cancelButtonTitleColorNormal;
         audioTrackBar.oKButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_oKButtonTitle"];
         audioTrackBar.cancelButtonTitle = [NSBundle LFME_localizedStringForKey:@"_LFME_cancelButtonTitle"];
-        audioTrackBar.customTopbarHeight = self->_edit_naviBar.height;
+        audioTrackBar.customTopbarHeight = self->_edit_naviBar.lfme_height;
         audioTrackBar.naviHeight = CGRectGetHeight(self.navigationController.navigationBar.frame);
         if (@available(iOS 11.0, *)) {
             audioTrackBar.customToolbarHeight = 44.f+self.navigationController.view.safeAreaInsets.bottom;
@@ -1079,7 +1079,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     [self.view addSubview:audioTrackBar];
     
     [UIView animateWithDuration:0.25f animations:^{
-        audioTrackBar.y = 0;
+        audioTrackBar.lfme_y = 0;
     } completion:^(BOOL finished) {
         /** 隐藏顶部栏 */
         self->_isHideNaviBar = YES;
@@ -1094,7 +1094,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     if (isChanged) {
         [self.view addSubview:self.edit_filter_toolBar];
         CGRect frame = self.edit_filter_toolBar.frame;
-        frame.origin.y = self.view.height-frame.size.height;
+        frame.origin.y = self.view.lfme_height-frame.size.height;
         if (animated) {
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_filter_toolBar.frame = frame;
@@ -1106,7 +1106,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         if (_edit_filter_toolBar.superview == nil) return;
         
         CGRect frame = self.edit_filter_toolBar.frame;
-        frame.origin.y = self.view.height;
+        frame.origin.y = self.view.lfme_height;
         if (animated) {
             [UIView animateWithDuration:.25f animations:^{
                 self->_edit_filter_toolBar.frame = frame;
@@ -1126,11 +1126,11 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 {
     if (_edit_sticker_toolBar == nil) {
         CGFloat row = 4;
-        CGFloat w=self.view.width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
+        CGFloat w=self.view.lfme_width, h=lf_stickerSize*row+lf_stickerMargin*(row+1);
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
-        CGRect frame = CGRectMake(0, self.view.height, w, h);
+        CGRect frame = CGRectMake(0, self.view.lfme_height, w, h);
         
         if (self.stickerBarCacheResource) {
             _edit_sticker_toolBar = [[LFStickerBar alloc] initWithFrame:frame cacheResources:self.stickerBarCacheResource];
@@ -1161,7 +1161,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
-        _edit_clipping_toolBar = [[LFVideoClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.height - h, self.view.width, h)];
+        _edit_clipping_toolBar = [[LFVideoClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.lfme_height - h, self.view.lfme_width, h)];
         _edit_clipping_toolBar.alpha = 0.f;
         _edit_clipping_toolBar.delegate = self;
     }
@@ -1172,11 +1172,11 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 - (JRFilterBar *)edit_filter_toolBar
 {
     if (_edit_filter_toolBar == nil) {
-        CGFloat w=self.view.width, h=100.f;
+        CGFloat w=self.view.lfme_width, h=100.f;
         if (@available(iOS 11.0, *)) {
             h += self.navigationController.view.safeAreaInsets.bottom;
         }
-        _edit_filter_toolBar = [[JRFilterBar alloc] initWithFrame:CGRectMake(0, self.view.height, w, h) defalutEffectType:[_EditingView getFilterType] dataSource:@[
+        _edit_filter_toolBar = [[JRFilterBar alloc] initWithFrame:CGRectMake(0, self.view.lfme_height, w, h) defalutEffectType:[_EditingView getFilterType] dataSource:@[
                                                                                                                                                                     @(LFFilterNameType_None),
                                                                                                                                                                     @(LFFilterNameType_LinearCurve),
                                                                                                                                                                     @(LFFilterNameType_Chrome),
