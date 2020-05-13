@@ -100,6 +100,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 
 - (void)setVideoURL:(NSURL *)url placeholderImage:(UIImage *)image;
 {
+    _originalUrl = url;
     AVAsset *asset = [AVURLAsset assetWithURL:url];
     [self setVideoAsset:asset placeholderImage:image];
 }
@@ -552,6 +553,7 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 [strongSelf->_EditingView pauseVideo];
+                videoEdit = [[LFVideoEdit alloc] initWithEditAsset:weakSelf.asset editFinalURL:weakSelf.originalUrl data:data];
                 [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
                 if ([weakSelf.delegate respondsToSelector:@selector(lf_VideoEditingController:didFinishPhotoEdit:)]) {
                     [weakSelf.delegate lf_VideoEditingController:weakSelf didFinishPhotoEdit:videoEdit];
