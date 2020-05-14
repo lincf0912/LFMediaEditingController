@@ -37,14 +37,14 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     self = [super init];
     
     if (self) {
-        if (@available(iOS 9.0, *)) {
+#ifdef NSFoundationVersionNumber_iOS_9_0
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
             _CGContext = contextRef;
             _CIContext = [CIContext contextWithCGContext:contextRef options:LFContextCreateCIContextOptions()];
             _type = LFContextTypeCoreGraphics;
 #pragma clang diagnostic pop
-        }
+#endif
     }
     
     return self;
@@ -73,44 +73,53 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     return self;
 }
 
-#if !(TARGET_IPHONE_SIMULATOR)
+#ifdef NSFoundationVersionNumber_iOS_9_0
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
 - (instancetype)initWithMTLDevice:(id<MTLDevice>)device {
     self = [super init];
     
     if (self) {
         _MTLDevice = device;
-        if (@available(iOS 9.0, *)) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-            _CIContext = [CIContext contextWithMTLDevice:device options:LFContextCreateCIContextOptions()];
-            _type = LFContextTypeMetal;
-#pragma clang diagnostic pop
-        }
+        _CIContext = [CIContext contextWithMTLDevice:device options:LFContextCreateCIContextOptions()];
+        _type = LFContextTypeMetal;
     }
     
     return self;
 }
+#pragma clang diagnostic pop
 #endif
+
+- (void)dealloc
+{
+    if (_EAGLContext) {
+        [EAGLContext setCurrentContext:nil];
+        _EAGLContext = nil;
+    }
+    _CGContext = nil;
+    _MTLDevice = nil;
+    _CIContext = nil;
+}
 
 + (LFContextType)suggestedContextType {
 
-#if !(TARGET_IPHONE_SIMULATOR)
 //#pragma clang diagnostic push
 //#pragma clang diagnostic ignored "-Wunguarded-availability"
 //    if ([self supportsType:LFContextTypeMetal]) {
 //        return LFContextTypeMetal;
 //    } else
 //#pragma clang diagnostic pop
-#endif
     if ([self supportsType:LFContextTypeEAGL]) {
         return LFContextTypeEAGL;
     } else
     
+#ifdef NSFoundationVersionNumber_iOS_9_0
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
         if ([self supportsType:LFContextTypeCoreGraphics]) {
             return LFContextTypeCoreGraphics;
 #pragma clang diagnostic pop
+#endif
     } else {
         return LFContextTypeDefault;
     }
@@ -120,7 +129,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
     id CIContextClass = [CIContext class];
     
     switch (contextType) {
-#if !(TARGET_IPHONE_SIMULATOR)
+#ifdef NSFoundationVersionNumber_iOS_9_0
         case LFContextTypeMetal:
             return [CIContextClass respondsToSelector:@selector(contextWithMTLDevice:options:)] && MTLCreateSystemDefaultDevice();
 #endif
@@ -141,6 +150,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
         case LFContextTypeAuto:
             return [self contextWithType:[self suggestedContextType] options:options];
 #if !(TARGET_IPHONE_SIMULATOR)
+#ifdef NSFoundationVersionNumber_iOS_9_0
         case LFContextTypeMetal: {
             if (@available(iOS 8.0, *)) {
                 id<MTLDevice> device = options[LFContextOptionsMTLDeviceKey];
@@ -154,6 +164,7 @@ static NSDictionary *LFContextCreateCIContextOptions() {
                 return [[self alloc] initWithMTLDevice:device];
             }
         }
+#endif
 #endif
         case LFContextTypeCoreGraphics: {
             CGContextRef context = (__bridge CGContextRef)(options[LFContextOptionsCGContextKey]);
@@ -174,12 +185,13 @@ static NSDictionary *LFContextCreateCIContextOptions() {
             
             if (context == nil) {
                 static dispatch_once_t onceToken;
-                static EAGLSharegroup *shareGroup;
+                static EAGLSharegroup *lf_EAGLShareGroup ;
                 dispatch_once(&onceToken, ^{
-                    shareGroup = [EAGLSharegroup new];
+                    lf_EAGLShareGroup = [EAGLSharegroup new];
+                    lf_EAGLShareGroup.debugLabel = @"LFContext";
                 });
                 
-                context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:shareGroup];
+                context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:lf_EAGLShareGroup];
             }
             return [[self alloc] initWithEAGLContext:context];
         }

@@ -18,7 +18,6 @@ static char* LFItemChanged = "CurrentItemContext";
     CADisplayLink *_displayLink;
     AVPlayerItemVideoOutput *_videoOutput;
     AVPlayerItem *_oldItem;
-    id _timeObserver;
 }
 @end
 
@@ -220,6 +219,7 @@ static char* LFItemChanged = "CurrentItemContext";
         if ([item.outputs containsObject:_videoOutput]) {
             [item removeOutput:_videoOutput];
         }
+        [_videoOutput setDelegate:nil queue:nil];
         _videoOutput = nil;
     }
 }
