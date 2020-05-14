@@ -218,8 +218,8 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
     
     double minClippingDuration = [self operationDoubleForKey:LFVideoEditClipMinDurationAttributeName];
     double maxClippingDuration = [self operationDoubleForKey:LFVideoEditClipMaxDurationAttributeName];
-    NSAssert(minClippingDuration > 0 && minClippingDuration < maxClippingDuration, @"Must be greater than 0 and less than LFVideoEditClipMaxDurationAttributeName");
-    NSAssert(maxClippingDuration > minClippingDuration, @"Must be greater than LFVideoEditClipMinDurationAttributeName");
+    NSAssert(minClippingDuration > 0 && (maxClippingDuration == 0 || minClippingDuration < maxClippingDuration), @"Must be greater than 0 and less than LFVideoEditClipMaxDurationAttributeName");
+    NSAssert(maxClippingDuration == 0 || maxClippingDuration > minClippingDuration, @"Must be greater than LFVideoEditClipMinDurationAttributeName");
     _EditingView.minClippingDuration = minClippingDuration;
     _EditingView.maxClippingDuration = maxClippingDuration;
     
