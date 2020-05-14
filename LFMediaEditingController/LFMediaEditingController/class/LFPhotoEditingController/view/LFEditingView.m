@@ -16,6 +16,8 @@
 #import "UIView+LFMECommon.h"
 #import "UIImage+LFMECommon.h"
 
+#import "LFMediaEditingHeader.h"
+
 #import <AVFoundation/AVFoundation.h>
 
 #define kMaxZoomScale 2.5f
@@ -187,6 +189,10 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     if (image) {
         _imageSize = image.size;
         CGRect cropRect = AVMakeRectWithAspectRatioInsideRect(self.imageSize, self.bounds);
+        
+        /** 参数取整，否则可能会出现1像素偏差 */
+        cropRect = LFMediaEditProundRect(cropRect);
+        
         self.gridView.controlSize = cropRect.size;
         self.gridView.gridRect = cropRect;
         self.gridView.aspectRatioHorizontally = (self.imageSize.width > self.imageSize.height);
@@ -600,10 +606,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     CGRect clippingRect = self.clippingView.frame;
     
     /** 参数取整，否则可能会出现1像素偏差 */
-    clippingRect.origin.x = ((int)(clippingRect.origin.x+0.5)*1.f);
-    clippingRect.origin.y = ((int)(clippingRect.origin.y+0.5)*1.f);
-    clippingRect.size.width = ((int)(clippingRect.size.width+0.5)*1.f);
-    clippingRect.size.height = ((int)(clippingRect.size.height+0.5)*1.f);
+    clippingRect = LFMediaEditProundRect(clippingRect);
     
     CGSize size = clippingRect.size;
     
@@ -631,10 +634,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
         clipRect = CGRectMake(contentOffset.x/clipScale, contentOffset.y/clipScale, size.width/clipScale, size.height/clipScale);
     }
     /** 参数取整，否则可能会出现1像素偏差 */
-    clipRect.origin.x = ((int)(clipRect.origin.x+0.5)*1.f);
-    clipRect.origin.y = ((int)(clipRect.origin.y+0.5)*1.f);
-    clipRect.size.width = ((int)(clipRect.size.width+0.5)*1.f);
-    clipRect.size.height = ((int)(clipRect.size.height+0.5)*1.f);
+    clipRect = LFMediaEditProundRect(clipRect);
     
     // CIImage 的原始坐标在左下角，y值需要重新计算。（注：因使用CIImage的截取方式会出现模糊情况。改为使用CGImage的方法。）
 //    clipRect.origin.y = (int)((contentSize.height/clipScale - clipRect.size.height - clipRect.origin.y)+0.5)*1.f;

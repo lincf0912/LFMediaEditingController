@@ -43,4 +43,6 @@
 OBJC_EXTERN double const LFMediaEditMinRate;
 OBJC_EXTERN double const LFMediaEditMaxRate;
 
+OBJC_EXTERN CGRect LFMediaEditProundRect(CGRect rect);
+
 #endif /* LFMediaEditingHeader_h */

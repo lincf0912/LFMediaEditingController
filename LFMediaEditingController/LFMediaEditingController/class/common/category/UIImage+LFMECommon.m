@@ -216,6 +216,9 @@
 //截取部分图像
 - (UIImage *)LFME_cropInRect:(CGRect)rect
 {
+    if (CGPointEqualToPoint(CGPointZero, rect.origin) && CGSizeEqualToSize(self.size, rect.size)) {
+        return self;
+    }
     UIImage *smallImage = nil;
     CGImageRef sourceImageRef = [self CGImage];
     CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);

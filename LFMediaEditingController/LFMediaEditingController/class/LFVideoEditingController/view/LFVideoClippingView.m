@@ -165,6 +165,10 @@ NSString *const kLFVideoCLippingViewData_filter = @"LFVideoCLippingViewData_filt
         videoSize = self.zoomingView.lfme_size;
     }
     CGRect editRect = AVMakeRectWithAspectRatioInsideRect(videoSize, self.originalRect);
+    
+    /** 参数取整，否则可能会出现1像素偏差 */
+    editRect = LFMediaEditProundRect(editRect);
+    
     self.frame = editRect;
     _zoomingView.lfme_size = editRect.size;
     

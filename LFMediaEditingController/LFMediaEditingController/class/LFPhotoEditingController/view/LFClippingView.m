@@ -10,6 +10,8 @@
 #import "LFZoomingView.h"
 #import "UIView+LFMEFrame.h"
 #import "UIImage+LFMECommon.h"
+#import "LFMediaEditingHeader.h"
+
 #import <AVFoundation/AVFoundation.h>
 
 #define kRound(x) (round(x*100000)/100000)
@@ -141,10 +143,8 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     CGRect inRect = [self.superview convertRect:rect toView:self.zoomingView];
     /** 参数取整，否则可能会出现1像素偏差 */
-    inRect.origin.x = ((int)(inRect.origin.x+0.5)*1.f);
-    inRect.origin.y = ((int)(inRect.origin.y+0.5)*1.f);
-    inRect.size.width = ((int)(inRect.size.width+0.5)*1.f);
-    inRect.size.height = ((int)(inRect.size.height+0.5)*1.f);
+    inRect = LFMediaEditProundRect(inRect);
+    
     return [self.zoomingView editOtherImagesInRect:inRect rotate:rotate];
 }
 
