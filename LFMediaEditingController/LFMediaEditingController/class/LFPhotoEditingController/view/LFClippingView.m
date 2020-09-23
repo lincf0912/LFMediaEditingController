@@ -59,6 +59,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 @property (nonatomic, assign) CGFloat old_minimumZoomScale;
 @property (nonatomic, assign) CGFloat old_maximumZoomScale;
 @property (nonatomic, assign) CGAffineTransform old_transform;
+@property (nonatomic, assign) NSInteger old_angle;
 
 @end
 
@@ -158,6 +159,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
     self.old_contentOffset = self.contentOffset;
     self.old_minimumZoomScale = self.minimumZoomScale;
     self.old_maximumZoomScale = self.maximumZoomScale;
+    self.old_angle = self.angle;
     
     _cropRect = cropRect;
     
@@ -204,7 +206,7 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
 {
     if (!CGRectEqualToRect(self.old_frame, CGRectZero)) {
         self.transform = self.old_transform;
-        self.angle = 0;
+        self.angle = self.old_angle;
         self.frame = self.old_frame;
         self.saveRect = self.frame;
         self.minimumZoomScale = self.old_minimumZoomScale;

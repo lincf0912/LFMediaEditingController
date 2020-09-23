@@ -29,6 +29,8 @@
 @property (nonatomic, readonly) BOOL isReseting;
 /** 是否旋转中 */
 @property (nonatomic, readonly) BOOL isRotating;
+/** 旋转角度 */
+@property (nonatomic, readonly) NSInteger angle;
 /** 是否缩放中 */
 //@property (nonatomic, readonly) BOOL isZooming;
 /** 是否可还原 */
