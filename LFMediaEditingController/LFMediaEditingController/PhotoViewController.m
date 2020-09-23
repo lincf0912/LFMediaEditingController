@@ -87,6 +87,7 @@
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//指定数据来源是相册
+    picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:picker.sourceType];
     
     picker.delegate = self;
     
