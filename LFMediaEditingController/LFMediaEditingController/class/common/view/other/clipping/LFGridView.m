@@ -249,19 +249,19 @@ const CGFloat kControlWidth = 30.f;
 - (NSArray <NSString *>*)aspectRatioDescs
 {
     if (_aspectRatioHorizontally) {
-        static NSArray <NSString *> *aspectRatioHorizontally = nil;
+        static NSArray <NSString *> *aspectRatioHorizontallyDescs = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            aspectRatioHorizontally = @[@"Original", @"1x1", @"3x2", @"4x3", @"5x3", @"15x9", @"16x9", @"16x10"];
+            aspectRatioHorizontallyDescs = @[@"Original", @"1x1", @"3x2", @"4x3", @"5x3", @"15x9", @"16x9", @"16x10"];
         });
-        return aspectRatioHorizontally;
+        return aspectRatioHorizontallyDescs;
     } else {
-        static NSArray <NSString *> *aspectRatioVertical = nil;
+        static NSArray <NSString *> *aspectRatioVerticalDescs = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            aspectRatioVertical = @[@"Original", @"1x1", @"2x3", @"3x4", @"3x5", @"9x15", @"9x16", @"10x16"];
+            aspectRatioVerticalDescs = @[@"Original", @"1x1", @"2x3", @"3x4", @"3x5", @"9x15", @"9x16", @"10x16"];
         });
-        return aspectRatioVertical;
+        return aspectRatioVerticalDescs;
     }
 }
 
@@ -269,7 +269,20 @@ const CGFloat kControlWidth = 30.f;
 
 - (CGSize)aspectRatioSize
 {
-    if (self.aspectRatioHorizontally) {
+    BOOL aspectRatioHorizontally = self.aspectRatioHorizontally;
+    switch (self.angle) {
+        case 90:
+        case -90:
+        case 270:
+        case -270:
+            aspectRatioHorizontally = !aspectRatioHorizontally;
+            break;
+        default:
+            break;
+    }
+    
+    
+    if (aspectRatioHorizontally) {
         switch (self.aspectRatio) {
             case LFGridViewAspectRatioType_None:
                 return CGSizeZero;

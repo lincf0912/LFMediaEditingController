@@ -42,6 +42,8 @@ typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
 
 /** 比例是否水平翻转 */
 @property (nonatomic, assign) BOOL aspectRatioHorizontally;
+/** 旋转系数 */
+@property (nonatomic, assign) NSInteger angle;
 /** 设置固定比例 */
 @property (nonatomic, assign) LFGridViewAspectRatioType aspectRatio;
 - (void)setAspectRatio:(LFGridViewAspectRatioType)aspectRatio animated:(BOOL)animated;
