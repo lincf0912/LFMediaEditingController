@@ -518,8 +518,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     [self.clippingView cancel];
     _clippingRect = AVMakeRectWithAspectRatioInsideRect(self.clippingView.lfme_size, self.bounds);
-    self.gridView.gridRect = self.clippingView.frame;
+    self.gridView.angle = self.clippingView.angle;
     [self.gridView setAspectRatioWithoutDelegate:self.old_aspectRatio];
+    self.gridView.gridRect = self.clippingView.frame;
     self.imagePixel.center = CGPointMake(CGRectGetMidX(self.gridView.gridRect), CGRectGetMidY(self.gridView.gridRect));
     self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
 }
@@ -711,6 +712,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     __weak typeof(self) weakSelf = self;
     void (^block)(CGRect) = ^(CGRect rect){
         if (clippingView.isReseting || clippingView.isRotating) { /** 重置/旋转 需要将遮罩显示也重置 */
+            weakSelf.gridView.angle = clippingView.angle;
             [weakSelf.gridView setGridRect:rect maskLayer:YES animated:YES];
         } else if (clippingView.isZooming) { /** 缩放 */
             weakSelf.gridView.showMaskLayer = NO;
@@ -1019,6 +1021,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     self.clippingView.photoEditData = photoEditData[kLFEditingViewData_clippingView];
     _clippingRect = self.clippingView.frame;
+    self.gridView.angle = self.clippingView.angle;
     self.gridView.gridRect = self.clippingRect;
     self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
     NSDictionary *myData = photoEditData[kLFEditingViewData];
