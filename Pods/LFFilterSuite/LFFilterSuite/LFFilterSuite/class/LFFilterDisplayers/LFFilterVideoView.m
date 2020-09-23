@@ -217,7 +217,14 @@ static char* LFItemChanged = "CurrentItemContext";
 - (void)unsetupVideoOutputToItem:(AVPlayerItem *)item {
     if (_videoOutput != nil && item != nil) {
         if ([item.outputs containsObject:_videoOutput]) {
-            [item removeOutput:_videoOutput];
+            AVPlayerItemVideoOutput *videoOutput = _videoOutput;
+            if (videoOutput.delegateQueue) {
+                dispatch_async(videoOutput.delegateQueue, ^{
+                    [item removeOutput:videoOutput];
+                });
+            } else {
+                [item removeOutput:videoOutput];
+            }
         }
         [_videoOutput setDelegate:nil queue:nil];
         _videoOutput = nil;

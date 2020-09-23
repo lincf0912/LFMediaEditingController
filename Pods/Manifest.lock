@@ -1,6 +1,6 @@
 PODS:
   - LFAssetExportSession (1.0.2)
-  - LFFilterSuite (1.0.2):
+  - LFFilterSuite (1.0.3):
     - LFAssetExportSession
 
 DEPENDENCIES:
@@ -13,8 +13,8 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   LFAssetExportSession: bd22818d071a842fd594a72f188321a91ba13f0d
-  LFFilterSuite: cf22df0a0c97557453f9f7ac2781234a94366aab
+  LFFilterSuite: 522f6a3d94ee66528b7db5b34a9b84312b882de4
 
 PODFILE CHECKSUM: 985587071e33ab9504608bc8e89ffaea41428acf
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3
