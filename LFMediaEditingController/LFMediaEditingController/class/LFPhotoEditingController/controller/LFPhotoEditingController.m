@@ -47,6 +47,8 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropAspectRatioAttributeName = @"
 LFPhotoEditOperationStringKey const LFPhotoEditCropCanRotateAttributeName = @"LFPhotoEditCropCanRotateAttributeName";
 /** 允许剪切比例 NSNumber containing LFPhotoEditOperationSubType, default YES */
 LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName = @"LFPhotoEditCropCanAspectRatioAttributeName";
+/** 自定义剪切比例。NSArray containing NSArray<id <LFExtraAspectRatioProtocol>>, default nil. */
+LFPhotoEditOperationStringKey const LFPhotoEditCropExtraAspectRatioAttributeName = @"LFPhotoEditCropExtraAspectRatioAttributeName";
 /************************ Attributes ************************/
 
 @interface LFPhotoEditingController () <LFEditToolbarDelegate, LFStickerBarDelegate, JRFilterBarDelegate, JRFilterBarDataSource, LFClipToolbarDelegate, LFEditToolbarDataSource, LFTextBarDelegate, LFPhotoEditDelegate, LFEditingViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
@@ -208,6 +210,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     _EditingView.editDelegate = self;
     _EditingView.clippingDelegate = self;
     _EditingView.fixedAspectRatio = ![self operationBOOLForKey:LFPhotoEditCropCanAspectRatioAttributeName];
+    _EditingView.extraAspectRatioList = [self operationArrayForKey:LFPhotoEditCropExtraAspectRatioAttributeName];
     
     /** 单击的 Recognizer */
     singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singlePressed)];
@@ -1358,7 +1361,8 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
         #pragma clang diagnostic push
         #pragma clang diagnostic ignored "-Wunused-variable"
                 
-        BOOL isContain = [key isEqualToString:LFPhotoEditStickerContentsAttributeName];
+        BOOL isContain = [key isEqualToString:LFPhotoEditStickerContentsAttributeName]
+        || [key isEqualToString:LFPhotoEditCropExtraAspectRatioAttributeName];
         NSAssert(!isContain, @"The type corresponding to this key %@ is NSArray", key);
         #pragma clang diagnostic pop
     }

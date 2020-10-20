@@ -21,6 +21,10 @@
 "_LFME_AudioTackTitle_prompt" = "自定义音乐";
 
 /* -------- LFRatioMenu  -------*/
+/**
+ * 命名规则 _LFME_ratio_$name
+ * 例如："_LFME_ratio_1x1" = "等比"
+ */
 "_LFME_ratio_Original" = "Original";
 
 /* -------- LFFilterMenu  -------*/

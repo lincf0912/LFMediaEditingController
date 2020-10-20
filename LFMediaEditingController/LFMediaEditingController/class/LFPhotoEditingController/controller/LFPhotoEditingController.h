@@ -9,6 +9,7 @@
 #import "LFBaseEditingController.h"
 #import "LFStickerContent.h"
 #import "LFPhotoEdit.h"
+#import "LFExtraAspectRatio.h"
 
 typedef NS_ENUM(NSUInteger, LFPhotoEditOperationType) {
     /** 绘画 */
@@ -121,6 +122,18 @@ UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditCropCanRotateAttribu
  NSNumber containing LFPhotoEditOperationSubType, default YES
  */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName;
+/**
+ 自定义剪切比例。将会完全重写剪切比例，如需修改显示比例的名称可在LFImagePickerController.strings修改。
+ Customize the aspect ratio. The aspect ratio will be rewritten. If you need to modify the name of the display, you can modify it in LFImagePickerController.strings.
+ 
+ NSArray containing NSArray<id <LFExtraAspectRatioProtocol>>, default nil.
+ ex:
+ @[
+    [LFExtraAspectRatio extraAspectRatioWithWidth:9 andHeight:16],
+    [LFExtraAspectRatio extraAspectRatioWithWidth:2 andHeight:3],
+ ].
+ */
+UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditCropExtraAspectRatioAttributeName;
 
 /************************ Attributes ************************/
 

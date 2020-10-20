@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LFExtraAspectRatioProtocol.h"
 
 typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
     LFGridViewAspectRatioType_None,
@@ -18,6 +19,8 @@ typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
     LFGridViewAspectRatioType_15x9,
     LFGridViewAspectRatioType_16x9,
     LFGridViewAspectRatioType_16x10,
+    // 其它配置
+    LFGridViewAspectRatioType_Extra = 100,
 };
 
 @protocol LFGridViewDelegate;
@@ -42,6 +45,8 @@ typedef NS_ENUM(NSUInteger, LFGridViewAspectRatioType) {
 
 /** 比例是否水平翻转 */
 @property (nonatomic, assign) BOOL aspectRatioHorizontally;
+/** 其它比例配置，将会完全重写比例配置 */
+@property (nonatomic, strong) NSArray <id <LFExtraAspectRatioProtocol>>*extraAspectRatioList;
 /** 旋转系数 */
 @property (nonatomic, assign) NSInteger angle;
 /** 设置固定比例 */

@@ -204,9 +204,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
         /** 参数取整，否则可能会出现1像素偏差 */
         cropRect = LFMediaEditProundRect(cropRect);
         
+        self.gridView.aspectRatioHorizontally = (self.imageSize.width > self.imageSize.height);
         self.gridView.controlSize = cropRect.size;
         self.gridView.gridRect = cropRect;
-        self.gridView.aspectRatioHorizontally = (self.imageSize.width > self.imageSize.height);
         self.imagePixel.center = CGPointMake(CGRectGetMidX(cropRect), CGRectGetMidY(cropRect));
         /** 调整最大缩放比例 */
         {
@@ -579,6 +579,17 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 {
     _defaultAspectRatioIndex = defaultAspectRatioIndex;
     _onceDefaultAspectRatioIndex = defaultAspectRatioIndex;
+}
+
+/** 重写比例配置 */
+- (void)setExtraAspectRatioList:(NSArray<id<LFExtraAspectRatioProtocol>> *)extraAspectRatioList
+{
+    self.gridView.extraAspectRatioList = extraAspectRatioList;
+}
+
+- (NSArray<id<LFExtraAspectRatioProtocol>> *)extraAspectRatioList
+{
+    return self.gridView.extraAspectRatioList;
 }
 
 /** 长宽比例 */

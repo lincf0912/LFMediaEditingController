@@ -22,6 +22,7 @@
 		3B32D1CF242B23AD005D0258 /* LFPaintBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B32D1BE242B23AD005D0258 /* LFPaintBrush.m */; };
 		3B32D1D0242B23AD005D0258 /* LFStampBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B32D1C0242B23AD005D0258 /* LFStampBrush.m */; };
 		3B32D1D1242B23AD005D0258 /* LFDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B32D1C3242B23AD005D0258 /* LFDrawView.m */; };
+		3B4A43E5253EE8E3002916E7 /* LFExtraAspectRatio.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B4A43E4253EE8E2002916E7 /* LFExtraAspectRatio.m */; };
 		3B86CC6124162B4000D6FA06 /* UIView+LFDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B86CC5F24162B4000D6FA06 /* UIView+LFDownloadManager.m */; };
 		3B86CC6224162B4000D6FA06 /* LFDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B86CC6024162B4000D6FA06 /* LFDownloadManager.m */; };
 		3B86CD73241A1F6A00D6FA06 /* UIColor+TransformColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B86CD4A241A1F6A00D6FA06 /* UIColor+TransformColor.m */; };
@@ -161,6 +162,9 @@
 		3B32D1C2242B23AD005D0258 /* LFHighlightBrush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFHighlightBrush.h; sourceTree = "<group>"; };
 		3B32D1C3242B23AD005D0258 /* LFDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFDrawView.m; sourceTree = "<group>"; };
 		3B32D1D2242B23FA005D0258 /* LFDrawViewHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFDrawViewHeader.h; sourceTree = "<group>"; };
+		3B4A43E0253ED658002916E7 /* LFExtraAspectRatioProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFExtraAspectRatioProtocol.h; sourceTree = "<group>"; };
+		3B4A43E3253EE8E2002916E7 /* LFExtraAspectRatio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFExtraAspectRatio.h; sourceTree = "<group>"; };
+		3B4A43E4253EE8E2002916E7 /* LFExtraAspectRatio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFExtraAspectRatio.m; sourceTree = "<group>"; };
 		3B86CC5D24162B4000D6FA06 /* UIView+LFDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+LFDownloadManager.h"; sourceTree = "<group>"; };
 		3B86CC5E24162B4000D6FA06 /* LFDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFDownloadManager.h; sourceTree = "<group>"; };
 		3B86CC5F24162B4000D6FA06 /* UIView+LFDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+LFDownloadManager.m"; sourceTree = "<group>"; };
@@ -673,6 +677,8 @@
 		3BC5BD3C24035BED00675877 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				3B4A43E3253EE8E2002916E7 /* LFExtraAspectRatio.h */,
+				3B4A43E4253EE8E2002916E7 /* LFExtraAspectRatio.m */,
 				3BC5BD3D24035BED00675877 /* LFText.m */,
 				3BC5BD3E24035BED00675877 /* LFStickerItem.m */,
 				3BC5BD3F24035BED00675877 /* LFStickerItem+View.h */,
@@ -883,6 +889,7 @@
 				C763E8272331D4D90004ED6C /* LFEditingProtocol.m */,
 				6FAB0D3D1F27357A00C1BCFD /* LFPhotoEditDelegate.h */,
 				3B897EF42403A0D300A3E854 /* LFFilterDataProtocol.h */,
+				3B4A43E0253ED658002916E7 /* LFExtraAspectRatioProtocol.h */,
 			);
 			path = define;
 			sourceTree = "<group>";
@@ -1425,6 +1432,7 @@
 				3B32D1D0242B23AD005D0258 /* LFStampBrush.m in Sources */,
 				C78B9C4F1FC54E2100D82F1F /* NaviViewController.m in Sources */,
 				C72C3960236ACB04008C55B1 /* SPBaseCollectionViewCell.m in Sources */,
+				3B4A43E5253EE8E3002916E7 /* LFExtraAspectRatio.m in Sources */,
 				C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */,
 				3BC5BD4B24035BED00675877 /* LFStickerItem.m in Sources */,
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,

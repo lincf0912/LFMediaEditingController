@@ -117,14 +117,16 @@
 - (void)photoEditing
 {
 //    NSArray *stickerGifs = @[[NSURL URLWithString:@"https://n.sinaimg.cn/tech/transform/677/w400h277/20200219/4639-iprtayz5721379.gif"], [NSURL URLWithString:@"https://f.sinaimg.cn/tech/transform/40/w420h420/20200214/b778-ipmxpvz6387339.gif"], [NSURL URLWithString:@"https://n.sinaimg.cn/tech/transform/362/w244h118/20200214/d095-ipmxpvz6380936.gif"], [NSURL URLWithString:@"https://n.sinaimg.cn/tech/transform/552/w315h237/20200214/75d2-ipmxpvz6380604.gif"], [NSURL URLWithString:@"https://n.sinaimg.cn/tech/transform/538/w350h188/20200214/49ef-ipmxpvz6378358.gif"], [NSURL URLWithString:@"https://n.sinaimg.cn/tech/transform/18/w536h282/20200213/256b-ipmxpvz2333375.gif"], [NSURL URLWithString:@"https://f.sinaimg.cn/tech/transform/755/w280h475/20200213/ae28-ipmxpvz2324934.gif"], [NSURL URLWithString:@"https://n.sinaimg.cn/tech/transform/704/w351h353/20200213/34b7-ipmxpvz2320937.gif"], [NSURL URLWithString:@"https://f.sinaimg.cn/tech/transform/474/w308h166/20200213/3554-ipmxpvz2313851.gif"], [NSURL URLWithString:@"https://fail.gif"]];
-//
 //    NSURL *appendFile = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"1.jpg" ofType:nil]];
 //    NSURL *failFile = [NSURL fileURLWithPath:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"test"]];
+    
+    
     
     LFPhotoEditingController *lfPhotoEditVC = [[LFPhotoEditingController alloc] init];
 //    lfPhotoEditVC.operationType = LFPhotoEditOperationType_draw | LFPhotoEditOperationType_splash;
 //    lfPhotoEditVC.defaultOperationType = LFPhotoEditOperationType_crop; // 默认剪裁
-//    lfPhotoEditVC.operationAttrs = @{
+    // 以下属性建议逐个开放测试。
+    lfPhotoEditVC.operationAttrs = @{
 //                                     LFPhotoEditDrawColorAttributeName:@(LFPhotoEditOperationSubTypeDrawVioletRedColor), // 绘画紫罗兰红色
 //                                     LFPhotoEditDrawBrushAttributeName:@(LFPhotoEditOperationSubTypeDrawStampFruitBrush), // 绘画笔刷
 //                                     LFPhotoEditStickerContentsAttributeName:@[
@@ -143,7 +145,12 @@
 //                                     LFPhotoEditCropAspectRatioAttributeName:@(LFPhotoEditOperationSubTypeCropAspectRatio1x1), //剪裁尺寸
 //                                     LFPhotoEditCropCanRotateAttributeName:@(NO), //不允许剪切旋转
 //                                     LFPhotoEditCropCanAspectRatioAttributeName:@(NO), //不允许剪切比例调整
-//                                     };
+//                                     LFPhotoEditCropExtraAspectRatioAttributeName:@[
+//                                             [LFExtraAspectRatio extraAspectRatioWithWidth:9 andHeight:16],
+//                                             [LFExtraAspectRatio extraAspectRatioWithWidth:16 andHeight:9],
+//                                             [LFExtraAspectRatio extraAspectRatioWithWidth:2 andHeight:3],
+//                                     ], //自定义纵横比
+                                     };
     
     lfPhotoEditVC.delegate = self;
     LFPhotoEdit *photoEdit = self.photoEdit;

@@ -220,6 +220,9 @@ const CGFloat kControlWidth = 30.f;
 
 - (void)setAspectRatio:(LFGridViewAspectRatioType)aspectRatio animated:(BOOL)animated
 {
+    if (self.extraAspectRatioList && aspectRatio != LFGridViewAspectRatioType_None) {
+        aspectRatio += LFGridViewAspectRatioType_Extra;
+    }
     if (_aspectRatio != aspectRatio) {
 //        LFGridViewAspectRatioType prevAspectRatio = _aspectRatio;
         _aspectRatio = aspectRatio;
@@ -252,14 +255,30 @@ const CGFloat kControlWidth = 30.f;
         static NSArray <NSString *> *aspectRatioHorizontallyDescs = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            aspectRatioHorizontallyDescs = @[@"Original", @"1x1", @"3x2", @"4x3", @"5x3", @"15x9", @"16x9", @"16x10"];
+            if (self.extraAspectRatioList) {
+                NSMutableArray *m_array = [NSMutableArray arrayWithCapacity:self.extraAspectRatioList.count];
+                for (id <LFExtraAspectRatioProtocol> extraAspectRatio in self.extraAspectRatioList) {
+                    [m_array addObject:[NSString stringWithFormat:@"%d%@%d", abs(extraAspectRatio.lf_aspectWidth), extraAspectRatio.lf_aspectDelimiter ?: @"x", abs(extraAspectRatio.lf_aspectHeight)]];
+                }
+                aspectRatioHorizontallyDescs = [m_array copy];
+            } else {
+                aspectRatioHorizontallyDescs = @[@"Original", @"1x1", @"3x2", @"4x3", @"5x3", @"15x9", @"16x9", @"16x10"];
+            }
         });
         return aspectRatioHorizontallyDescs;
     } else {
         static NSArray <NSString *> *aspectRatioVerticalDescs = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            aspectRatioVerticalDescs = @[@"Original", @"1x1", @"2x3", @"3x4", @"3x5", @"9x15", @"9x16", @"10x16"];
+            if (self.extraAspectRatioList) {
+                NSMutableArray *m_array = [NSMutableArray arrayWithCapacity:self.extraAspectRatioList.count];
+                for (id <LFExtraAspectRatioProtocol> extraAspectRatio in self.extraAspectRatioList) {
+                    [m_array addObject:[NSString stringWithFormat:@"%d%@%d", abs(extraAspectRatio.lf_aspectHeight), extraAspectRatio.lf_aspectDelimiter ?: @"x", abs(extraAspectRatio.lf_aspectWidth)]];
+                }
+                aspectRatioVerticalDescs = [m_array copy];
+            } else {
+                aspectRatioVerticalDescs = @[@"Original", @"1x1", @"2x3", @"3x4", @"3x5", @"9x15", @"9x16", @"10x16"];
+            }
         });
         return aspectRatioVerticalDescs;
     }
@@ -305,6 +324,15 @@ const CGFloat kControlWidth = 30.f;
                 return CGSizeMake(16, 9);
             case LFGridViewAspectRatioType_16x10:
                 return CGSizeMake(16, 10);
+            default:
+            {
+                NSUInteger index = self.aspectRatio - LFGridViewAspectRatioType_Extra - 1;
+                if (index < self.extraAspectRatioList.count) {
+                    id <LFExtraAspectRatioProtocol> extraAspectRatio = self.extraAspectRatioList[index];
+                    return CGSizeMake(abs(extraAspectRatio.lf_aspectWidth), abs(extraAspectRatio.lf_aspectHeight));
+                }
+                return CGSizeZero;
+            }
         }
     } else {
         switch (self.aspectRatio) {
@@ -329,6 +357,15 @@ const CGFloat kControlWidth = 30.f;
                 return CGSizeMake(9, 16);
             case LFGridViewAspectRatioType_16x10:
                 return CGSizeMake(10, 16);
+            default:
+            {
+                NSUInteger index = self.aspectRatio - LFGridViewAspectRatioType_Extra - 1;
+                if (index < self.extraAspectRatioList.count) {
+                    id <LFExtraAspectRatioProtocol> extraAspectRatio = self.extraAspectRatioList[index];
+                    return CGSizeMake(abs(extraAspectRatio.lf_aspectHeight), abs(extraAspectRatio.lf_aspectWidth));
+                }
+                return CGSizeZero;
+            }
         }
     }
     

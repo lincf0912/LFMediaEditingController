@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LFScrollView.h"
 #import "LFEditingProtocol.h"
+#import "LFExtraAspectRatioProtocol.h"
 
 @protocol LFEditingViewDelegate;
 
@@ -38,6 +39,8 @@
 - (void)rotate;
 /** 默认长宽比例 */
 @property (nonatomic, assign) NSUInteger defaultAspectRatioIndex;
+/** 重写比例配置 */
+@property (nonatomic, strong) NSArray <id <LFExtraAspectRatioProtocol>>*extraAspectRatioList;
 /**
  固定长宽比例
  若为true，以下方法将失效：
