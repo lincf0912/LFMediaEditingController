@@ -9,6 +9,7 @@
 #import "LFMovingView.h"
 #import "LFMediaEditingHeader.h"
 #import "LFStickerItem+View.h"
+#import "UIView+LFMECommon.h"
 
 #define LFMovingView_margin 22
 
@@ -113,7 +114,7 @@
             _contentView.layer.shadowOffset = CGSizeMake(0, 0);
             _contentView.layer.shadowRadius = 2.f;
             
-            [self updateShadow];
+            [_contentView LFME_updateShadow];
         }
         
         _contentView.center = self.center;
@@ -132,6 +133,7 @@
         _deleteButton.layer.shadowOpacity = .5f;
         _deleteButton.layer.shadowOffset = CGSizeMake(0, 0);
         _deleteButton.layer.shadowRadius = 3;
+        [_deleteButton LFME_updateShadow];
         [self addSubview:_deleteButton];
         
         _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, LFMovingView_margin, LFMovingView_margin)];
@@ -141,6 +143,7 @@
         _circleView.layer.shadowOpacity = .5f;
         _circleView.layer.shadowOffset = CGSizeMake(0, 0);
         _circleView.layer.shadowRadius = 3;
+        [_circleView LFME_updateShadow];
         [self addSubview:_circleView];
         
         _scale = 1.f;
@@ -190,30 +193,11 @@
     _contentView.center = center;
     _deleteButton.center = _contentView.frame.origin;
     _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
-    [self updateShadow];
+    [_contentView LFME_updateShadow];
     /** 更新显示视图大小 */
     _view.frame = _contentView.bounds;
     
     [self setScale:_scale rotation:_arg];
-}
-
-- (void)updateShadow
-{
-    CGFloat shadowRadius = _contentView.layer.shadowRadius;
-    
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    path.lineJoinStyle = kCGLineJoinRound;
-    
-    UIBezierPath *leftPath = [UIBezierPath bezierPathWithRect:CGRectMake(-shadowRadius/2, 0, shadowRadius, _contentView.bounds.size.height-shadowRadius)];
-    UIBezierPath *topPath = [UIBezierPath bezierPathWithRect:CGRectMake(shadowRadius/2, -shadowRadius/2, _contentView.bounds.size.width-shadowRadius, shadowRadius)];
-    UIBezierPath *rightPath = [UIBezierPath bezierPathWithRect:CGRectMake(_contentView.bounds.size.width-shadowRadius/2, shadowRadius, shadowRadius, _contentView.bounds.size.height-shadowRadius)];
-    UIBezierPath *bottomPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, _contentView.bounds.size.height-shadowRadius/2, _contentView.bounds.size.width-shadowRadius, shadowRadius)];
-    [path appendPath:topPath];
-    [path appendPath:leftPath];
-    [path appendPath:rightPath];
-    [path appendPath:bottomPath];
-    
-    _contentView.layer.shadowPath = path.CGPath;
 }
 
 - (void)initGestures
@@ -287,6 +271,7 @@
     if (_isActive) {        
         _contentView.layer.borderWidth = 1/_scale/self.screenScale;
         _contentView.layer.cornerRadius = 3/_scale/self.screenScale;
+        [_contentView LFME_updateShadow];
     }
 }
 

@@ -131,4 +131,29 @@
     }
 }
 
+/** 设置阴影 */
+- (void)LFME_updateShadow
+{
+    CGFloat shadowRadius = self.layer.shadowRadius;
+    
+    if (shadowRadius == 0) {
+        self.layer.shadowPath = nil;
+        return;
+    }
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    path.lineJoinStyle = kCGLineJoinRound;
+    
+    UIBezierPath *leftPath = [UIBezierPath bezierPathWithRect:CGRectMake(-shadowRadius/2, 0, shadowRadius, self.bounds.size.height-shadowRadius)];
+    UIBezierPath *topPath = [UIBezierPath bezierPathWithRect:CGRectMake(shadowRadius/2, -shadowRadius/2, self.bounds.size.width-shadowRadius, shadowRadius)];
+    UIBezierPath *rightPath = [UIBezierPath bezierPathWithRect:CGRectMake(self.bounds.size.width-shadowRadius/2, shadowRadius, shadowRadius, self.bounds.size.height-shadowRadius)];
+    UIBezierPath *bottomPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, self.bounds.size.height-shadowRadius/2, self.bounds.size.width-shadowRadius, shadowRadius)];
+    [path appendPath:topPath];
+    [path appendPath:leftPath];
+    [path appendPath:rightPath];
+    [path appendPath:bottomPath];
+    
+    self.layer.shadowPath = path.CGPath;
+}
+
 @end

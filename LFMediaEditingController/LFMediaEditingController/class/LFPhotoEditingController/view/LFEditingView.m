@@ -142,6 +142,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     imagePixel.layer.shadowOffset = CGSizeMake(0, 0);
     imagePixel.layer.shadowRadius = 8;
     imagePixel.alpha = 0.f;
+    [imagePixel LFME_updateShadow];
     [self addSubview:imagePixel];
     self.imagePixel = imagePixel;
     
