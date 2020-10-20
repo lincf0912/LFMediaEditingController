@@ -61,12 +61,10 @@ NSString *const lfgridLayerAnimtionKey = @"lf_gridLayer_contentsRectAnimate";
         animate.delegate = self;
         
         self.path = path;
-        self.shadowPath = path;
         [self addAnimation:animate forKey:lfgridLayerAnimtionKey];
         
     } else {
         self.path = path;
-        self.shadowPath = path;
         if (self.callback) {
             self.callback(YES);
             self.callback = nil;

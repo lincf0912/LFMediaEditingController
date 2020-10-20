@@ -115,7 +115,7 @@ Allow rotation.
  */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditCropCanRotateAttributeName;
 /**
- 允许剪切比例。如果值为NO，剪切比例将不会被重置。
+ 允许剪切比例。如果值为NO，剪切比例将不会被重置。（固定预设剪切比例）
  Allow aspect ratio. If the value is NO, the aspect ratio will not be reset.
  
  NSNumber containing LFPhotoEditOperationSubType, default YES
