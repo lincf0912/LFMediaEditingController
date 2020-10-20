@@ -192,14 +192,14 @@ LFVideoEditOperationStringKey const LFVideoEditClipMaxDurationAttributeName = @"
 {
     CGRect editRect = self.view.bounds;
     
-    if (@available(iOS 11.0, *)) {
-        if (hasSafeArea) {
-            editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
-            editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
-            editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
-            editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
-        }
-    }
+//    if (@available(iOS 11.0, *)) {
+//        if (hasSafeArea) {
+//            editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
+//            editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
+//            editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
+//            editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
+//        }
+//    }
     
     _EditingView = [[LFVideoEditingView alloc] initWithFrame:editRect];
     _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

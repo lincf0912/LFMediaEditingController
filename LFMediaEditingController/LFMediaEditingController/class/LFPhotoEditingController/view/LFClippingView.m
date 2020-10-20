@@ -383,6 +383,20 @@ NSString *const kLFClippingViewData_zoomingView = @"LFClippingViewData_zoomingVi
         CGRect zoomRect = [self.superview convertRect:rect toView:self];
         contentOffset.x = zoomRect.origin.x * zoomScale / self.zoomScale;
         contentOffset.y = zoomRect.origin.y * zoomScale / self.zoomScale;
+        
+        /** 计算实际可滚动的范围，避免contentOffset超出滚动范围的情况。 */
+        CGSize contentSize = self.zoomingView.lfme_size;
+        contentSize.width = contentSize.width * zoomScale / self.zoomScale;
+        contentSize.height = contentSize.height * zoomScale / self.zoomScale;
+        
+        CGPoint maxContentOffset = CGPointMake(contentSize.width - cropRect.size.width, contentSize.height - cropRect.size.height);
+        if (contentOffset.x > maxContentOffset.x) {
+            contentOffset.x = maxContentOffset.x;
+        }
+        
+        if (contentOffset.y > maxContentOffset.y) {
+            contentOffset.y = maxContentOffset.y;
+        }
     }
     
     

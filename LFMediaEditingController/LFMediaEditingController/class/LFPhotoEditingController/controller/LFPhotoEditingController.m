@@ -194,17 +194,17 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
 {
     CGRect editRect = self.view.bounds;
     
-    if (@available(iOS 11.0, *)) {
-        if (hasSafeArea) {
-            editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
-            editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
-            editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
-            editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
-        }
-    }
+//    if (@available(iOS 11.0, *)) {
+//        if (hasSafeArea) {
+//            editRect.origin.x += self.navigationController.view.safeAreaInsets.left;
+//            editRect.origin.y += self.navigationController.view.safeAreaInsets.top;
+//            editRect.size.width -= (self.navigationController.view.safeAreaInsets.left+self.navigationController.view.safeAreaInsets.right);
+//            editRect.size.height -= (self.navigationController.view.safeAreaInsets.top+self.navigationController.view.safeAreaInsets.bottom);
+//        }
+//    }
     
     _EditingView = [[LFEditingView alloc] initWithFrame:editRect];
-//    _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _EditingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _EditingView.editDelegate = self;
     _EditingView.clippingDelegate = self;
     _EditingView.fixedAspectRatio = ![self operationBOOLForKey:LFPhotoEditCropCanAspectRatioAttributeName];
@@ -730,9 +730,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropCanAspectRatioAttributeName =
     if (_edit_clipping_toolBar == nil) {
         UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
         if (@available(iOS 11.0, *)) {
-            if (hasSafeArea) {
-                safeAreaInsets = self.navigationController.view.safeAreaInsets;
-            }
+            safeAreaInsets = self.navigationController.view.safeAreaInsets;
         }
         CGFloat h = 44.f + safeAreaInsets.bottom;
         _edit_clipping_toolBar = [[LFClipToolbar alloc] initWithFrame:CGRectMake(0, self.view.lfme_height - h, self.view.lfme_width, h)];

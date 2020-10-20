@@ -76,6 +76,9 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 /** 记录剪裁前的数据 */
 @property (nonatomic, assign) LFGridViewAspectRatioType old_aspectRatio;
 
+/** 额外的安全区域活动范围 */
+@property (nonatomic, assign) UIEdgeInsets extraSafeAreaInsets;
+
 @end
 
 @implementation LFEditingView
@@ -101,6 +104,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     self.minimumZoomScale = 1.0;
     _editToolbarDefaultHeight = 44.f;
     _defaultMaximumZoomScale = kMaxZoomScale;
+    _extraSafeAreaInsets = UIEdgeInsetsZero;
     
     /** 创建缩放层，避免直接缩放LFClippingView，会改变其transform */
     UIView *clipZoomView = [[UIView alloc] initWithFrame:self.bounds];
@@ -150,6 +154,13 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     
 }
 
+- (void)safeAreaInsetsDidChange
+{
+    [super safeAreaInsetsDidChange];
+    
+    [self resetContentSize];
+}
+
 - (void)dealloc
 {
     // 释放LFEditingProtocol协议
@@ -158,10 +169,10 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 
 - (UIEdgeInsets)refer_clippingInsets
 {
-    CGFloat top = kClipZoom_margin;
-    CGFloat left = kClipZoom_margin;
-    CGFloat bottom = self.editToolbarDefaultHeight + kClipZoom_margin;
-    CGFloat right = kClipZoom_margin;
+    CGFloat top = kClipZoom_margin + self.extraSafeAreaInsets.top;
+    CGFloat left = kClipZoom_margin + self.extraSafeAreaInsets.left;
+    CGFloat bottom = self.editToolbarDefaultHeight + kClipZoom_margin + self.extraSafeAreaInsets.bottom;
+    CGFloat right = kClipZoom_margin + self.extraSafeAreaInsets.right;
     
     return UIEdgeInsetsMake(top, left, bottom, right);
 }
@@ -221,6 +232,8 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
 - (void)setClippingRect:(CGRect)clippingRect
 {
     if (self.isClipping) {
+        self.clippingMaxRect = [self refer_clippingRect];
+        
         CGFloat clippingMinY = CGRectGetMinY(self.clippingMaxRect);
         if (clippingRect.origin.y < clippingMinY) {
             clippingRect.origin.y = clippingMinY;
@@ -345,6 +358,8 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
             self.maximumZoomScale = self.minimumZoomScale;
             /** 重置contentSize */
             [self resetContentSize];
+            /** 滚到顶部 */
+            [self setContentOffset:CGPointMake(-self.contentInset.left + self.extraSafeAreaInsets.left, -self.contentInset.top + self.extraSafeAreaInsets.top)];
         }];
     } else {
         self.maximumZoomScale = MIN(MAX(self.minimumZoomScale + self.defaultMaximumZoomScale - self.defaultMaximumZoomScale * (self.clippingView.zoomScale/self.clippingView.maximumZoomScale), self.minimumZoomScale), self.defaultMaximumZoomScale);
@@ -948,8 +963,31 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     CGFloat height = MAX(self.frame.size.height, realClipZoomRect.size.height);
     CGFloat diffWidth = (width-self.clipZoomView.frame.size.width)/2;
     CGFloat diffHeight = (height-self.clipZoomView.frame.size.height)/2;
-    self.contentInset = UIEdgeInsetsMake(diffHeight, diffWidth, 0, 0);
-    self.scrollIndicatorInsets = UIEdgeInsetsMake(diffHeight, diffWidth, 0, 0);
+    
+    UIEdgeInsets inset = UIEdgeInsetsMake(diffHeight, diffWidth, 0, 0);
+    
+    if (@available(iOS 11.0, *)) {
+        /** 计算安全区域的滚动范围 */
+        CGFloat offsetContentInsetHeight = (self.frame.size.height-realClipZoomRect.size.height)/2;
+        CGFloat offsetContentInsetWidth = (self.frame.size.width-realClipZoomRect.size.width)/2;
+        
+        UIEdgeInsets extraSafeAreaInsets = UIEdgeInsetsZero;
+        
+        extraSafeAreaInsets.top = MAX(self.safeAreaInsets.top - offsetContentInsetHeight, 0);
+        extraSafeAreaInsets.left = MAX(self.safeAreaInsets.left - offsetContentInsetWidth, 0);
+        extraSafeAreaInsets.bottom = MAX(self.safeAreaInsets.bottom - offsetContentInsetHeight, 0);
+        extraSafeAreaInsets.right = MAX(self.safeAreaInsets.right - offsetContentInsetWidth, 0);
+        
+        self.extraSafeAreaInsets = extraSafeAreaInsets;
+        
+        inset.top += extraSafeAreaInsets.top;
+        inset.left += extraSafeAreaInsets.left;
+        inset.bottom += extraSafeAreaInsets.bottom;
+        inset.right += extraSafeAreaInsets.right;
+    }
+    
+    self.contentInset = inset;
+    self.scrollIndicatorInsets = inset;
     self.contentSize = CGSizeMake(width-diffWidth, height-diffHeight);
     
     [self setSubViewData];
@@ -980,7 +1018,7 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
         /** 重置contentSize */
         [self resetContentSize];
         /** 滚到顶部 */
-        [self setContentOffset:CGPointMake(-self.contentInset.left, -self.contentInset.top)];
+        [self setContentOffset:CGPointMake(-self.contentInset.left + self.extraSafeAreaInsets.left, -self.contentInset.top + self.extraSafeAreaInsets.top)];
     }
 }
 

@@ -48,6 +48,9 @@
         _cancelButtonTitleColorNormal = [UIColor colorWithWhite:0.8f alpha:1.f];
         /** 创建笔刷缓存 */
         [LFBrushCache share].countLimit = 20;
+        if (@available(iOS 7.0, *)) {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
         /** 刘海屏的顶部一直会存在安全区域，window的显示区域不在刘海屏范围，调整window的层级无法遮挡状态栏。 */
         if (@available(iOS 11.0, *)) {
             if (hasSafeArea) {
