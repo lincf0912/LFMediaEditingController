@@ -181,7 +181,7 @@
 
 - (void)showInfoMessage:(NSString *)text
 {
-    LFEasyNoticeBarConfig config = LFEasyNoticeBarConfigDefault();
+    LFEasyNoticeBarConfig *config = [LFEasyNoticeBarConfig new];
     config.title = text;
     config.type = LFEasyNoticeBarDisplayTypeInfo;
     [LFEasyNoticeBar showAnimationWithConfig:config];
@@ -189,7 +189,7 @@
 
 - (void)showErrorMessage:(NSString *)text
 {
-    LFEasyNoticeBarConfig config = LFEasyNoticeBarConfigDefault();
+    LFEasyNoticeBarConfig *config = [LFEasyNoticeBarConfig new];
     config.title = text;
     config.type = LFEasyNoticeBarDisplayTypeError;
     [LFEasyNoticeBar showAnimationWithConfig:config];

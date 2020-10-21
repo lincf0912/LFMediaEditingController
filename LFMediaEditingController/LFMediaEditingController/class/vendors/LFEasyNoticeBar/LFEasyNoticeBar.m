@@ -10,11 +10,22 @@
 
 CGFloat const LFEasyNoticeBarWidenSize = 50.0;
 
-LFEasyNoticeBarConfig LFEasyNoticeBarConfigDefault(void) {
-    return (LFEasyNoticeBarConfig){
-        nil, LFEasyNoticeBarDisplayTypeInfo, 20.0, [UIColor blackColor], [UIColor whiteColor]
-    };
-};
+@implementation LFEasyNoticeBarConfig
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _type = LFEasyNoticeBarDisplayTypeInfo;
+        _margin = 20.0;
+        _textColor = [UIColor blackColor];
+        _backgroundColor = [UIColor whiteColor];
+        _statusBarStyle = UIStatusBarStyleDefault;
+    }
+    return self;
+}
+
+@end
 
 @interface LFEasyNoticeBar ()
 
@@ -61,7 +72,7 @@ LFEasyNoticeBarConfig LFEasyNoticeBarConfigDefault(void) {
     return self;
 }
 
-- (instancetype)initWithConfig:(LFEasyNoticeBarConfig)config
+- (instancetype)initWithConfig:(LFEasyNoticeBarConfig *)config
 {
     self = [super init];
     if (self) {
@@ -145,22 +156,26 @@ LFEasyNoticeBarConfig LFEasyNoticeBarConfigDefault(void) {
     CGAffineTransform transform = CGAffineTransformMakeTranslation(0, -self.frame.size.height);
     self.transform = transform;
     
+    __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.65 delay:0.0 usingSpringWithDamping:0.58 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.transform = CGAffineTransformIdentity;
+        weakSelf.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
-        
-        [UIView animateWithDuration:0.25 delay:duration options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.transform = transform;
-        } completion:^(BOOL finished) {
-            if (finished) {
-                [self removeFromSuperview];
-            }
-        }];
+        if (finished) {
+            [UIView animateWithDuration:0.25 delay:duration options:UIViewAnimationOptionCurveEaseOut animations:^{
+                weakSelf.transform = transform;
+            } completion:^(BOOL finished) {
+                if (finished) {
+                    [weakSelf removeFromSuperview];
+                }
+            }];
+        } else {
+            [weakSelf removeFromSuperview];
+        }
     }];
 }
 
 #pragma mark - public
-+ (void)showAnimationWithConfig:(LFEasyNoticeBarConfig)config
++ (void)showAnimationWithConfig:(LFEasyNoticeBarConfig *)config
 {
     LFEasyNoticeBar *lf_noticeBar = [[self alloc] initWithConfig:config];
     [lf_noticeBar showWithDuration:2.0];

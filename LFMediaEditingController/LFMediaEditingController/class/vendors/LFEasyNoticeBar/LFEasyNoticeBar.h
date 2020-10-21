@@ -17,48 +17,45 @@ typedef NS_ENUM(NSUInteger, LFEasyNoticeBarDisplayType) {
     LFEasyNoticeBarDisplayTypeError
 };
 
-struct LFEasyNoticeBarConfig {
-    /**
-     *   Notice title, default is nil.
-     */
-    NSString *title;
+@interface LFEasyNoticeBarConfig : NSObject
+/**
+ *   Notice title, default is nil.
+ */
+@property (nonatomic, copy) NSString *title;
 
-    /**
-     *   NoticeBar display type, default is LFEasyNoticeBarDisplayTypeInfo.
-     */
-    LFEasyNoticeBarDisplayType type;
+/**
+ *   NoticeBar display type, default is LFEasyNoticeBarDisplayTypeInfo.
+ */
+@property (nonatomic, assign) LFEasyNoticeBarDisplayType type;
 
-    /**
-     *   Margin around the noticeBar, default is 20.0f.
-     */
-    CGFloat margin;
+/**
+ *   Margin around the noticeBar, default is 20.0f.
+ */
+@property (nonatomic, assign) CGFloat margin;
 
-    /**
-     *   Notice title color, default is black.
-     */
-    UIColor *textColor;
+/**
+ *   Notice title color, default is black.
+ */
+@property (nonatomic, strong) UIColor *textColor;
 
-    /**
-     *   Background color, default is white.
-     */
-    UIColor *backgroundColor;
-    
-    /**
-     *   UIStatusBarStyle, default is UIStatusBarStyleDefault.
-     */
-    UIStatusBarStyle statusBarStyle;
-};
-typedef struct LFEasyNoticeBarConfig LFEasyNoticeBarConfig;
+/**
+ *   Background color, default is white.
+ */
+@property (nonatomic, strong) UIColor *backgroundColor;
 
-UIKIT_EXTERN LFEasyNoticeBarConfig LFEasyNoticeBarConfigDefault(void);
+/**
+ *   UIStatusBarStyle, default is UIStatusBarStyleDefault.
+ */
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
+@end
 
 @interface LFEasyNoticeBar : UIView
 
-@property (nonatomic, readonly) LFEasyNoticeBarConfig config;
+@property (nonatomic, readonly) LFEasyNoticeBarConfig *config;
 
 - (void)showWithDuration:(NSTimeInterval)duration;
 
-+ (void)showAnimationWithConfig:(LFEasyNoticeBarConfig)config;
++ (void)showAnimationWithConfig:(LFEasyNoticeBarConfig *)config;
 + (void)hideAll;
 
 @end
