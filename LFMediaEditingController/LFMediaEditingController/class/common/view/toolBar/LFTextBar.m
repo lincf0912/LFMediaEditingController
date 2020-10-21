@@ -471,25 +471,33 @@ CGFloat const LFTextBarAlignmentTag = 221;
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    UITextRange *selectedRange = [textView markedTextRange];
-    //获取高亮部分
-    UITextPosition *pos = [textView positionFromPosition:selectedRange.start offset:0];
-    
-    //如果在变化中是高亮部分在变，就不要计算字符了
-    if (selectedRange && pos) {
-        return;
-    }
-    
-    NSString  *nsTextContent = textView.text;
-    NSInteger existTextNum = nsTextContent.length;
-    
-    if (existTextNum > _maxLimitCount)
-    {
-        //截取到最大位置的字符(由于超出截部分在should时被处理了所在这里这了提高效率不再判断)
-        NSString *s = [nsTextContent substringToIndex:_maxLimitCount];
+    NSString *toBeString = textView.text;
+    NSString *lang = textView.textInputMode.primaryLanguage; // 键盘输入模式
+    if([lang isEqualToString:@"zh-Hans"]) { //简体中文输入，包括简体拼音，健体五笔，简体手写
+        UITextRange *selectedRange = [textView markedTextRange];
+        //获取高亮部分
+        UITextPosition *position = [textView positionFromPosition:selectedRange.start offset:0];
         
-        [textView setText:s];
+        //有高亮选择的字符串，则暂不对文字进行统计和限制
+        if (selectedRange && position) {
+            return;
+        }
+        //没有高亮选择的字，则对已输入的文字进行字数统计和限制
+        if(!position) {
+            if(toBeString.length > _maxLimitCount) {
+                //截取到最大位置的字符(由于超出截部分在should时被处理了所在这里这了提高效率不再判断)
+                textView.text = [toBeString substringToIndex:_maxLimitCount];
+            }
+        }
+    } else{ //中文输入法以外的直接对其统计限制即可，不考虑其他语种情况
+        if(toBeString.length > _maxLimitCount) {
+            
+            //防止表情被截段
+            NSRange rangeIndex = [toBeString rangeOfComposedCharacterSequenceAtIndex:_maxLimitCount];
+            textView.text = [toBeString substringToIndex:(rangeIndex.location)];
+        }
     }
+    
     
     //不让显示负数 口口日
 //    self.lbNums.text = [NSString stringWithFormat:@"%ld/%d",MAX(0,_maxLimitCount - existTextNum),_maxLimitCount];
