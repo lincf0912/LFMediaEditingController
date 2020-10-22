@@ -10,14 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** 命名描述见LFImagePickerController.strings */
+/** 组合名称name=$lf_aspectWidth+$lf_aspectDelimiter+$lf_aspectHeight 重命名规则描述见LFImagePickerController.strings */
 @protocol LFExtraAspectRatioProtocol <NSObject>
 /** 横比例，例如9 */
-@property (nonatomic, assign) int lf_aspectWidth;
+@property (nonatomic, readonly) int lf_aspectWidth;
 /** 纵比例，例如16 */
-@property (nonatomic, assign) int lf_aspectHeight;
+@property (nonatomic, readonly) int lf_aspectHeight;
 /** 分隔符，默认x */
-@property (nonatomic, copy, nullable) NSString *lf_aspectDelimiter;
+@property (nonatomic, copy, nullable, readonly) NSString *lf_aspectDelimiter;
+/**
+ 适配视图纵横比例
+ 如果视图的宽度>高度，则纵横比例会反转。
+ */
+@property (nonatomic, readonly) BOOL autoAspectRatio;
 
 @end
 

@@ -14,15 +14,33 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LFExtraAspectRatio : NSObject <LFExtraAspectRatioProtocol>
 
 /** 横比例，例如9 */
-@property (nonatomic, assign) int lf_aspectWidth;
+@property (nonatomic, readonly) int lf_aspectWidth;
 /** 纵比例，例如16 */
-@property (nonatomic, assign) int lf_aspectHeight;
+@property (nonatomic, readonly) int lf_aspectHeight;
 /** 分隔符，默认x */
-@property (nonatomic, copy, nullable) NSString *lf_aspectDelimiter;
+@property (nonatomic, copy, nullable, readonly) NSString *lf_aspectDelimiter;
+/**
+ 适配视图纵横比例，默认YES
+ 如果视图的宽度>高度，则纵横比例会反转。
+ */
+@property (nonatomic, readonly) BOOL autoAspectRatio;
 
-+ (instancetype)extraAspectRatioWithWidth:(int)width andHeight:(int)height;
++ (instancetype)extraAspectRatioWithWidth:(int)width
+                                andHeight:(int)height;
 
-- (instancetype)initWithWidth:(int)width andHeight:(int)height;
++ (instancetype)extraAspectRatioWithWidth:(int)width
+                                andHeight:(int)height
+                          autoAspectRatio:(BOOL)autoAspectRatio;
+
++ (instancetype)extraAspectRatioWithWidth:(int)width
+                                andHeight:(int)height
+                       andAspectDelimiter:(NSString * _Nullable)aspectDelimiter
+                          autoAspectRatio:(BOOL)autoAspectRatio;
+
+- (instancetype)initWithWidth:(int)width
+                    andHeight:(int)height
+           andAspectDelimiter:(NSString * _Nullable)aspectDelimiter
+              autoAspectRatio:(BOOL)autoAspectRatio;
 
 @end
 

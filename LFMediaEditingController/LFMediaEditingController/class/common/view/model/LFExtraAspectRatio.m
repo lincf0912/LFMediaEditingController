@@ -12,15 +12,35 @@
 
 + (instancetype)extraAspectRatioWithWidth:(int)width andHeight:(int)height
 {
-    return [[self alloc] initWithWidth:width andHeight:height];
+    return [self extraAspectRatioWithWidth:width andHeight:height andAspectDelimiter:nil autoAspectRatio:TRUE];
 }
 
-- (instancetype)initWithWidth:(int)width andHeight:(int)height
++ (instancetype)extraAspectRatioWithWidth:(int)width
+                                andHeight:(int)height
+                          autoAspectRatio:(BOOL)autoAspectRatio
+{
+    return [self extraAspectRatioWithWidth:width andHeight:height andAspectDelimiter:nil autoAspectRatio:autoAspectRatio];
+}
+
++ (instancetype)extraAspectRatioWithWidth:(int)width
+                                andHeight:(int)height
+                       andAspectDelimiter:(NSString  * _Nullable)aspectDelimiter
+                          autoAspectRatio:(BOOL)autoAspectRatio
+{
+    return [[self alloc] initWithWidth:width andHeight:height andAspectDelimiter:aspectDelimiter autoAspectRatio:autoAspectRatio];
+}
+
+- (instancetype)initWithWidth:(int)width
+                    andHeight:(int)height
+           andAspectDelimiter:(NSString  * _Nullable)aspectDelimiter
+              autoAspectRatio:(BOOL)autoAspectRatio
 {
     self = [super init];
     if (self) {
         _lf_aspectWidth = width;
         _lf_aspectHeight = height;
+        _lf_aspectDelimiter = aspectDelimiter ?: @"x";
+        _autoAspectRatio = autoAspectRatio;
     }
     return self;
 }

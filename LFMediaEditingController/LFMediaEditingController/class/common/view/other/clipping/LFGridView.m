@@ -260,7 +260,11 @@ const CGFloat kControlWidth = 30.f;
             if (_extraAspectRatioHorizontallyDescs == nil) {
                 NSMutableArray *m_array = [NSMutableArray arrayWithCapacity:self.extraAspectRatioList.count];
                 for (id <LFExtraAspectRatioProtocol> extraAspectRatio in self.extraAspectRatioList) {
-                    [m_array addObject:[NSString stringWithFormat:@"%d%@%d", abs(extraAspectRatio.lf_aspectWidth), extraAspectRatio.lf_aspectDelimiter ?: @"x", abs(extraAspectRatio.lf_aspectHeight)]];
+                    if (extraAspectRatio.autoAspectRatio) {
+                        [m_array addObject:[NSString stringWithFormat:@"%d%@%d", abs(extraAspectRatio.lf_aspectHeight), extraAspectRatio.lf_aspectDelimiter ?: @"x", abs(extraAspectRatio.lf_aspectWidth)]];
+                    } else {
+                        [m_array addObject:[NSString stringWithFormat:@"%d%@%d", abs(extraAspectRatio.lf_aspectWidth), extraAspectRatio.lf_aspectDelimiter ?: @"x", abs(extraAspectRatio.lf_aspectHeight)]];
+                    }
                 }
                 _extraAspectRatioHorizontallyDescs = [m_array copy];
             }
@@ -269,7 +273,7 @@ const CGFloat kControlWidth = 30.f;
             if (_extraAspectRatioVerticalDescs == nil) {
                 NSMutableArray *m_array = [NSMutableArray arrayWithCapacity:self.extraAspectRatioList.count];
                 for (id <LFExtraAspectRatioProtocol> extraAspectRatio in self.extraAspectRatioList) {
-                    [m_array addObject:[NSString stringWithFormat:@"%d%@%d", abs(extraAspectRatio.lf_aspectHeight), extraAspectRatio.lf_aspectDelimiter ?: @"x", abs(extraAspectRatio.lf_aspectWidth)]];
+                    [m_array addObject:[NSString stringWithFormat:@"%d%@%d", abs(extraAspectRatio.lf_aspectWidth), extraAspectRatio.lf_aspectDelimiter ?: @"x", abs(extraAspectRatio.lf_aspectHeight)]];
                 }
                 _extraAspectRatioVerticalDescs = [m_array copy];
             }
@@ -339,7 +343,11 @@ const CGFloat kControlWidth = 30.f;
                 NSUInteger index = self.aspectRatio - LFGridViewAspectRatioType_Extra - 1;
                 if (index < self.extraAspectRatioList.count) {
                     id <LFExtraAspectRatioProtocol> extraAspectRatio = self.extraAspectRatioList[index];
-                    return CGSizeMake(abs(extraAspectRatio.lf_aspectWidth), abs(extraAspectRatio.lf_aspectHeight));
+                    if (extraAspectRatio.autoAspectRatio) {
+                        return CGSizeMake(abs(extraAspectRatio.lf_aspectHeight), abs(extraAspectRatio.lf_aspectWidth));
+                    } else {
+                        return CGSizeMake(abs(extraAspectRatio.lf_aspectWidth), abs(extraAspectRatio.lf_aspectHeight));
+                    }
                 }
                 return CGSizeZero;
             }
@@ -372,7 +380,7 @@ const CGFloat kControlWidth = 30.f;
                 NSUInteger index = self.aspectRatio - LFGridViewAspectRatioType_Extra - 1;
                 if (index < self.extraAspectRatioList.count) {
                     id <LFExtraAspectRatioProtocol> extraAspectRatio = self.extraAspectRatioList[index];
-                    return CGSizeMake(abs(extraAspectRatio.lf_aspectHeight), abs(extraAspectRatio.lf_aspectWidth));
+                    return CGSizeMake(abs(extraAspectRatio.lf_aspectWidth), abs(extraAspectRatio.lf_aspectHeight));
                 }
                 return CGSizeZero;
             }
