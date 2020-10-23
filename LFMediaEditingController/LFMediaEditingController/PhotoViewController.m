@@ -146,9 +146,9 @@
 //                                     LFPhotoEditCropCanRotateAttributeName:@(NO), //不允许剪切旋转
 //                                     LFPhotoEditCropCanAspectRatioAttributeName:@(NO), //不允许剪切比例调整
 //                                     LFPhotoEditCropExtraAspectRatioAttributeName:@[
+//                                             [LFExtraAspectRatio extraAspectRatioWithWidth:9 andHeight:16 autoAspectRatio:NO],
 //                                             [LFExtraAspectRatio extraAspectRatioWithWidth:9 andHeight:16],
 //                                             [LFExtraAspectRatio extraAspectRatioWithWidth:16 andHeight:9],
-//                                             [LFExtraAspectRatio extraAspectRatioWithWidth:2 andHeight:3],
 //                                     ], //自定义纵横比
                                      };
     

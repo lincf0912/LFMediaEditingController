@@ -303,90 +303,94 @@ const CGFloat kControlWidth = 30.f;
 - (CGSize)aspectRatioSize
 {
     BOOL aspectRatioHorizontally = self.aspectRatioHorizontally;
+    BOOL angleAspectRatioHorizontally = NO;
     switch (self.angle) {
         case 90:
         case -90:
         case 270:
         case -270:
+        {
+            angleAspectRatioHorizontally = YES;
             aspectRatioHorizontally = !aspectRatioHorizontally;
+        }
             break;
         default:
             break;
     }
     
-    
-    if (aspectRatioHorizontally) {
-        switch (self.aspectRatio) {
-            case LFGridViewAspectRatioType_None:
+    switch (self.aspectRatio) {
+        case LFGridViewAspectRatioType_None:
+            return CGSizeZero;
+        case LFGridViewAspectRatioType_Original:
+            if (self.controlSize.width == 0 || self.controlSize.height == 0) {
                 return CGSizeZero;
-            case LFGridViewAspectRatioType_Original:
-                if (self.controlSize.width == 0 || self.controlSize.height == 0) {
-                    return CGSizeZero;
-                }
+            }
+            if (aspectRatioHorizontally) {
                 return CGSizeMake(1, self.controlSize.height/self.controlSize.width);
-            case LFGridViewAspectRatioType_1x1:
-                return CGSizeMake(1, 1);
-            case LFGridViewAspectRatioType_3x2:
+            } else {
+                return CGSizeMake(self.controlSize.width/self.controlSize.height, 1);
+            }
+        case LFGridViewAspectRatioType_1x1:
+            return CGSizeMake(1, 1);
+        case LFGridViewAspectRatioType_3x2:
+            if (aspectRatioHorizontally) {
                 return CGSizeMake(3, 2);
-            case LFGridViewAspectRatioType_4x3:
+            } else {
+                return CGSizeMake(2, 3);
+            }
+        case LFGridViewAspectRatioType_4x3:
+            if (aspectRatioHorizontally) {
                 return CGSizeMake(4, 3);
-            case LFGridViewAspectRatioType_5x3:
+            } else {
+                return CGSizeMake(3, 4);
+            }
+        case LFGridViewAspectRatioType_5x3:
+            if (aspectRatioHorizontally) {
                 return CGSizeMake(5, 3);
-            case LFGridViewAspectRatioType_15x9:
+            } else {
+                return CGSizeMake(3, 5);
+            }
+        case LFGridViewAspectRatioType_15x9:
+            if (aspectRatioHorizontally) {
                 return CGSizeMake(15, 9);
-            case LFGridViewAspectRatioType_16x9:
+            } else {
+                return CGSizeMake(9, 15);
+            }
+        case LFGridViewAspectRatioType_16x9:
+            if (aspectRatioHorizontally) {
                 return CGSizeMake(16, 9);
-            case LFGridViewAspectRatioType_16x10:
+            } else {
+                return CGSizeMake(9, 16);
+            }
+        case LFGridViewAspectRatioType_16x10:
+            if (aspectRatioHorizontally) {
                 return CGSizeMake(16, 10);
-            default:
-            {
-                NSUInteger index = self.aspectRatio - LFGridViewAspectRatioType_Extra - 1;
-                if (index < self.extraAspectRatioList.count) {
-                    id <LFExtraAspectRatioProtocol> extraAspectRatio = self.extraAspectRatioList[index];
-                    if (extraAspectRatio.autoAspectRatio) {
+            } else {
+                return CGSizeMake(10, 16);
+            }
+        default:
+        {
+            NSUInteger index = self.aspectRatio - LFGridViewAspectRatioType_Extra - 1;
+            if (index < self.extraAspectRatioList.count) {
+                id <LFExtraAspectRatioProtocol> extraAspectRatio = self.extraAspectRatioList[index];
+                if (extraAspectRatio.autoAspectRatio) {
+                    if (aspectRatioHorizontally) { /** 使用适配视图纵横比例，根据aspectRatioHorizontally判断 */
+                        return CGSizeMake(abs(extraAspectRatio.lf_aspectHeight), abs(extraAspectRatio.lf_aspectWidth));
+                    } else {
+                        return CGSizeMake(abs(extraAspectRatio.lf_aspectWidth), abs(extraAspectRatio.lf_aspectHeight));
+                    }
+                } else {
+                    if (angleAspectRatioHorizontally) { /** 禁用适配视图纵横比例，根据angleAspectRatioHorizontally判断，旋转界面需要改变比例。 */
                         return CGSizeMake(abs(extraAspectRatio.lf_aspectHeight), abs(extraAspectRatio.lf_aspectWidth));
                     } else {
                         return CGSizeMake(abs(extraAspectRatio.lf_aspectWidth), abs(extraAspectRatio.lf_aspectHeight));
                     }
                 }
-                return CGSizeZero;
             }
-        }
-    } else {
-        switch (self.aspectRatio) {
-            case LFGridViewAspectRatioType_None:
-                return CGSizeZero;
-            case LFGridViewAspectRatioType_Original:
-                if (self.controlSize.width == 0 || self.controlSize.height == 0) {
-                    return CGSizeZero;
-                }
-                return CGSizeMake(self.controlSize.width/self.controlSize.height, 1);
-            case LFGridViewAspectRatioType_1x1:
-                return CGSizeMake(1, 1);
-            case LFGridViewAspectRatioType_3x2:
-                return CGSizeMake(2, 3);
-            case LFGridViewAspectRatioType_4x3:
-                return CGSizeMake(3, 4);
-            case LFGridViewAspectRatioType_5x3:
-                return CGSizeMake(3, 5);
-            case LFGridViewAspectRatioType_15x9:
-                return CGSizeMake(9, 15);
-            case LFGridViewAspectRatioType_16x9:
-                return CGSizeMake(9, 16);
-            case LFGridViewAspectRatioType_16x10:
-                return CGSizeMake(10, 16);
-            default:
-            {
-                NSUInteger index = self.aspectRatio - LFGridViewAspectRatioType_Extra - 1;
-                if (index < self.extraAspectRatioList.count) {
-                    id <LFExtraAspectRatioProtocol> extraAspectRatio = self.extraAspectRatioList[index];
-                    return CGSizeMake(abs(extraAspectRatio.lf_aspectWidth), abs(extraAspectRatio.lf_aspectHeight));
-                }
-                return CGSizeZero;
-            }
+            return CGSizeZero;
         }
     }
-    
+        
     return CGSizeZero;
 }
 
