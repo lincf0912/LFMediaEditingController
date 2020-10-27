@@ -51,7 +51,7 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     self.userInteractionEnabled = YES;
     self.clipsToBounds = YES;
     _screenScale = 1.f;
-    _minScale = .2f;
+    _minScale = .3f;
     _maxScale = 3.f;
 }
 
@@ -164,15 +164,23 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     
     /** 屏幕缩放率 */
     movingView.screenScale = self.screenScale;
-    /** 最小缩放率 */
-    CGFloat ratio = self.minScale;
-    movingView.minScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height)/self.screenScale;
-    /** 最大缩放率 */
-    ratio = self.maxScale;
-    movingView.maxScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height)/self.screenScale;
-    ratio = 0.5f;
-    CGFloat scale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height);
-    [movingView setScale:scale/self.screenScale];
+    
+    /** 区别文字情况，文字采用固定缩放率 */
+    if (item.text) {
+        movingView.minScale = self.minScale;
+        movingView.maxScale = self.maxScale;
+        [movingView setScale:1.0/self.screenScale];
+    } else { /** 采用动态屏幕大小与贴图大小比例缩放率 */
+        /** 最小缩放率 */
+        CGFloat ratio = self.minScale;
+        movingView.minScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width * 0.5) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height * 0.5) / movingView.view.frame.size.height)/self.screenScale;
+        /** 最大缩放率 */
+        ratio = self.maxScale;
+        movingView.maxScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height)/self.screenScale;
+        ratio = 0.5f;
+        CGFloat scale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height);
+        [movingView setScale:scale/self.screenScale];
+    }
 //    NSLog(@"minScale:%f, maxScale:%f, scale:%f", movingView.minScale, movingView.maxScale, movingView.scale);
     
     self.selectMovingView = movingView;

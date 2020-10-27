@@ -166,7 +166,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor];
     textView.textAlignment = NSTextAlignmentLeft;
-    [textView setFont:[UIFont systemFontOfSize:30.f]];
+    [textView setFont:[UIFont systemFontOfSize:35.f]];
     //UITextInputTraits
     textView.returnKeyType = UIReturnKeyDefault;
     textView.spellCheckingType = UITextSpellCheckingTypeNo;

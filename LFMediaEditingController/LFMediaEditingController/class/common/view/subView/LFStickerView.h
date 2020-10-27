@@ -29,7 +29,7 @@
 /** create sticker */
 - (void)createStickerItem:(LFStickerItem *)item;
 
-/** 最小缩放率 默认0.2 */
+/** 最小缩放率 默认0.3 */
 @property (nonatomic, assign) CGFloat minScale;
 /** 最大缩放率 默认3.0 */
 @property (nonatomic, assign) CGFloat maxScale;

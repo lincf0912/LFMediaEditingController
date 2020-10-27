@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 初始化 */
 - (instancetype)initWithItem:(LFStickerItem *)item;
 
-/** 缩放率 0.2~3.0 */
+/** 缩放率 minScale~maxScale */
 - (void)setScale:(CGFloat)scale;
 - (void)setScale:(CGFloat)scale rotation:(CGFloat)rotation;
 

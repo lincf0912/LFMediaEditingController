@@ -456,7 +456,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     return self.lf_stickerView.screenScale;
 }
 
-/** 最小缩放率 默认0.2 */
+/** 最小缩放率 */
 - (void)setStickerMinScale:(CGFloat)stickerMinScale
 {
     if (self.lf_protocolxecutor) {
@@ -472,7 +472,7 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
     }
     return self.lf_stickerView.minScale;
 }
-/** 最大缩放率 默认3.0 */
+/** 最大缩放率 */
 - (void)setStickerMaxScale:(CGFloat)stickerMaxScale
 {
     if (self.lf_protocolxecutor) {
