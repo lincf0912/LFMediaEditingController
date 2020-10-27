@@ -979,8 +979,15 @@ NSString *const kLFEditingViewData_clippingView = @"kLFEditingViewData_clippingV
     
     if (@available(iOS 11.0, *)) {
         /** 计算安全区域的滚动范围 */
-        CGFloat offsetContentInsetHeight = (self.frame.size.height-realClipZoomRect.size.height)/2;
-        CGFloat offsetContentInsetWidth = (self.frame.size.width-realClipZoomRect.size.width)/2;
+        CGFloat offsetContentInsetHeight = 0;
+        /** 长图等宽度不足屏幕宽度的图片会被放大，超出部分不计算；（也可以使用乘以zoomScale来计算，避免计算过于复杂，简单使用判断就行。） */
+        if (realClipZoomRect.size.height < self.frame.size.height) {
+            offsetContentInsetHeight = (self.frame.size.height-realClipZoomRect.size.height)/2;
+        }
+        CGFloat offsetContentInsetWidth = 0;
+        if (realClipZoomRect.size.width < self.frame.size.width) {
+            offsetContentInsetWidth = (self.frame.size.width-realClipZoomRect.size.width)/2;
+        }
         
         UIEdgeInsets extraSafeAreaInsets = UIEdgeInsetsZero;
         
