@@ -1068,9 +1068,22 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropExtraAspectRatioAttributeName
     if (isActive) { /** 选中的情况下点击 */
         LFStickerItem *item = [_EditingView getSelectSticker];
         if (item.text) {
+            [_EditingView stickerDeactivated];
             [self showTextBarController:item.text];
         }
     }
+}
+/** 贴图移动开始，可以通过getSelectSticker获取选中贴图 */
+- (void)lf_photoEditStickerMovingBegan
+{
+    _isHideNaviBar = YES;
+    [self changedBarState];
+}
+/** 贴图移动结束，可以通过getSelectSticker获取选中贴图 */
+- (void)lf_photoEditStickerMovingEnded
+{
+    _isHideNaviBar = NO;
+    [self changedBarState];
 }
 
 #pragma mark - LFPhotoEditSplashDelegate

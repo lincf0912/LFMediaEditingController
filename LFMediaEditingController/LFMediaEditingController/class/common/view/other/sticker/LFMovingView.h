@@ -39,10 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) LFStickerItem *item;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGFloat rotation;
-@property (nonatomic, readonly) BOOL isActive;
+@property (nonatomic, readonly, getter=isActive) BOOL active;
 
-
-@property (nonatomic, copy, nullable) void(^tapEnded)(LFMovingView *view);
+/** 区分isActive，参数的isActive是旧值，view.isActive是新值 */
+@property (nonatomic, copy, nullable) void(^tapEnded)(LFMovingView *view, BOOL isActive);
+@property (nonatomic, copy, nullable) void(^movingBegan)(LFMovingView *view);
+@property (nonatomic, copy, nullable) void(^movingEnded)(LFMovingView *view);
+/** active发送变化时激活 */
+@property (nonatomic, copy, nullable) void(^movingActived)(LFMovingView *view);
 
 @property (nonatomic, copy, nullable) BOOL(^moveCenter)(CGRect rect);
 

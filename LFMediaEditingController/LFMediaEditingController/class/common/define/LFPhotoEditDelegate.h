@@ -20,8 +20,12 @@
 /** +++++++++++++++++++++贴图代理+++++++++++++++++++++ */
 @protocol LFPhotoEditStickerDelegate <NSObject>
 @optional
-/** 点击贴图 isActive=YES 选中的情况下点击 */
+/** 点击贴图 isActive=YES 选中的情况下点击，可以通过getSelectSticker获取选中贴图 */
 - (void)lf_photoEditStickerDidSelectViewIsActive:(BOOL)isActive;
+/** 贴图移动开始，可以通过getSelectSticker获取选中贴图 */
+- (void)lf_photoEditStickerMovingBegan;
+/** 贴图移动结束，可以通过getSelectSticker获取选中贴图 */
+- (void)lf_photoEditStickerMovingEnded;
 
 @end
 

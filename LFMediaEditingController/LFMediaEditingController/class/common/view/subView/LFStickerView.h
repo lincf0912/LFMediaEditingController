@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "LFStickerItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class LFText;
 @interface LFStickerView : UIView
 
@@ -46,7 +48,14 @@
 @property (nonatomic, strong) NSDictionary *data;
 
 /** 点击回调视图 */
-@property (nonatomic, copy) void(^tapEnded)(LFStickerItem *item, BOOL isActive);
-@property (nonatomic, copy) BOOL(^moveCenter)(CGRect rect);
+@property (nonatomic, copy, nullable) void(^tapEnded)(LFStickerItem *item, BOOL isActive);
+/** 视图开始移动 */
+@property (nonatomic, copy, nullable) void(^movingBegan)(LFStickerItem *item);
+/** 视图结束移动 */
+@property (nonatomic, copy, nullable) void(^movingEnded)(LFStickerItem *item);
+/** 视图超出屏幕后的返回位置 */
+@property (nonatomic, copy, nullable) BOOL(^moveCenter)(CGRect rect);
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -75,9 +75,8 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
         if ([subView isKindOfClass:[LFMovingView class]]) {
             if (tapEnded) {
                 __weak typeof(self) weakSelf = self;
-                [subView setTapEnded:^(LFMovingView *view) {
-                    weakSelf.selectMovingView = view;
-                    weakSelf.tapEnded(view.item, view.isActive);
+                [subView setTapEnded:^(LFMovingView *view, BOOL isActive) {
+                    weakSelf.tapEnded(view.item, isActive);
                 }];
             } else {
                 [subView setTapEnded:nil];
@@ -136,16 +135,34 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     
     [self addSubview:movingView];
     
-    if (active) {
-        [LFMovingView setActiveEmoticonView:movingView];
+    __weak typeof(self) weakSelf = self;
+    [movingView setMovingActived:^(LFMovingView * _Nonnull view) {
+        if (view.isActive) {
+            weakSelf.selectMovingView = view;
+        } else { /** selectMovingView就让它一直存活吧。 */
+            /** 取消激活时，清空selectMovingView */
+//            if (weakSelf.selectMovingView == view) {
+//                weakSelf.selectMovingView = nil;
+//            }
+        }
+    }];
+    
+    
+    if (self.tapEnded) {
+        [movingView setTapEnded:^(LFMovingView * _Nonnull view, BOOL isActive) {
+            weakSelf.tapEnded(view.item, isActive);
+        }];
     }
     
+    if (self.movingBegan) {
+        [movingView setMovingBegan:^(LFMovingView * _Nonnull view) {
+            weakSelf.movingBegan(view.item);
+        }];
+    }
     
-    __weak typeof(self) weakSelf = self;
-    if (self.tapEnded) {
-        [movingView setTapEnded:^(LFMovingView * _Nonnull view) {
-            weakSelf.selectMovingView = view;
-            weakSelf.tapEnded(view.item, view.isActive);
+    if (self.movingEnded) {
+        [movingView setMovingEnded:^(LFMovingView * _Nonnull view) {
+            weakSelf.movingEnded(view.item);
         }];
     }
     
@@ -153,6 +170,10 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
         [movingView setMoveCenter:^BOOL (CGRect rect) {
             return weakSelf.moveCenter(rect);
         }];
+    }
+    
+    if (active) {
+        [LFMovingView setActiveEmoticonView:movingView];
     }
     
     return movingView;
@@ -176,14 +197,12 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
         movingView.minScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width * 0.5) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height * 0.5) / movingView.view.frame.size.height)/self.screenScale;
         /** 最大缩放率 */
         ratio = self.maxScale;
-        movingView.maxScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height)/self.screenScale;
+        movingView.maxScale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width * 0.5) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height * 0.5) / movingView.view.frame.size.height)/self.screenScale;
         ratio = 0.5f;
         CGFloat scale = MIN( (ratio * [UIScreen mainScreen].bounds.size.width) / movingView.view.frame.size.width, (ratio * [UIScreen mainScreen].bounds.size.height) / movingView.view.frame.size.height);
         [movingView setScale:scale/self.screenScale];
     }
 //    NSLog(@"minScale:%f, maxScale:%f, scale:%f", movingView.minScale, movingView.maxScale, movingView.scale);
-    
-    self.selectMovingView = movingView;
     
     [self lf_showInView:[UIApplication sharedApplication].keyWindow maskRects:@[[NSValue valueWithCGRect:[self convertRect:movingView.frame toView:nil]]] withTips:@[[NSBundle LFME_localizedStringForKey:@"_LFME_UserGuide_StickerView_MovingView_Pinch"]]];
 }

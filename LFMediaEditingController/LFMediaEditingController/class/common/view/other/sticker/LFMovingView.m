@@ -51,7 +51,7 @@
     CGFloat _initialScale;
 }
 
-@property (nonatomic, assign) BOOL isActive;
+@property (nonatomic, assign, getter=isActive) BOOL active;
 
 @end
 
@@ -228,7 +228,6 @@
 
 - (void)setActive:(BOOL)active
 {
-    _isActive = active;
     _deleteButton.hidden = self.item.isMain ? YES : !active;
     _circleView.hidden = !active;
     _contentView.layer.borderWidth = (active) ? 1/_scale/self.screenScale : 0;
@@ -237,6 +236,13 @@
     _contentView.layer.shadowColor = (active) ? [UIColor blackColor].CGColor : [UIColor clearColor].CGColor;
     
     _view.userInteractionEnabled = active;
+    
+    if (_active != active) {
+        _active = active;
+        if (self.movingActived) {
+            self.movingActived(self);
+        }
+    }
 }
 
 - (void)setScale:(CGFloat)scale
@@ -268,7 +274,7 @@
     
     self.transform = CGAffineTransformMakeRotation(_arg);
 
-    if (_isActive) {        
+    if (self.isActive) {
         _contentView.layer.borderWidth = 1/_scale/self.screenScale;
         _contentView.layer.cornerRadius = 3/_scale/self.screenScale;
         [_contentView LFME_updateShadow];
@@ -330,8 +336,9 @@
 
 - (void)viewDidTap:(UITapGestureRecognizer*)sender
 {
-    if (self.tapEnded) self.tapEnded(self);
+    BOOL isActive = self.isActive;
     [[self class] setActiveEmoticonView:self];
+    if (self.tapEnded) self.tapEnded(self, isActive);
 }
 
 - (void)viewDidPan:(UIPanGestureRecognizer*)sender
@@ -343,6 +350,9 @@
         [[self class] setActiveEmoticonView:self];
         _initialPoint = self.center;
         [self cancelDeactivated];
+        if (self.movingBegan) {
+            self.movingBegan(self);
+        }
     }
     self.center = CGPointMake(_initialPoint.x + p.x, _initialPoint.y + p.y);
     
@@ -361,6 +371,9 @@
             }];            
         }
         [self autoDeactivated];
+        if (self.movingEnded) {
+            self.movingEnded(self);
+        }
     }
 }
 

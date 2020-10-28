@@ -203,6 +203,16 @@ static const char * LFEditingProtocolSplashLineWidthKey = "LFEditingProtocolSpla
                 [weakSelf.editDelegate lf_photoEditStickerDidSelectViewIsActive:isActive];
             }
         };
+        self.lf_stickerView.movingBegan = ^(LFStickerItem * _Nonnull item) {
+            if ([weakSelf.editDelegate respondsToSelector:@selector(lf_photoEditStickerMovingBegan)]) {
+                [weakSelf.editDelegate lf_photoEditStickerMovingBegan];
+            }
+        };
+        self.lf_stickerView.movingEnded = ^(LFStickerItem * _Nonnull item) {
+            if ([weakSelf.editDelegate respondsToSelector:@selector(lf_photoEditStickerMovingEnded)]) {
+                [weakSelf.editDelegate lf_photoEditStickerMovingEnded];
+            }
+        };
         
         /** 模糊 */
         self.lf_splashView.drawBegan = ^{
