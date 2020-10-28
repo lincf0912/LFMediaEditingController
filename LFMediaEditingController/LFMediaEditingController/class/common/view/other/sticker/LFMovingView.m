@@ -12,6 +12,7 @@
 #import "UIView+LFMECommon.h"
 
 #define LFMovingView_margin 22
+#define LFMovingView_contentMargin 40
 
 @interface LFMovingContentView : UIView <UIGestureRecognizerDelegate>
 
@@ -100,12 +101,12 @@
     if (view == nil) {
         return nil;
     }
-    self = [super initWithFrame:CGRectMake(0, 0, view.frame.size.width+LFMovingView_margin, view.frame.size.height+LFMovingView_margin)];
+    self = [super initWithFrame:CGRectMake(0, 0, view.frame.size.width+LFMovingView_contentMargin+LFMovingView_margin, view.frame.size.height+LFMovingView_contentMargin+LFMovingView_margin)];
     if(self){
         _deactivatedDelay = 4.f;
         _view = view;
         _item = item;
-        _contentView = [[LFMovingContentView alloc] initWithFrame:view.bounds];
+        _contentView = [[LFMovingContentView alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width+LFMovingView_contentMargin, view.frame.size.height+LFMovingView_contentMargin)];
         _contentView.layer.borderColor = [[UIColor colorWithWhite:1.f alpha:0.8] CGColor];
         {
             // shadow
@@ -120,7 +121,7 @@
         _contentView.center = self.center;
         [_contentView addSubview:view];
         view.userInteractionEnabled = self.isActive;
-        view.frame = _contentView.bounds;
+        view.center = CGPointMake(_contentView.bounds.size.width/2, _contentView.bounds.size.height/2);
         [self addSubview:_contentView];
         
         _deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -179,7 +180,7 @@
     CGPoint center = self.center;
     /** 更新自身大小 */
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(viewSize.width+LFMovingView_margin, viewSize.height+LFMovingView_margin);
+    frame.size = CGSizeMake(viewSize.width+LFMovingView_contentMargin+LFMovingView_margin, viewSize.height+LFMovingView_contentMargin+LFMovingView_margin);
     self.frame = frame;
     self.center = center;
     
@@ -188,14 +189,14 @@
     
     /** 更新主体大小 */
     CGRect contentFrame = _contentView.frame;
-    contentFrame.size = viewSize;
+    contentFrame.size = CGSizeMake(viewSize.width+LFMovingView_contentMargin, viewSize.height+LFMovingView_contentMargin);
     _contentView.frame = contentFrame;
     _contentView.center = center;
     _deleteButton.center = _contentView.frame.origin;
     _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
     [_contentView LFME_updateShadow];
     /** 更新显示视图大小 */
-    _view.frame = _contentView.bounds;
+    _view.center = CGPointMake(_contentView.bounds.size.width/2, _contentView.bounds.size.height/2);
     
     [self setScale:_scale rotation:_arg];
 }
