@@ -69,6 +69,7 @@ CGFloat const LFTextBarAlignmentTag = 221;
         UIVisualEffectView * effe = [[UIVisualEffectView alloc]initWithEffect:blur];
         effe.frame = self.bounds;
         effe.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        effe.alpha = 0.8;
         [self addSubview:effe];
     } else {
         self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
