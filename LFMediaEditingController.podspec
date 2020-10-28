@@ -12,6 +12,15 @@ s.requires_arc = true
 s.source_files = 'LFMediaEditingController/LFMediaEditingController/class/*.{h,m}'
 s.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class/*.h'
 
+s.default_subspec = 'Core'
+
+s.subspec 'Core' do |core|
+
+core.dependency 'LFMediaEditingController/LFPhotoEditingController'
+core.dependency 'LFMediaEditingController/LFVideoEditingController'
+
+end
+
 # LFPhotoEditingController模块
 s.subspec 'LFPhotoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/LFMediaEditingController/class/common/*.bundle'
@@ -34,7 +43,7 @@ end
 s.subspec 'LFVideoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/LFMediaEditingController/class/common/*.bundle'
 ss.source_files = 'LFMediaEditingController/LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/LFMediaEditingController/class/LFVideoEditingController/**/*.{h,m}','LFMediaEditingController/LFMediaEditingController/class/common/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class/*.h','LFMediaEditingController/LFMediaEditingController/class/LFVideoEditingController/controller/*.h','LFMediaEditingController/LFMediaEditingController/class/LFVideoEditingController/model/*.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFStickerContent.h'
+ss.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class/*.h','LFMediaEditingController/LFMediaEditingController/class/LFVideoEditingController/controller/*.h','LFMediaEditingController/LFMediaEditingController/class/LFVideoEditingController/model/*.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFStickerContent.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFExtraAspectRatio.h','LFMediaEditingController/LFMediaEditingController/class/common/define/LFExtraAspectRatioProtocol.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
