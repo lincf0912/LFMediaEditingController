@@ -115,7 +115,7 @@
             _contentView.layer.shadowOffset = CGSizeMake(0, 0);
             _contentView.layer.shadowRadius = 2.f;
             
-            [_contentView LFME_updateShadow];
+            [_contentView LFME_updateSquareShadow];
         }
         
         _contentView.center = self.center;
@@ -131,20 +131,20 @@
         
         [_deleteButton setImage:[NSBundle LFME_imageNamed:@"StickerZoomingViewDelete.png"] forState:UIControlStateNormal];
         _deleteButton.layer.shadowColor = [UIColor blackColor].CGColor;
-        _deleteButton.layer.shadowOpacity = .5f;
+        _deleteButton.layer.shadowOpacity = .2f;
         _deleteButton.layer.shadowOffset = CGSizeMake(0, 0);
-        _deleteButton.layer.shadowRadius = 3;
-        [_deleteButton LFME_updateShadow];
+        _deleteButton.layer.shadowRadius = 2;
+        [_deleteButton LFME_updateCircleShadow];
         [self addSubview:_deleteButton];
         
         _circleView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, LFMovingView_margin, LFMovingView_margin)];
         _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
         [_circleView setImage:[NSBundle LFME_imageNamed:@"StickerZoomingViewCircle.png"]];
         _circleView.layer.shadowColor = [UIColor blackColor].CGColor;
-        _circleView.layer.shadowOpacity = .5f;
+        _circleView.layer.shadowOpacity = .2f;
         _circleView.layer.shadowOffset = CGSizeMake(0, 0);
-        _circleView.layer.shadowRadius = 3;
-        [_circleView LFME_updateShadow];
+        _circleView.layer.shadowRadius = 2;
+        [_circleView LFME_updateCircleShadow];
         [self addSubview:_circleView];
         
         _scale = 1.f;
@@ -194,7 +194,7 @@
     _contentView.center = center;
     _deleteButton.center = _contentView.frame.origin;
     _circleView.center = CGPointMake(CGRectGetMaxX(_contentView.frame), CGRectGetMaxY(_contentView.frame));
-    [_contentView LFME_updateShadow];
+    [_contentView LFME_updateSquareShadow];
     /** 更新显示视图大小 */
     _view.center = CGPointMake(_contentView.bounds.size.width/2, _contentView.bounds.size.height/2);
     
@@ -278,7 +278,7 @@
     if (self.isActive) {
         _contentView.layer.borderWidth = 1/_scale/self.screenScale;
         _contentView.layer.cornerRadius = 3/_scale/self.screenScale;
-        [_contentView LFME_updateShadow];
+        [_contentView LFME_updateSquareShadow];
     }
 }
 

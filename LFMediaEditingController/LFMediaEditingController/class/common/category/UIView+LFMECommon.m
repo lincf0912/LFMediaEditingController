@@ -132,7 +132,7 @@
 }
 
 /** 设置阴影 */
-- (void)LFME_updateShadow
+- (void)LFME_updateSquareShadow
 {
     CGFloat shadowRadius = self.layer.shadowRadius;
     
@@ -152,6 +152,22 @@
     [path appendPath:leftPath];
     [path appendPath:rightPath];
     [path appendPath:bottomPath];
+    
+    self.layer.shadowPath = path.CGPath;
+}
+
+/** 设置阴影（圆） */
+- (void)LFME_updateCircleShadow
+{
+    CGFloat shadowRadius = self.layer.shadowRadius;
+    
+    if (shadowRadius == 0) {
+        self.layer.shadowPath = nil;
+        return;
+    }
+    
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, -shadowRadius/2, -shadowRadius/2) cornerRadius:self.bounds.size.width/2];
+    path.lineJoinStyle = kCGLineJoinRound;
     
     self.layer.shadowPath = path.CGPath;
 }

@@ -19,6 +19,8 @@
 - (void)LFME_setCornerRadius:(float)cornerRadius;
 /** 设置弧边，需要手动设置masksToBounds */
 - (void)LFME_setCornerRadiusWithoutMasks:(float)cornerRadius;
-/** 设置阴影 */
-- (void)LFME_updateShadow;
+/** 设置阴影（方） */
+- (void)LFME_updateSquareShadow;
+/** 设置阴影（圆） */
+- (void)LFME_updateCircleShadow;
 @end
