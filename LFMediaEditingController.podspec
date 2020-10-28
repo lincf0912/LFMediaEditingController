@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = 'LFMediaEditingController'
-s.version      = '1.4.5.1'
+s.version      = '1.4.6'
 s.summary      = 'Media Editor (edit photo、edit video)'
 s.homepage     = 'https://github.com/lincf0912/LFMediaEditingController'
 s.license      = 'MIT'
@@ -16,7 +16,7 @@ s.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class
 s.subspec 'LFPhotoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/LFMediaEditingController/class/common/*.bundle'
 ss.source_files = 'LFMediaEditingController/LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/**/*.{h,m}','LFMediaEditingController/LFMediaEditingController/class/common/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/model/*.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFStickerContent.h'
+ss.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/model/*.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFStickerContent.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFExtraAspectRatio.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
