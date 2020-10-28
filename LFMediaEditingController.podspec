@@ -16,7 +16,7 @@ s.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class
 s.subspec 'LFPhotoEditingController' do |ss|
 ss.resources    = 'LFMediaEditingController/LFMediaEditingController/class/common/*.bundle'
 ss.source_files = 'LFMediaEditingController/LFMediaEditingController/class/*.{h,m}','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/**/*.{h,m}','LFMediaEditingController/LFMediaEditingController/class/common/**/*.{h,m}'
-ss.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/model/*.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFStickerContent.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFExtraAspectRatio.h'
+ss.public_header_files = 'LFMediaEditingController/LFMediaEditingController/class/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/controller/*.h','LFMediaEditingController/LFMediaEditingController/class/LFPhotoEditingController/model/*.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFStickerContent.h','LFMediaEditingController/LFMediaEditingController/class/common/view/model/LFExtraAspectRatio.h','LFMediaEditingController/LFMediaEditingController/class/common/define/LFExtraAspectRatioProtocol.h'
 ss.dependency 'LFMediaEditingController/JRPickColorView'
 ss.dependency 'LFMediaEditingController/JRFilterBar'
 ss.dependency 'LFMediaEditingController/LFColorMatrix'
