@@ -8,6 +8,8 @@
 
 #import "LFStickerView.h"
 #import "LFMovingView.h"
+#import "LFMovingRemoveView.h"
+
 #import "NSObject+LFTipsGuideView.h"
 #import "NSBundle+LFMediaEditing.h"
 
@@ -27,6 +29,10 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
 @property (nonatomic, weak) LFMovingView *selectMovingView;
 
 @property (nonatomic, assign, getter=isHitTestSubView) BOOL hitTestSubView;
+
+@property (nonatomic, weak) LFMovingRemoveView *movingRemoveView;
+/** 缓存对象，不用每次显示都创建。 */
+@property (nonatomic, strong) LFMovingRemoveView *cacheMovingRemoveView;
 
 @end
 
@@ -157,12 +163,28 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
     if (self.movingBegan) {
         [movingView setMovingBegan:^(LFMovingView * _Nonnull view) {
             weakSelf.movingBegan(view.item);
+            [weakSelf showMovingRemoveView];
         }];
     }
+    
+    [movingView setMovingChanged:^(LFMovingView * _Nonnull view, CGPoint locationPoint) {
+        BOOL isContains = CGRectContainsPoint(weakSelf.movingRemoveView.frame, locationPoint);
+        if (weakSelf.movingRemoveView.isSelected && !isContains) {
+            [weakSelf dismissMovingRemoveView:YES];
+        } else {
+            weakSelf.movingRemoveView.selected = isContains;
+        }
+    }];
     
     if (self.movingEnded) {
         [movingView setMovingEnded:^(LFMovingView * _Nonnull view) {
             weakSelf.movingEnded(view.item);
+            if (weakSelf.movingRemoveView.isSelected) {
+                [weakSelf removeSelectStickerView];
+                [weakSelf dismissMovingRemoveView:NO];
+            } else {
+                [weakSelf dismissMovingRemoveView:YES];
+            }
         }];
     }
     
@@ -221,6 +243,54 @@ NSString *const kLFStickerViewData_movingView_rotation = @"LFStickerViewData_mov
             if ([subView isKindOfClass:[LFMovingView class]]) {
                 subView.screenScale = screenScale;
             }
+        }
+    }
+}
+
+- (LFMovingRemoveView *)cacheMovingRemoveView
+{
+    if (_cacheMovingRemoveView == nil) {
+        _cacheMovingRemoveView = [[LFMovingRemoveView alloc] initWithFrame:CGRectMake((self.bounds.size.width-150)/2, self.bounds.size.height - 100 - 30, 150, 100)];
+    }
+    return _cacheMovingRemoveView;
+}
+
+- (void)showMovingRemoveView
+{
+    if (self.movingRemoveView == nil) {
+        LFMovingRemoveView *movingRemoveView = self.cacheMovingRemoveView;
+        /** 还原默认值 */
+        movingRemoveView.alpha = 0.0;
+        movingRemoveView.selected = NO;
+        /** 优化用户体验，判断当前movingView的位置，调整movingRemoveView的显示位置 */
+        CGRect rect = movingRemoveView.frame;
+        if (self.selectMovingView.center.y > self.center.y) {
+            rect.origin.y = 30;
+        } else {
+            rect.origin.y = self.bounds.size.height - 100 - 30;
+        }
+        movingRemoveView.frame = rect;
+        [self addSubview:movingRemoveView];
+        self.movingRemoveView = movingRemoveView;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        self.movingRemoveView.alpha = 1.0;
+    }];
+}
+
+- (void)dismissMovingRemoveView:(BOOL)animated
+{
+    LFMovingRemoveView *movingRemoveView = self.movingRemoveView;
+    self.movingRemoveView = nil;
+    if (movingRemoveView) {
+        if (animated) {
+            [UIView animateWithDuration:0.25 animations:^{
+                movingRemoveView.alpha = 0.0;
+            } completion:^(BOOL finished) {
+                [movingRemoveView removeFromSuperview];
+            }];
+        } else {
+            [movingRemoveView removeFromSuperview];
         }
     }
 }

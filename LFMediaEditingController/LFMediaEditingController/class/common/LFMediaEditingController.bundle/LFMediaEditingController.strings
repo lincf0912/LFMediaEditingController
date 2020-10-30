@@ -1,6 +1,6 @@
 /* 
-  LFImagePickerController.strings
-  LFImagePickerController
+  LFMediaEditingController.strings
+  LFMediaEditingController
 
   Created by Mr.D on 2018/3/9.
   Copyright © 2018年 LamTsanFeng. All rights reserved.
@@ -49,6 +49,10 @@
 "_LFME_brush_Fluorescent" = "荧光笔";
 "_LFME_brush_Stamp" = "图章";
 "_LFME_brush_Eraser" = "橡皮擦";
+
+/* -------- UserGuide  -------*/
+"_LFME_sticker_remove_normal" = "拖动到此处删除";
+"_LFME_sticker_remove_selected" = "松手即可删除";
 
 /* -------- UserGuide  -------*/
 "_LFME_UserGuide_ToolBar_Scroll" = "向左👈滚动会发现更多功能噢。";

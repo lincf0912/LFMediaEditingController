@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 区分isActive，参数的isActive是旧值，view.isActive是新值 */
 @property (nonatomic, copy, nullable) void(^tapEnded)(LFMovingView *view, BOOL isActive);
 @property (nonatomic, copy, nullable) void(^movingBegan)(LFMovingView *view);
+@property (nonatomic, copy, nullable) void(^movingChanged)(LFMovingView *view, CGPoint locationPoint);
 @property (nonatomic, copy, nullable) void(^movingEnded)(LFMovingView *view);
 /** active发送变化时激活 */
 @property (nonatomic, copy, nullable) void(^movingActived)(LFMovingView *view);

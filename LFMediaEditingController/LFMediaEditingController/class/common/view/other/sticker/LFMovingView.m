@@ -356,6 +356,12 @@
         }
     }
     self.center = CGPointMake(_initialPoint.x + p.x, _initialPoint.y + p.y);
+    if (sender.state == UIGestureRecognizerStateChanged) {
+        if (self.movingChanged) {
+            CGPoint locationPoint = [sender locationInView:self.superview];
+            self.movingChanged(self, locationPoint);
+        }
+    }
     
     if (sender.state == UIGestureRecognizerStateEnded) {
         BOOL isMoveCenter = NO;

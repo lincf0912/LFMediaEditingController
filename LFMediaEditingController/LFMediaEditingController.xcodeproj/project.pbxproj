@@ -62,6 +62,7 @@
 		3BC5BD562403659D00675877 /* LFTipsGuideManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD502403659D00675877 /* LFTipsGuideManager.m */; };
 		3BC5BD572403659D00675877 /* NSObject+LFTipsGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD512403659D00675877 /* NSObject+LFTipsGuideView.m */; };
 		3BC5BD582403659D00675877 /* LFTipsGuideView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3BC5BD542403659D00675877 /* LFTipsGuideView.bundle */; };
+		3BD57106254AC3500079ABDA /* LFMovingRemoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD57105254AC3500079ABDA /* LFMovingRemoveView.m */; };
 		6F14E5D51EE6438A0049AE56 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D41EE6438A0049AE56 /* main.m */; };
 		6F14E5D81EE6438A0049AE56 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5D71EE6438A0049AE56 /* AppDelegate.m */; };
 		6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F14E5DA1EE6438A0049AE56 /* ViewController.m */; };
@@ -244,6 +245,8 @@
 		3BC5BD522403659D00675877 /* LFTipsGuideManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFTipsGuideManager.h; sourceTree = "<group>"; };
 		3BC5BD532403659D00675877 /* LFTipsGuideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFTipsGuideView.h; sourceTree = "<group>"; };
 		3BC5BD542403659D00675877 /* LFTipsGuideView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LFTipsGuideView.bundle; sourceTree = "<group>"; };
+		3BD57104254AC3500079ABDA /* LFMovingRemoveView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LFMovingRemoveView.h; sourceTree = "<group>"; };
+		3BD57105254AC3500079ABDA /* LFMovingRemoveView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFMovingRemoveView.m; sourceTree = "<group>"; };
 		59CF21AA4ECAE5D75012FAF4 /* Pods_LFMediaEditingController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LFMediaEditingController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F14E5D01EE6438A0049AE56 /* LFMediaEditingController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LFMediaEditingController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F14E5D41EE6438A0049AE56 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -659,6 +662,8 @@
 			children = (
 				3BC5BD3524035BED00675877 /* LFMovingView.m */,
 				3BC5BD3624035BED00675877 /* LFMovingView.h */,
+				3BD57104254AC3500079ABDA /* LFMovingRemoveView.h */,
+				3BD57105254AC3500079ABDA /* LFMovingRemoveView.m */,
 			);
 			path = sticker;
 			sourceTree = "<group>";
@@ -1402,6 +1407,7 @@
 				3BC5BD4424035BED00675877 /* LFResizeControl.m in Sources */,
 				3B86CD75241A1F6A00D6FA06 /* NSData+JRImageContentType.m in Sources */,
 				3B86CD7A241A1F6A00D6FA06 /* JRStickerContent+JRGetData.m in Sources */,
+				3BD57106254AC3500079ABDA /* LFMovingRemoveView.m in Sources */,
 				3BC5BD4824035BED00675877 /* LFFilterView.m in Sources */,
 				6F14E5DB1EE6438A0049AE56 /* ViewController.m in Sources */,
 				6FAB0D4D1F27360300C1BCFD /* UIDevice+LFMEOrientation.m in Sources */,
