@@ -263,19 +263,25 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropExtraAspectRatioAttributeName
         if (self.operationType&LFPhotoEditOperationType_crop) {
             LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditCropAspectRatioAttributeName];
             NSInteger index = 0;
-            switch (subType) {
-                case LFPhotoEditOperationSubTypeCropAspectRatioOriginal:
-                case LFPhotoEditOperationSubTypeCropAspectRatio1x1:
-                case LFPhotoEditOperationSubTypeCropAspectRatio3x2:
-                case LFPhotoEditOperationSubTypeCropAspectRatio4x3:
-                case LFPhotoEditOperationSubTypeCropAspectRatio5x3:
-                case LFPhotoEditOperationSubTypeCropAspectRatio15x9:
-                case LFPhotoEditOperationSubTypeCropAspectRatio16x9:
-                case LFPhotoEditOperationSubTypeCropAspectRatio16x10:
-                    index = subType % 500 + 1;
-                    break;
-                default:
-                    break;
+            if (_EditingView.extraAspectRatioList) {
+                if (index >= 500) {
+                    index = subType % 500 + 1;                    
+                }
+            } else {
+                switch (subType) {
+                    case LFPhotoEditOperationSubTypeCropAspectRatioOriginal:
+                    case LFPhotoEditOperationSubTypeCropAspectRatio1x1:
+                    case LFPhotoEditOperationSubTypeCropAspectRatio3x2:
+                    case LFPhotoEditOperationSubTypeCropAspectRatio4x3:
+                    case LFPhotoEditOperationSubTypeCropAspectRatio5x3:
+                    case LFPhotoEditOperationSubTypeCropAspectRatio15x9:
+                    case LFPhotoEditOperationSubTypeCropAspectRatio16x9:
+                    case LFPhotoEditOperationSubTypeCropAspectRatio16x10:
+                        index = subType % 500 + 1;
+                        break;
+                    default:
+                        break;
+                }
             }
             
             _EditingView.defaultAspectRatioIndex = index;
