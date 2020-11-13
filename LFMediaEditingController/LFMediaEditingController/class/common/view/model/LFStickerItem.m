@@ -165,6 +165,7 @@
     if (self) {
         _main = [coder decodeBoolForKey:@"main"];
         _image = [coder decodeObjectForKey:@"image"];
+        _text = [coder decodeObjectForKey:@"text"];
         NSURL *assetURL = [coder decodeObjectForKey:@"assetURL"];
         if (assetURL) {
             _asset = [AVAsset assetWithURL:assetURL];            
@@ -178,6 +179,7 @@
 {
     [coder encodeBool:self.isMain forKey:@"main"];
     [coder encodeObject:self.image forKey:@"image"];
+    [coder encodeObject:self.text forKey:@"text"];
     if ([_asset isKindOfClass:[AVURLAsset class]]) {
         NSURL *assetURL = ((AVURLAsset *)_asset).URL;
         [coder encodeObject:assetURL forKey:@"assetURL"];

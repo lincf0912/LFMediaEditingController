@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LFText : NSObject
+@interface LFText : NSObject <NSSecureCoding>
 
 //@property (nonatomic, copy) NSString *text;
 //@property (nonatomic, strong) UIFont *font;
