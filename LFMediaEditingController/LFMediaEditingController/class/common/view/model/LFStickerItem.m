@@ -8,6 +8,7 @@
 
 #import "LFStickerItem.h"
 #import "NSAttributedString+LFMECoreText.h"
+#import "LFCGContextDrawTextBackground.h"
 
 @interface LFStickerItem ()
 
@@ -47,7 +48,7 @@
 {
     self = [super init];
     if (self) {
-        _textInsets = UIEdgeInsetsMake(5.f, 5.f, 5.f, 5.f);
+        _textInsets = UIEdgeInsetsMake(8.f, 8.f, 8.f, 8.f);
     }
     return self;
 }
@@ -79,19 +80,41 @@
             UIColor *textColor = [typingAttributes objectForKey:NSForegroundColorAttributeName];
             
             CGPoint point = CGPointMake(self.textInsets.left, self.textInsets.top);
+            CGPoint origin = CGPointMake(self.textInsets.left, self.textInsets.top);
+            
             CGSize size = textSize;
+            if (!CGRectIsNull(self.text.usedRect)) {
+                /** 因为高度的偏差不明，使用UITextView的文字高度效果更佳。 */
+                textSize.height = self.text.usedRect.size.height;
+                /** 改变画布大小 */
+                point.x += (self.text.usedRect.size.width - textSize.width)/2;
+                point.y += (self.text.usedRect.size.height - textSize.height)/2;
+                size = self.text.usedRect.size;
+            }
+            CGSize usedSize = size;
+            
             size.width += (self.textInsets.left+self.textInsets.right);
             size.height += (self.textInsets.top+self.textInsets.bottom);
+            
+            
             
             @autoreleasepool {
                 /** 创建画布 */
                 UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
                 CGContextRef context = UIGraphicsGetCurrentContext();
                 
-                UIColor *shadowColor = ([textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor] : [UIColor blackColor];
-                CGColorRef shadow = [shadowColor colorWithAlphaComponent:0.8f].CGColor;
-                CGContextSetShadowWithColor(context, CGSizeMake(1, 1), 3.f, shadow);
-                CGContextSetAllowsAntialiasing(context, YES);
+                if (self.text.layoutData) {
+                    CGContextSaveGState(context);   //保存当前的绘图配置信息
+                    CGContextTranslateCTM(context, origin.x, origin.y); //转换初始坐标系到绘制字形的位置
+                    lf_CGContextDrawTextBackgroundData(context, usedSize, self.text.layoutData);
+                    CGContextRestoreGState(context); //恢复绘图配置信息
+                } else {
+                    /** 没有背景色反差时，添加阴影 */
+                    UIColor *shadowColor = ([textColor isEqual:[UIColor blackColor]]) ? [UIColor whiteColor] : [UIColor blackColor];
+                    CGColorRef shadow = [shadowColor colorWithAlphaComponent:0.8f].CGColor;
+                    CGContextSetShadowWithColor(context, CGSizeMake(1, 1), 3.f, shadow);
+                    CGContextSetAllowsAntialiasing(context, YES);
+                }
                 
                 [self.text.attributedText LFME_drawInContext:context withPosition:point andHeight:textSize.height andWidth:textSize.width];
                 

@@ -48,6 +48,8 @@
 		3B8B0C6423E7C78500148D0B /* LFEditToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B8B0C5D23E7C78500148D0B /* LFEditToolbar.m */; };
 		3B8B0C6523E7C78500148D0B /* LFStickerBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B8B0C5F23E7C78500148D0B /* LFStickerBar.m */; };
 		3B8B0C6623E7C78500148D0B /* LFTextBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B8B0C6023E7C78500148D0B /* LFTextBar.m */; };
+		3B90CB3F255CE80C001BF0EF /* LFCGContextDrawTextBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90CB3B255CE80C001BF0EF /* LFCGContextDrawTextBackground.m */; };
+		3B90CB40255CE80C001BF0EF /* LFTextViewBackgroundLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90CB3E255CE80C001BF0EF /* LFTextViewBackgroundLayoutManager.m */; };
 		3BC5BD4324035BED00675877 /* LFGridMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD2B24035BEC00675877 /* LFGridMaskLayer.m */; };
 		3BC5BD4424035BED00675877 /* LFResizeControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD2D24035BEC00675877 /* LFResizeControl.m */; };
 		3BC5BD4524035BED00675877 /* LFGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC5BD3124035BED00675877 /* LFGridView.m */; };
@@ -217,6 +219,10 @@
 		3B8B0C5E23E7C78500148D0B /* LFSafeAreaMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFSafeAreaMaskView.h; sourceTree = "<group>"; };
 		3B8B0C5F23E7C78500148D0B /* LFStickerBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFStickerBar.m; sourceTree = "<group>"; };
 		3B8B0C6023E7C78500148D0B /* LFTextBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFTextBar.m; sourceTree = "<group>"; };
+		3B90CB3B255CE80C001BF0EF /* LFCGContextDrawTextBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFCGContextDrawTextBackground.m; sourceTree = "<group>"; };
+		3B90CB3C255CE80C001BF0EF /* LFCGContextDrawTextBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFCGContextDrawTextBackground.h; sourceTree = "<group>"; };
+		3B90CB3D255CE80C001BF0EF /* LFTextViewBackgroundLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFTextViewBackgroundLayoutManager.h; sourceTree = "<group>"; };
+		3B90CB3E255CE80C001BF0EF /* LFTextViewBackgroundLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFTextViewBackgroundLayoutManager.m; sourceTree = "<group>"; };
 		3BC5BD2B24035BEC00675877 /* LFGridMaskLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFGridMaskLayer.m; sourceTree = "<group>"; };
 		3BC5BD2C24035BEC00675877 /* LFGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFGridView.h; sourceTree = "<group>"; };
 		3BC5BD2D24035BEC00675877 /* LFResizeControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFResizeControl.m; sourceTree = "<group>"; };
@@ -632,9 +638,21 @@
 			path = toolBar;
 			sourceTree = "<group>";
 		};
+		3B90CB3A255CE7DF001BF0EF /* textBackground */ = {
+			isa = PBXGroup;
+			children = (
+				3B90CB3C255CE80C001BF0EF /* LFCGContextDrawTextBackground.h */,
+				3B90CB3B255CE80C001BF0EF /* LFCGContextDrawTextBackground.m */,
+				3B90CB3D255CE80C001BF0EF /* LFTextViewBackgroundLayoutManager.h */,
+				3B90CB3E255CE80C001BF0EF /* LFTextViewBackgroundLayoutManager.m */,
+			);
+			path = textBackground;
+			sourceTree = "<group>";
+		};
 		3BC5BD2924035BEC00675877 /* other */ = {
 			isa = PBXGroup;
 			children = (
+				3B90CB3A255CE7DF001BF0EF /* textBackground */,
 				3BC5BD2A24035BEC00675877 /* clipping */,
 				3BC5BD3424035BED00675877 /* sticker */,
 			);
@@ -1385,6 +1403,7 @@
 				6F384D451EEA2C290077D207 /* LFBaseEditingController.m in Sources */,
 				C72C3961236ACB04008C55B1 /* SPDropMainMenu.m in Sources */,
 				3B8B0C6323E7C78500148D0B /* LFEditCollectionView.m in Sources */,
+				3B90CB3F255CE80C001BF0EF /* LFCGContextDrawTextBackground.m in Sources */,
 				6F359B371F1DDE6D009F2035 /* LFVideoClipToolbar.m in Sources */,
 				C73F4CBA2230FE1800ED40B7 /* LFDataFilterVideoView.m in Sources */,
 				3B86CD73241A1F6A00D6FA06 /* UIColor+TransformColor.m in Sources */,
@@ -1440,6 +1459,7 @@
 				C72C3960236ACB04008C55B1 /* SPBaseCollectionViewCell.m in Sources */,
 				3B4A43E5253EE8E3002916E7 /* LFExtraAspectRatio.m in Sources */,
 				C73F4CB32230C99C00ED40B7 /* JRFilterBar.m in Sources */,
+				3B90CB40255CE80C001BF0EF /* LFTextViewBackgroundLayoutManager.m in Sources */,
 				3BC5BD4B24035BED00675877 /* LFStickerItem.m in Sources */,
 				6FAB0D4A1F2735D800C1BCFD /* UIView+LFMEFrame.m in Sources */,
 				3B32D1D1242B23AD005D0258 /* LFDrawView.m in Sources */,

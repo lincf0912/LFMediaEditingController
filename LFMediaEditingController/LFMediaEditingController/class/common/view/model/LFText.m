@@ -10,4 +10,13 @@
 
 @implementation LFText
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _usedRect = CGRectNull;
+    }
+    return self;
+}
+
 @end

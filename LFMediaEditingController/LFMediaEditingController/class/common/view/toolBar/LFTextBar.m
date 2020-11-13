@@ -11,16 +11,19 @@
 #import "LFMediaEditingHeader.h"
 #import "LFStickerItem.h"
 #import "JRPickColorView.h"
+#import "LFTextViewBackgroundLayoutManager.h"
 
 /** 来限制最大输入只能150个字符 */
 #define MAX_LIMIT_NUMS 150
 
+CGFloat const LFTextBarFontBGTag = 220;
 CGFloat const LFTextBarAlignmentTag = 221;
 
 @interface LFTextBar () <UITextViewDelegate, JRPickColorViewDelegate>
 
 @property (nonatomic, weak) UIView *topbar;
 @property (nonatomic, weak) UITextView *lf_textView;
+@property (nonatomic, strong) LFTextViewBackgroundLayoutManager *layoutManager;
 
 @property (nonatomic, weak) JRPickColorView *lf_colorSlider;
 @property (nonatomic, weak) UIView *lf_keyboardBar;
@@ -112,15 +115,17 @@ CGFloat const LFTextBarAlignmentTag = 221;
 {
     _showText = showText;
     if (showText.attributedText.length > 0) {
+        self.layoutManager.layoutData = showText.layoutData;
         [self.lf_textView setAttributedText:showText.attributedText];
-        [self setTextColor:self.lf_textView.textColor];
+        UIColor *textColor = self.layoutManager.type == LFCGContextDrawTextBackgroundTypeNone ? self.lf_textView.textColor : self.layoutManager.usedColor;
+        [self setTextSliderColor:textColor];
     }
-    if (self.lf_textView.textAlignment) {
-        UIView *alignmentView = [self.lf_keyboardBar viewWithTag:LFTextBarAlignmentTag];
-        for (UIButton *btn in alignmentView.subviews) {
-            btn.selected = (btn.tag == self.lf_textView.textAlignment);
-        }
+    UIView *alignmentView = [self.lf_keyboardBar viewWithTag:LFTextBarAlignmentTag];
+    for (UIButton *btn in alignmentView.subviews) {
+        btn.selected = (btn.tag == self.lf_textView.textAlignment);
     }
+    UIButton *fontBGButton = [self.lf_keyboardBar viewWithTag:LFTextBarFontBGTag];
+    fontBGButton.selected = !(self.layoutManager.type == LFCGContextDrawTextBackgroundTypeNone);
 }
 
 - (void)configCustomNaviBar
@@ -162,12 +167,31 @@ CGFloat const LFTextBarAlignmentTag = 221;
 
 - (void)configTextView
 {
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_topbar.frame), self.lfme_width, self.lfme_height-CGRectGetHeight(_topbar.frame))];
+    NSTextStorage *storage = [NSTextStorage new];
+    self.layoutManager = [LFTextViewBackgroundLayoutManager new];
+    [storage addLayoutManager:self.layoutManager];
+    
+    NSTextContainer *container = [[NSTextContainer alloc] initWithSize:CGSizeZero];
+    [self.layoutManager addTextContainer:container];
+    
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_topbar.frame), self.lfme_width, self.lfme_height-CGRectGetHeight(_topbar.frame)) textContainer:container];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor];
     textView.textAlignment = NSTextAlignmentLeft;
     [textView setFont:[UIFont systemFontOfSize:35.f]];
+    CGFloat xMargin = 8, yMargin = 8;
+    // 使用textContainerInset设置top、leaft、right
+    textView.textContainerInset = UIEdgeInsetsMake(yMargin, xMargin, yMargin, xMargin);
+    textView.layoutManager.allowsNonContiguousLayout = NO;
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 8.f;
+    NSDictionary *attributes = @{
+        NSFontAttributeName:textView.font,
+        NSParagraphStyleAttributeName:style
+    };
+    textView.attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    
     //UITextInputTraits
     textView.returnKeyType = UIReturnKeyDefault;
     textView.spellCheckingType = UITextSpellCheckingTypeNo;
@@ -260,19 +284,17 @@ CGFloat const LFTextBarAlignmentTag = 221;
         maxSliderWidth = CGRectGetMinX(view.frame);
     }
     
-    /** 文字背景 */
-    if (/* DISABLES CODE */ (NO)) {
-        UIButton *fontBG = [UIButton buttonWithType:UIButtonTypeCustom];
-        fontBG.frame = CGRectMake(5, 0, 44, CGRectGetHeight(keyboardBar.frame));
-        [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG.png") forState:UIControlStateNormal];
-        [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG_HL.png") forState:UIControlStateHighlighted];
-        [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG_HL.png") forState:UIControlStateSelected];
-        [fontBG addTarget:self action:@selector(fontBG_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [keyboardBar addSubview:fontBG];
-        
-        sliderX = CGRectGetMaxX(fontBG.frame);
-        maxSliderWidth -= CGRectGetWidth(fontBG.frame) + 5;
-    }
+    UIButton *fontBG = [UIButton buttonWithType:UIButtonTypeCustom];
+    fontBG.frame = CGRectMake(5, 0, 44, CGRectGetHeight(keyboardBar.frame));
+    fontBG.tag = LFTextBarFontBGTag;
+    [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG.png") forState:UIControlStateNormal];
+    [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG_HL.png") forState:UIControlStateHighlighted];
+    [fontBG setImage:bundleEditImageNamed(@"EditImageTextBG_HL.png") forState:UIControlStateSelected];
+    [fontBG addTarget:self action:@selector(fontBG_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [keyboardBar addSubview:fontBG];
+    
+    sliderX = CGRectGetMaxX(fontBG.frame);
+    maxSliderWidth -= CGRectGetWidth(fontBG.frame) + 5;
     
     /** 拾色器 */
     CGFloat sliderHeight = 34.f;
@@ -292,20 +314,26 @@ CGFloat const LFTextBarAlignmentTag = 221;
 /** 设置文字拾起器默认颜色 */
 - (void)setTextColor:(UIColor *)textColor
 {
-    [self setTextSliderColor:textColor];
+    if (self.layoutManager.type == LFCGContextDrawTextBackgroundTypeNone) {
+        self.lf_textView.textColor = textColor;
+        self.layoutManager.usedColor = textColor;
+    } else {
+        self.lf_textView.textColor = [textColor isEqual:[UIColor whiteColor]] ? [UIColor blackColor] : [UIColor whiteColor];
+        self.layoutManager.usedColor = textColor;
+    }
 }
 
 /** 设置文本拾色器默认颜色 */
 - (void)setTextSliderColor:(UIColor *)color
 {
     self.lf_colorSlider.color = color;
-    self.lf_textView.textColor = color;
+    [self setTextColor:self.lf_colorSlider.color];
 }
 
 - (void)setTextSliderColorAtIndex:(NSUInteger)index
 {
     self.lf_colorSlider.index = index;
-    self.lf_textView.textColor = self.lf_colorSlider.color;
+    [self setTextColor:self.lf_colorSlider.color];
 }
 
 #pragma mark - button action
@@ -316,6 +344,10 @@ CGFloat const LFTextBarAlignmentTag = 221;
         btn.selected = (btn == button);
     }
     self.lf_textView.textAlignment = (NSTextAlignment)button.tag;
+    if (self.layoutManager.type != LFCGContextDrawTextBackgroundTypeNone) {
+        /** 需要重新填充颜色进行绘制背景。解决补位情况绘制会出现偏差。 */
+        [self setTextColor:self.lf_colorSlider.color];
+    }
     
 }
 - (void)font_buttonClick:(UIButton *)button
@@ -325,7 +357,13 @@ CGFloat const LFTextBarAlignmentTag = 221;
 - (void)fontBG_buttonClick:(UIButton *)button
 {
     button.selected = !button.isSelected;
-    NSLog(@"正在完善...");
+    
+    if (button.isSelected) {
+        self.layoutManager.type = LFCGContextDrawTextBackgroundTypeSolid;
+    } else {
+        self.layoutManager.type = LFCGContextDrawTextBackgroundTypeNone;
+    }
+    [self setTextColor:self.lf_colorSlider.color];
 }
 
 #pragma mark - 顶部栏(action)
@@ -346,6 +384,8 @@ CGFloat const LFTextBarAlignmentTag = 221;
 //            text.textColor = self.lf_textView.textColor;
 //            text.font = self.lf_textView.font;
             text.attributedText = self.lf_textView.attributedText;
+            text.layoutData = self.layoutManager.layoutData;
+            text.usedRect = [self.layoutManager usedRectForTextContainer:self.lf_textView.textContainer];
         }
         [self.delegate lf_textBarController:self didFinishText:text];
     }
@@ -472,6 +512,11 @@ CGFloat const LFTextBarAlignmentTag = 221;
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+    if (self.layoutManager.type != LFCGContextDrawTextBackgroundTypeNone) {
+        /** 需要重新填充颜色进行绘制背景。解决补位情况绘制会出现偏差。 */
+        [self setTextColor:self.lf_colorSlider.color];
+    }
+    
     NSString *toBeString = textView.text;
     NSString *lang = textView.textInputMode.primaryLanguage; // 键盘输入模式
     if([lang isEqualToString:@"zh-Hans"]) { //简体中文输入，包括简体拼音，健体五笔，简体手写
@@ -507,6 +552,6 @@ CGFloat const LFTextBarAlignmentTag = 221;
 #pragma mark - JRPickColorViewDelegate
 - (void)JRPickColorView:(JRPickColorView *)pickColorView didSelectColor:(UIColor *)color
 {
-    self.lf_textView.textColor = color;
+    [self setTextColor:color];
 }
 @end
