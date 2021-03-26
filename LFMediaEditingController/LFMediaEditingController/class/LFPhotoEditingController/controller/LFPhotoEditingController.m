@@ -22,7 +22,6 @@
 #import "LFSafeAreaMaskView.h"
 
 #import "FilterSuiteUtils.h"
-#import "LFImageCoder.h"
 
 #import "NSObject+LFTipsGuideView.h"
 
@@ -112,7 +111,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropExtraAspectRatioAttributeName
 
 - (void)setEditImage:(UIImage *)editImage durations:(NSArray<NSNumber *> *)durations
 {
-    _editImage = LFIC_UIImageDecodedCopy(editImage);
+    _editImage = editImage;
     _durations = durations;
     
     if (_editImage.images.count) {
@@ -568,7 +567,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropExtraAspectRatioAttributeName
     void (^finishImage)(UIImage *) = ^(UIImage *image){
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (data) {
-                photoEdit = [[LFPhotoEdit alloc] initWithEditImage:weakSelf.editImage previewImage:LFIC_UIImageDecodedCopy(image) durations:weakSelf.durations data:data];
+                photoEdit = [[LFPhotoEdit alloc] initWithEditImage:weakSelf.editImage previewImage:image durations:weakSelf.durations data:data];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([weakSelf.delegate respondsToSelector:@selector(lf_PhotoEditingController:didFinishPhotoEdit:)]) {
