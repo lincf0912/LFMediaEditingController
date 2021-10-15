@@ -263,7 +263,7 @@ LFPhotoEditOperationStringKey const LFPhotoEditCropExtraAspectRatioAttributeName
             LFPhotoEditOperationSubType subType = [self operationSubTypeForKey:LFPhotoEditCropAspectRatioAttributeName];
             NSInteger index = 0;
             if (_EditingView.extraAspectRatioList) {
-                if (index >= 500) {
+                if (subType >= 500) {
                     index = subType % 500 + 1;                    
                 }
             } else {

@@ -102,8 +102,8 @@ UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditSplashAttributeName;
  */
 UIKIT_EXTERN LFPhotoEditOperationStringKey const LFPhotoEditFilterAttributeName;
 /**
- 默认剪切比例
- The default aspect ratio of the crop.
+ 默认剪切比例。如果是自定义比例，需要从LFPhotoEditOperationSubTypeCropAspectRatioOriginal开始计算。
+ The default aspect ratio of the crop. If it is a custom aspect ratio. It needs to be calculated from LFPhotoEditOperationSubTypeCropAspectRatioOriginal (LFPhotoEditOperationSubTypeCropAspectRatioOriginal+index).
  
  NSNumber containing LFPhotoEditOperationSubType, default 0
  */
